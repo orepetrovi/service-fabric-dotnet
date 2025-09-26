@@ -12,9 +12,9 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 {
-    public abstract class Int64Meter2DTest
+    public abstract class TimeSpanMeter3DTest
     {
-        readonly IMeter2D<long> sut;
+        readonly IMeter3D<TimeSpan> sut;
 
         // Constructor parameters
         readonly IFabricMeter fabricMeter = Mock.Of<IFabricMeter>();
@@ -23,9 +23,9 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
         // Test fixture
         static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-        public Int64Meter2DTest() => sut = new Int64Meter2D(fabricMeter, systemDimensions);
+        public TimeSpanMeter3DTest() => sut = new TimeSpanMeter3D(fabricMeter, systemDimensions);
 
-        public class Class : Int64Meter2DTest
+        public class Class : TimeSpanMeter3DTest
         {
             [Fact]
             public void InvokesBaseWithGivenArguments()
@@ -36,22 +36,28 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             }
         }
 
-        public class Record : Int64Meter2DTest
+        public class Record : TimeSpanMeter3DTest
         {
-            readonly long value = fuzzy.Int64();
+            readonly TimeSpan value = fuzzy.TimeSpan();
+            readonly long longValue;
             readonly string customDimension1 = fuzzy.String();
             readonly string customDimension2 = fuzzy.String();
+            readonly string customDimension3 = fuzzy.String();
 
             readonly Action<long, int, string, string, string> mockRecordAction = Mock.Of<Action<long, int, string, string, string>>();
 
-            public Record() => sut.Private().Field<Action<long, int, string, string, string>>().Set(mockRecordAction);
+            public Record()
+            {
+                sut.Private().Field<Action<long, int, string, string, string>>().Set(mockRecordAction);
+                longValue = (long)Math.Round(value.TotalMilliseconds);
+            }
 
             [Fact]
             public void InvokesBaseRecord()
             {
-                sut.Record(value, customDimension1, customDimension2);
+                sut.Record(value, customDimension1, customDimension2, customDimension3);
 
-                Mock.Get(mockRecordAction).Verify(m => m.Invoke(value, 2, customDimension1, customDimension2, null), Times.Once);
+                Mock.Get(mockRecordAction).Verify(m => m.Invoke(longValue, 3, customDimension1, customDimension2, customDimension3), Times.Once);
             }
         }
     }

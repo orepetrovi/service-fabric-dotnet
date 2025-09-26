@@ -3,17 +3,18 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 {
-    sealed class Int64Meter3D : Meter, IMeter3D<long>
+    sealed class TimeSpanMeter1D : Meter, IMeter1D<TimeSpan>
     {
-        internal Int64Meter3D(IFabricMeter fabricMeter, IEnumerable<string> systemDimensionValues) : base(fabricMeter, systemDimensionValues) { }
+        internal TimeSpanMeter1D(IFabricMeter fabricMeter, IEnumerable<string> systemDimensionValues) : base(fabricMeter, systemDimensionValues) { }
 
-        public void Record(long value, string dimension1, string dimension2, string dimension3)
+        public void Record(TimeSpan value, string dimension1)
         {
-            base.Record(value, 3, dimension1, dimension2, dimension3);
+            base.Record(ConvertTimeSpanToLong(value), 1, dimension1);
         }
     }
 }
