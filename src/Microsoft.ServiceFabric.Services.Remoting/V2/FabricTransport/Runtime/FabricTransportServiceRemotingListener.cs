@@ -9,6 +9,7 @@ using System.Fabric.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.ServiceFabric.Diagnostics.Metrics;
 using Microsoft.ServiceFabric.FabricTransport.V2.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.FabricTransport.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
@@ -130,7 +131,8 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
                 serializersManager,
                 new ExceptionSerializer(svcExceptionConvertors, remotingSettings),
                 serviceContext.PartitionId,
-                serviceContext.ReplicaOrInstanceId);
+                serviceContext.ReplicaOrInstanceId,
+                new TimeSpanMeterProvider(serviceContext));
 
             this.fabricTransportlistener = new FabricTransportListener(
                 remotingSettings.GetInternalSettings(),
