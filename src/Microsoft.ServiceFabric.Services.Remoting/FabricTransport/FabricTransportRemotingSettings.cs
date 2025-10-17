@@ -9,7 +9,8 @@ namespace Microsoft.ServiceFabric.Services.Remoting.FabricTransport
     using System.Fabric;
     using System.Fabric.Common;
     using Microsoft.ServiceFabric.FabricTransport;
-    using Constants = Microsoft.ServiceFabric.Services.Remoting.V2.Constants;
+    using Microsoft.ServiceFabric.Services.Remoting.V2.Client;
+    using Constants = V2.Constants;
 
     /// <summary>
     /// Represents a settings that configures the  FabricTransport communication.
@@ -62,7 +63,7 @@ namespace Microsoft.ServiceFabric.Services.Remoting.FabricTransport
         }
 
         /// <summary>
-        /// Gets or sets the exception deserialization techinique to use.
+        /// Gets or sets the exception deserialization technique to use.
         /// </summary>
         [Obsolete(DeprecationMessage.RemotingV1)]
         public ExceptionDeserialization ExceptionDeserializationTechnique { get; set; }
@@ -84,7 +85,7 @@ namespace Microsoft.ServiceFabric.Services.Remoting.FabricTransport
         /// </summary>
         /// <value>The KeepAliveTimeout as <see cref="System.TimeSpan"/>.</value>
         /// <remarks>Default Value for KeepAliveTimeout Timeout is set as TimeSpan.Zero. which indicates we disable the tcp keepalive option.
-        /// If you are using loadbalancer , you may need to configure this in order to avoid  the loadbalancer to close the connection after certain time. </remarks>
+        /// If you are using loadbalancer, you may need to configure this in order to avoid  the loadbalancer to close the connection after certain time. </remarks>
         public TimeSpan KeepAliveTimeout
         {
             get { return this.fabricTransportSettings.KeepAliveTimeout; }

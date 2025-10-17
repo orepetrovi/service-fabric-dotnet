@@ -31,7 +31,7 @@ namespace Microsoft.ServiceFabric.Services.Remoting.Tests.V2.ExceptionConvertors
            {
                 new Remoting.V2.Runtime.FabricExceptionConvertor(),
                 new Remoting.V2.Runtime.SystemExceptionConvertor(),
-                new Remoting.V2.Runtime.ExceptionConversionHandler.DefaultExceptionConvertor(),
+                new Remoting.V2.Runtime.DefaultExceptionConvertor(),
            };
 
         private static Remoting.V2.Runtime.ExceptionConversionHandler runtimeHandler
@@ -104,6 +104,7 @@ namespace Microsoft.ServiceFabric.Services.Remoting.Tests.V2.ExceptionConvertors
             new AbandonedMutexException("AbandonedMutexException"),
             new SemaphoreFullException("SemaphoreFullException"),
             new SynchronizationLockException("SynchronizationLockException"),
+            new TaskCanceledException("TaskCanceledException"),
             new ThreadInterruptedException("ThreadInterruptedException"),
             new ThreadStateException("ThreadStateException"),
             new TimeoutException("TimeoutException"),
