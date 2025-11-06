@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Remoting.V2.Builder;
 using Microsoft.ServiceFabric.Actors.Runtime;
+using Microsoft.ServiceFabric.Diagnostics;
 using Microsoft.ServiceFabric.Diagnostics.Tracing;
 using Microsoft.ServiceFabric.Services;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
@@ -25,9 +26,10 @@ namespace Microsoft.ServiceFabric.Actors.Remoting.V2.Runtime
     /// </summary>
     public class ActorServiceRemotingDispatcher : ServiceRemotingMessageDispatcher
     {
-        private static readonly string TraceType = typeof(ActorServiceRemotingDispatcher).Name;
-        private readonly ActorService actorService;
-        private readonly ServiceRemotingCancellationHelper cancellationHelper;
+        static readonly string TraceType = typeof(ActorServiceRemotingDispatcher).Name;
+        readonly ActorService actorService;
+        readonly ServiceRemotingCancellationHelper cancellationHelper;
+        readonly IClock clock;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActorServiceRemotingDispatcher"/> class. This can dispatch messages to an actor service and
@@ -45,6 +47,7 @@ namespace Microsoft.ServiceFabric.Actors.Remoting.V2.Runtime
         {
             this.actorService = actorService;
             this.cancellationHelper = new ServiceRemotingCancellationHelper(actorService.Context.TraceId);
+            this.clock = new SystemClock();
         }
 
         /// <summary>
@@ -117,9 +120,9 @@ namespace Microsoft.ServiceFabric.Actors.Remoting.V2.Runtime
             IServiceRemotingRequestMessageBody msgBody,
             CancellationToken cancellationToken)
         {
-            var startTime = DateTime.UtcNow;
+            DateTime startTime = clock.UtcNow;
             IServiceRemotingResponseMessageBody retVal;
-            this.actorService.ActorManager.DiagnosticsEventManager.ActorRequestProcessingStart();
+            this.actorService.ActorManager.DiagnosticsEvents.ActorRequestProcessingStart();
             try
             {
                 retVal = await this.OnDispatch(
@@ -129,7 +132,7 @@ namespace Microsoft.ServiceFabric.Actors.Remoting.V2.Runtime
             }
             finally
             {
-                this.actorService.ActorManager.DiagnosticsEventManager.ActorRequestProcessingFinish(startTime);
+                this.actorService.ActorManager.DiagnosticsEvents.ActorRequestProcessingFinish(startTime);
             }
 
             return retVal;
@@ -146,7 +149,7 @@ namespace Microsoft.ServiceFabric.Actors.Remoting.V2.Runtime
                 messageHeaders.ActorId,
                 messageHeaders.MethodName,
                 isCancellationRequested);
-            var startTime = DateTime.UtcNow;
+            DateTime startTime = clock.UtcNow;
             if (isCancellationRequested)
             {
                 await this.cancellationHelper.CancelRequestAsync(
@@ -158,7 +161,7 @@ namespace Microsoft.ServiceFabric.Actors.Remoting.V2.Runtime
             else
             {
                 IServiceRemotingResponseMessageBody retVal;
-                this.actorService.ActorManager.DiagnosticsEventManager.ActorRequestProcessingStart();
+                this.actorService.ActorManager.DiagnosticsEvents.ActorRequestProcessingStart();
 
                 var methodDispatcher = this.actorService.MethodDispatcherMapV2.GetDispatcher(messageHeaders.InterfaceId, messageHeaders.MethodId);
 
@@ -183,7 +186,7 @@ namespace Microsoft.ServiceFabric.Actors.Remoting.V2.Runtime
                 }
                 finally
                 {
-                    this.actorService.ActorManager.DiagnosticsEventManager.ActorRequestProcessingFinish(startTime);
+                    this.actorService.ActorManager.DiagnosticsEvents.ActorRequestProcessingFinish(startTime);
                 }
 
                 // We are creating empty response headers so that ServiceRemotingServiceEvents can add headers if they needed.

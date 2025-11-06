@@ -3,7 +3,7 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
-namespace Microsoft.ServiceFabric.Actors.Diagnostics
+namespace Microsoft.ServiceFabric.Actors.Diagnostics.PerformanceCounters
 {
     using System.Fabric.Common;
 
@@ -11,6 +11,8 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
     // frequency at which a particular actor method is invoked.
     internal class ActorMethodFrequencyCounterWriter : FabricBaselessPerformanceCounterWriter
     {
+        protected ActorMethodFrequencyCounterWriter() { }
+
         internal ActorMethodFrequencyCounterWriter(FabricPerformanceCounterSetInstance counterSetInstance)
             : base(
                 counterSetInstance,
@@ -18,7 +20,7 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
         {
         }
 
-        internal void UpdateCounterValue()
+        internal virtual void UpdateCounterValue()
         {
             this.Counter.Increment();
         }

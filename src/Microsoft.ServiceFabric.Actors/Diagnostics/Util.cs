@@ -5,11 +5,13 @@
 
 namespace Microsoft.ServiceFabric.Actors.Diagnostics
 {
-    using System.Fabric;
-
-    internal struct ChangeRoleDiagnosticData
+    internal class Util
     {
-        internal ReplicaRole CurrentRole;
-        internal ReplicaRole NewRole;
+        public static long GetInterfaceMethodKey(uint interfaceId, uint methodId)
+        {
+            var key = (ulong)methodId;
+            key = key | (ulong)interfaceId << 32;
+            return (long)key;
+        }
     }
 }

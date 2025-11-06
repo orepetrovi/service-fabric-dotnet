@@ -3,7 +3,7 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
-namespace Microsoft.ServiceFabric.Actors.Diagnostics
+namespace Microsoft.ServiceFabric.Actors.Diagnostics.PerformanceCounters
 {
     using System.Fabric.Common;
 
@@ -11,6 +11,8 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
     // number of pending actor calls that are waiting for the actor lock.
     internal class ActorLockContentionCounterWriter : FabricBaselessPerformanceCounterWriter
     {
+        protected ActorLockContentionCounterWriter() { }
+
         internal ActorLockContentionCounterWriter(FabricPerformanceCounterSetInstance counterSetInstance)
             : base(
                 counterSetInstance,
@@ -18,7 +20,7 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
         {
         }
 
-        internal void UpdateCounterValue(PendingActorMethodDiagnosticData pendingMethodData)
+        internal virtual void UpdateCounterValue(PendingActorMethodDiagnosticData pendingMethodData)
         {
             var delta = pendingMethodData.PendingActorMethodCallsDelta;
             if (delta != 0)

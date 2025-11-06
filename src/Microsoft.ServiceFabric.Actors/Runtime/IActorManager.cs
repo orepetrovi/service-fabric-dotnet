@@ -34,10 +34,7 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
         /// </summary>
         bool HasRemindersLoaded { get; }
 
-        /// <summary>
-        /// Gets the DiagnosticsEventManager isntance.
-        /// </summary>
-        DiagnosticsEventManager DiagnosticsEventManager { get; }
+        IDiagnostics DiagnosticsEvents { get; }
 
         #region Actor Manager Life Cycle
 

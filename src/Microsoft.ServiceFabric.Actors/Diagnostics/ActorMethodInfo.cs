@@ -5,9 +5,15 @@
 
 namespace Microsoft.ServiceFabric.Actors.Diagnostics
 {
-    internal struct ActivationDiagnosticData
+    sealed class ActorMethodInfo
     {
-        internal bool IsActivationEvent;
-        internal ActorId ActorId;
+        internal readonly string methodName;
+        internal readonly string methodSignature;
+
+        internal ActorMethodInfo(string methodName, string methodSignature)
+        {
+            this.methodName = methodName;
+            this.methodSignature = methodSignature;
+        }
     }
 }
