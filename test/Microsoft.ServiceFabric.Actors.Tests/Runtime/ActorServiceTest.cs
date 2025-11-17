@@ -7,6 +7,7 @@ using System;
 using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
+using Fuzzy;
 using Inspector;
 using Microsoft.ServiceFabric.Actors.Diagnostics;
 using Microsoft.ServiceFabric.Actors.Tests;
@@ -18,6 +19,8 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
 {
     public class ActorServiceTest
     {
+        static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
         readonly ActorService actorService = TestMocksRepository.GetActorService<TestActor>();
 
         public ActorServiceTest()
@@ -25,29 +28,62 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
             actorService.InitializeInternal(new ActorMethodFriendlyNameBuilder(actorService.ActorTypeInformation));
         }
 
-        public class OnRoleChange : ActorServiceTest, IDisposable
+        public class Diagnostics : ActorServiceTest, IDisposable
         {
-            readonly IDiagnostics diagnosticEvents = Mock.Of<IDiagnostics>();
+            readonly Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory> createDiagnosticsFactory;
+            readonly Mock<Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory>> mockCreateDiagnosticsFactory = new Mock<Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory>>();
+            readonly DiagnosticsFactory diagnosticsFactory;
 
-            readonly Func<ReplicaRole, CancellationToken, Task> sutMethod;
-            readonly Func<ActorService, IClock, PerformanceCounterProviderV2, IDiagnostics> createDiagnosticEvents;
+            readonly StatefulServiceContext serviceContext = fuzzy.StatefulServiceContext();
+            readonly ActorTypeInformation typeInformation = ActorTypeInformation.Get(typeof(TestActor));
 
-            public OnRoleChange()
+            readonly ActorService sut;
+
+            public Diagnostics()
             {
-                sutMethod = actorService.DeclaredBy(typeof(ActorService)).Method<Func<ReplicaRole, CancellationToken, Task>>("OnChangeRoleAsync");
+                diagnosticsFactory = new Mock<DiagnosticsFactory>(serviceContext, typeInformation, new ActorMethodFriendlyNameBuilder(typeInformation)).Object;
 
-                // store createDiagnosticEvents function in order to restore it in Dispose()
-                createDiagnosticEvents = typeof(ActorManager).Field<Func<ActorService, IClock, PerformanceCounterProviderV2, IDiagnostics>>().Value;
-                typeof(ActorManager).Field<Func<ActorService, IClock, PerformanceCounterProviderV2, IDiagnostics>>().Set((actorService, clock, performanceCounterProvider) => diagnosticEvents);
+                this.createDiagnosticsFactory = typeof(ActorService).Field<Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory>>().Value;
+                typeof(ActorService).Field<Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory>>().Set(mockCreateDiagnosticsFactory.Object);
+                mockCreateDiagnosticsFactory.Setup(_ => _.Invoke(It.IsAny<ServiceContext>(), It.IsAny<ActorTypeInformation>(), It.IsAny<ActorMethodFriendlyNameBuilder>())).Returns(diagnosticsFactory);
 
-                var actorManager = new ActorManager(actorService);
-                actorService.Field<ActorManagerAdapter>().Value.ActorManager = actorManager;
+                sut = new ActorService(serviceContext, typeInformation);
             }
 
             public void Dispose()
             {
-                // restore createDiagnosticEvents function
-                typeof(ActorManager).Field<Func<ActorService, IClock, PerformanceCounterProviderV2, IDiagnostics>>().Set(createDiagnosticEvents);
+                typeof(ActorService).Field<Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory>>().Set(this.createDiagnosticsFactory);
+            }
+
+            [Fact]
+            public void IsCreatedByConstructor()
+            {
+                mockCreateDiagnosticsFactory.Verify(d => d.Invoke(It.Is<ServiceContext>(c => c == serviceContext), It.Is<ActorTypeInformation>(i => i == typeInformation), It.IsAny<ActorMethodFriendlyNameBuilder>()), Times.Once);
+                Mock.Get(diagnosticsFactory).Verify(d => d.CreateDiagnostics(It.IsAny<IClock>()), Times.Once);
+            }
+
+            [Fact]
+            public void IsDisposedByOnCloseAsync()
+            {
+                sut.DeclaredBy(typeof(ActorService)).Method<Func<CancellationToken, Task>>("OnCloseAsync").Invoke(TestContext.Current.CancellationToken);
+
+                Mock.Get(diagnosticsFactory).Verify(d => d.Dispose(), Times.Once);
+            }
+        }
+
+        public class OnRoleChange : ActorServiceTest
+        {
+            readonly IDiagnostics diagnostics = Mock.Of<IDiagnostics>();
+
+            readonly Func<ReplicaRole, CancellationToken, Task> sutMethod;
+
+            public OnRoleChange()
+            {
+                actorService.Field<IDiagnostics>().Set(diagnostics);
+                sutMethod = actorService.DeclaredBy(typeof(ActorService)).Method<Func<ReplicaRole, CancellationToken, Task>>("OnChangeRoleAsync");
+
+                var actorManager = new ActorManager(actorService, Mock.Of<IClock>(), diagnostics);
+                actorService.Field<ActorManagerAdapter>().Value.ActorManager = actorManager;
             }
 
             [Fact]
@@ -55,7 +91,7 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
             {
                 sutMethod.Invoke(ReplicaRole.Primary, TestContext.Current.CancellationToken);
 
-                Mock.Get(diagnosticEvents).Verify(d => d.ActorChangeRole(It.IsAny<ReplicaRole>(), ReplicaRole.Primary), Times.Once);
+                Mock.Get(diagnostics).Verify(d => d.ActorChangeRole(It.IsAny<ReplicaRole>(), ReplicaRole.Primary), Times.Once);
             }
 
             [Fact]
@@ -63,7 +99,7 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
             {
                 sutMethod.Invoke(ReplicaRole.IdleSecondary, TestContext.Current.CancellationToken);
 
-                Mock.Get(diagnosticEvents).Verify(d => d.ActorChangeRole(It.IsAny<ReplicaRole>(), ReplicaRole.IdleSecondary), Times.Once);
+                Mock.Get(diagnostics).Verify(d => d.ActorChangeRole(It.IsAny<ReplicaRole>(), ReplicaRole.IdleSecondary), Times.Once);
             }
         }
     }

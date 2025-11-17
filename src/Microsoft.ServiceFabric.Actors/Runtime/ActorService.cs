@@ -40,7 +40,15 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
         ActorMethodFriendlyNameBuilder methodFriendlyNameBuilder;
         ReplicaRole replicaRole;
         Remoting.V2.Runtime.ActorMethodDispatcherMap methodDispatcherMapV2;
+
         readonly IClock clock = new SystemClock();
+        readonly IDiagnostics diagnostics;
+        readonly DiagnosticsFactory diagnosticsFactory;
+
+        static Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory> createDiagnosticFactory = (serviceContext, actorTypeInformation, methodNameBuilder) =>
+        {
+            return new DiagnosticsFactory(serviceContext, actorTypeInformation, methodNameBuilder);
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActorService"/> class.
@@ -72,6 +80,9 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
             this.actorManagerAdapter = new ActorManagerAdapter { ActorManager = new MockActorManager(this) };
             this.replicaRole = ReplicaRole.Unknown;
             this.methodFriendlyNameBuilder = new ActorMethodFriendlyNameBuilder(actorTypeInformation);
+
+            this.diagnosticsFactory = createDiagnosticFactory(context, actorTypeInfo, methodFriendlyNameBuilder);
+            this.diagnostics = this.diagnosticsFactory.CreateDiagnostics(clock);
 
             ActorTelemetry.ActorServiceInitializeEvent(
                 this.ActorManager.ActorService.Context,
@@ -132,6 +143,16 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
         internal IActorManager ActorManager
         {
             get { return this.actorManagerAdapter.ActorManager; }
+        }
+
+        internal IClock Clock
+        {
+            get { return this.clock; }
+        }
+
+        internal IDiagnostics Diagnostics
+        {
+            get { return this.diagnostics; }
         }
 
         #region IActorService Members
@@ -296,17 +317,13 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
 
             if (newRole == ReplicaRole.Primary)
             {
-                this.actorManagerAdapter.ActorManager = new ActorManager(this);
+                this.actorManagerAdapter.ActorManager = new ActorManager(this, clock, diagnostics);
                 await this.actorManagerAdapter.OpenAsync(this.Partition, cancellationToken);
-                this.ActorManager.DiagnosticsEvents.ActorChangeRole(this.replicaRole, newRole);
+                this.diagnostics.ActorChangeRole(this.replicaRole, newRole);
             }
             else
             {
-                if ((this.ActorManager != null) && (this.ActorManager.DiagnosticsEvents != null))
-                {
-                    this.ActorManager.DiagnosticsEvents.ActorChangeRole(this.replicaRole, newRole);
-                }
-
+                this.diagnostics.ActorChangeRole(this.replicaRole, newRole);
                 await this.actorManagerAdapter.CloseAsync(cancellationToken);
             }
 
@@ -331,6 +348,7 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
             ActorTelemetry.ActorServiceReplicaCloseEvent(this.ActorManager.ActorService.Context);
 
             await this.actorManagerAdapter.CloseAsync(cancellationToken);
+            this.diagnosticsFactory.Dispose();
 
             ActorTrace.Source.WriteInfoWithId(TraceType, this.Context.TraceId, "End close.");
         }
@@ -350,7 +368,7 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
             ActorBase actorBase,
             IActorStateProvider actorStateProvider)
         {
-            return new ActorStateManager(actorBase, actorStateProvider, actorBase.Manager.DiagnosticsEvents);
+            return new ActorStateManager(actorBase, actorStateProvider, actorBase.ActorService.Diagnostics, actorBase.ActorService.Clock);
         }
 
         private ActorBase DefaultActorFactory(ActorService actorService, ActorId actorId)
