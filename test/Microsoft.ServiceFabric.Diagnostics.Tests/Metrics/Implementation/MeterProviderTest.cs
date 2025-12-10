@@ -59,8 +59,8 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             {
                 var sut = new TestMeterProvider<int>(null);
 
-                var actualSystemDimensionNames = (string[])sut.Private().Field<IEnumerable<string>>().Value;
-                var actualSystemDimensionValues = (string[])sut.Protected().Field<IEnumerable<string>>().Value;
+                var actualSystemDimensionNames = sut.Private().Field<IEnumerable<string>>().Value;
+                var actualSystemDimensionValues = sut.Protected().Field<IEnumerable<string>>().Value;
 
                 Assert.Empty(actualSystemDimensionValues);
                 Assert.Empty(actualSystemDimensionNames);
