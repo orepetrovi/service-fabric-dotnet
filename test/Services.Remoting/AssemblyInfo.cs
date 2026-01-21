@@ -3,13 +3,17 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
-using static Microsoft.ServiceFabric.Constants.AssemblyInfo;
 using System.Runtime.CompilerServices;
 using Xunit;
+using static Microsoft.ServiceFabric.Constants.AssemblyInfo;
 
 // This attribute is used to run tests in the same assembly in sequence.
 // It is necessary for ServiceRemotingProviderAttributeTest suit to run properly,
 // because ServiceRemotingProviderAttribute has static state and cannot be teste in parallel.
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
-[assembly: InternalsVisibleTo(DynamicProxyGenAssembly2)]
 [assembly: CaptureConsole]
+
+// Mock calls to FabricTelemetry.dll to prevent failures relating to this
+[assembly: AssemblyFixture(typeof(Microsoft.ServiceFabric.TestFramework.TelemetryApiFixture))]
+
+[assembly: InternalsVisibleTo(DynamicProxyGenAssembly2)]
