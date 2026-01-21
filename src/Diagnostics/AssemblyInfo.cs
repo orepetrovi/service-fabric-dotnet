@@ -27,11 +27,12 @@ using static Microsoft.ServiceFabric.Constants.AssemblyInfo;
 [assembly: InternalsVisibleTo("AzureFilesVolumePluginSetup" + PublicKey)]
 [assembly: InternalsVisibleTo("SFVolumeDiskDebugAgentCommon" + PublicKey)]
 [assembly: InternalsVisibleTo("NodeAgentServiceSetup" + PublicKey)]
-[assembly: InternalsVisibleTo("Microsoft.ServiceFabric.Diagnostics.Tests" + PublicKey)]
+[assembly: InternalsVisibleTo("Microsoft.ServiceFabric.Actors.IntegrationTests" + PublicKey)]
 [assembly: InternalsVisibleTo("Microsoft.ServiceFabric.Actors.Tests" + PublicKey)]
+[assembly: InternalsVisibleTo("Microsoft.ServiceFabric.Diagnostics.Tests" + PublicKey)]
+[assembly: InternalsVisibleTo("Microsoft.ServiceFabric.Services.Remoting.Tests" + PublicKey)]
 [assembly: InternalsVisibleTo("Microsoft.ServiceFabric.Services.Tests" + PublicKey)]
 [assembly: InternalsVisibleTo("Microsoft.ServiceFabric.TestFramework" + PublicKey)]
-[assembly: InternalsVisibleTo("Microsoft.ServiceFabric.Services.Remoting.Tests" + PublicKey)]
 [assembly: InternalsVisibleTo(DynamicProxyGenAssembly2)]
 
 // Making internals visible for assemblies using Metrics
