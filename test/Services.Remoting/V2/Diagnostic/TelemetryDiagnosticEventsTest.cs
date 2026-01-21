@@ -14,7 +14,7 @@ using IClock = Microsoft.ServiceFabric.Diagnostics.IClock;
 
 namespace Microsoft.ServiceFabric.Services.Remoting.V2.Diagnostic
 {
-    public class TelemetryDiagnosticEventsTest : MockedMetricsTest
+    public class TelemetryDiagnosticEventsTest
     {
         static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
