@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.Actors.Runtime
 {
-    public class ActorConcurrencyLockTests : MockedMetricsTest
+    public class ActorConcurrencyLockTests
     {
         private static string currentContext = Guid.Empty.ToString();
 

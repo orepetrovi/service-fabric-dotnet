@@ -17,7 +17,7 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.Actors.Runtime
 {
-    public class ActorServiceTest : MockedMetricsTest
+    public class ActorServiceTest
     {
         static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 

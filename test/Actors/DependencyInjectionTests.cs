@@ -15,7 +15,7 @@ namespace Microsoft.ServiceFabric.Actors.Tests
     using Microsoft.ServiceFabric.TestFramework;
     using Xunit;
 
-    public class DependencyInjectionTests : MockedMetricsTest
+    public class DependencyInjectionTests
     {
         public interface IMockActor : IActor
         {

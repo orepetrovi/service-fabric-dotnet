@@ -18,7 +18,7 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.Actors.Diagnostics
 {
-    public class DiagnosticsFactoryTest : MockedMetricsTest
+    public class DiagnosticsFactoryTest
     {
         static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
