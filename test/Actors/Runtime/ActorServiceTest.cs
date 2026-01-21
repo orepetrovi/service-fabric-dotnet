@@ -17,7 +17,7 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.Actors.Runtime
 {
-    public class ActorServiceTest
+    public class ActorServiceTest : IDisposable
     {
         static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
@@ -41,9 +41,8 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
             sut.InitializeInternal(new ActorMethodFriendlyNameBuilder(sut.ActorTypeInformation));
         }
 
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
             typeof(ActorService).Field<Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory>>().Set(this.createDiagnosticsFactory);
         }
 
