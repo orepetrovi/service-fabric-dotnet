@@ -4,12 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Fuzzy;
 using Microsoft.ServiceFabric.Actors.Runtime;
-using Microsoft.ServiceFabric.TestFramework;
 using Xunit;
 
 namespace Microsoft.ServiceFabric.Actors.ActorIntegrationTests;
 
-public class RegisterReminderAsync : MockedMetricsTest
+public class RegisterReminderAsync
 {
     public class WithNewReminderName : RegisterReminderAsync
     {
