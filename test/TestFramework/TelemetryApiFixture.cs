@@ -10,9 +10,7 @@ using Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation;
 using Moq;
 using Xunit;
 
-[assembly: AssemblyFixture(typeof(Microsoft.ServiceFabric.Actors.IntegrationTests.TelemetryApiFixture))]
-
-namespace Microsoft.ServiceFabric.Actors.IntegrationTests
+namespace Microsoft.ServiceFabric.TestFramework
 {
     public class TelemetryApiFixture : IAsyncLifetime
     {

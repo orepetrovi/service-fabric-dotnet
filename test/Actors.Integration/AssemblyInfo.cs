@@ -8,3 +8,6 @@ using Xunit;
 // Run tests sequentially to prevent failures in tests that depend on global state.
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 [assembly: CaptureConsole]
+
+// Mock calls to FabricTelemetry.dll to prevent failures relating to this
+[assembly: AssemblyFixture(typeof(Microsoft.ServiceFabric.Actors.IntegrationTests.TelemetryApiFixture))]
