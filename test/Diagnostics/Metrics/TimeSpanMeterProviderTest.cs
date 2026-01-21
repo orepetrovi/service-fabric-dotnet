@@ -10,7 +10,6 @@ using System.Linq;
 using Fuzzy;
 using Inspector;
 using Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation;
-using Microsoft.ServiceFabric.TestFramework;
 using Moq;
 using Xunit;
 
