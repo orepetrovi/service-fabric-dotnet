@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.Actors.Runtime
 {
-    public class ActorStateManagerTest : MockedMetricsTest
+    public class ActorStateManagerTest
     {
         readonly static IFuzz fuzzy = new RandomFuzz();
 

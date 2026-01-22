@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 using Fuzzy;
 using Microsoft.ServiceFabric.Actors.Query;
 using Microsoft.ServiceFabric.Actors.Runtime;
-using Microsoft.ServiceFabric.TestFramework;
 using Moq;
 using Xunit;
 using Xunit.Internal;
 
 namespace Microsoft.ServiceFabric.Actors.ActorServiceIntegrationTests
 {
-    public class GetRemindersAsync : MockedMetricsTest
+    public class GetRemindersAsync
     {
         static readonly IFuzz fuzzy = new RandomFuzz();
 

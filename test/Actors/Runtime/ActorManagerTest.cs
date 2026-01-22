@@ -17,7 +17,7 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.Actors.Runtime
 {
-    public class ActorManagerTest : MockedMetricsTest
+    public class ActorManagerTest
     {
         internal const int RemainderCount = 10;
         internal readonly ActorId actorId;

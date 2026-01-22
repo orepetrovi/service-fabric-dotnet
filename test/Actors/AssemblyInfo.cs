@@ -14,5 +14,6 @@ using static Microsoft.ServiceFabric.Constants.AssemblyInfo;
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 [assembly: CaptureConsole]
 
-// Used to test mocks
+[assembly: AssemblyFixture(typeof(Microsoft.ServiceFabric.TestFramework.FabricTelemetryDllFixture))]
+
 [assembly: InternalsVisibleTo(DynamicProxyGenAssembly2)]

@@ -19,7 +19,7 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.Actors
 {
-    public class ActorServiceRemotingDispatcherTest : MockedMetricsTest
+    public class ActorServiceRemotingDispatcherTest
     {
         readonly internal ActorServiceRemotingDispatcher sut;
 

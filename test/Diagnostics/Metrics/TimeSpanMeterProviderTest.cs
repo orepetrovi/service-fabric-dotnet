@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics
 {
-    public class TimeSpanMeterProviderTest : MockedMetricsTest
+    public class TimeSpanMeterProviderTest : FabricTelemetryDllFixture
     {
         static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
