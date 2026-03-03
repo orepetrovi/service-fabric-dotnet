@@ -17,8 +17,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             RuntimeContext runtimeContext,
             Func<StatelessServiceContext, StatelessService> serviceFactory)
         {
-            this.runtimeContext = runtimeContext;
-            this.serviceFactory = serviceFactory;
+            this.runtimeContext = runtimeContext ?? throw new ArgumentNullException(nameof(runtimeContext));
+            this.serviceFactory = serviceFactory ?? throw new ArgumentNullException(nameof(serviceFactory));
         }
 
         IStatelessServiceInstance IStatelessServiceFactory.CreateInstance(
@@ -37,13 +37,13 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 partitionId,
                 instanceId);
 
-            var service = this.serviceFactory(instanceContext);
+            StatelessService service = this.serviceFactory(instanceContext) ?? throw new InvalidOperationException($"{nameof(serviceFactory)} return null");
             return new StatelessServiceInstanceAdapter(service.Context, service);
         }
 
         public void Dispose()
         {
-            this.runtimeContext?.Dispose();
+            this.runtimeContext.Dispose();
         }
     }
 }

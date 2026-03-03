@@ -17,8 +17,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             RuntimeContext runtimeContext,
             Func<StatefulServiceContext, StatefulServiceBase> serviceFactory)
         {
-            this.serviceFactory = serviceFactory;
-            this.runtimeContext = runtimeContext;
+            this.serviceFactory = serviceFactory ?? throw new ArgumentNullException(nameof(serviceFactory));
+            this.runtimeContext = runtimeContext ?? throw new ArgumentNullException(nameof(runtimeContext));
         }
 
         IStatefulServiceReplica IStatefulServiceFactory.CreateReplica(
@@ -37,13 +37,13 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 partitionId,
                 replicaId);
 
-            var service = this.serviceFactory(serviceContext);
+            StatefulServiceBase service = this.serviceFactory(serviceContext) ?? throw new InvalidOperationException($"{nameof(serviceFactory)} returned null");
             return new StatefulServiceReplicaAdapter(service.Context, service);
         }
 
         public void Dispose()
         {
-            this.runtimeContext?.Dispose();
+            this.runtimeContext.Dispose();
         }
     }
 }
