@@ -93,7 +93,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             return sharedContext;
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             this.Runtime?.Dispose();
             this.CodePackageContext?.Dispose();
