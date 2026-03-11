@@ -9,9 +9,9 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 {
     sealed class Int64Meter : Meter, IMeter<long>
     {
-        internal Int64Meter(IFabricMeter fabricMeter, IEnumerable<string> systemDimensionValues) : base(fabricMeter, systemDimensionValues) { }
+        internal Int64Meter(IFabricMeter fabricMeter, IReadOnlyCollection<string> systemDimensionValues) : base(fabricMeter, systemDimensionValues) { }
 
-        public void Record(long value)
+        void IMeter<long>.Record(long value)
         {
             base.Record(value);
         }

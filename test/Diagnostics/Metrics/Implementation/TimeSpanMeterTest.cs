@@ -32,7 +32,7 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             {
                 var meter = (Meter)sut;
                 Assert.Same(fabricMeter, meter.Field<IFabricMeter>().Value);
-                Assert.Equal(systemDimensions, meter.Field<string[]>().Value);
+                Assert.Equal(systemDimensions, meter.Field<IReadOnlyCollection<string>>().Value);
             }
         }
 
@@ -41,20 +41,27 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             readonly TimeSpan value = fuzzy.TimeSpan();
             readonly long longValue;
 
-            readonly Action<long, int, string, string, string> mockRecordAction = Mock.Of<Action<long, int, string, string, string>>();
+            protected string[] actualDimensions;
 
             public Record()
             {
-                sut.Private().Field<Action<long, int, string, string, string>>().Set(mockRecordAction);
+                // capture strings emitted to IFabricMeter.Record for assertion in tests
+                Mock.Get(fabricMeter)
+                    .Setup(m => m.Record(It.IsAny<long>(), It.IsAny<uint>(), It.IsAny<IntPtr>()))
+                    .Callback<long, uint, IntPtr>((value, count, stringPtrs) => actualDimensions = Util.CaptureStringPointers(stringPtrs, count));
+
                 longValue = (long)Math.Round(value.TotalMilliseconds);
             }
 
             [Fact]
-            public void InvokesBaseRecord()
+            public void CallsFabricMeterWithCombinedDimensions()
             {
+                string[] expectedArray = systemDimensions.ToArray();
+
                 sut.Record(value);
 
-                Mock.Get(mockRecordAction).Verify(m => m.Invoke(longValue, 0, null, null, null), Times.Once);
+                Mock.Get(fabricMeter).Verify(m => m.Record(longValue, (uint)expectedArray.Length, It.IsAny<IntPtr>()), Times.Once);
+                Assert.Equal(expectedArray, actualDimensions);
             }
         }
     }

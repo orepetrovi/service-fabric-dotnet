@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Fuzzy;
 using Inspector;
 using Moq;
@@ -13,39 +14,45 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 {
-    public abstract class Int64Meter1DTest
+    public abstract class Meter1DTest
     {
-        readonly IMeter1D<long> sut;
+        static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-        // Constructor parameters
         readonly IFabricMeter fabricMeter = Mock.Of<IFabricMeter>();
         readonly List<string> systemDimensions = fuzzy.List(() => fuzzy.String());
 
-        // Test fixture
-        static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-
-        public Int64Meter1DTest() => sut = new Int64Meter1D(fabricMeter, systemDimensions);
-
-        public class Class : Int64Meter1DTest
+        public class Constructor : Meter1DTest
         {
             [Fact]
-            public void InvokesBaseWithGivenArguments()
+            public void ThrowsArgumentNullExceptionWhenMeterIsNull()
             {
-                var meter = (Meter)sut;
-                Assert.Same(fabricMeter, meter.Field<IFabricMeter>().Value);
-                Assert.Equal(systemDimensions, meter.Field<IReadOnlyCollection<string>>().Value);
+                var exception = Assert.Throws<TargetInvocationException>(() => new Mock<Meter1D>(null, systemDimensions).Object);
+                Assert.IsType<ArgumentNullException>(exception.InnerException);
+            }
+
+            [Fact]
+            public void ThrowsArgumentNullExceptionWhenSystemDimensionsAreNull()
+            {
+                var exception = Assert.Throws<TargetInvocationException>(() => new Mock<Meter1D>(fabricMeter, null).Object);
+                Assert.IsType<ArgumentNullException>(exception.InnerException);
             }
         }
 
-        public class Record : Int64Meter1DTest
+        public class Record : Meter1DTest
         {
+            readonly Meter sut;
+
+            readonly Method<Action<long, string>> sutMethod;
+
+            protected string[] actualDimensions;
             readonly long value = fuzzy.Int64();
             readonly string dimension1Value = fuzzy.String();
 
-            protected string[] actualDimensions;
-
             public Record()
             {
+                sut = new Mock<Meter1D>(fabricMeter, systemDimensions).Object;
+                sutMethod = sut.Protected().Method<Action<long, string>>();
+
                 // capture strings emitted to IFabricMeter.Record for assertion in tests
                 Mock.Get(fabricMeter)
                     .Setup(m => m.Record(It.IsAny<long>(), It.IsAny<uint>(), It.IsAny<IntPtr>()))
@@ -57,10 +64,16 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             {
                 string[] expectedArray = systemDimensions.Concat(new[] { dimension1Value }).ToArray();
 
-                sut.Record(value, dimension1Value);
+                sutMethod.Invoke(value, dimension1Value);
 
                 Mock.Get(fabricMeter).Verify(m => m.Record(value, (uint)expectedArray.Length, It.IsAny<IntPtr>()), Times.Once);
                 Assert.Equal(expectedArray, actualDimensions);
+            }
+
+            [Fact]
+            public void ThrowsExceptionIfCustomDimensionIsNull()
+            {
+                Assert.Throws<ArgumentNullException>(() => sutMethod.Invoke(value, null));
             }
         }
     }

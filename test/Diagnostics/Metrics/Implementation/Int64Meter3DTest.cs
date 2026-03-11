@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Fuzzy;
 using Inspector;
 using Moq;
@@ -32,27 +33,36 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             {
                 var meter = (Meter)sut;
                 Assert.Same(fabricMeter, meter.Field<IFabricMeter>().Value);
-                Assert.Equal(systemDimensions, meter.Field<string[]>().Value);
+                Assert.Equal(systemDimensions, meter.Field<IReadOnlyCollection<string>>().Value);
             }
         }
 
         public class Record : Int64Meter3DTest
         {
             readonly long value = fuzzy.Int64();
-            readonly string customDimension1 = fuzzy.String();
-            readonly string customDimension2 = fuzzy.String();
-            readonly string customDimension3 = fuzzy.String();
+            readonly string dimension1Value = fuzzy.String();
+            readonly string dimension2Value = fuzzy.String();
+            readonly string dimension3Value = fuzzy.String();
 
-            readonly Action<long, int, string, string, string> mockRecordAction = Mock.Of<Action<long, int, string, string, string>>();
+            protected string[] actualDimensions;
 
-            public Record() => sut.Private().Field<Action<long, int, string, string, string>>().Set(mockRecordAction);
+            public Record()
+            {
+                // capture strings emitted to IFabricMeter.Record for assertion in tests
+                Mock.Get(fabricMeter)
+                    .Setup(m => m.Record(It.IsAny<long>(), It.IsAny<uint>(), It.IsAny<IntPtr>()))
+                    .Callback<long, uint, IntPtr>((value, count, stringPtrs) => actualDimensions = Util.CaptureStringPointers(stringPtrs, count));
+            }
 
             [Fact]
-            public void InvokesBaseRecord()
+            public void CallsFabricMeterWithCombinedDimensions()
             {
-                sut.Record(value, customDimension1, customDimension2, customDimension3);
+                string[] expectedArray = systemDimensions.Concat(new[] { dimension1Value, dimension2Value, dimension3Value }).ToArray();
 
-                Mock.Get(mockRecordAction).Verify(m => m.Invoke(value, 3, customDimension1, customDimension2, customDimension3), Times.Once);
+                sut.Record(value, dimension1Value, dimension2Value, dimension3Value);
+
+                Mock.Get(fabricMeter).Verify(m => m.Record(value, (uint)expectedArray.Length, It.IsAny<IntPtr>()), Times.Once);
+                Assert.Equal(expectedArray, actualDimensions);
             }
         }
     }

@@ -5,27 +5,25 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 {
     abstract class Meter
     {
-        private readonly Action<long, int, string, string, string> recordAction;
-
-        protected readonly string[] systemDimensionValues;
         protected readonly IFabricMeter fabricMeter;
 
-        internal Meter(IFabricMeter fabricMeter, IEnumerable<string> systemDimensionValues)
+        protected readonly IReadOnlyCollection<string> systemDimensionValues;
+
+        internal Meter(IFabricMeter fabricMeter, IReadOnlyCollection<string> systemDimensionValues)
         {
-            if (systemDimensionValues == null)
-            {
-                throw new ArgumentNullException(nameof(systemDimensionValues));
-            }
+            this.systemDimensionValues = systemDimensionValues ?? throw new ArgumentNullException(nameof(systemDimensionValues));
             this.fabricMeter = fabricMeter ?? throw new ArgumentNullException(nameof(fabricMeter));
-            this.systemDimensionValues = systemDimensionValues.ToArray();
-            this.recordAction = RecordViaNative;
+        }
+
+        protected void Record(long value)
+        {
+            RecordViaNative(value, 0, null, null, null);
         }
 
         protected long ConvertTimeSpanToLong(TimeSpan value)
@@ -33,70 +31,50 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             return (long)Math.Round(value.TotalMilliseconds);
         }
 
-        protected void Record(long value, int customDimensionCount = 0, string customDimension1 = null, string customDimension2 = null, string customDimension3 = null)
+        unsafe protected void RecordViaNative(long value, int customDimensionCount, string dimension1Value, string dimension2Value, string dimension3Value)
         {
             if (customDimensionCount < 0 || customDimensionCount > 3)
             {
                 throw new ArgumentOutOfRangeException(nameof(customDimensionCount));
             }
-            if (customDimension3 == null && customDimensionCount == 3)
-            {
-                throw new ArgumentException(nameof(customDimension3));
-            }
-            if (customDimension2 == null && customDimensionCount >= 2)
-            {
-                throw new ArgumentException(nameof(customDimension2));
-            }
-            if (customDimension1 == null && customDimensionCount >= 1)
-            {
-                throw new ArgumentException(nameof(customDimension1));
-            }
 
-            recordAction.Invoke(value, customDimensionCount, customDimension1, customDimension2, customDimension3);
-        }
+            int dimensionCount = systemDimensionValues.Count + customDimensionCount;
 
-        unsafe private void RecordViaNative(long value, int customDimensionCount, string customDimension1, string customDimension2, string customDimension3)
-        {
-            int totalDimensionCount = systemDimensionValues.Length + customDimensionCount;
-
-            GCHandle* allDimensionPins = stackalloc GCHandle[totalDimensionCount];
-            IntPtr* allDimensionValuesPointers = stackalloc IntPtr[totalDimensionCount];
+            GCHandle* dimensionPins = stackalloc GCHandle[dimensionCount];
+            IntPtr* dimensionValuesPointers = stackalloc IntPtr[dimensionCount];
 
             try
             {
-                for (int i = 0; i < systemDimensionValues.Length; i++)
+                int i = 0;
+                foreach (string systemDimensionValue in systemDimensionValues)
                 {
-                    allDimensionPins[i] = GCHandle.Alloc(systemDimensionValues[i], GCHandleType.Pinned);
+                    dimensionPins[i++] = GCHandle.Alloc(systemDimensionValue, GCHandleType.Pinned);
                 }
 
                 if (customDimensionCount > 0)
-                    allDimensionPins[systemDimensionValues.Length] = GCHandle.Alloc(customDimension1, GCHandleType.Pinned);
+                    dimensionPins[i++] = GCHandle.Alloc(dimension1Value, GCHandleType.Pinned);
 
                 if (customDimensionCount > 1)
-                    allDimensionPins[systemDimensionValues.Length + 1] = GCHandle.Alloc(customDimension2, GCHandleType.Pinned);
+                    dimensionPins[i++] = GCHandle.Alloc(dimension2Value, GCHandleType.Pinned);
 
                 if (customDimensionCount > 2)
-                    allDimensionPins[systemDimensionValues.Length + 2] = GCHandle.Alloc(customDimension3, GCHandleType.Pinned);
+                    dimensionPins[i++] = GCHandle.Alloc(dimension3Value, GCHandleType.Pinned);
 
 
-                for (int i = 0; i < totalDimensionCount; i++)
+                for (i = 0; i < dimensionCount; i++)
                 {
                     // for strings, AddrOfPinnedObject() returns a pointer to the first character - https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.gchandle.addrofpinnedobject
-                    allDimensionValuesPointers[i] = allDimensionPins[i].AddrOfPinnedObject();
+                    dimensionValuesPointers[i] = dimensionPins[i].AddrOfPinnedObject();
                 }
 
-                fabricMeter.Record(value, (uint)totalDimensionCount, (IntPtr)allDimensionValuesPointers);
-            }
-            catch (Exception)
-            {
-                throw;
+                fabricMeter.Record(value, (uint)dimensionCount, (IntPtr)dimensionValuesPointers);
             }
             finally
             {
-                for (int i = 0; i < totalDimensionCount; i++)
+                for (int i = 0; i < dimensionCount; i++)
                 {
-                    if (allDimensionPins[i].IsAllocated)
-                        allDimensionPins[i].Free();
+                    if (dimensionPins[i].IsAllocated)
+                        dimensionPins[i].Free();
                 }
             }
         }

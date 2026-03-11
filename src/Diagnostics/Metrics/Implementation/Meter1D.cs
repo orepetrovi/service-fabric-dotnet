@@ -3,17 +3,19 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 {
-    sealed class Int64Meter3D : Meter3D, IMeter3D<long>
+    abstract class Meter1D : Meter
     {
-        internal Int64Meter3D(IFabricMeter fabricMeter, IReadOnlyCollection<string> systemDimensionValues) : base(fabricMeter, systemDimensionValues) { }
+        internal Meter1D(IFabricMeter fabricMeter, IReadOnlyCollection<string> systemDimensionValues) : base(fabricMeter, systemDimensionValues) { }
 
-        void IMeter3D<long>.Record(long value, string dimension1, string dimension2, string dimension3)
+        protected void Record(long value, string dimension1Value)
         {
-            base.Record(value, dimension1, dimension2, dimension3);
+            _ = dimension1Value ?? throw new ArgumentNullException(nameof(dimension1Value));
+            base.RecordViaNative(value, 1, dimension1Value, null, null);
         }
     }
 }
