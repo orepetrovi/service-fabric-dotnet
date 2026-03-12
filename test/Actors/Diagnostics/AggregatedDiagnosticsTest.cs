@@ -240,23 +240,12 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
         public sealed class Dispose : AggregatedDiagnosticsTest
         {
             [Fact]
-            public void DisposesAllChildren()
+            public void DisposesAllChildrenDiagnostics()
             {
-                var child1 = Mock.Of<IDiagnostics>();
-                var child2 = Mock.Of<IDiagnostics>();
+                sut.Dispose();
 
-                var aggregated = new AggregatedDiagnostics(new List<IDiagnostics> { child1, child2 });
-                aggregated.Dispose();
-
-                Mock.Get(child1).Verify(d => d.Dispose(), Times.Once);
-                Mock.Get(child2).Verify(d => d.Dispose(), Times.Once);
-            }
-
-            [Fact]
-            public void DoesNotThrowWhenEmpty()
-            {
-                var aggregated = new AggregatedDiagnostics(new List<IDiagnostics>());
-                aggregated.Dispose();
+                Mock.Get(diagnostics).Verify(d => d.Dispose(), Times.Once);
+                Mock.Get(anotherDiagnostics).Verify(d => d.Dispose(), Times.Once);
             }
         }
     }

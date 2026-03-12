@@ -12,7 +12,6 @@ using Inspector;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Diagnostics;
 using Microsoft.ServiceFabric.Diagnostics.Metrics;
-using Microsoft.ServiceFabric.TestFramework;
 using Moq;
 using Xunit;
 
@@ -87,11 +86,18 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
         {
             readonly Guid guid = Guid.NewGuid();
             readonly Mock<PerformanceCounterProviderV2> mockPerformanceCounterProviderV2;
+            readonly Mock<IMeterProvider<TimeSpan>> mockTimeSpanProvider;
+            readonly Mock<IMeterProvider<long>> mockLongProvider;
 
             public DisposeTest()
             {
                 mockPerformanceCounterProviderV2 = new Mock<PerformanceCounterProviderV2>(guid, typeInformation);
+                mockTimeSpanProvider = new Mock<IMeterProvider<TimeSpan>>() { DefaultValue = DefaultValue.Mock };
+                mockLongProvider = new Mock<IMeterProvider<long>>() { DefaultValue = DefaultValue.Mock };
+
                 sut.Field<PerformanceCounterProviderV2>().Set(mockPerformanceCounterProviderV2.Object);
+                sut.Field<IMeterProvider<TimeSpan>>().Set(mockTimeSpanProvider.Object);
+                sut.Field<IMeterProvider<long>>().Set(mockLongProvider.Object);
             }
 
             [Fact]
@@ -105,11 +111,6 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
             [Fact]
             public void DisposesMeterProviders()
             {
-                var mockTimeSpanProvider = new Mock<IMeterProvider<TimeSpan>>() { DefaultValue = DefaultValue.Mock };
-                var mockLongProvider = new Mock<IMeterProvider<long>>() { DefaultValue = DefaultValue.Mock };
-                sut.Field<IMeterProvider<TimeSpan>>().Set(mockTimeSpanProvider.Object);
-                sut.Field<IMeterProvider<long>>().Set(mockLongProvider.Object);
-
                 sut.Dispose();
 
                 mockTimeSpanProvider.Verify(p => p.Dispose(), Times.Once);
