@@ -69,7 +69,7 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
         public void Dispose()
         {
-            if (fabricMeterProvider != null)
+            if (!disposed)
             {
                 finalReleaseComObject(fabricMeterProvider);
                 disposed = true;
