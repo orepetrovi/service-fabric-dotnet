@@ -53,7 +53,7 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             }
 
             [Fact]
-            public void ThrowAnArgumentExceptionWhenServiceContextNull()
+            public void SetsEmptyDimensionsIfNullServiceContext()
             {
                 var sut = new Mock<MeterProvider<int>>(null).Object;
 
