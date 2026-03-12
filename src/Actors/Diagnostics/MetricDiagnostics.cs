@@ -38,16 +38,16 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
             _ = typeInfo ?? throw new ArgumentNullException(nameof(typeInfo));
             this.clock = clock ?? throw new ArgumentNullException(nameof(clock));
 
-            this.pendingMethodCalls = longMeterProvider.CreateMeter(ActorMetricsNamespace, "PendingMethodCalls");
-            this.acquireLockDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "AcquireLockDuration");
-            this.releaseLockDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "ReleaseLockDuration");
-            this.methodExecutionDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "MethodExecutionDuration", "MethodName", "MethodSigniture", "Exception");
-            this.onActivateAsyncDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "OnActivateAsyncDuration");
-            this.requestProcessingDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "RequestProcessingDuration");
-            this.loadStateDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "LoadStateDuration");
-            this.saveStateDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "SaveStateDuration");
+            pendingMethodCalls = longMeterProvider.CreateMeter(ActorMetricsNamespace, "PendingMethodCalls");
+            acquireLockDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "AcquireLockDuration");
+            releaseLockDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "ReleaseLockDuration");
+            methodExecutionDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "MethodExecutionDuration", "MethodName", "MethodSigniture", "Exception");
+            onActivateAsyncDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "OnActivateAsyncDuration");
+            requestProcessingDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "RequestProcessingDuration");
+            loadStateDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "LoadStateDuration");
+            saveStateDuration = timeSpanProvider.CreateMeter(ActorMetricsNamespace, "SaveStateDuration");
 
-            this.actorMethodInfo = ActorMethodInfoUtil.BuildActorMethodInfo(nameBuilder, typeInfo);
+            actorMethodInfo = ActorMethodInfoUtil.BuildActorMethodInfo(nameBuilder, typeInfo);
         }
 
         public void AcquireActorLockFinish(PendingActorMethodDiagnosticData diagnosticData, DateTime startTime)
@@ -82,45 +82,30 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
             // Intentionally left blank, since we don't track
         }
 
-        public void ActorOnActivateAsyncFinish(DateTime startTime)
-        {
-            onActivateAsyncDuration.Record(clock.UtcNow - startTime);
-        }
+        public void ActorOnActivateAsyncFinish(DateTime startTime) => onActivateAsyncDuration.Record(clock.UtcNow - startTime);
 
         public void ActorOnActivateAsyncStart()
         {
             // Intentionally left blank, since we don't track
         }
 
-        public void ActorRequestProcessingFinish(DateTime startTime)
-        {
-            requestProcessingDuration.Record(clock.UtcNow - startTime);
-        }
+        public void ActorRequestProcessingFinish(DateTime startTime) => requestProcessingDuration.Record(clock.UtcNow - startTime);
 
         public void ActorRequestProcessingStart()
         {
             // Intentionally left blank, since we don't track
         }
 
-        public void LoadActorStateFinish(DateTime startTime)
-        {
-            loadStateDuration.Record(clock.UtcNow - startTime);
-        }
+        public void LoadActorStateFinish(DateTime startTime) => loadStateDuration.Record(clock.UtcNow - startTime);
 
         public void LoadActorStateStart()
         {
             // Intentionally left blank, since we don't track
         }
 
-        public void ReleaseActorLock(DateTime startTime)
-        {
-            releaseLockDuration.Record(clock.UtcNow - startTime);
-        }
+        public void ReleaseActorLock(DateTime startTime) => releaseLockDuration.Record(clock.UtcNow - startTime);
 
-        public void SaveActorStateFinish(ActorId actorId, DateTime startTime)
-        {
-            saveStateDuration.Record(clock.UtcNow - startTime);
-        }
+        public void SaveActorStateFinish(ActorId actorId, DateTime startTime) => saveStateDuration.Record(clock.UtcNow - startTime);
 
         public void SaveActorStateStart(ActorId actorId)
         {
