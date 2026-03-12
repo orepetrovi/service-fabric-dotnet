@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Fabric;
+using System.Fabric.Interop;
 using Fuzzy;
 using Inspector;
 using Moq;
@@ -13,31 +14,30 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 {
-    public class MeterProviderTest
+    public class MeterProviderTest : IDisposable
     {
         static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
+        readonly IMeterProvider<int> sut;
+
         readonly ServiceContext serviceContext = fuzzy.ServiceContext();
 
-        public class Constructor : MeterProviderTest, IDisposable
+        public MeterProviderTest()
         {
-            public Constructor()
-            {
-                typeof(MeterProvider<int>).Field<Func<IFabricMeterProvider>>().Set(() => Mock.Of<IFabricMeterProvider>());
-            }
+            typeof(MeterProvider<int>).Field<Func<IFabricMeterProvider>>().Set(() => Mock.Of<IFabricMeterProvider>());
+            sut = new Mock<MeterProvider<int>>(serviceContext).Object;
+        }
 
-            public void Dispose()
-            {
-                typeof(MeterProvider<int>).Field<Func<IFabricMeterProvider>>().Set(NativeTelemetry.FabricCreateMeterProvider);
-            }
+        public virtual void Dispose() => typeof(MeterProvider<int>).Field<Func<IFabricMeterProvider>>().Set(NativeTelemetry.FabricCreateMeterProvider);
+
+        public class Constructor : MeterProviderTest
+        {
 
             [Fact]
             public void SetsRequiredDimensionsFromServiceContext()
             {
-                var sut = new TestMeterProvider<int>(serviceContext);
-
-                var actualSystemDimensionNames = (string[])sut.Private().Field<IReadOnlyCollection<string>>().Value;
-                var actualSystemDimensionValues = (string[])sut.Protected().Field<IReadOnlyCollection<string>>().Value;
+                string[] actualSystemDimensionNames = (string[])sut.Private().Field<IReadOnlyCollection<string>>().Value;
+                string[] actualSystemDimensionValues = (string[])sut.Protected().Field<IReadOnlyCollection<string>>().Value;
 
                 Assert.Equal(serviceContext.PartitionId.ToString(), actualSystemDimensionValues[0]);
                 Assert.Equal(serviceContext.ServiceTypeName, actualSystemDimensionValues[1]);
@@ -55,52 +55,50 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             [Fact]
             public void ThrowAnArgumentExceptionWhenServiceContextNull()
             {
-                var sut = new TestMeterProvider<int>(null);
+                var sut = new Mock<MeterProvider<int>>(null).Object;
 
-                var actualSystemDimensionNames = sut.Private().Field<IReadOnlyCollection<string>>().Value;
-                var actualSystemDimensionValues = sut.Protected().Field<IReadOnlyCollection<string>>().Value;
+                IReadOnlyCollection<string> actualSystemDimensionNames = sut.Private().Field<IReadOnlyCollection<string>>().Value;
+                IReadOnlyCollection<string> actualSystemDimensionValues = sut.Protected().Field<IReadOnlyCollection<string>>().Value;
 
                 Assert.Empty(actualSystemDimensionValues);
                 Assert.Empty(actualSystemDimensionNames);
             }
         }
 
-        public class Class : MeterProviderTest
+        public class DisposeTest : MeterProviderTest
         {
-            [Fact]
-            public void HasFabricCreateMeterProviderFunc()
+            public DisposeTest() => typeof(MeterProvider<int>).Field<Func<object, int>>().Set(objectParam => fuzzy.Int32());
+            override public void Dispose()
             {
-                Func<IFabricMeterProvider> expected = typeof(NativeTelemetry).Method<Func<IFabricMeterProvider>>(nameof(NativeTelemetry.FabricCreateMeterProvider));
-                Func<IFabricMeterProvider> actual = typeof(MeterProvider<int>).Field<Func<IFabricMeterProvider>>();
-                Assert.Equal(expected, actual);
+                base.Dispose();
+                typeof(MeterProvider<int>).Field<Func<object, int>>().Set(Utility.FinalReleaseComObject);
+            }
+
+            [Fact]
+            public void DisposesNativeFabricMeterProvider()
+            {
+                sut.Dispose();
+
+                Assert.True(sut.Field<bool>().Value);
             }
         }
 
-        class TestMeterProvider<TValueType> : MeterProvider<TValueType>
+        public class CreateMeterProvider : DisposeTest
         {
-            public TestMeterProvider(ServiceContext serviceContext)
-                : base(serviceContext)
-            {
-            }
+            readonly Func<string, string, IEnumerable<string>, IFabricMeter> sutMethod;
 
-            public override IMeter<TValueType> CreateMeter(string metricNamespace, string name)
-            {
-                throw new NotImplementedException();
-            }
+            readonly string metricNamespace = fuzzy.String();
+            readonly string metricName = fuzzy.String();
+            readonly IEnumerable<string> dimensions = fuzzy.List(() => fuzzy.String());
 
-            public override IMeter1D<TValueType> CreateMeter(string metricNamespace, string name, string dimension1Name)
-            {
-                throw new NotImplementedException();
-            }
+            public CreateMeterProvider() => sutMethod = sut.Protected().Method<Func<string, string, IEnumerable<string>, IFabricMeter>>();
 
-            public override IMeter2D<TValueType> CreateMeter(string metricNamespace, string name, string dimension1Name, string dimension2Name)
+            [Fact]
+            public void ThrowsIfDisposed()
             {
-                throw new NotImplementedException();
-            }
+                sut.Dispose();
 
-            public override IMeter3D<TValueType> CreateMeter(string metricNamespace, string name, string dimension1Name, string dimension2Name, string dimension3Name)
-            {
-                throw new NotImplementedException();
+                Assert.Throws<ObjectDisposedException>(() => sutMethod.Invoke(metricNamespace, metricName, dimensions));
             }
         }
     }

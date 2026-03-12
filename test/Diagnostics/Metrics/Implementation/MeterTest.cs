@@ -5,12 +5,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Fabric.Interop;
 using System.Linq;
 using System.Reflection;
 using Fuzzy;
 using Inspector;
 using Moq;
 using Xunit;
+
 
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 {
@@ -87,7 +89,21 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             }
         }
 
-        public class RecordViaNative : MeterTest
+        public class DisposeTest : MeterTest, IDisposable
+        {
+            public DisposeTest() => typeof(Meter).Field<Func<object, int>>().Set(objectParam => fuzzy.Int32());
+            public void Dispose() => typeof(Meter).Field<Func<object, int>>().Set(Utility.FinalReleaseComObject);
+
+            [Fact]
+            public void DisposesNativeFabricMeterProvider()
+            {
+                sut.Dispose();
+
+                Assert.True(sut.Private().Field<bool>().Value);
+            }
+        }
+
+        public class RecordViaNative : DisposeTest
         {
             readonly string dimension1Value = fuzzy.String();
             readonly string dimension2Value = fuzzy.String();
@@ -95,25 +111,16 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
             readonly Method<Action<long, int, string, string, string>> sutMethod;
 
-            public RecordViaNative()
-            {
-                sutMethod = sut.Protected().Method<Action<long, int, string, string, string>>();
-            }
+            public RecordViaNative() => sutMethod = sut.Protected().Method<Action<long, int, string, string, string>>();
 
 
             [Fact]
-            public void ThrowsExceptionIfNumberOfCustomDimensionsNegative()
-            {
-                Assert.Throws<ArgumentOutOfRangeException>(() =>
-                    sutMethod.Invoke(value, fuzzy.Int32().Maximum(-1), dimension1Value, dimension2Value, dimension3Value));
-            }
+            public void ThrowsExceptionIfNumberOfCustomDimensionsNegative() => Assert.Throws<ArgumentOutOfRangeException>(() =>
+                                                                                                sutMethod.Invoke(value, fuzzy.Int32().Maximum(-1), dimension1Value, dimension2Value, dimension3Value));
 
             [Fact]
-            public void ThrowsExceptionIfNumberOfCustomDimensionsHigherThanSupported()
-            {
-                Assert.Throws<ArgumentOutOfRangeException>(() =>
-                    sutMethod.Invoke(value, fuzzy.Int32().Minimum(4), dimension1Value, dimension2Value, dimension3Value));
-            }
+            public void ThrowsExceptionIfNumberOfCustomDimensionsHigherThanSupported() => Assert.Throws<ArgumentOutOfRangeException>(() =>
+                                                                                                           sutMethod.Invoke(value, fuzzy.Int32().Minimum(4), dimension1Value, dimension2Value, dimension3Value));
 
             [Fact]
             public void CallsNativeMeterRecordWithZeroCustomDimensionsAndAllSystemDimensions()
@@ -157,6 +164,15 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
                 Mock.Get(fabricMeter).Verify(m => m.Record(value, (uint)expectedArray.Length, It.IsAny<IntPtr>()), Times.Once);
                 Assert.Equal(expectedArray, actualDimensions);
+            }
+
+
+            [Fact]
+            public void ThrowsIfDisposed()
+            {
+                sut.Dispose();
+
+                Assert.Throws<ObjectDisposedException>(() => sutMethod.Invoke(value, 3, dimension1Value, dimension2Value, dimension3Value));
             }
         }
     }

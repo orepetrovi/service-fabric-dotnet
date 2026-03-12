@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Fabric;
+using System.Fabric.Interop;
 using System.Linq;
 
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
@@ -14,9 +15,12 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
     {
         readonly IReadOnlyCollection<string> systemDimensionNames;
         protected readonly IReadOnlyCollection<string> systemDimensionValues;
-        protected readonly IFabricMeterProvider fabricMeterProvider;
+        readonly IFabricMeterProvider fabricMeterProvider;
+
+        bool disposed = false;
 
         static Func<IFabricMeterProvider> createFabricMeterProvider = NativeTelemetry.FabricCreateMeterProvider;
+        static Func<object, int> finalReleaseComObject = Utility.FinalReleaseComObject;
 
         protected MeterProvider(ServiceContext serviceContext = null)
         {
@@ -51,6 +55,9 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
         protected IFabricMeter CreateNativeMeter(string metricNamespace, string metricName, IEnumerable<string> additionalDimensions)
         {
+            if (disposed)
+                throw new ObjectDisposedException(nameof(this.GetType));
+
             var allDimensionsList = new List<string>(systemDimensionNames.Count + additionalDimensions.Count());
 
             allDimensionsList.AddRange(systemDimensionNames);
@@ -60,12 +67,13 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             return fabricMeterProvider.CreateMeter(metricNamespace, metricName, (uint)allDimensions.Length, allDimensions);
         }
 
-        /// <summary>
-        /// Releases the native COM resources held by this meter provider.
-        /// </summary>
         public void Dispose()
         {
-            // TODO: Release the fabricMeterProvider COM object
+            if (fabricMeterProvider != null)
+            {
+                finalReleaseComObject(fabricMeterProvider);
+                disposed = true;
+            }
         }
 
         public abstract IMeter<TValueType> CreateMeter(string metricNamespace, string name);
