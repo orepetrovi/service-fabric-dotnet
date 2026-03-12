@@ -56,7 +56,7 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
         protected IFabricMeter CreateNativeMeter(string metricNamespace, string metricName, IEnumerable<string> additionalDimensions)
         {
             if (disposed)
-                throw new ObjectDisposedException(nameof(this.GetType));
+                throw new ObjectDisposedException(nameof(MeterProvider<TValueType>));
 
             var allDimensionsList = new List<string>(systemDimensionNames.Count + additionalDimensions.Count());
 

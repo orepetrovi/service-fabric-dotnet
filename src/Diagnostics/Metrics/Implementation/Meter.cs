@@ -19,7 +19,6 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
         static Func<object, int> finalReleaseComObject = Utility.FinalReleaseComObject;
         bool disposed = false;
 
-
         internal Meter(IFabricMeter fabricMeter, IReadOnlyCollection<string> systemDimensionValues)
         {
             this.systemDimensionValues = systemDimensionValues ?? throw new ArgumentNullException(nameof(systemDimensionValues));
@@ -42,7 +41,7 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
         unsafe protected void RecordViaNative(long value, int customDimensionCount, string dimension1Value, string dimension2Value, string dimension3Value)
         {
             if (disposed)
-                throw new ObjectDisposedException(nameof(this.GetType));
+                throw new ObjectDisposedException(nameof(Meter));
             if (customDimensionCount < 0 || customDimensionCount > 3)
                 throw new ArgumentOutOfRangeException(nameof(customDimensionCount));
 
