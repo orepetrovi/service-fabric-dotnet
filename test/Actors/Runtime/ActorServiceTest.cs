@@ -11,7 +11,6 @@ using Fuzzy;
 using Inspector;
 using Microsoft.ServiceFabric.Actors.Diagnostics;
 using Microsoft.ServiceFabric.Diagnostics;
-using Microsoft.ServiceFabric.TestFramework;
 using Moq;
 using Xunit;
 
@@ -28,17 +27,19 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
         readonly Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory> createDiagnosticsFactory;
         readonly Mock<Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory>> mockCreateDiagnosticsFactory = new Mock<Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory>>();
         readonly DiagnosticsFactory diagnosticsFactory;
+        readonly IDiagnostics diagnostics;
 
         public ActorServiceTest()
         {
             diagnosticsFactory = new Mock<DiagnosticsFactory>(serviceContext, typeInformation, new ActorMethodFriendlyNameBuilder(typeInformation)) { DefaultValue = DefaultValue.Mock }.Object;
 
-            this.createDiagnosticsFactory = typeof(ActorService).Field<Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory>>().Value;
+            createDiagnosticsFactory = typeof(ActorService).Field<Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory>>().Value;
             typeof(ActorService).Field<Func<ServiceContext, ActorTypeInformation, ActorMethodFriendlyNameBuilder, DiagnosticsFactory>>().Set(mockCreateDiagnosticsFactory.Object);
             mockCreateDiagnosticsFactory.Setup(_ => _.Invoke(It.IsAny<ServiceContext>(), It.IsAny<ActorTypeInformation>(), It.IsAny<ActorMethodFriendlyNameBuilder>())).Returns(diagnosticsFactory);
 
             sut = new ActorService(serviceContext, typeInformation);
             sut.InitializeInternal(new ActorMethodFriendlyNameBuilder(sut.ActorTypeInformation));
+            diagnostics = sut.Field<IDiagnostics>().Value;
         }
 
         public void Dispose()
@@ -58,24 +59,19 @@ namespace Microsoft.ServiceFabric.Actors.Runtime
             [Fact]
             public void IsDisposedByOnCloseAsync()
             {
-                var diagnostics = sut.Field<IDiagnostics>();
-
                 sut.DeclaredBy(typeof(ActorService)).Method<Func<CancellationToken, Task>>("OnCloseAsync").Invoke(TestContext.Current.CancellationToken);
 
-                Mock.Get(diagnostics.Value).Verify(d => d.Dispose(), Times.Once);
+                Mock.Get(diagnostics).Verify(d => d.Dispose(), Times.Once);
                 Mock.Get(diagnosticsFactory).Verify(d => d.Dispose(), Times.Once);
             }
         }
 
         public class OnRoleChange : ActorServiceTest
         {
-            readonly IDiagnostics diagnostics = Mock.Of<IDiagnostics>();
-
             readonly Func<ReplicaRole, CancellationToken, Task> sutMethod;
 
             public OnRoleChange()
             {
-                sut.Field<IDiagnostics>().Set(diagnostics);
                 sutMethod = sut.DeclaredBy(typeof(ActorService)).Method<Func<ReplicaRole, CancellationToken, Task>>("OnChangeRoleAsync");
 
                 var actorManager = new ActorManager(sut, Mock.Of<IClock>(), diagnostics);
