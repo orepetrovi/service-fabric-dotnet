@@ -30,12 +30,26 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
         public class Dispose : FabricTransportServiceRemotingListenerTest
         {
             [Fact]
-            public void AbortDisposesEverything()
+            public void AbortDisposesMeterProvider()
             {
                 sut.Abort();
 
                 Mock.Get(mockMeterProvider).Verify(m => m.Dispose(), Times.Once);
+            }
+
+            [Fact]
+            public void AbortDisposesFabricTransportListener()
+            {
+                sut.Abort();
+
                 Mock.Get(mockFabricTransportListener).Verify(m => m.Dispose(), Times.Once);
+            }
+
+            [Fact]
+            public void AbortDisposesMessageHandler()
+            {
+                sut.Abort();
+
                 Mock.Get(mockTransportMessageHandler).Verify(m => m.Dispose(), Times.Once);
             }
         }
