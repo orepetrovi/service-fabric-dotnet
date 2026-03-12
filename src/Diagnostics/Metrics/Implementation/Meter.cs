@@ -38,7 +38,7 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
         protected long ConvertTimeSpanToLong(TimeSpan value) => (long)Math.Round(value.TotalMilliseconds);
 
-        unsafe protected void RecordViaNative(long value, int customDimensionCount, string dimension1Value, string dimension2Value, string dimension3Value)
+        protected unsafe void RecordViaNative(long value, int customDimensionCount, string dimension1Value, string dimension2Value, string dimension3Value)
         {
             if (disposed)
                 throw new ObjectDisposedException(nameof(Meter));
