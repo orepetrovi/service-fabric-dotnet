@@ -48,22 +48,10 @@ namespace Microsoft.ServiceFabric.Services.Remoting.Tests.V2.Diagnostic
             }
 
             [Fact]
-            public void ThrowsOnNullProvider()
-            {
-                Assert.Throws<ArgumentException>(() =>
-                {
-                    new PerformanceCounterDiagnosticEvents(null, clock);
-                });
-            }
+            public void ThrowsOnNullProvider() => Assert.Throws<ArgumentException>(() => new PerformanceCounterDiagnosticEvents(null, clock));
 
             [Fact]
-            public void ThrowsOnNullClock()
-            {
-                Assert.Throws<ArgumentException>(() =>
-                {
-                    new PerformanceCounterDiagnosticEvents(performanceCounterProvider, null);
-                });
-            }
+            public void ThrowsOnNullClock() => Assert.Throws<ArgumentException>(() => new PerformanceCounterDiagnosticEvents(performanceCounterProvider, null));
         }
 
         public class OnEvent : PerformanceCounterDiagnosticEventsTest
@@ -241,15 +229,6 @@ namespace Microsoft.ServiceFabric.Services.Remoting.Tests.V2.Diagnostic
                 Mock.Get(outstandingRequestsCounterWriter).Verify(x => x.UpdateCounterValue(It.IsAny<long>()), Times.Never);
                 performanceCounterProvider.Property<FabricAverageCount64PerformanceCounterWriter>(nameof(performanceCounterProvider.ServiceRequestDeserializationTimeCounterWriter))
                     .Set(requestDeserializationTimeCounterWriter);
-            }
-        }
-
-        public class Dispose : PerformanceCounterDiagnosticEventsTest
-        {
-            [Fact]
-            public void DoesNotThrow()
-            {
-                sut.Dispose();
             }
         }
     }

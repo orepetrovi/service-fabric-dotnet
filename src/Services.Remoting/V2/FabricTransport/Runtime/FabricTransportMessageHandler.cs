@@ -19,14 +19,15 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
 {
     sealed class FabricTransportMessageHandler : IFabricTransportMessageHandler
     {
-        private static readonly string TraceType = typeof(FabricTransportMessageHandler).Name;
-        private readonly IServiceRemotingMessageHandler remotingMessageHandler;
-        private readonly IServiceRemotingMessageSerializersManager serializersManager;
-        private readonly Guid partitionId;
-        private readonly long replicaOrInstanceId;
-        private IServiceRemotingMessageHeaderSerializer headerSerializer;
-        private ExceptionSerializer exceptionSerializer;
-        private IDiagnosticEvents diagnosticEvents;
+        static readonly string traceType = typeof(FabricTransportMessageHandler).Name;
+
+        readonly IServiceRemotingMessageHandler remotingMessageHandler;
+        readonly IServiceRemotingMessageSerializersManager serializersManager;
+        readonly Guid partitionId;
+        readonly long replicaOrInstanceId;
+        readonly IServiceRemotingMessageHeaderSerializer headerSerializer;
+        readonly ExceptionSerializer exceptionSerializer;
+        readonly IDiagnosticEvents diagnosticEvents;
         readonly IClock clock;
         readonly ServiceRemotingPerformanceCounterProvider serviceRemotingPerformanceCounterProvider;
 
@@ -42,17 +43,19 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
             this.serializersManager = serializersManager;
             this.partitionId = partitionId;
             this.replicaOrInstanceId = replicaOrInstanceId;
-            this.headerSerializer = this.serializersManager.GetHeaderSerializer();
-            this.exceptionSerializer = exceptionConvertorHandler;
 
-            this.clock = new SystemClock();
+            headerSerializer = this.serializersManager.GetHeaderSerializer();
+            exceptionSerializer = exceptionConvertorHandler;
 
-            this.serviceRemotingPerformanceCounterProvider = new ServiceRemotingPerformanceCounterProvider(this.partitionId, this.replicaOrInstanceId);
-            var performanceCounterDiagnosticEvents = new PerformanceCounterDiagnosticEvents(serviceRemotingPerformanceCounterProvider, this.clock);
-            var telemetryDiagnosticEvents = new TelemetryDiagnosticEvents(meterProvider, this.clock);
+            clock = new SystemClock();
+
+            serviceRemotingPerformanceCounterProvider = new ServiceRemotingPerformanceCounterProvider(this.partitionId, this.replicaOrInstanceId);
+
+            var performanceCounterDiagnosticEvents = new PerformanceCounterDiagnosticEvents(serviceRemotingPerformanceCounterProvider, clock);
+            var telemetryDiagnosticEvents = new TelemetryDiagnosticEvents(meterProvider, clock);
 
             var registeredDiagnosticsEvents = new List<IDiagnosticEvents> { performanceCounterDiagnosticEvents, telemetryDiagnosticEvents };
-            this.diagnosticEvents = new AggregatedDiagnosticEvents(registeredDiagnosticsEvents);
+            diagnosticEvents = new AggregatedDiagnosticEvents(registeredDiagnosticsEvents);
         }
 
         public async Task<FabricTransportMessage> RequestResponseAsync(
@@ -65,7 +68,7 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
             IServiceRemotingRequestMessage remotingRequestMessage = null;
             try
             {
-                remotingRequestMessage = this.CreateRemotingRequestMessage(fabricTransportMessage);
+                remotingRequestMessage = CreateRemotingRequestMessage(fabricTransportMessage);
 
                 LogContext.Set(new LogContext
                 {
@@ -73,23 +76,23 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
                 });
 
                 var retval = await
-                    this.remotingMessageHandler.HandleRequestResponseAsync(
+                    remotingMessageHandler.HandleRequestResponseAsync(
                         new FabricTransportServiceRemotingRequestContext(requestContext, this.serializersManager),
                         remotingRequestMessage);
-                return this.CreateFabricTransportMessage(retval, remotingRequestMessage.GetHeader().InterfaceId);
+                return CreateFabricTransportMessage(retval, remotingRequestMessage.GetHeader().InterfaceId);
             }
             catch (Exception ex)
             {
                 if (remotingRequestMessage != null)
                 {
-                    ServiceTrace.Source.WriteWarning(TraceType, "[{0}] Remote Exception occured {1}", remotingRequestMessage.GetHeader().RequestId, ex);
+                    ServiceTrace.Source.WriteWarning(traceType, "[{0}] Remote Exception occured {1}", remotingRequestMessage.GetHeader().RequestId, ex);
                 }
                 else
                 {
-                    ServiceTrace.Source.WriteWarning(TraceType, "Remote Exception occured {0}", ex);
+                    ServiceTrace.Source.WriteWarning(traceType, "Remote Exception occured {0}", ex);
                 }
 
-                return this.CreateFabricTransportExceptionMessage(ex);
+                return CreateFabricTransportExceptionMessage(ex);
             }
             finally
             {
@@ -98,20 +101,15 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
             }
         }
 
-        public void HandleOneWay(
-            FabricTransportRequestContext requestContext,
-            FabricTransportMessage requesTransportMessage)
-        {
-            throw new NotImplementedException();
-        }
+        public void HandleOneWay(FabricTransportRequestContext requestContext, FabricTransportMessage requestTransportMessage) => throw new NotImplementedException();
 
         public void Dispose()
         {
-            if (this.remotingMessageHandler is IDisposable disposableItem)
+            if (remotingMessageHandler is IDisposable disposableItem)
             {
                 disposableItem.Dispose();
             }
-            if (this.serviceRemotingPerformanceCounterProvider != null)
+            if (serviceRemotingPerformanceCounterProvider != null)
             {
                 serviceRemotingPerformanceCounterProvider.Dispose();
             }
@@ -122,9 +120,9 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
         {
             var header = new ServiceRemotingResponseMessageHeader();
             header.AddHeader("HasRemoteException", new byte[0]);
-            var serializedHeader = this.serializersManager.GetHeaderSerializer().SerializeResponseHeader(header);
+            var serializedHeader = serializersManager.GetHeaderSerializer().SerializeResponseHeader(header);
 
-            var serializedMsg = this.exceptionSerializer.SerializeRemoteException(ex);
+            var serializedMsg = exceptionSerializer.SerializeRemoteException(ex);
             var msg = new FabricTransportMessage(
                 new FabricTransportRequestHeader(serializedHeader.GetSendBuffer(), serializedHeader.Dispose),
                 new FabricTransportRequestBody(serializedMsg, null));
@@ -138,14 +136,14 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
                 return new FabricTransportMessage(null, null);
             }
 
-            var responseHeader = this.headerSerializer.SerializeResponseHeader(retval.GetHeader());
+            var responseHeader = headerSerializer.SerializeResponseHeader(retval.GetHeader());
             var fabricTransportRequestHeader = responseHeader != null
                 ? new FabricTransportRequestHeader(
                     responseHeader.GetSendBuffer(),
                     responseHeader.Dispose)
                 : new FabricTransportRequestHeader(default(ArraySegment<byte>), null);
             var responseSerializer =
-                this.serializersManager.GetResponseBodySerializer(interfaceId);
+                serializersManager.GetResponseBodySerializer(interfaceId);
 
             DateTime operationStartTime = clock.UtcNow;
             diagnosticEvents.OnCreateTransportMessageBegin();
@@ -167,10 +165,10 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
 
         private IServiceRemotingRequestMessage CreateRemotingRequestMessage(FabricTransportMessage fabricTransportMessage)
         {
-            var deSerializedHeader = this.headerSerializer.DeserializeRequestHeaders(
+            var deSerializedHeader = headerSerializer.DeserializeRequestHeaders(
                 new IncomingMessageHeader(fabricTransportMessage.GetHeader().GetRecievedStream()));
             var msgBodySerializer =
-                 this.serializersManager.GetRequestBodySerializer(deSerializedHeader.InterfaceId);
+                 serializersManager.GetRequestBodySerializer(deSerializedHeader.InterfaceId);
 
             DateTime operationStartTime = clock.UtcNow;
             diagnosticEvents.OnRemotingRequestBegin();

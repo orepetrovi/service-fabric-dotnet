@@ -27,10 +27,10 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
     {
         private static readonly string DefaultV2ListenerEndpointResourceName = "ServiceEndpointV2";
         private static readonly string DefaultWrappedMessageListenerEndpointResourceName = "ServiceEndpointV2_1";
-        private readonly FabricTransportMessageHandler transportMessageHandler;
+        private readonly IFabricTransportMessageHandler transportMessageHandler;
         private readonly string listenAddress;
         private readonly string publishAddress;
-        readonly FabricTransportListener fabricTransportlistener;
+        readonly IFabricTransportListener fabricTransportlistener;
         readonly IMeterProvider<TimeSpan> meterProvider;
 
         /// <summary>

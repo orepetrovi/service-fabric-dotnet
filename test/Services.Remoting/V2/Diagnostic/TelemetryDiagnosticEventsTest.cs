@@ -7,7 +7,6 @@ using System;
 using Fuzzy;
 using Inspector;
 using Microsoft.ServiceFabric.Diagnostics.Metrics;
-using Microsoft.ServiceFabric.TestFramework;
 using Moq;
 using Xunit;
 using IClock = Microsoft.ServiceFabric.Diagnostics.IClock;

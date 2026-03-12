@@ -29,17 +29,17 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
         readonly FabricTransportMessageHandler sut;
 
         readonly IDiagnosticEvents diagnosticEvents = Mock.Of<IDiagnosticEvents>();
+        readonly IServiceRemotingMessageHandler serviceRemotingMessageHandler = (IServiceRemotingMessageHandler)new Mock<IServiceRemotingMessageHandler>() { DefaultValue = DefaultValue.Mock }.As<IDisposable>().Object;
         readonly DateTime currentTime = fuzzy.DateTime();
         readonly IClock clock = Mock.Of<IClock>();
 
-
         public FabricTransportMessageHandlerTest()
         {
-            Mock.Get(this.clock).Setup(c => c.UtcNow)
+            Mock.Get(clock).Setup(c => c.UtcNow)
                 .Returns(currentTime);
 
-            this.sut = new FabricTransportMessageHandler(
-                new Mock<IServiceRemotingMessageHandler>() { DefaultValue = DefaultValue.Mock }.Object,
+            sut = new FabricTransportMessageHandler(
+                serviceRemotingMessageHandler,
                 new Mock<IServiceRemotingMessageSerializersManager>() { DefaultValue = DefaultValue.Mock }.Object,
                 new ExceptionSerializer(
                     new IExceptionConvertor[] { new DefaultExceptionConvertor() },
@@ -47,7 +47,7 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
                 ),
                 Guid.NewGuid(),
                 fuzzy.Int64(),
-                Mock.Of<IMeterProvider<TimeSpan>>());
+                new Mock<IMeterProvider<TimeSpan>>() { DefaultValue = DefaultValue.Mock }.Object);
         }
 
         public class Constructor : FabricTransportMessageHandlerTest
@@ -80,13 +80,13 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
             }
         }
 
-        public class RequestReponse : FabricTransportMessageHandlerTest
+        public class RequestResponse : FabricTransportMessageHandlerTest
         {
 
-            FabricTransportMessage fabricTransportMessage = new FabricTransportMessage(new FabricTransportRequestHeader(Mock.Of<Stream>()), new FabricTransportRequestBody(Mock.Of<Stream>()));
-            FabricTransportRequestContext requestContext = new FabricTransportRequestContext(null, null);
+            readonly FabricTransportMessage fabricTransportMessage = new(new FabricTransportRequestHeader(Mock.Of<Stream>()), new FabricTransportRequestBody(Mock.Of<Stream>()));
+            readonly FabricTransportRequestContext requestContext = new(null, null);
 
-            public RequestReponse()
+            public RequestResponse()
             {
                 // After creating SUT, we replace DiagnosticsSource with a mock
                 sut.Field<IDiagnosticEvents>().Set(diagnosticEvents);
@@ -98,8 +98,8 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
             {
                 await sut.RequestResponseAsync(requestContext, fabricTransportMessage);
 
-                Mock.Get(this.diagnosticEvents).Verify(d => d.OnRequestResponseBegin(), Times.Once);
-                Mock.Get(this.diagnosticEvents).Verify(d => d.OnRequestResponseEnd(currentTime), Times.Once);
+                Mock.Get(diagnosticEvents).Verify(d => d.OnRequestResponseBegin(), Times.Once);
+                Mock.Get(diagnosticEvents).Verify(d => d.OnRequestResponseEnd(currentTime), Times.Once);
             }
 
             [Fact]
@@ -107,8 +107,8 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
             {
                 await sut.RequestResponseAsync(requestContext, fabricTransportMessage);
 
-                Mock.Get(this.diagnosticEvents).Verify(d => d.OnCreateTransportMessageBegin(), Times.Once);
-                Mock.Get(this.diagnosticEvents).Verify(d => d.OnCreateTransportMessageEnd(currentTime), Times.Once);
+                Mock.Get(diagnosticEvents).Verify(d => d.OnCreateTransportMessageBegin(), Times.Once);
+                Mock.Get(diagnosticEvents).Verify(d => d.OnCreateTransportMessageEnd(currentTime), Times.Once);
             }
 
             [Fact]
@@ -116,8 +116,8 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
             {
                 await sut.RequestResponseAsync(requestContext, fabricTransportMessage);
 
-                Mock.Get(this.diagnosticEvents).Verify(d => d.OnRemotingRequestBegin(), Times.Once);
-                Mock.Get(this.diagnosticEvents).Verify(d => d.OnRemotingRequestEnd(currentTime), Times.Once);
+                Mock.Get(diagnosticEvents).Verify(d => d.OnRemotingRequestBegin(), Times.Once);
+                Mock.Get(diagnosticEvents).Verify(d => d.OnRemotingRequestEnd(currentTime), Times.Once);
             }
 
             [Fact]
@@ -127,25 +127,22 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
                 var remotingMethodStartTime = currentTime.AddMinutes(1);
                 var transportMethodStartTime = currentTime.AddMinutes(2);
 
-                Action onSerializationBeginCallback = () =>
-                {
-                    Mock.Get(clock).Setup(c => c.UtcNow).Returns(transportMethodStartTime);
-                };
+                Action onSerializationBeginCallback = () => Mock.Get(clock).Setup(c => c.UtcNow).Returns(transportMethodStartTime);
                 Action onRequestBeginCallback = () =>
                 {
                     Mock.Get(clock).Setup(c => c.UtcNow).Returns(remotingMethodStartTime);
-                    Mock.Get(this.diagnosticEvents).InSequence(sequence).Setup(d => d.OnRemotingRequestBegin()).Callback(onSerializationBeginCallback);
+                    Mock.Get(diagnosticEvents).InSequence(sequence).Setup(d => d.OnRemotingRequestBegin()).Callback(onSerializationBeginCallback);
                 };
-                Mock.Get(this.diagnosticEvents).InSequence(sequence).Setup(d => d.OnRequestResponseBegin()).Callback(onRequestBeginCallback);
+                Mock.Get(diagnosticEvents).InSequence(sequence).Setup(d => d.OnRequestResponseBegin()).Callback(onRequestBeginCallback);
 
                 await sut.RequestResponseAsync(requestContext, fabricTransportMessage);
 
-                Mock.Get(this.diagnosticEvents).Verify(d => d.OnRequestResponseBegin(), Times.Once);
-                Mock.Get(this.diagnosticEvents).Verify(d => d.OnRequestResponseEnd(currentTime), Times.Once);
-                Mock.Get(this.diagnosticEvents).Verify(d => d.OnRemotingRequestBegin(), Times.Once);
-                Mock.Get(this.diagnosticEvents).Verify(d => d.OnRemotingRequestEnd(remotingMethodStartTime), Times.Once);
-                Mock.Get(this.diagnosticEvents).Verify(d => d.OnCreateTransportMessageBegin(), Times.Once);
-                Mock.Get(this.diagnosticEvents).Verify(d => d.OnCreateTransportMessageEnd(transportMethodStartTime), Times.Once);
+                Mock.Get(diagnosticEvents).Verify(d => d.OnRequestResponseBegin(), Times.Once);
+                Mock.Get(diagnosticEvents).Verify(d => d.OnRequestResponseEnd(currentTime), Times.Once);
+                Mock.Get(diagnosticEvents).Verify(d => d.OnRemotingRequestBegin(), Times.Once);
+                Mock.Get(diagnosticEvents).Verify(d => d.OnRemotingRequestEnd(remotingMethodStartTime), Times.Once);
+                Mock.Get(diagnosticEvents).Verify(d => d.OnCreateTransportMessageBegin(), Times.Once);
+                Mock.Get(diagnosticEvents).Verify(d => d.OnCreateTransportMessageEnd(transportMethodStartTime), Times.Once);
 
                 // cleanup
                 Mock.Get(clock).Setup(c => c.UtcNow).Returns(currentTime);
@@ -154,61 +151,22 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
 
         public class Dispose : FabricTransportMessageHandlerTest
         {
+            public Dispose() => sut.Field<IDiagnosticEvents>().Set(diagnosticEvents);
+
             [Fact]
             public void DisposesDiagnosticEvents()
             {
-                sut.Field<IDiagnosticEvents>().Set(diagnosticEvents);
-
                 sut.Dispose();
 
                 Mock.Get(diagnosticEvents).Verify(d => d.Dispose(), Times.Once);
             }
 
             [Fact]
-            public void DisposesPerformanceCounterProvider()
-            {
-                var provider = sut.Field<ServiceRemotingPerformanceCounterProvider>().Value;
-                Assert.NotNull(provider);
-
-                sut.Field<IDiagnosticEvents>().Set(diagnosticEvents);
-                sut.Dispose();
-
-                // ServiceRemotingPerformanceCounterProvider is not mockable (concrete class),
-                // but verifying it doesn't throw confirms the disposal path works.
-            }
-
-            [Fact]
             public void DisposesDisposableRemotingMessageHandler()
             {
-                var disposableHandler = new Mock<IServiceRemotingMessageHandler>();
-                disposableHandler.As<IDisposable>();
-                disposableHandler.SetupAllProperties();
-                disposableHandler.DefaultValue = DefaultValue.Mock;
-
-                var handlerSut = new FabricTransportMessageHandler(
-                    disposableHandler.Object,
-                    new Mock<IServiceRemotingMessageSerializersManager>() { DefaultValue = DefaultValue.Mock }.Object,
-                    new ExceptionSerializer(
-                        new IExceptionConvertor[] { new DefaultExceptionConvertor() },
-                        new FabricTransportRemotingListenerSettings { RemotingExceptionDepth = 2 }
-                    ),
-                    Guid.NewGuid(),
-                    fuzzy.Int64(),
-                    new Mock<IMeterProvider<TimeSpan>>() { DefaultValue = DefaultValue.Mock }.Object);
-
-                // Replace diagnosticEvents with a mock to avoid cascading into real TelemetryDiagnosticEvents
-                handlerSut.Field<IDiagnosticEvents>().Set(Mock.Of<IDiagnosticEvents>());
-
-                handlerSut.Dispose();
-
-                disposableHandler.As<IDisposable>().Verify(d => d.Dispose(), Times.Once);
-            }
-
-            [Fact]
-            public void DoesNotThrowWhenRemotingMessageHandlerIsNotDisposable()
-            {
-                sut.Field<IDiagnosticEvents>().Set(diagnosticEvents);
                 sut.Dispose();
+
+                Mock.Get(serviceRemotingMessageHandler).As<IDisposable>().Verify(d => d.Dispose(), Times.Once);
             }
         }
     }

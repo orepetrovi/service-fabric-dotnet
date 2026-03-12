@@ -14,49 +14,29 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
 {
     public abstract class FabricTransportServiceRemotingListenerTest
     {
+        readonly FabricTransportServiceRemotingListener sut = Type<FabricTransportServiceRemotingListener>.Uninitialized();
+
+        readonly IMeterProvider<TimeSpan> mockMeterProvider = Mock.Of<IMeterProvider<TimeSpan>>();
+        readonly IFabricTransportListener mockFabricTransportListener = Mock.Of<IFabricTransportListener>();
+        readonly IFabricTransportMessageHandler mockTransportMessageHandler = Mock.Of<IFabricTransportMessageHandler>();
+
+        public FabricTransportServiceRemotingListenerTest()
+        {
+            sut.Field<IMeterProvider<TimeSpan>>().Set(mockMeterProvider);
+            sut.Field<IFabricTransportListener>().Set(mockFabricTransportListener);
+            sut.Field<IFabricTransportMessageHandler>().Set(mockTransportMessageHandler);
+        }
+
         public class Dispose : FabricTransportServiceRemotingListenerTest
         {
             [Fact]
-            public void DisposesMeterProvider()
+            public void AbortDisposesEverything()
             {
-                var sut = Type<FabricTransportServiceRemotingListener>.Uninitialized();
-
-                var mockMeterProvider = Mock.Of<IMeterProvider<TimeSpan>>();
-                var mockFabricTransportListener = Type<FabricTransportListener>.Uninitialized();
-                var mockTransportMessageHandler = Type<FabricTransportMessageHandler>.Uninitialized();
-
-                // Set up diagnostic events on the handler so Dispose() doesn't null-ref
-                mockTransportMessageHandler.Field<Diagnostic.IDiagnosticEvents>().Set(Mock.Of<Diagnostic.IDiagnosticEvents>());
-
-                sut.Field<IMeterProvider<TimeSpan>>().Set(mockMeterProvider);
-                sut.Field<FabricTransportListener>().Set(mockFabricTransportListener);
-                sut.Field<FabricTransportMessageHandler>().Set(mockTransportMessageHandler);
-
                 sut.Abort();
 
                 Mock.Get(mockMeterProvider).Verify(m => m.Dispose(), Times.Once);
-            }
-
-            [Fact]
-            public void DisposesTransportMessageHandler()
-            {
-                var sut = Type<FabricTransportServiceRemotingListener>.Uninitialized();
-
-                var mockMeterProvider = Mock.Of<IMeterProvider<TimeSpan>>();
-                var mockDiagnosticEvents = Mock.Of<Diagnostic.IDiagnosticEvents>();
-                var mockFabricTransportListener = Type<FabricTransportListener>.Uninitialized();
-                var mockTransportMessageHandler = Type<FabricTransportMessageHandler>.Uninitialized();
-
-                mockTransportMessageHandler.Field<Diagnostic.IDiagnosticEvents>().Set(mockDiagnosticEvents);
-
-                sut.Field<IMeterProvider<TimeSpan>>().Set(mockMeterProvider);
-                sut.Field<FabricTransportListener>().Set(mockFabricTransportListener);
-                sut.Field<FabricTransportMessageHandler>().Set(mockTransportMessageHandler);
-
-                sut.Abort();
-
-                // Verify handler's Dispose cascades to its diagnosticEvents
-                Mock.Get(mockDiagnosticEvents).Verify(d => d.Dispose(), Times.Once);
+                Mock.Get(mockFabricTransportListener).Verify(m => m.Dispose(), Times.Once);
+                Mock.Get(mockTransportMessageHandler).Verify(m => m.Dispose(), Times.Once);
             }
         }
     }

@@ -3,7 +3,6 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
 using System.Fabric;
 using System.Fabric.Interop;
 using System.Globalization;
@@ -13,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.ServiceFabric.FabricTransport.Runtime
 {
-    internal class FabricTransportListener : IDisposable
+    internal class FabricTransportListener : IFabricTransportListener
     {
         private NativeFabricTransport.IFabricTransportListener nativeListner;
 
