@@ -27,29 +27,15 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
             sut.Field<IFabricTransportMessageHandler>().Set(mockTransportMessageHandler);
         }
 
-        public class Dispose : FabricTransportServiceRemotingListenerTest
+        public class Abort : FabricTransportServiceRemotingListenerTest
         {
             [Fact]
-            public void AbortDisposesMeterProvider()
+            public void AbortDisposesAllDisposables()
             {
                 sut.Abort();
 
                 Mock.Get(mockMeterProvider).Verify(m => m.Dispose(), Times.Once);
-            }
-
-            [Fact]
-            public void AbortDisposesFabricTransportListener()
-            {
-                sut.Abort();
-
                 Mock.Get(mockFabricTransportListener).Verify(m => m.Dispose(), Times.Once);
-            }
-
-            [Fact]
-            public void AbortDisposesMessageHandler()
-            {
-                sut.Abort();
-
                 Mock.Get(mockTransportMessageHandler).Verify(m => m.Dispose(), Times.Once);
             }
         }

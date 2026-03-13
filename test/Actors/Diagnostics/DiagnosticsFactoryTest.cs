@@ -85,19 +85,19 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
         public class DisposeTest : DiagnosticsFactoryTest
         {
             readonly Guid guid = Guid.NewGuid();
-            readonly Mock<PerformanceCounterProviderV2> mockPerformanceCounterProviderV2;
-            readonly Mock<IMeterProvider<TimeSpan>> mockTimeSpanProvider;
-            readonly Mock<IMeterProvider<long>> mockLongProvider;
+            readonly Mock<PerformanceCounterProviderV2> performanceCounterProviderV2;
+            readonly Mock<IMeterProvider<TimeSpan>> timeSpanProvider;
+            readonly Mock<IMeterProvider<long>> longProvider;
 
             public DisposeTest()
             {
-                mockPerformanceCounterProviderV2 = new Mock<PerformanceCounterProviderV2>(guid, typeInformation);
-                mockTimeSpanProvider = new Mock<IMeterProvider<TimeSpan>>() { DefaultValue = DefaultValue.Mock };
-                mockLongProvider = new Mock<IMeterProvider<long>>() { DefaultValue = DefaultValue.Mock };
+                performanceCounterProviderV2 = new Mock<PerformanceCounterProviderV2>(guid, typeInformation);
+                timeSpanProvider = new Mock<IMeterProvider<TimeSpan>>() { DefaultValue = DefaultValue.Mock };
+                longProvider = new Mock<IMeterProvider<long>>() { DefaultValue = DefaultValue.Mock };
 
-                sut.Field<PerformanceCounterProviderV2>().Set(mockPerformanceCounterProviderV2.Object);
-                sut.Field<IMeterProvider<TimeSpan>>().Set(mockTimeSpanProvider.Object);
-                sut.Field<IMeterProvider<long>>().Set(mockLongProvider.Object);
+                sut.Field<PerformanceCounterProviderV2>().Set(performanceCounterProviderV2.Object);
+                sut.Field<IMeterProvider<TimeSpan>>().Set(timeSpanProvider.Object);
+                sut.Field<IMeterProvider<long>>().Set(longProvider.Object);
             }
 
             [Fact]
@@ -105,7 +105,7 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
             {
                 sut.Dispose();
 
-                mockPerformanceCounterProviderV2.Verify(p => p.Dispose(), Times.Once);
+                performanceCounterProviderV2.Verify(p => p.Dispose(), Times.Once);
             }
 
             [Fact]
@@ -113,8 +113,8 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
             {
                 sut.Dispose();
 
-                mockTimeSpanProvider.Verify(p => p.Dispose(), Times.Once);
-                mockLongProvider.Verify(p => p.Dispose(), Times.Once);
+                timeSpanProvider.Verify(p => p.Dispose(), Times.Once);
+                longProvider.Verify(p => p.Dispose(), Times.Once);
             }
         }
 

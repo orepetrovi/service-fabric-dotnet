@@ -154,18 +154,11 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
             public Dispose() => sut.Field<IDiagnosticEvents>().Set(diagnosticEvents);
 
             [Fact]
-            public void DisposesDiagnosticEvents()
+            public void DisposesAllDisposables()
             {
                 sut.Dispose();
 
                 Mock.Get(diagnosticEvents).Verify(d => d.Dispose(), Times.Once);
-            }
-
-            [Fact]
-            public void DisposesDisposableRemotingMessageHandler()
-            {
-                sut.Dispose();
-
                 Mock.Get(serviceRemotingMessageHandler).As<IDisposable>().Verify(d => d.Dispose(), Times.Once);
             }
         }

@@ -14,10 +14,9 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
     {
         protected readonly IReadOnlyCollection<string> systemDimensionValues;
 
-        readonly IFabricMeter fabricMeter;
+        IFabricMeter fabricMeter;
 
         static Func<object, int> finalReleaseComObject = Utility.FinalReleaseComObject;
-        bool disposed = false;
 
         internal Meter(IFabricMeter fabricMeter, IReadOnlyCollection<string> systemDimensionValues)
         {
@@ -27,10 +26,10 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
         public void Dispose()
         {
-            if (!disposed)
+            if (!IsDisposed())
             {
                 finalReleaseComObject(fabricMeter);
-                disposed = true;
+                fabricMeter = null;
             }
         }
 
@@ -38,9 +37,11 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
         protected long ConvertTimeSpanToLong(TimeSpan value) => (long)Math.Round(value.TotalMilliseconds);
 
+        bool IsDisposed() => fabricMeter == null;
+
         protected unsafe void RecordViaNative(long value, int customDimensionCount, string dimension1Value, string dimension2Value, string dimension3Value)
         {
-            if (disposed)
+            if (IsDisposed())
                 throw new ObjectDisposedException(nameof(Meter));
             if (customDimensionCount < 0 || customDimensionCount > 3)
                 throw new ArgumentOutOfRangeException(nameof(customDimensionCount));

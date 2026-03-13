@@ -91,15 +91,31 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
         public class DisposeTest : MeterTest, IDisposable
         {
-            public DisposeTest() => typeof(Meter).Field<Func<object, int>>().Set(objectParam => fuzzy.Int32());
+            readonly Func<object, int> finalReleaseComObject = Mock.Of<Func<object, int>>();
+
+            // Set the finalReleaseComObject delegate to a mock function, so we can verify that it was called in Dispose.
+            public DisposeTest() =>
+                typeof(Meter).Field<Func<object, int>>().Set(finalReleaseComObject);
+
+            // Restore the original finalReleaseComObject delegate after the test, to avoid affecting other tests.
             public void Dispose() => typeof(Meter).Field<Func<object, int>>().Set(Utility.FinalReleaseComObject);
 
             [Fact]
-            public void DisposesNativeFabricMeterProvider()
+            public void ReleasesNativeFabricMeter()
             {
                 sut.Dispose();
 
-                Assert.True(sut.Private().Field<bool>().Value);
+                Mock.Get(finalReleaseComObject).Verify(f => f(fabricMeter), Times.Once);
+                Assert.Null(sut.Private().Field<IFabricMeter>().Value);
+            }
+
+            [Fact]
+            public void SubsequentDisposesDoNotReleaseNativeFabricMeterProvider()
+            {
+                sut.Dispose();
+                sut.Dispose();
+
+                Mock.Get(finalReleaseComObject).Verify(f => f(fabricMeter), Times.Once);
             }
         }
 
@@ -115,12 +131,12 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
 
             [Fact]
-            public void ThrowsExceptionIfNumberOfCustomDimensionsNegative() => Assert.Throws<ArgumentOutOfRangeException>(() =>
-                                                                                                sutMethod.Invoke(value, fuzzy.Int32().Maximum(-1), dimension1Value, dimension2Value, dimension3Value));
+            public void ThrowsExceptionIfNumberOfCustomDimensionsNegative() =>
+                Assert.Throws<ArgumentOutOfRangeException>(() => sutMethod.Invoke(value, fuzzy.Int32().Maximum(-1), dimension1Value, dimension2Value, dimension3Value));
 
             [Fact]
-            public void ThrowsExceptionIfNumberOfCustomDimensionsHigherThanSupported() => Assert.Throws<ArgumentOutOfRangeException>(() =>
-                                                                                                           sutMethod.Invoke(value, fuzzy.Int32().Minimum(4), dimension1Value, dimension2Value, dimension3Value));
+            public void ThrowsExceptionIfNumberOfCustomDimensionsHigherThanSupported() =>
+                Assert.Throws<ArgumentOutOfRangeException>(() => sutMethod.Invoke(value, fuzzy.Int32().Minimum(4), dimension1Value, dimension2Value, dimension3Value));
 
             [Fact]
             public void CallsNativeMeterRecordWithZeroCustomDimensionsAndAllSystemDimensions()

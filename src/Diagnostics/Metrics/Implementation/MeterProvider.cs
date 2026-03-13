@@ -15,9 +15,7 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
     {
         readonly IReadOnlyCollection<string> systemDimensionNames;
         protected readonly IReadOnlyCollection<string> systemDimensionValues;
-        readonly IFabricMeterProvider fabricMeterProvider;
-
-        bool disposed = false;
+        IFabricMeterProvider fabricMeterProvider;
 
         static Func<IFabricMeterProvider> createFabricMeterProvider = NativeTelemetry.FabricCreateMeterProvider;
         static Func<object, int> finalReleaseComObject = Utility.FinalReleaseComObject;
@@ -53,9 +51,11 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             }
         }
 
+        bool IsDisposed() => fabricMeterProvider == null;
+
         protected IFabricMeter CreateNativeMeter(string metricNamespace, string metricName, IEnumerable<string> additionalDimensions)
         {
-            if (disposed)
+            if (IsDisposed())
                 throw new ObjectDisposedException(nameof(MeterProvider<TValueType>));
 
             var allDimensionsList = new List<string>(systemDimensionNames.Count + additionalDimensions.Count());
@@ -69,10 +69,10 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
         public void Dispose()
         {
-            if (!disposed)
+            if (!IsDisposed())
             {
                 finalReleaseComObject(fabricMeterProvider);
-                disposed = true;
+                fabricMeterProvider = null;
             }
         }
 

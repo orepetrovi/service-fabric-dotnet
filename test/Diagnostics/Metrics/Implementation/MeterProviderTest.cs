@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Fabric;
 using System.Fabric.Interop;
+using System.Linq;
 using Fuzzy;
 using Inspector;
 using Moq;
@@ -20,11 +21,12 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
         readonly IMeterProvider<int> sut;
 
+        readonly IFabricMeterProvider fabricMeterProvider = Mock.Of<IFabricMeterProvider>();
         readonly ServiceContext serviceContext = fuzzy.ServiceContext();
 
         public MeterProviderTest()
         {
-            typeof(MeterProvider<int>).Field<Func<IFabricMeterProvider>>().Set(() => Mock.Of<IFabricMeterProvider>());
+            typeof(MeterProvider<int>).Field<Func<IFabricMeterProvider>>().Set(() => fabricMeterProvider);
             sut = new Mock<MeterProvider<int>>(serviceContext).Object;
         }
 
@@ -36,20 +38,20 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             [Fact]
             public void SetsRequiredDimensionsFromServiceContext()
             {
-                string[] actualSystemDimensionNames = (string[])sut.Private().Field<IReadOnlyCollection<string>>().Value;
-                string[] actualSystemDimensionValues = (string[])sut.Protected().Field<IReadOnlyCollection<string>>().Value;
+                var actualSystemDimensionNames = sut.Private().Field<IReadOnlyCollection<string>>().Value;
+                var actualSystemDimensionValues = sut.Protected().Field<IReadOnlyCollection<string>>().Value;
 
-                Assert.Equal(serviceContext.PartitionId.ToString(), actualSystemDimensionValues[0]);
-                Assert.Equal(serviceContext.ServiceTypeName, actualSystemDimensionValues[1]);
-                Assert.Equal(serviceContext.ServiceName.ToString(), actualSystemDimensionValues[2]);
-                Assert.Equal(serviceContext.CodePackageActivationContext.ApplicationName, actualSystemDimensionValues[3]);
-                Assert.Equal(serviceContext.CodePackageActivationContext.ApplicationTypeName, actualSystemDimensionValues[4]);
+                Assert.Equal(serviceContext.PartitionId.ToString(), actualSystemDimensionValues.ElementAt(0));
+                Assert.Equal(serviceContext.ServiceTypeName, actualSystemDimensionValues.ElementAt(1));
+                Assert.Equal(serviceContext.ServiceName.ToString(), actualSystemDimensionValues.ElementAt(2));
+                Assert.Equal(serviceContext.CodePackageActivationContext.ApplicationName, actualSystemDimensionValues.ElementAt(3));
+                Assert.Equal(serviceContext.CodePackageActivationContext.ApplicationTypeName, actualSystemDimensionValues.ElementAt(4));
 
-                Assert.Equal(nameof(ServiceContext.PartitionId), actualSystemDimensionNames[0]);
-                Assert.Equal(nameof(ServiceContext.ServiceTypeName), actualSystemDimensionNames[1]);
-                Assert.Equal(nameof(ServiceContext.ServiceName), actualSystemDimensionNames[2]);
-                Assert.Equal(nameof(ServiceContext.CodePackageActivationContext.ApplicationName), actualSystemDimensionNames[3]);
-                Assert.Equal(nameof(ServiceContext.CodePackageActivationContext.ApplicationTypeName), actualSystemDimensionNames[4]);
+                Assert.Equal(nameof(ServiceContext.PartitionId), actualSystemDimensionNames.ElementAt(0));
+                Assert.Equal(nameof(ServiceContext.ServiceTypeName), actualSystemDimensionNames.ElementAt(1));
+                Assert.Equal(nameof(ServiceContext.ServiceName), actualSystemDimensionNames.ElementAt(2));
+                Assert.Equal(nameof(ServiceContext.CodePackageActivationContext.ApplicationName), actualSystemDimensionNames.ElementAt(3));
+                Assert.Equal(nameof(ServiceContext.CodePackageActivationContext.ApplicationTypeName), actualSystemDimensionNames.ElementAt(4));
             }
 
             [Fact]
@@ -57,8 +59,8 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             {
                 var sut = new Mock<MeterProvider<int>>(null).Object;
 
-                IReadOnlyCollection<string> actualSystemDimensionNames = sut.Private().Field<IReadOnlyCollection<string>>().Value;
-                IReadOnlyCollection<string> actualSystemDimensionValues = sut.Protected().Field<IReadOnlyCollection<string>>().Value;
+                var actualSystemDimensionNames = sut.Private().Field<IReadOnlyCollection<string>>().Value;
+                var actualSystemDimensionValues = sut.Protected().Field<IReadOnlyCollection<string>>().Value;
 
                 Assert.Empty(actualSystemDimensionValues);
                 Assert.Empty(actualSystemDimensionNames);
@@ -67,38 +69,55 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
         public class DisposeTest : MeterProviderTest
         {
-            public DisposeTest() => typeof(MeterProvider<int>).Field<Func<object, int>>().Set(objectParam => fuzzy.Int32());
+            readonly Func<object, int> finalReleaseComObject = Mock.Of<Func<object, int>>();
+
+            // Set the finalReleaseComObject delegate to a mock function, so we can verify that it was called in Dispose.
+            public DisposeTest() =>
+                typeof(MeterProvider<int>).Field<Func<object, int>>().Set(finalReleaseComObject);
+
             override public void Dispose()
             {
                 base.Dispose();
+
+                // Restore the original finalReleaseComObject delegate after the test, to avoid affecting other tests.
                 typeof(MeterProvider<int>).Field<Func<object, int>>().Set(Utility.FinalReleaseComObject);
             }
 
             [Fact]
-            public void DisposesNativeFabricMeterProvider()
+            public void ReleasesNativeFabricMeterProvider()
             {
                 sut.Dispose();
 
-                Assert.True(sut.Field<bool>().Value);
+                Mock.Get(finalReleaseComObject).Verify(f => f(fabricMeterProvider), Times.Once);
+                Assert.Null(sut.Private().Field<IFabricMeterProvider>().Value);
+            }
+
+            [Fact]
+            public void SubsequentDisposesDoNotReleaseNativeFabricMeterProvider()
+            {
+                sut.Dispose();
+                sut.Dispose();
+                Mock.Get(finalReleaseComObject).Verify(f => f(fabricMeterProvider), Times.Once);
             }
         }
 
         public class CreateMeterProvider : DisposeTest
         {
-            readonly Func<string, string, IEnumerable<string>, IFabricMeter> sutMethod;
+            readonly Func<string, string, IEnumerable<string>, IFabricMeter> createMeterProvider;
 
             readonly string metricNamespace = fuzzy.String();
             readonly string metricName = fuzzy.String();
             readonly IEnumerable<string> dimensions = fuzzy.List(() => fuzzy.String());
 
-            public CreateMeterProvider() => sutMethod = sut.Protected().Method<Func<string, string, IEnumerable<string>, IFabricMeter>>();
+            public CreateMeterProvider() =>
+                createMeterProvider = sut.Protected().Method<Func<string, string, IEnumerable<string>, IFabricMeter>>();
 
             [Fact]
             public void ThrowsIfDisposed()
             {
                 sut.Dispose();
 
-                Assert.Throws<ObjectDisposedException>(() => sutMethod.Invoke(metricNamespace, metricName, dimensions));
+                Assert.Throws<ObjectDisposedException>(() => createMeterProvider.Invoke(metricNamespace, metricName, dimensions));
             }
         }
     }
