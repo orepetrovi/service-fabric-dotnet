@@ -5,10 +5,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-
-#if NET
 using System.Runtime.InteropServices.Marshalling;
-#else
+
+#if !NET
 using GeneratedComInterfaceAttribute = System.Runtime.InteropServices.ComImportAttribute;
 #endif
 
@@ -19,6 +18,7 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     partial interface IFabricMeterProvider
     {
+        [return: MarshalUsing(typeof(UniqueComInterfaceMarshaller<IFabricMeter>))]
         IFabricMeter CreateMeter([MarshalAs(UnmanagedType.LPWStr)] string metricNamespace, [MarshalAs(UnmanagedType.LPWStr)] string name, uint count, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] dimensionNames);
     }
 }
