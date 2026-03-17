@@ -9,3 +9,4 @@ using static Microsoft.ServiceFabric.Constants.AssemblyInfo;
 [assembly: InternalsVisibleTo("Microsoft.ServiceFabric.FabricTransport.Tests" + PublicKey)]
 [assembly: InternalsVisibleTo("Microsoft.ServiceFabric.Services.Remoting.Tests" + PublicKey)]
 [assembly: InternalsVisibleTo("Microsoft.ServiceFabric.Services.Remoting" + PublicKey)]
+[assembly: InternalsVisibleTo(DynamicProxyGenAssembly2)]

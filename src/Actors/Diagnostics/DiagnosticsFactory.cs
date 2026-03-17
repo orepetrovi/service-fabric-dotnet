@@ -48,6 +48,8 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
         public virtual void Dispose()
         {
             performanceCounterProvider.Dispose();
+            timeSpanMeterProvider.Dispose();
+            longMeterProvider.Dispose();
         }
     }
 }

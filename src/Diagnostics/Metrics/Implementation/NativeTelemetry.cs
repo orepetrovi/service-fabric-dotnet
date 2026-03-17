@@ -4,7 +4,9 @@
 // ------------------------------------------------------------
 
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 using HRESULT = System.Int32;
+
 #if !NET
 using LibraryImportAttribute = System.Runtime.InteropServices.DllImportAttribute;
 #endif
@@ -26,7 +28,7 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 #else
         extern
 #endif
-        HRESULT FabricCreateMeterProvider(out IFabricMeterProvider meterProvider);
+        HRESULT FabricCreateMeterProvider([MarshalUsing(typeof(UniqueComInterfaceMarshaller<IFabricMeterProvider>))] out IFabricMeterProvider meterProvider);
 
     }
 }

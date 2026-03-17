@@ -4,13 +4,17 @@
 // ------------------------------------------------------------
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
+namespace Microsoft.ServiceFabric.FabricTransport.Runtime
 {
-    sealed class NullMeter3D<TValueType> : IMeter3D<TValueType>
+    interface IFabricTransportListener : IDisposable
     {
-        public void Record(TValueType value, string dimension1, string dimension2, string dimension3) { }
+        Task<string> OpenAsync(CancellationToken cancellationToken);
 
-        public void Dispose() { }
+        Task CloseAsync(CancellationToken cancellationToken);
+
+        void Abort();
     }
 }

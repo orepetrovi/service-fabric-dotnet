@@ -236,5 +236,17 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
                 Mock.Get(anotherDiagnostics).Verify(ds => ds.ActorDeactivated(actorId), Times.Once);
             }
         }
+
+        public sealed class Dispose : AggregatedDiagnosticsTest
+        {
+            [Fact]
+            public void DisposesAllChildrenDiagnostics()
+            {
+                sut.Dispose();
+
+                Mock.Get(diagnostics).Verify(d => d.Dispose(), Times.Once);
+                Mock.Get(anotherDiagnostics).Verify(d => d.Dispose(), Times.Once);
+            }
+        }
     }
 }

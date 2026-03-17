@@ -12,7 +12,6 @@ using Inspector;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Diagnostics;
 using Microsoft.ServiceFabric.Diagnostics.Metrics;
-using Microsoft.ServiceFabric.TestFramework;
 using Moq;
 using Xunit;
 
@@ -86,20 +85,29 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
         public class DisposeTest : DiagnosticsFactoryTest
         {
             readonly Guid guid = Guid.NewGuid();
-            readonly Mock<PerformanceCounterProviderV2> mockPerformanceCounterProviderV2;
+            readonly Mock<PerformanceCounterProviderV2> performanceCounterProviderV2;
+            readonly Mock<IMeterProvider<TimeSpan>> timeSpanProvider;
+            readonly Mock<IMeterProvider<long>> longProvider;
 
             public DisposeTest()
             {
-                mockPerformanceCounterProviderV2 = new Mock<PerformanceCounterProviderV2>(guid, typeInformation);
-                sut.Field<PerformanceCounterProviderV2>().Set(mockPerformanceCounterProviderV2.Object);
+                performanceCounterProviderV2 = new Mock<PerformanceCounterProviderV2>(guid, typeInformation);
+                timeSpanProvider = new Mock<IMeterProvider<TimeSpan>>() { DefaultValue = DefaultValue.Mock };
+                longProvider = new Mock<IMeterProvider<long>>() { DefaultValue = DefaultValue.Mock };
+
+                sut.Field<PerformanceCounterProviderV2>().Set(performanceCounterProviderV2.Object);
+                sut.Field<IMeterProvider<TimeSpan>>().Set(timeSpanProvider.Object);
+                sut.Field<IMeterProvider<long>>().Set(longProvider.Object);
             }
 
             [Fact]
-            public void DisposesPerformanceCounterProvider()
+            public void DisposesAllDependencies()
             {
                 sut.Dispose();
 
-                mockPerformanceCounterProviderV2.Verify(p => p.Dispose(), Times.Once);
+                performanceCounterProviderV2.Verify(p => p.Dispose(), Times.Once);
+                timeSpanProvider.Verify(p => p.Dispose(), Times.Once);
+                longProvider.Verify(p => p.Dispose(), Times.Once);
             }
         }
 

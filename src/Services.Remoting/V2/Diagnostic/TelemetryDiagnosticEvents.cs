@@ -22,9 +22,9 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.Diagnostic
             _ = meterProvider ?? throw new ArgumentNullException(nameof(meterProvider));
             this.clock = clock ?? throw new ArgumentNullException(nameof(clock));
 
-            this.requestProcessingTime = meterProvider.CreateMeter("Services.Remoting", "MessageHandler.RequestProcessingTime");
-            this.requestDeserializationTime = meterProvider.CreateMeter("Services.Remoting", "MessageHandler.RequestDeserializationTime");
-            this.responseSerializationTime = meterProvider.CreateMeter("Services.Remoting", "MessageHandler.ResponseSerializationTime");
+            requestProcessingTime = meterProvider.CreateMeter("Services.Remoting", "MessageHandler.RequestProcessingTime");
+            requestDeserializationTime = meterProvider.CreateMeter("Services.Remoting", "MessageHandler.RequestDeserializationTime");
+            responseSerializationTime = meterProvider.CreateMeter("Services.Remoting", "MessageHandler.ResponseSerializationTime");
         }
 
         public void OnCreateTransportMessageBegin()
@@ -32,29 +32,27 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.Diagnostic
             // Intentionally left blank, since we don't observe this
         }
 
-        public void OnCreateTransportMessageEnd(DateTime startTime)
-        {
-            responseSerializationTime.Record(clock.UtcNow - startTime);
-        }
+        public void OnCreateTransportMessageEnd(DateTime startTime) => responseSerializationTime.Record(clock.UtcNow - startTime);
 
         public void OnRemotingRequestBegin()
         {
             // Intentionally left blank, since we don't observe this
         }
 
-        public void OnRemotingRequestEnd(DateTime startTime)
-        {
-            requestDeserializationTime.Record(clock.UtcNow - startTime);
-        }
+        public void OnRemotingRequestEnd(DateTime startTime) => requestDeserializationTime.Record(clock.UtcNow - startTime);
 
         public void OnRequestResponseBegin()
         {
             // Intentionally left blank, since we don't observe this
         }
 
-        public void OnRequestResponseEnd(DateTime startTime)
+        public void OnRequestResponseEnd(DateTime startTime) => requestProcessingTime.Record(clock.UtcNow - startTime);
+
+        public void Dispose()
         {
-            requestProcessingTime.Record(clock.UtcNow - startTime);
+            requestProcessingTime.Dispose();
+            requestDeserializationTime.Dispose();
+            responseSerializationTime.Dispose();
         }
     }
 }

@@ -14,7 +14,7 @@ using Xunit;
 
 
 namespace Microsoft.ServiceFabric.Services.Remoting.Tests.V2.Diagnostic
-{    
+{
     public class AggregatedDiagnosticEventsTest
     {
         internal interface ITestDiagnosticsEvents : IDiagnosticEvents { }
@@ -27,7 +27,7 @@ namespace Microsoft.ServiceFabric.Services.Remoting.Tests.V2.Diagnostic
             Mock.Of<IDiagnosticEvents>()
         };
 
-        private AggregatedDiagnosticEvents sut;
+        readonly AggregatedDiagnosticEvents sut;
 
         protected AggregatedDiagnosticEventsTest() => sut = new AggregatedDiagnosticEvents(diagnosticEvents);
 
@@ -63,16 +63,10 @@ namespace Microsoft.ServiceFabric.Services.Remoting.Tests.V2.Diagnostic
             }
 
             [Fact]
-            public void ThrowsOnNullEventsList()
-            {
-                Assert.Throws<ArgumentException>(() => new AggregatedDiagnosticEvents(null));
-            }
+            public void ThrowsOnNullEventsList() => Assert.Throws<ArgumentException>(() => new AggregatedDiagnosticEvents(null));
 
             [Fact]
-            public void ThrowsOnAnyNullEvents()
-            {
-                Assert.Throws<ArgumentException>(() => new AggregatedDiagnosticEvents(new List<IDiagnosticEvents> { diagnosticEvent, null }));
-            }
+            public void ThrowsOnAnyNullEvents() => Assert.Throws<ArgumentException>(() => new AggregatedDiagnosticEvents(new List<IDiagnosticEvents> { diagnosticEvent, null }));
 
             [Fact]
             public void AssignsEmptyEvent()
@@ -86,9 +80,9 @@ namespace Microsoft.ServiceFabric.Services.Remoting.Tests.V2.Diagnostic
             [Fact]
             public void AssignsSingleEvent()
             {
-                Assert.NotNull(this.sut.Field<IEnumerable<IDiagnosticEvents>>());
-                Assert.Single(this.sut.Field<IEnumerable<IDiagnosticEvents>>().Value);
-                Assert.IsAssignableFrom<IDiagnosticEvents>(this.sut.Field<IEnumerable<IDiagnosticEvents>>().Value.First());
+                Assert.NotNull(sut.Field<IEnumerable<IDiagnosticEvents>>());
+                Assert.Single(sut.Field<IEnumerable<IDiagnosticEvents>>().Value);
+                Assert.IsAssignableFrom<IDiagnosticEvents>(sut.Field<IEnumerable<IDiagnosticEvents>>().Value.First());
             }
 
             [Fact]
@@ -201,6 +195,20 @@ namespace Microsoft.ServiceFabric.Services.Remoting.Tests.V2.Diagnostic
 
                 Mock.Get(diagnosticEvent).Verify(ds => ds.OnCreateTransportMessageEnd(startTime), Times.Once);
                 Mock.Get(anotherDiagnosticEvents).Verify(ds => ds.OnCreateTransportMessageEnd(startTime), Times.Once);
+            }
+        }
+
+        public class Dispose : AggregatedDiagnosticEventsTest
+        {
+            [Fact]
+            public void DisposesAllChildren()
+            {
+                var sut = new AggregatedDiagnosticEvents(new List<IDiagnosticEvents> { diagnosticEvent, anotherDiagnosticEvents });
+
+                sut.Dispose();
+
+                Mock.Get(diagnosticEvent).Verify(d => d.Dispose(), Times.Once);
+                Mock.Get(anotherDiagnosticEvents).Verify(d => d.Dispose(), Times.Once);
             }
         }
 

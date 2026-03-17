@@ -48,22 +48,10 @@ namespace Microsoft.ServiceFabric.Services.Remoting.Tests.V2.Diagnostic
             }
 
             [Fact]
-            public void ThrowsOnNullProvider()
-            {
-                Assert.Throws<ArgumentException>(() =>
-                {
-                    new PerformanceCounterDiagnosticEvents(null, clock);
-                });
-            }
+            public void ThrowsOnNullProvider() => Assert.Throws<ArgumentException>(() => new PerformanceCounterDiagnosticEvents(null, clock));
 
             [Fact]
-            public void ThrowsOnNullClock()
-            {
-                Assert.Throws<ArgumentException>(() =>
-                {
-                    new PerformanceCounterDiagnosticEvents(performanceCounterProvider, null);
-                });
-            }
+            public void ThrowsOnNullClock() => Assert.Throws<ArgumentException>(() => new PerformanceCounterDiagnosticEvents(performanceCounterProvider, null));
         }
 
         public class OnEvent : PerformanceCounterDiagnosticEventsTest

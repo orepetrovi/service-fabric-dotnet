@@ -5,15 +5,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Fabric.Interop;
 using System.Runtime.InteropServices;
 
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 {
-    abstract class Meter
+    abstract class Meter : IDisposable
     {
-        protected readonly IFabricMeter fabricMeter;
-
         protected readonly IReadOnlyCollection<string> systemDimensionValues;
+
+        IFabricMeter fabricMeter;
+
+        static Func<object, int> finalReleaseComObject = Utility.FinalReleaseComObject;
 
         internal Meter(IFabricMeter fabricMeter, IReadOnlyCollection<string> systemDimensionValues)
         {
@@ -21,22 +24,27 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             this.fabricMeter = fabricMeter ?? throw new ArgumentNullException(nameof(fabricMeter));
         }
 
-        protected void Record(long value)
+        public void Dispose()
         {
-            RecordViaNative(value, 0, null, null, null);
-        }
-
-        protected long ConvertTimeSpanToLong(TimeSpan value)
-        {
-            return (long)Math.Round(value.TotalMilliseconds);
-        }
-
-        unsafe protected void RecordViaNative(long value, int customDimensionCount, string dimension1Value, string dimension2Value, string dimension3Value)
-        {
-            if (customDimensionCount < 0 || customDimensionCount > 3)
+            if (!IsDisposed())
             {
-                throw new ArgumentOutOfRangeException(nameof(customDimensionCount));
+                finalReleaseComObject(fabricMeter);
+                fabricMeter = null;
             }
+        }
+
+        protected void Record(long value) => RecordViaNative(value, 0, null, null, null);
+
+        protected long ConvertTimeSpanToLong(TimeSpan value) => (long)Math.Round(value.TotalMilliseconds);
+
+        bool IsDisposed() => fabricMeter == null;
+
+        protected unsafe void RecordViaNative(long value, int customDimensionCount, string dimension1Value, string dimension2Value, string dimension3Value)
+        {
+            if (IsDisposed())
+                throw new ObjectDisposedException(nameof(Meter));
+            if (customDimensionCount < 0 || customDimensionCount > 3)
+                throw new ArgumentOutOfRangeException(nameof(customDimensionCount));
 
             int dimensionCount = systemDimensionValues.Count + customDimensionCount;
 

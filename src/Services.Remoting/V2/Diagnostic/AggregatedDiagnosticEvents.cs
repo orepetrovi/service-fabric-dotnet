@@ -68,5 +68,13 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.Diagnostic
                 diagnosticEvent.OnCreateTransportMessageEnd(startTime);
             }
         }
+
+        public void Dispose()
+        {
+            foreach (IDiagnosticEvents diagnosticEvent in diagnosticEvents)
+            {
+                diagnosticEvent.Dispose();
+            }
+        }
     }
 }

@@ -141,5 +141,13 @@ namespace Microsoft.ServiceFabric.Actors.Diagnostics
                 d.AcquireActorLockFinish(diagnosticData, startTime);
             }
         }
+
+        public void Dispose()
+        {
+            foreach (IDiagnostics d in diagnosticEvents)
+            {
+                d.Dispose();
+            }
+        }
     }
 }

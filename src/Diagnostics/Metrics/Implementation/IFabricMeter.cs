@@ -5,10 +5,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-
-#if NET
 using System.Runtime.InteropServices.Marshalling;
-#else
+
+#if !NET
 using GeneratedComInterfaceAttribute = System.Runtime.InteropServices.ComImportAttribute;
 #endif
 

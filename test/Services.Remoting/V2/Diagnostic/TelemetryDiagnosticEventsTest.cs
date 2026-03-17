@@ -7,7 +7,6 @@ using System;
 using Fuzzy;
 using Inspector;
 using Microsoft.ServiceFabric.Diagnostics.Metrics;
-using Microsoft.ServiceFabric.TestFramework;
 using Moq;
 using Xunit;
 using IClock = Microsoft.ServiceFabric.Diagnostics.IClock;
@@ -54,18 +53,18 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.Diagnostic
 
         public class OnEvents : TelemetryDiagnosticEventsTest
         {
-            readonly IMeter<TimeSpan> mockRequestProcessingTime;
-            readonly IMeter<TimeSpan> mockRequestDeserializationTime;
-            readonly IMeter<TimeSpan> mockResponseSerializationTime;
+            readonly IMeter<TimeSpan> requestProcessingTime;
+            readonly IMeter<TimeSpan> requestDeserializationTime;
+            readonly IMeter<TimeSpan> responseSerializationTime;
             readonly DateTime endTime;
             readonly DateTime startTime;
             readonly double durationMilliseconds = fuzzy.Double(0, 5000);
 
             public OnEvents()
             {
-                mockRequestProcessingTime = sut.Field<IMeter<TimeSpan>>("requestProcessingTime").Value;
-                mockRequestDeserializationTime = sut.Field<IMeter<TimeSpan>>("requestDeserializationTime").Value;
-                mockResponseSerializationTime = sut.Field<IMeter<TimeSpan>>("responseSerializationTime").Value;
+                requestProcessingTime = sut.Field<IMeter<TimeSpan>>("requestProcessingTime").Value;
+                requestDeserializationTime = sut.Field<IMeter<TimeSpan>>("requestDeserializationTime").Value;
+                responseSerializationTime = sut.Field<IMeter<TimeSpan>>("responseSerializationTime").Value;
 
                 startTime = DateTime.UtcNow;
                 endTime = startTime.AddMilliseconds(durationMilliseconds);
@@ -80,9 +79,9 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.Diagnostic
                 sut.OnCreateTransportMessageBegin();
                 sut.OnRemotingRequestBegin();
 
-                Mock.Get(mockRequestProcessingTime).Verify(x => x.Record(It.IsAny<TimeSpan>()), Times.Never);
-                Mock.Get(mockRequestDeserializationTime).Verify(x => x.Record(It.IsAny<TimeSpan>()), Times.Never);
-                Mock.Get(mockResponseSerializationTime).Verify(x => x.Record(It.IsAny<TimeSpan>()), Times.Never);
+                Mock.Get(requestProcessingTime).Verify(x => x.Record(It.IsAny<TimeSpan>()), Times.Never);
+                Mock.Get(requestDeserializationTime).Verify(x => x.Record(It.IsAny<TimeSpan>()), Times.Never);
+                Mock.Get(responseSerializationTime).Verify(x => x.Record(It.IsAny<TimeSpan>()), Times.Never);
             }
 
             [Fact]
@@ -90,7 +89,7 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.Diagnostic
             {
                 sut.OnRequestResponseEnd(startTime);
 
-                Mock.Get(mockRequestProcessingTime).Verify(x => x.Record(It.Is<TimeSpan>(ts => Math.Abs(ts.TotalMilliseconds - durationMilliseconds) < 0.0001)), Times.Once);
+                Mock.Get(requestProcessingTime).Verify(x => x.Record(It.Is<TimeSpan>(ts => Math.Abs(ts.TotalMilliseconds - durationMilliseconds) < 0.0001)), Times.Once);
             }
 
             [Fact]
@@ -98,7 +97,7 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.Diagnostic
             {
                 sut.OnRemotingRequestEnd(startTime);
 
-                Mock.Get(mockRequestDeserializationTime).Verify(x => x.Record(It.Is<TimeSpan>(ts => Math.Abs(ts.TotalMilliseconds - durationMilliseconds) < 0.0001)), Times.Once);
+                Mock.Get(requestDeserializationTime).Verify(x => x.Record(It.Is<TimeSpan>(ts => Math.Abs(ts.TotalMilliseconds - durationMilliseconds) < 0.0001)), Times.Once);
             }
 
             [Fact]
@@ -106,7 +105,31 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.Diagnostic
             {
                 sut.OnCreateTransportMessageEnd(startTime);
 
-                Mock.Get(mockResponseSerializationTime).Verify(x => x.Record(It.Is<TimeSpan>(ts => Math.Abs(ts.TotalMilliseconds - durationMilliseconds) < 0.0001)), Times.Once);
+                Mock.Get(responseSerializationTime).Verify(x => x.Record(It.Is<TimeSpan>(ts => Math.Abs(ts.TotalMilliseconds - durationMilliseconds) < 0.0001)), Times.Once);
+            }
+        }
+
+        public class Dispose : TelemetryDiagnosticEventsTest
+        {
+            readonly IMeter<TimeSpan> requestProcessingTime;
+            readonly IMeter<TimeSpan> requestDeserializationTime;
+            readonly IMeter<TimeSpan> responseSerializationTime;
+
+            public Dispose()
+            {
+                requestProcessingTime = sut.Field<IMeter<TimeSpan>>("requestProcessingTime").Value;
+                requestDeserializationTime = sut.Field<IMeter<TimeSpan>>("requestDeserializationTime").Value;
+                responseSerializationTime = sut.Field<IMeter<TimeSpan>>("responseSerializationTime").Value;
+            }
+
+            [Fact]
+            public void DisposesAllMeters()
+            {
+                sut.Dispose();
+
+                Mock.Get(requestProcessingTime).Verify(m => m.Dispose(), Times.Once);
+                Mock.Get(requestDeserializationTime).Verify(m => m.Dispose(), Times.Once);
+                Mock.Get(responseSerializationTime).Verify(m => m.Dispose(), Times.Once);
             }
         }
     }

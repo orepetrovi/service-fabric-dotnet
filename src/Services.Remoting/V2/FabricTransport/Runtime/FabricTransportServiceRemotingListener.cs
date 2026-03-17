@@ -3,6 +3,7 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Fabric;
 using System.Fabric.Common;
@@ -26,10 +27,11 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
     {
         private static readonly string DefaultV2ListenerEndpointResourceName = "ServiceEndpointV2";
         private static readonly string DefaultWrappedMessageListenerEndpointResourceName = "ServiceEndpointV2_1";
-        private readonly FabricTransportMessageHandler transportMessageHandler;
+        private readonly IFabricTransportMessageHandler transportMessageHandler;
         private readonly string listenAddress;
         private readonly string publishAddress;
-        readonly FabricTransportListener fabricTransportlistener;
+        readonly IFabricTransportListener fabricTransportlistener;
+        readonly IMeterProvider<TimeSpan> meterProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FabricTransportServiceRemotingListener"/> class.
@@ -126,13 +128,15 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
                 new DefaultExceptionConvertor()
             };
 
+            this.meterProvider = new TimeSpanMeterProvider(serviceContext);
+
             this.transportMessageHandler = new FabricTransportMessageHandler(
                 serviceRemotingMessageHandler,
                 serializersManager,
                 new ExceptionSerializer(svcExceptionConvertors, remotingSettings),
                 serviceContext.PartitionId,
                 serviceContext.ReplicaOrInstanceId,
-                new TimeSpanMeterProvider(serviceContext));
+                this.meterProvider);
 
             this.fabricTransportlistener = new FabricTransportListener(
                 remotingSettings.GetInternalSettings(),
@@ -233,6 +237,7 @@ namespace Microsoft.ServiceFabric.Services.Remoting.V2.FabricTransport.Runtime
         {
             this.fabricTransportlistener.Dispose();
             this.transportMessageHandler.Dispose();
+            this.meterProvider.Dispose();
         }
     }
 }

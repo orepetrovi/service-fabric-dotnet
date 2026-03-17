@@ -3,6 +3,7 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 
 namespace Microsoft.ServiceFabric.FabricTransport.Runtime
@@ -11,7 +12,7 @@ namespace Microsoft.ServiceFabric.FabricTransport.Runtime
     /// Defines the interface that must be implemented by the ServiceRemotingListener to receive messages from the
     /// remoting transport.
     /// </summary>
-    internal interface IFabricTransportMessageHandler
+    interface IFabricTransportMessageHandler : IDisposable
     {
         Task<FabricTransportMessage> RequestResponseAsync(FabricTransportRequestContext requestContext,
             FabricTransportMessage fabricTransportMessage);
