@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Fabric;
 using System.Fabric.Interop;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 {
@@ -52,15 +53,52 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
         bool IsDisposed() => fabricMeterProvider == null;
 
-        protected IFabricMeter CreateNativeMeter(string metricNamespace, string metricName, IEnumerable<string> variableDimensionNames)
+        protected unsafe IFabricMeter CreateNativeMeter(string metricNamespace, string metricName, IEnumerable<string> variableDimensionNames)
         {
             if (IsDisposed())
                 throw new ObjectDisposedException(nameof(MeterProvider<>));
 
             string[] allDimensionNames = [.. fixedDimensionNames, .. variableDimensionNames];
-            string[] fixedDimensionsValues = [.. fixedDimensionValues];
+            string[] fixedDimValues = [.. fixedDimensionValues];
+            int totalPins = 2 + allDimensionNames.Length + fixedDimValues.Length;
 
-            return fabricMeterProvider.CreateMeter(metricNamespace, metricName, (uint)allDimensionNames.Length, allDimensionNames, (uint)fixedDimensionsValues.Length, fixedDimensionsValues);
+            GCHandle* pins = stackalloc GCHandle[totalPins];
+            IntPtr* dimensionNamePtrs = stackalloc IntPtr[allDimensionNames.Length];
+            IntPtr* fixedValuePtrs = stackalloc IntPtr[fixedDimValues.Length];
+
+            try
+            {
+                int p = 0;
+                pins[p++] = GCHandle.Alloc(metricNamespace, GCHandleType.Pinned);
+                pins[p++] = GCHandle.Alloc(metricName, GCHandleType.Pinned);
+
+                for (int i = 0; i < allDimensionNames.Length; i++)
+                    pins[p++] = GCHandle.Alloc(allDimensionNames[i], GCHandleType.Pinned);
+
+                for (int i = 0; i < fixedDimValues.Length; i++)
+                    pins[p++] = GCHandle.Alloc(fixedDimValues[i], GCHandleType.Pinned);
+
+                for (int i = 0; i < allDimensionNames.Length; i++)
+                    dimensionNamePtrs[i] = pins[2 + i].AddrOfPinnedObject();
+
+                for (int i = 0; i < fixedDimValues.Length; i++)
+                    fixedValuePtrs[i] = pins[2 + allDimensionNames.Length + i].AddrOfPinnedObject();
+
+                FABRIC_METER_DESCRIPTION description;
+                description.Namespace = pins[0].AddrOfPinnedObject();
+                description.Name = pins[1].AddrOfPinnedObject();
+                description.TotalDimensionsCount = (uint)allDimensionNames.Length;
+                description.DimensionNames = (IntPtr)dimensionNamePtrs;
+                description.FixedDimensionCount = (uint)fixedDimValues.Length;
+                description.FixedDimensionValues = (IntPtr)fixedValuePtrs;
+                description.Reserved = IntPtr.Zero;
+
+                return fabricMeterProvider.CreateMeter((IntPtr)(&description));
+            }
+            finally
+            {
+                Interop.Free(pins, totalPins);
+            }
         }
 
         public void Dispose()
