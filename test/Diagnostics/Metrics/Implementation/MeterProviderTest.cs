@@ -117,7 +117,7 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
             {
                 sut.Dispose();
 
-                Assert.Throws<ObjectDisposedException>(() => createMeterProvider.Invoke(metricNamespace, metricName, dimensions));
+                _ = Assert.Throws<ObjectDisposedException>(() => createMeterProvider.Invoke(metricNamespace, metricName, dimensions));
             }
         }
     }

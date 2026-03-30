@@ -7,14 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Fabric;
 using System.Fabric.Interop;
-using System.Linq;
 
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 {
     abstract class MeterProvider<TValueType> : IMeterProvider<TValueType>
     {
-        readonly IReadOnlyCollection<string> systemDimensionNames;
-        protected readonly IReadOnlyCollection<string> systemDimensionValues;
+        readonly IReadOnlyCollection<string> fixedDimensionNames;
+        protected readonly IReadOnlyCollection<string> fixedDimensionValues;
         IFabricMeterProvider fabricMeterProvider;
 
         static Func<IFabricMeterProvider> createFabricMeterProvider = NativeTelemetry.FabricCreateMeterProvider;
@@ -26,45 +25,42 @@ namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation
 
             if (serviceContext != null)
             {
-                systemDimensionNames = new[]
-                {
+                fixedDimensionNames =
+                [
                     nameof(ServiceContext.PartitionId),
                     nameof(ServiceContext.ServiceTypeName),
                     nameof(ServiceContext.ServiceName),
                     nameof(ServiceContext.CodePackageActivationContext.ApplicationName),
                     nameof(ServiceContext.CodePackageActivationContext.ApplicationTypeName)
-                };
+                ];
 
-                systemDimensionValues = new[]
-                {
+                fixedDimensionValues =
+                [
                     serviceContext.PartitionId.ToString(),
                     serviceContext.ServiceTypeName,
                     serviceContext.ServiceName.ToString(),
                     serviceContext.CodePackageActivationContext.ApplicationName,
                     serviceContext.CodePackageActivationContext.ApplicationTypeName
-                };
+                ];
             }
             else
             {
-                systemDimensionNames = Array.Empty<string>();
-                systemDimensionValues = Array.Empty<string>();
+                fixedDimensionNames = [];
+                fixedDimensionValues = [];
             }
         }
 
         bool IsDisposed() => fabricMeterProvider == null;
 
-        protected IFabricMeter CreateNativeMeter(string metricNamespace, string metricName, IEnumerable<string> additionalDimensions)
+        protected IFabricMeter CreateNativeMeter(string metricNamespace, string metricName, IEnumerable<string> variableDimensionNames)
         {
             if (IsDisposed())
-                throw new ObjectDisposedException(nameof(MeterProvider<TValueType>));
+                throw new ObjectDisposedException(nameof(MeterProvider<>));
 
-            var allDimensionsList = new List<string>(systemDimensionNames.Count + additionalDimensions.Count());
+            string[] allDimensionNames = [.. fixedDimensionNames, .. variableDimensionNames];
+            string[] fixedDimensionsValues = [.. fixedDimensionValues];
 
-            allDimensionsList.AddRange(systemDimensionNames);
-            allDimensionsList.AddRange(additionalDimensions);
-
-            string[] allDimensions = allDimensionsList.ToArray();
-            return fabricMeterProvider.CreateMeter(metricNamespace, metricName, (uint)allDimensions.Length, allDimensions);
+            return fabricMeterProvider.CreateMeter(metricNamespace, metricName, (uint)allDimensionNames.Length, allDimensionNames, (uint)fixedDimensionsValues.Length, fixedDimensionsValues);
         }
 
         public void Dispose()
