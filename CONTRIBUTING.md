@@ -21,9 +21,10 @@ sudo ./init.sh
 
 ## dotnet
 
-You can run `dotnet` commands in the root of the repo for all projects in the `code.slnx`. You can also run `dotnet`
-in a directory containing a specific project you're interested in. For example, `cd test/Services.Remoting` if you want
-to build and test only the `Microsoft.ServiceFabric.Services.Remoting.Tests.csproj` and its dependencies.
+- Run the `dotnet` commands in the root of the repo for all projects in the `code.slnx`.
+- Run `dotnet` in a directory containing a specific project you're interested in to reduce time and output.
+  For example, `cd test/Services.Remoting` if you want to build and test only the `Microsoft.ServiceFabric.Services.Remoting.Tests.csproj`
+  and its dependencies.
 
 ## Restore
 
@@ -34,21 +35,24 @@ dotnet restore
 ```
 
 ## Build
+```
+dotnet build -graph --no-restore
+```
+- `-graph` eliminates the `MSB3026` warnings from multiple projects trying to copy the same file to the shared build output.
+  Note that it prevents MSBuild from using environment variables as properties and you may have to specify them explicitly
+  instead, i.e. `-c Release` or `-p PublicRelease=true`.
+- `--no-restore` saves a few seconds for every build
 
-Speed up build by skipping restore and building specific projects you're modifying, typically a test project.
-```
-dotnet build --no-restore
-```
 
 ## Test
 ```
 dotnet test -c Release -f net10.0
 ```
-The Remoting tests have known failures in the `Debug` configuration, so we use the `--configuration` parameter to run
-`Release` tests for all projects. This parameter can be omitted to run `Debug` tests for a specific project.
-
-On Windows, strong name verification must be disabled to avoid `net472` test failures.
-Run `init.cmd` or `eng\SkipStrongName.ps1` if you encounter them.
+- `-c Release` avoids known failures in the `Debug` configuration of some test projects.
+- `-f net10.0` or `-f net472` reduces test time by limiting them to a specific .NET framework.
+- You must run tests on all frameworks, without the `-f` switch, to verify all code changes.
+- On Windows, the `net472` tests will fail unless strong name verification of Service Fabric assemblies was disabled by
+  `init.cmd` or `eng\SkipStrongName.ps1`.
 
 ## Pack
 ```
