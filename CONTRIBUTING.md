@@ -1,10 +1,28 @@
-# Code
+# Contributing
 
 ## Clone
 ```
 git clone https://github.com/microsoft/service-fabric-dotnet.git
 cd ./service-fabric-dotnet
 ```
+
+## Project Structure
+
+| Directory             | Purpose                                                |
+|-----------------------|--------------------------------------------------------|
+| `src/`                | Product projects (libraries shipped as NuGet packages) |
+| `src/Constants`       | Compile-time constants used by other projects          |
+| `test/`               | Test projects (xUnit, one per src project)             |
+| `test/TestFramework/` | Shared test utilities                                  |
+| `properties/`         | Shared MSBuild props, signing key                      |
+| `refs/`               | Reference assemblies without NuGet packages            |
+
+Product projects target `net8.0;net462` with the exception of `Client.Http` and `PowerShell.Http` which still target
+`netstandard2.0`. Test projects target `net10.0;net9.0;net8.0;net472`.
+
+The `src/` and `test/` directories contain sub-directories named based on the projects within them. For example, `src/Actors`
+contains `Microsoft.ServiceFabric.Actors.csproj` and `test/Actors` contains `Microsoft.ServiceFabric.Actors.Tests.csproj`.
+We omit the `Microsoft.ServiceFabric` prefix and the `Tests` suffix from directory names.
 
 ## Install pre-requisites
 
@@ -54,11 +72,20 @@ dotnet test -c Release -f net10.0
 - On Windows, the `net472` tests will fail unless strong name verification of Service Fabric assemblies was disabled by
   `init.cmd` or `eng\SkipStrongName.ps1`.
 
+You can use `-f net472` or `-f net10.0` to speed up verification during development. Run tests on all
+target frameworks before submitting a pull request.
+
 ## Pack
 ```
 dotnet pack
 ```
 NuGet packages and PowerShell modules are produced in the [out/packages](./out/packages) directory.
+
+## Build Conventions
+
+- **Central package management**: All package versions defined in `Directory.Packages.props`
+- **C# version**: `latestMajor` (set in `Directory.Build.props`)
+- **Assembly signing**: Delay-signed with `properties/Key.snk`
 
 ## Integrate
 
@@ -110,6 +137,7 @@ sure you're building with latest package versions and assemblies.
   to discuss your idea with us first.
 - Join the [service-fabric-write](https://repos.opensource.microsoft.com/orgs/microsoft/teams/service-fabric-write) team.
 - Create a branch called `user/{youraccount}/{youproposal}` in your local clone.
+- Ask Copilot `/review with multiple models` of your changes.
 
 ## External Contributors
 - Find an existing or submit a new [issue](https://github.com/microsoft/service-fabric-dotnet/issues) to discuss your idea with us first.
@@ -118,7 +146,18 @@ sure you're building with latest package versions and assemblies.
 
 ## All Contributors
 - Create a [draft pull request](https://docs.github.com/articles/creating-a-pull-request).
+- Follow the [git commit guidelines](https://cbea.ms/git-commit) to author the PR title and description.
+  - Write for the person reading history of the _target_ branch in the future.
+  - Describe _what_ it changes and _why_, not _how_ it was developed or which prior PRs it addresses.
+  - Title should use the imperative mood and be limited to 72 characters.
+  - Don't include textual tags `[MyFeature]` in the title.
 - Make sure the validation build completes successfully.
 - Link the pull request from the work item/issue you've created.
 - Publish the pull request and address the Copilot review feedback.
+- Resolve review comment threads after addressing the feedback.
 - Tag the person you were discussing your proposal to review the PR.
+
+## Maintainers
+- Ask Copilot `/review PR #N with multiple models and post feedback to GitHub`.
+- Re-open comment threads if the feedback was not addressed adequately.
+- Merge the pull request after approving it.
