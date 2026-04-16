@@ -11,7 +11,6 @@ namespace Microsoft.ServiceFabric.Actors.Tests
     using System.Threading.Tasks;
     using Microsoft.ServiceFabric.Actors;
     using Microsoft.ServiceFabric.Actors.Runtime;
-    using Microsoft.ServiceFabric.TestFramework;
     using Xunit;
 
     public class DependencyInjectionTests

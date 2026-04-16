@@ -9,7 +9,6 @@ using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Tests;
-using Microsoft.ServiceFabric.TestFramework;
 using Xunit;
 
 namespace Microsoft.ServiceFabric.Actors.Runtime
