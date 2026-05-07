@@ -38,11 +38,9 @@ namespace Microsoft.ServiceFabric.Services.Communication.Wcf.Runtime
 
             if (this.channelDisp.Listener.State != CommunicationState.Opened)
             {
-                var faultCodeToUse = WcfRemoteExceptionInformation.FaultCodeRetry;
-                var faultReason = new FaultReason(WcfRemoteExceptionInformation.ToString(error));
-                var faultException = new FaultException(faultReason, faultCodeToUse);
-                var mssgFault = faultException.CreateMessageFault();
-                fault = Message.CreateMessage(version, mssgFault, null);
+                var faultReason = new FaultReason(error.GetType().FullName);
+                var faultException = new FaultException(faultReason, WcfRemoteExceptionInformation.FaultCodeRetry);
+                fault = Message.CreateMessage(version, faultException.CreateMessageFault(), null);
             }
         }
     }
