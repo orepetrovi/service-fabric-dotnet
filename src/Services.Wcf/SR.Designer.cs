@@ -68,32 +68,5 @@ namespace Microsoft.ServiceFabric.Services.Wcf {
                 return ResourceManager.GetString("ErrorCommunicationClientOpenTimeout", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to deserialize and get remote exception  {0}.
-        /// </summary>
-        internal static string ErrorDeserializationFailure {
-            get {
-                return ResourceManager.GetString("ErrorDeserializationFailure", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The exception {0} was unhandled on the service and could not be serialized for transferring to the client..
-        /// </summary>
-        internal static string ErrorExceptionSerializationFailed1 {
-            get {
-                return ResourceManager.GetString("ErrorExceptionSerializationFailed1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Detailed Exception Information: {0}.
-        /// </summary>
-        internal static string ErrorExceptionSerializationFailed2 {
-            get {
-                return ResourceManager.GetString("ErrorExceptionSerializationFailed2", resourceCulture);
-            }
-        }
     }
 }

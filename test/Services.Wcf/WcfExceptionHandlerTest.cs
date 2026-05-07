@@ -56,6 +56,22 @@ public abstract class WcfExceptionHandlerTest
 
             Assert.False(HostileSentinel.WasInstantiated);
         }
+
+        [Fact]
+        public void ReturnsFalseForFaultExceptionWithoutRetrySubCode()
+        {
+            var fe = new FaultException(
+                new FaultReason("System.InvalidOperationException"),
+                new FaultCode(WcfRemoteExceptionInformation.FaultCodeName));
+
+            bool handled = sut.TryHandleException(
+                new ExceptionInformation(fe),
+                retrySettings,
+                out var result);
+
+            Assert.False(handled);
+            Assert.Null(result);
+        }
     }
 
     [Serializable]

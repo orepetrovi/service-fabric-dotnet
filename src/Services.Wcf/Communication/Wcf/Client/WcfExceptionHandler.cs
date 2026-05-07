@@ -158,7 +158,7 @@ namespace Microsoft.ServiceFabric.Services.Communication.Wcf.Client
                 result = new ExceptionHandlingRetryResult(
                     fe.Reason.ToString(),
                     isTransient: false,
-                    retrySettings.RetryPolicy.GetNextRetryDelay(new RetryDelayParameters(0, false)),
+                    retrySettings,
                     retrySettings.DefaultMaxRetryCountForNonTransientErrors);
                 return true;
             }
