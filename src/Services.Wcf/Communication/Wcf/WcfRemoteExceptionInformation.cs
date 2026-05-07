@@ -7,7 +7,7 @@ namespace Microsoft.ServiceFabric.Services.Communication.Wcf
 {
     using System.ServiceModel;
 
-    internal class WcfRemoteExceptionInformation
+    internal static class WcfRemoteExceptionInformation
     {
         public static readonly string FaultCodeName = "WcfRemoteExceptionInformation";
         public static readonly string FaultSubCodeRetryName = "Retry";

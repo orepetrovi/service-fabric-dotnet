@@ -20,7 +20,7 @@ public abstract class WcfGlobalErrorHandlerTest
     // Constructor parameters
     readonly ChannelDispatcher dispatcher;
 
-    WcfGlobalErrorHandlerTest()
+    protected WcfGlobalErrorHandlerTest()
     {
         var listener = new Mock<IChannelListener> { DefaultValue = DefaultValue.Mock };
         listener.Setup(l => l.State).Returns(CommunicationState.Faulted);
