@@ -7,6 +7,7 @@ using System;
 using System.Fabric;
 using Fuzzy;
 using Inspector;
+using Microsoft.ServiceFabric.Data;
 using Moq;
 using Xunit;
 
@@ -64,7 +65,12 @@ public abstract class StatefulServiceReplicaFactoryTest
 
         public CreateReplica()
         {
-            mockService = new Mock<StatefulServiceBase>(fuzzy.StatefulServiceContext()) { DefaultValue = DefaultValue.Mock };
+            mockService = new Mock<StatefulServiceBase>(
+                fuzzy.StatefulServiceContext(),
+                Mock.Of<IStateProviderReplica>())
+            {
+                DefaultValue = DefaultValue.Mock,
+            };
 
             Mock.Get(serviceFactory)
                 .Setup(f => f(It.IsAny<StatefulServiceContext>()))
