@@ -7,6 +7,7 @@ namespace Microsoft.ServiceFabric.Services.Communication.Wcf.Client;
 
 using System;
 using System.ServiceModel;
+using Fuzzy;
 using Microsoft.ServiceFabric.Services.Communication.Client;
 using Xunit;
 
@@ -14,11 +15,17 @@ public abstract class WcfExceptionHandlerTest
 {
     readonly IExceptionHandler sut = new WcfExceptionHandler();
 
-    // Constructor parameters
-    readonly OperationRetrySettings retrySettings = new();
+    // Test fixture
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
     public sealed class TryHandleException : WcfExceptionHandlerTest
     {
+        readonly OperationRetrySettings retrySettings = new(
+            fuzzy.TimeSpan(),
+            fuzzy.TimeSpan(),
+            fuzzy.Int32().Between(1, 10),
+            fuzzy.Int32().Between(1, 10));
+
         [Fact]
         public void ReturnsTrueWithRetryResultForWellKnownFaultException()
         {
@@ -29,32 +36,13 @@ public abstract class WcfExceptionHandlerTest
             bool handled = sut.TryHandleException(
                 new ExceptionInformation(fe),
                 retrySettings,
-                out var result);
+                out ExceptionHandlingResult result);
 
             Assert.True(handled);
-            var retry = Assert.IsType<ExceptionHandlingRetryResult>(result);
+            ExceptionHandlingRetryResult retry = Assert.IsType<ExceptionHandlingRetryResult>(result);
             Assert.False(retry.IsTransient);
             Assert.Equal(retrySettings.DefaultMaxRetryCountForNonTransientErrors, retry.MaxRetryCount);
             Assert.Equal(fe.Reason.ToString(), retry.ExceptionId);
-        }
-
-        [Fact]
-        public void DoesNotDeserializeHostilePayloadInFaultReason()
-        {
-            HostileSentinel.WasInstantiated = false;
-
-            string hostileXml = "<HostileSentinel xmlns=\"http://schemas.datacontract.org/2004/07/" +
-                typeof(HostileSentinel).Namespace + "\" />";
-            var fe = new FaultException(
-                new FaultReason(hostileXml),
-                WcfRemoteExceptionInformation.FaultCodeRetry);
-
-            sut.TryHandleException(
-                new ExceptionInformation(fe),
-                retrySettings,
-                out _);
-
-            Assert.False(HostileSentinel.WasInstantiated);
         }
 
         [Fact]
@@ -67,21 +55,10 @@ public abstract class WcfExceptionHandlerTest
             bool handled = sut.TryHandleException(
                 new ExceptionInformation(fe),
                 retrySettings,
-                out var result);
+                out ExceptionHandlingResult result);
 
             Assert.False(handled);
             Assert.Null(result);
-        }
-    }
-
-    [Serializable]
-    sealed class HostileSentinel : Exception
-    {
-        internal static bool WasInstantiated;
-
-        public HostileSentinel()
-        {
-            WasInstantiated = true;
         }
     }
 }

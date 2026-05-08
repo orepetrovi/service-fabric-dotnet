@@ -25,7 +25,7 @@ public abstract class WcfGlobalErrorHandlerTest
         var listener = new Mock<IChannelListener> { DefaultValue = DefaultValue.Mock };
         listener.Setup(l => l.State).Returns(CommunicationState.Faulted);
         dispatcher = Type<ChannelDispatcher>.Uninitialized();
-        dispatcher.Field<IChannelListener>("listener").Set(listener.Object);
+        dispatcher.Field<IChannelListener>().Set(listener.Object);
         sut = new WcfGlobalErrorHandler(dispatcher);
     }
 
