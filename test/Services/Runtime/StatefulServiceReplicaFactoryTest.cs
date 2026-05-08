@@ -60,15 +60,15 @@ public abstract class StatefulServiceReplicaFactoryTest
         readonly long replicaId = fuzzy.Int64();
 
         readonly Mock<StatefulServiceBase> mockService;
-        readonly StatefulServiceContext serviceContext;
+        StatefulServiceContext actualServiceContext;
 
         public CreateReplica()
         {
-            serviceContext = fuzzy.StatefulServiceContext();
-            mockService = new Mock<StatefulServiceBase>(serviceContext) { DefaultValue = DefaultValue.Mock };
+            mockService = new Mock<StatefulServiceBase>(fuzzy.StatefulServiceContext()) { DefaultValue = DefaultValue.Mock };
 
-            _ = Mock.Get(serviceFactory)
+            Mock.Get(serviceFactory)
                 .Setup(f => f(It.IsAny<StatefulServiceContext>()))
+                .Callback((StatefulServiceContext ctx) => actualServiceContext = ctx)
                 .Returns(mockService.Object);
         }
 
@@ -77,16 +77,15 @@ public abstract class StatefulServiceReplicaFactoryTest
         {
             IStatefulServiceFactory sut = CreateSut();
 
-            _ = sut.CreateReplica(serviceTypeName, serviceName, initializationData, partitionId, replicaId);
+            sut.CreateReplica(serviceTypeName, serviceName, initializationData, partitionId, replicaId);
 
-            Mock.Get(serviceFactory).Verify(f => f(It.Is<StatefulServiceContext>(ctx =>
-                ctx.NodeContext == runtimeContext.NodeContext &&
-                ctx.CodePackageActivationContext == runtimeContext.CodePackageContext &&
-                ctx.ServiceTypeName == serviceTypeName &&
-                ctx.ServiceName == serviceName &&
-                ctx.InitializationData == initializationData &&
-                ctx.PartitionId == partitionId &&
-                ctx.ReplicaId == replicaId)));
+            Assert.Same(runtimeContext.NodeContext, actualServiceContext.NodeContext);
+            Assert.Same(runtimeContext.CodePackageContext, actualServiceContext.CodePackageActivationContext);
+            Assert.Equal(serviceTypeName, actualServiceContext.ServiceTypeName);
+            Assert.Equal(serviceName, actualServiceContext.ServiceName);
+            Assert.Same(initializationData, actualServiceContext.InitializationData);
+            Assert.Equal(partitionId, actualServiceContext.PartitionId);
+            Assert.Equal(replicaId, actualServiceContext.ReplicaId);
         }
 
         [Fact]
@@ -104,13 +103,13 @@ public abstract class StatefulServiceReplicaFactoryTest
         [Fact]
         public void ThrowsInvalidOperationExceptionWhenServiceFactoryReturnsNull()
         {
-            _ = Mock.Get(serviceFactory)
+            Mock.Get(serviceFactory)
                 .Setup(f => f(It.IsAny<StatefulServiceContext>()))
                 .Returns((StatefulServiceBase)null);
 
             IStatefulServiceFactory sut = CreateSut();
 
-            _ = Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<InvalidOperationException>(() =>
                 sut.CreateReplica(serviceTypeName, serviceName, initializationData, partitionId, replicaId));
         }
     }
