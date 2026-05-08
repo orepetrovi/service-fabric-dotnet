@@ -124,18 +124,6 @@ namespace Microsoft.ServiceFabric.Services.Communication.Client
             this.maxRetryCount = maxRetryCount;
         }
 
-        internal ExceptionHandlingRetryResult(
-          Exception exception,
-          bool isTransient,
-          OperationRetrySettings retrySettings)
-            : this(
-                  exception,
-                  isTransient,
-                  retrySettings,
-                  isTransient ? retrySettings.DefaultMaxRetryCountForTransientErrors : retrySettings.DefaultMaxRetryCountForNonTransientErrors)
-        {
-        }
-
         /// <summary>
         /// Gets a value indicating whether the exception is represents a transient condition.
         /// The transient retriable exceptions are those where the communication channel from client
