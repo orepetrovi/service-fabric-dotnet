@@ -20,23 +20,15 @@ public abstract class WcfExceptionHandlerTest
 
     public sealed class TryHandleException : WcfExceptionHandlerTest
     {
-        readonly OperationRetrySettings retrySettings = new(
-            fuzzy.TimeSpan(),
-            fuzzy.TimeSpan(),
-            fuzzy.Int32().Between(1, 10),
-            fuzzy.Int32().Between(1, 10));
+        readonly OperationRetrySettings retrySettings =
+            new(fuzzy.TimeSpan(), fuzzy.TimeSpan(), fuzzy.Int32().Between(1, 10), fuzzy.Int32().Between(1, 10));
 
         [Fact]
         public void ReturnsTrueWithRetryResultForWellKnownFaultException()
         {
-            var fe = new FaultException(
-                new FaultReason("System.InvalidOperationException"),
-                WcfRemoteExceptionInformation.FaultCodeRetry);
+            var fe = new FaultException(new FaultReason("System.InvalidOperationException"), WcfRemoteExceptionInformation.FaultCodeRetry);
 
-            bool handled = sut.TryHandleException(
-                new ExceptionInformation(fe),
-                retrySettings,
-                out ExceptionHandlingResult result);
+            bool handled = sut.TryHandleException(new ExceptionInformation(fe), retrySettings, out ExceptionHandlingResult result);
 
             Assert.True(handled);
             ExceptionHandlingRetryResult retry = Assert.IsType<ExceptionHandlingRetryResult>(result);
@@ -49,13 +41,9 @@ public abstract class WcfExceptionHandlerTest
         public void ReturnsFalseForFaultExceptionWithoutRetrySubCode()
         {
             var fe = new FaultException(
-                new FaultReason("System.InvalidOperationException"),
-                new FaultCode(WcfRemoteExceptionInformation.FaultCodeName));
+                new FaultReason("System.InvalidOperationException"), new FaultCode(WcfRemoteExceptionInformation.FaultCodeName));
 
-            bool handled = sut.TryHandleException(
-                new ExceptionInformation(fe),
-                retrySettings,
-                out ExceptionHandlingResult result);
+            bool handled = sut.TryHandleException(new ExceptionInformation(fe), retrySettings, out ExceptionHandlingResult result);
 
             Assert.False(handled);
             Assert.Null(result);
