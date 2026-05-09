@@ -111,7 +111,7 @@ namespace Microsoft.ServiceFabric.Services.Communication.Client
         /// </param>
         /// <param name="retrySettings">The retrySettings from which the interval to wait before retrying is figured out.</param>
         /// <param name="maxRetryCount">The maximum number of times the exception identified by the exceptionId parameter needs to be retried for.</param>
-        public ExceptionHandlingRetryResult(
+        internal ExceptionHandlingRetryResult(
            string exceptionId,
            bool isTransient,
            OperationRetrySettings retrySettings,

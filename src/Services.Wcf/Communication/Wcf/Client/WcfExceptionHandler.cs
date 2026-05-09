@@ -23,7 +23,7 @@ namespace Microsoft.ServiceFabric.Services.Communication.Wcf.Client
     ///     <see cref="IExceptionHandler.TryHandleException(ExceptionInformation, OperationRetrySettings, out ExceptionHandlingResult)"/> method.
     ///     The <see cref="ExceptionHandlingRetryResult.IsTransient"/> property of the <see cref="ExceptionHandlingRetryResult"/> is set to false,
     ///     the <see cref="ExceptionHandlingRetryResult.RetryDelay"/>  property is set to a random value up to <see cref="OperationRetrySettings.MaxRetryBackoffIntervalOnNonTransientErrors"/>
-    ///     and <see cref="ExceptionHandlingRetryResult.MaxRetryCount"/> property is set to <see cref="int.MaxValue"/>.
+    ///     and <see cref="ExceptionHandlingRetryResult.MaxRetryCount"/> property is set to <see cref="OperationRetrySettings.DefaultMaxRetryCountForNonTransientErrors"/>.
     ///     <list type="bullet">
     ///         <item><description><see cref="EndpointNotFoundException"/></description> </item>
     ///         <item><description><see cref="CommunicationObjectAbortedException"/></description> </item>
@@ -60,12 +60,10 @@ namespace Microsoft.ServiceFabric.Services.Communication.Wcf.Client
     /// </item>
     /// <item>
     /// <description>
-    ///     The following exceptions are indicate an error from the service.
-    ///     They are handled by returning <see cref="ExceptionHandlingThrowResult"/> from the
-    ///     <see cref="IExceptionHandler.TryHandleException(ExceptionInformation, OperationRetrySettings, out ExceptionHandlingResult)"/> method.
-    ///     <list type="bullet">
-    ///         <item><description><see cref="FaultException"/></description> </item>
-    ///     </list>
+    ///     A <see cref="FaultException"/> carrying the well-known <c>WcfRemoteExceptionInformation</c>/<c>Retry</c> fault code
+    ///     is handled by returning <see cref="ExceptionHandlingRetryResult"/> with the fault reason as exception identifier.
+    ///     The <see cref="ExceptionHandlingRetryResult.IsTransient"/> property is set to false
+    ///     and <see cref="ExceptionHandlingRetryResult.MaxRetryCount"/> is set to <see cref="OperationRetrySettings.DefaultMaxRetryCountForNonTransientErrors"/>.
     /// </description>
     /// </item>
     /// <item>
@@ -76,6 +74,11 @@ namespace Microsoft.ServiceFabric.Services.Communication.Wcf.Client
     ///     The <see cref="ExceptionHandlingRetryResult.IsTransient"/> property of the <see cref="ExceptionHandlingRetryResult"/> is set to true,
     ///     the <see cref="ExceptionHandlingRetryResult.RetryDelay"/>  property is set to a random value up to <see cref="OperationRetrySettings.MaxRetryBackoffIntervalOnTransientErrors"/>
     ///     and <see cref="ExceptionHandlingRetryResult.MaxRetryCount"/> property is set to <see cref="OperationRetrySettings.DefaultMaxRetryCountForTransientErrors"/>.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <description>
+    ///     A <see cref="FaultException"/> without the well-known fault code is not handled and falls through to other exception handlers.
     /// </description>
     /// </item>
     /// </list>

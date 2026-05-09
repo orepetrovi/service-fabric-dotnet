@@ -9,10 +9,10 @@ namespace Microsoft.ServiceFabric.Services.Communication.Wcf
 
     internal static class WcfRemoteExceptionInformation
     {
-        public static readonly string FaultCodeName = "WcfRemoteExceptionInformation";
-        public static readonly string FaultSubCodeRetryName = "Retry";
+        internal static readonly string FaultCodeName = "WcfRemoteExceptionInformation";
+        internal static readonly string FaultSubCodeRetryName = "Retry";
 
-        public static readonly FaultCode FaultCodeRetry = new FaultCode(
+        internal static readonly FaultCode FaultCodeRetry = new FaultCode(
             FaultCodeName,
             new FaultCode(FaultSubCodeRetryName));
     }
