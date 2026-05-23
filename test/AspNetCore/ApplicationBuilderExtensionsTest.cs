@@ -28,14 +28,17 @@ public abstract class ApplicationBuilderExtensionsTest
         [Fact]
         public void ReturnsApplicationBuilderAfterRegisteringMiddleware()
         {
+            // Arrange
             Func<RequestDelegate, RequestDelegate> factory = null;
             _ = builder
                 .Setup(_ => _.Use(It.IsAny<Func<RequestDelegate, RequestDelegate>>()))
                 .Callback<Func<RequestDelegate, RequestDelegate>>(f => factory = f)
                 .Returns(builder.Object);
 
+            // Act
             IApplicationBuilder actual = builder.Object.UseServiceFabricMiddleware(urlSuffix);
 
+            // Assert
             Assert.Same(builder.Object, actual);
             builder.Verify(_ => _.Use(It.IsAny<Func<RequestDelegate, RequestDelegate>>()), Times.Once);
 
@@ -66,14 +69,17 @@ public abstract class ApplicationBuilderExtensionsTest
         [Fact]
         public void ReturnsApplicationBuilderAfterRegisteringMiddleware()
         {
+            // Arrange
             Func<RequestDelegate, RequestDelegate> factory = null;
             _ = builder
                 .Setup(_ => _.Use(It.IsAny<Func<RequestDelegate, RequestDelegate>>()))
                 .Callback<Func<RequestDelegate, RequestDelegate>>(f => factory = f)
                 .Returns(builder.Object);
 
+            // Act
             IApplicationBuilder actual = builder.Object.UseServiceFabricReverseProxyIntegrationMiddleware();
 
+            // Assert
             Assert.Same(builder.Object, actual);
             builder.Verify(_ => _.Use(It.IsAny<Func<RequestDelegate, RequestDelegate>>()), Times.Once);
 
