@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
+using Fuzzy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Moq;
@@ -13,11 +14,13 @@ namespace Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 
 public abstract class ApplicationBuilderExtensionsTest
 {
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
     readonly Mock<IApplicationBuilder> builder = new();
 
     public sealed class UseServiceFabricMiddleware : ApplicationBuilderExtensionsTest
     {
-        readonly string urlSuffix = Guid.NewGuid().ToString("N");
+        readonly string urlSuffix = fuzzy.String();
 
         [Fact]
         public void ReturnsApplicationBuilderAfterRegisteringMiddleware()
