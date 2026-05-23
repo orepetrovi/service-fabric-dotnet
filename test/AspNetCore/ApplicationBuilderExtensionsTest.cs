@@ -43,7 +43,7 @@ public abstract class ApplicationBuilderExtensionsTest
             RequestDelegate pipeline = factory(next);
             object middleware = pipeline.Target;
             Assert.Equal(typeof(ServiceFabricMiddleware), middleware.GetType());
-            Assert.Equal(urlSuffix, middleware.Field<string>("urlSuffix").Value);
+            Assert.Equal(urlSuffix, middleware.Field<string>().Value);
         }
 
         [Fact]
