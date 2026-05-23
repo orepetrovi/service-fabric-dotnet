@@ -25,5 +25,6 @@
     <ProjectReference Include="..\..\src\AspNetCore.HttpSys\Microsoft.ServiceFabric.AspNetCore.HttpSys.csproj" />
     <ProjectReference Include="..\..\src\AspNetCore.Kestrel\Microsoft.ServiceFabric.AspNetCore.Kestrel.csproj" />
     <ProjectReference Include="..\..\src\Services\Microsoft.ServiceFabric.Services.csproj" />
+    <ProjectReference Include="..\TestFramework\Microsoft.ServiceFabric.TestFramework.csproj" />
   </ItemGroup>
 </Project>
