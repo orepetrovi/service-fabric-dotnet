@@ -23,7 +23,7 @@ public abstract class ApplicationBuilderExtensionsTest
 
     public sealed class UseServiceFabricMiddleware : ApplicationBuilderExtensionsTest
     {
-        readonly string urlSuffix = "/" + fuzzy.String().LettersOrDigits();
+        readonly string urlSuffix = fuzzy.String();
 
         [Fact]
         public void ReturnsApplicationBuilderAfterRegisteringMiddleware()
