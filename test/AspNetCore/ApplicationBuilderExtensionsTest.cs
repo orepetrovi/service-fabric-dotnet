@@ -6,12 +6,10 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 using Moq;
 using Xunit;
-using ApplicationBuilderExtensions = Microsoft.ServiceFabric.Services.Communication.AspNetCore.ApplicationBuilderExtensions;
 
-namespace Microsoft.ServiceFabric.AspNetCore.Tests;
+namespace Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 
 public abstract class ApplicationBuilderExtensionsTest
 {
