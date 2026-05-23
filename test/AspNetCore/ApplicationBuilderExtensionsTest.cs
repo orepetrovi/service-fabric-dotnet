@@ -52,14 +52,22 @@ public abstract class ApplicationBuilderExtensionsTest
         public void ThrowsArgumentNullExceptionWhenBuilderIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => ApplicationBuilderExtensions.UseServiceFabricMiddleware(null, urlSuffix));
-            Assert.Equal(nameof(builder), exception.ParamName);
+            Assert.Equal(
+                typeof(ApplicationBuilderExtensions)
+                    .Method<Func<IApplicationBuilder, string, IApplicationBuilder>>(nameof(ApplicationBuilderExtensions.UseServiceFabricMiddleware))
+                    .Parameter<IApplicationBuilder>().Name,
+                exception.ParamName);
         }
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenUrlSuffixIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => builder.Object.UseServiceFabricMiddleware(null));
-            Assert.Equal(nameof(urlSuffix), exception.ParamName);
+            Assert.Equal(
+                typeof(ApplicationBuilderExtensions)
+                    .Method<Func<IApplicationBuilder, string, IApplicationBuilder>>(nameof(ApplicationBuilderExtensions.UseServiceFabricMiddleware))
+                    .Parameter<string>().Name,
+                exception.ParamName);
         }
     }
 
@@ -89,7 +97,11 @@ public abstract class ApplicationBuilderExtensionsTest
         public void ThrowsArgumentNullExceptionWhenBuilderIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => ApplicationBuilderExtensions.UseServiceFabricReverseProxyIntegrationMiddleware(null));
-            Assert.Equal(nameof(builder), exception.ParamName);
+            Assert.Equal(
+                typeof(ApplicationBuilderExtensions)
+                    .Method<Func<IApplicationBuilder, IApplicationBuilder>>(nameof(ApplicationBuilderExtensions.UseServiceFabricReverseProxyIntegrationMiddleware))
+                    .Parameter<IApplicationBuilder>().Name,
+                exception.ParamName);
         }
     }
 }
