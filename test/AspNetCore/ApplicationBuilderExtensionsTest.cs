@@ -34,14 +34,14 @@ public abstract class ApplicationBuilderExtensionsTest
         public void ThrowsArgumentNullExceptionWhenBuilderIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => ApplicationBuilderExtensions.UseServiceFabricMiddleware(null, urlSuffix));
-            Assert.Equal("builder", exception.ParamName);
+            Assert.Equal(nameof(builder), exception.ParamName);
         }
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenUrlSuffixIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => builder.Object.UseServiceFabricMiddleware(null));
-            Assert.Equal("urlSuffix", exception.ParamName);
+            Assert.Equal(nameof(urlSuffix), exception.ParamName);
         }
     }
 
@@ -62,7 +62,7 @@ public abstract class ApplicationBuilderExtensionsTest
         public void ThrowsArgumentNullExceptionWhenBuilderIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => ApplicationBuilderExtensions.UseServiceFabricReverseProxyIntegrationMiddleware(null));
-            Assert.Equal("builder", exception.ParamName);
+            Assert.Equal(nameof(builder), exception.ParamName);
         }
     }
 }
