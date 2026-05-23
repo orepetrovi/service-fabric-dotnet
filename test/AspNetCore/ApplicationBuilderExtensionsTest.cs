@@ -41,8 +41,7 @@ public abstract class ApplicationBuilderExtensionsTest
 
             RequestDelegate next = _ => Task.CompletedTask;
             RequestDelegate pipeline = factory(next);
-            object middleware = pipeline.Target;
-            Assert.Equal(typeof(ServiceFabricMiddleware), middleware.GetType());
+            ServiceFabricMiddleware middleware = Assert.IsType<ServiceFabricMiddleware>(pipeline.Target);
             Assert.Equal(urlSuffix, middleware.Field<string>().Value);
         }
 
@@ -87,8 +86,7 @@ public abstract class ApplicationBuilderExtensionsTest
 
             RequestDelegate next = _ => Task.CompletedTask;
             RequestDelegate pipeline = factory(next);
-            object middleware = pipeline.Target;
-            Assert.Equal(typeof(ServiceFabricReverseProxyIntegrationMiddleware), middleware.GetType());
+            Assert.IsType<ServiceFabricReverseProxyIntegrationMiddleware>(pipeline.Target);
         }
 
         [Fact]
