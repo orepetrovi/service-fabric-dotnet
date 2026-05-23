@@ -20,7 +20,7 @@ public abstract class ApplicationBuilderExtensionsTest
 
     readonly Mock<IApplicationBuilder> builder = new();
 
-    protected ApplicationBuilderExtensionsTest() =>
+    ApplicationBuilderExtensionsTest() =>
         _ = builder.Setup(_ => _.ApplicationServices).Returns(Mock.Of<IServiceProvider>());
 
     public sealed class UseServiceFabricMiddleware : ApplicationBuilderExtensionsTest
