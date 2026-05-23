@@ -52,7 +52,7 @@ public abstract class ApplicationBuilderExtensionsTest
             var exception = Assert.Throws<ArgumentNullException>(() => ApplicationBuilderExtensions.UseServiceFabricMiddleware(null, urlSuffix));
             Assert.Equal(
                 typeof(ApplicationBuilderExtensions)
-                    .Method<Func<IApplicationBuilder, string, IApplicationBuilder>>(nameof(ApplicationBuilderExtensions.UseServiceFabricMiddleware))
+                    .Method<Func<IApplicationBuilder, string, IApplicationBuilder>>()
                     .Parameter<IApplicationBuilder>().Name,
                 exception.ParamName);
         }
@@ -63,7 +63,7 @@ public abstract class ApplicationBuilderExtensionsTest
             var exception = Assert.Throws<ArgumentNullException>(() => builder.Object.UseServiceFabricMiddleware(null));
             Assert.Equal(
                 typeof(ApplicationBuilderExtensions)
-                    .Method<Func<IApplicationBuilder, string, IApplicationBuilder>>(nameof(ApplicationBuilderExtensions.UseServiceFabricMiddleware))
+                    .Method<Func<IApplicationBuilder, string, IApplicationBuilder>>()
                     .Parameter<string>().Name,
                 exception.ParamName);
         }
@@ -97,7 +97,7 @@ public abstract class ApplicationBuilderExtensionsTest
             var exception = Assert.Throws<ArgumentNullException>(() => ApplicationBuilderExtensions.UseServiceFabricReverseProxyIntegrationMiddleware(null));
             Assert.Equal(
                 typeof(ApplicationBuilderExtensions)
-                    .Method<Func<IApplicationBuilder, IApplicationBuilder>>(nameof(ApplicationBuilderExtensions.UseServiceFabricReverseProxyIntegrationMiddleware))
+                    .Method<Func<IApplicationBuilder, IApplicationBuilder>>()
                     .Parameter<IApplicationBuilder>().Name,
                 exception.ParamName);
         }
