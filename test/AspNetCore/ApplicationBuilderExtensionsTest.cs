@@ -42,8 +42,13 @@ public abstract class ApplicationBuilderExtensionsTest
             Assert.Same(builder.Object, actual);
             builder.Verify(_ => _.Use(It.IsAny<Func<RequestDelegate, RequestDelegate>>()), Times.Once);
 
+            // Arrange
             RequestDelegate next = _ => Task.CompletedTask;
+
+            // Act
             RequestDelegate pipeline = factory(next);
+
+            // Assert
             ServiceFabricMiddleware middleware = (ServiceFabricMiddleware)pipeline.Target;
             Assert.Equal(urlSuffix, middleware.Field<string>().Value);
             Assert.Same(next, middleware.Field<RequestDelegate>().Value);
@@ -83,8 +88,13 @@ public abstract class ApplicationBuilderExtensionsTest
             Assert.Same(builder.Object, actual);
             builder.Verify(_ => _.Use(It.IsAny<Func<RequestDelegate, RequestDelegate>>()), Times.Once);
 
+            // Arrange
             RequestDelegate next = _ => Task.CompletedTask;
+
+            // Act
             RequestDelegate pipeline = factory(next);
+
+            // Assert
             ServiceFabricReverseProxyIntegrationMiddleware middleware = (ServiceFabricReverseProxyIntegrationMiddleware)pipeline.Target;
             Assert.Same(next, middleware.Field<RequestDelegate>().Value);
         }
