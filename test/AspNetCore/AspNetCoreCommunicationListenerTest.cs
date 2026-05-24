@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Fuzzy;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Hosting;
@@ -26,61 +27,12 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     // Constructor parameters
     readonly ServiceContext serviceContext = fuzzy.ServiceContext();
-    readonly Func<string, AspNetCoreCommunicationListener, IWebHost> build;
+    readonly Func<string, AspNetCoreCommunicationListener, IWebHost> build = (_, _) => Mock.Of<IWebHost>();
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    readonly Mock<IWebHost> webHost = CreateWebHost();
-    string buildUrl;
-    AspNetCoreCommunicationListener buildListener;
-
-    AspNetCoreCommunicationListenerTest()
-    {
-        build = (url, listener) =>
-        {
-            buildUrl = url;
-            buildListener = listener;
-            SetupAddresses(webHost, url);
-            return webHost.Object;
-        };
+    AspNetCoreCommunicationListenerTest() =>
         sut = new TestListener(serviceContext, build);
-    }
-
-    public sealed class Abort : AspNetCoreCommunicationListenerTest
-    {
-        [Fact]
-        public void DoesNotThrowBeforeOpenAsync() =>
-            sut.Abort();
-
-        [Fact]
-        public async Task DisposesHostAfterOpenAsync()
-        {
-            _ = await sut.OpenAsync(CancellationToken.None);
-
-            sut.Abort();
-
-            webHost.Verify(_ => _.Dispose(), Times.Once);
-        }
-    }
-
-    public sealed class CloseAsync : AspNetCoreCommunicationListenerTest
-    {
-        readonly CancellationToken cancellationToken = new CancellationTokenSource().Token;
-
-        [Fact]
-        public async Task DoesNotThrowBeforeOpenAsync() =>
-            await sut.CloseAsync(cancellationToken);
-
-        [Fact]
-        public async Task PassesCancellationTokenToHostStopAsyncAfterOpenAsync()
-        {
-            _ = await sut.OpenAsync(CancellationToken.None);
-
-            await sut.CloseAsync(cancellationToken);
-
-            webHost.Verify(_ => _.StopAsync(cancellationToken), Times.Once);
-        }
-    }
 
     public sealed class ConfigureToUseUniqueServiceUrl : AspNetCoreCommunicationListenerTest
     {
@@ -212,53 +164,192 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
     }
 
-    public sealed class OpenAsync : AspNetCoreCommunicationListenerTest
+    public abstract class Abort
+    {
+        protected abstract AspNetCoreCommunicationListener Sut { get; }
+
+        protected abstract void VerifyHostDisposed(Times times);
+
+        [Fact]
+        public void DoesNotThrowBeforeOpenAsync() =>
+            Sut.Abort();
+
+        [Fact]
+        public async Task DisposesHostAfterOpenAsync()
+        {
+            _ = await Sut.OpenAsync(CancellationToken.None);
+
+            Sut.Abort();
+
+            VerifyHostDisposed(Times.Once());
+        }
+
+        public sealed class WithWebHost : Abort
+        {
+            readonly WebHostFixture fixture = new();
+            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
+            protected override void VerifyHostDisposed(Times times) => fixture.Host.Verify(_ => _.Dispose(), times);
+        }
+
+        public sealed class WithGenericHost : Abort
+        {
+            readonly GenericHostFixture fixture = new();
+            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
+            protected override void VerifyHostDisposed(Times times) => fixture.Host.Verify(_ => _.Dispose(), times);
+        }
+    }
+
+    public abstract class CloseAsync
     {
         readonly CancellationToken cancellationToken = new CancellationTokenSource().Token;
+
+        protected abstract AspNetCoreCommunicationListener Sut { get; }
+
+        protected abstract void VerifyHostStopAsync(CancellationToken expected, Times times);
+
+        [Fact]
+        public async Task DoesNotThrowBeforeOpenAsync() =>
+            await Sut.CloseAsync(cancellationToken);
+
+        [Fact]
+        public async Task PassesCancellationTokenToHostStopAsyncAfterOpenAsync()
+        {
+            _ = await Sut.OpenAsync(CancellationToken.None);
+
+            await Sut.CloseAsync(cancellationToken);
+
+            VerifyHostStopAsync(cancellationToken, Times.Once());
+        }
+
+        public sealed class WithWebHost : CloseAsync
+        {
+            readonly WebHostFixture fixture = new();
+            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
+            protected override void VerifyHostStopAsync(CancellationToken expected, Times times) =>
+                fixture.Host.Verify(_ => _.StopAsync(expected), times);
+        }
+
+        public sealed class WithGenericHost : CloseAsync
+        {
+            readonly GenericHostFixture fixture = new();
+            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
+            protected override void VerifyHostStopAsync(CancellationToken expected, Times times) =>
+                fixture.Host.Verify(_ => _.StopAsync(expected), times);
+        }
+    }
+
+    public abstract class OpenAsync
+    {
+        readonly CancellationToken cancellationToken = new CancellationTokenSource().Token;
+
+        protected abstract AspNetCoreCommunicationListener Sut { get; }
+
+        protected abstract string CapturedBuildUrl { get; }
+
+        protected abstract AspNetCoreCommunicationListener CapturedBuildListener { get; }
+
+        protected abstract void VerifyHostStartAsync(CancellationToken expected, Times times);
 
         [Fact]
         public async Task InvokesBuildDelegateWithGetListenerUrlAndSelf()
         {
-            _ = await sut.OpenAsync(cancellationToken);
+            _ = await Sut.OpenAsync(cancellationToken);
 
-            Assert.Equal(((TestListener)sut).GetListenerUrl(), buildUrl);
-            Assert.Same(sut, buildListener);
+            Assert.Equal(((TestListener)Sut).GetListenerUrl(), CapturedBuildUrl);
+            Assert.Same(Sut, CapturedBuildListener);
         }
 
         [Fact]
         public async Task PassesCancellationTokenToHostStartAsync()
         {
-            _ = await sut.OpenAsync(cancellationToken);
+            _ = await Sut.OpenAsync(cancellationToken);
 
-            webHost.Verify(_ => _.StartAsync(cancellationToken), Times.Once);
+            VerifyHostStartAsync(cancellationToken, Times.Once());
         }
 
         [Fact]
         public async Task ReturnsTaskThatCompletesWithUrl()
         {
-            Task<string> task = sut.OpenAsync(cancellationToken);
+            Task<string> task = Sut.OpenAsync(cancellationToken);
 
             Assert.NotNull(task);
             string url = await task;
             Assert.False(string.IsNullOrEmpty(url));
         }
+
+        public sealed class WithWebHost : OpenAsync
+        {
+            readonly WebHostFixture fixture = new();
+            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
+            protected override string CapturedBuildUrl => fixture.BuildUrl;
+            protected override AspNetCoreCommunicationListener CapturedBuildListener => fixture.BuildListener;
+            protected override void VerifyHostStartAsync(CancellationToken expected, Times times) =>
+                fixture.Host.Verify(_ => _.StartAsync(expected), times);
+        }
+
+        public sealed class WithGenericHost : OpenAsync
+        {
+            readonly GenericHostFixture fixture = new();
+            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
+            protected override string CapturedBuildUrl => fixture.BuildUrl;
+            protected override AspNetCoreCommunicationListener CapturedBuildListener => fixture.BuildListener;
+            protected override void VerifyHostStartAsync(CancellationToken expected, Times times) =>
+                fixture.Host.Verify(_ => _.StartAsync(expected), times);
+        }
     }
 
-    static Mock<IWebHost> CreateWebHost()
+    sealed class WebHostFixture
     {
-        var host = new Mock<IWebHost>();
-        _ = host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-        _ = host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-        return host;
+        public Mock<IWebHost> Host { get; } = new();
+        public TestListener Sut { get; }
+        public string BuildUrl { get; private set; }
+        public AspNetCoreCommunicationListener BuildListener { get; private set; }
+
+        public WebHostFixture()
+        {
+            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            Sut = new TestListener(fuzzy.ServiceContext(), (url, listener) =>
+            {
+                BuildUrl = url;
+                BuildListener = listener;
+                var addresses = new Mock<IServerAddressesFeature>();
+                _ = addresses.Setup(_ => _.Addresses).Returns(new[] { url });
+                var features = new FeatureCollection();
+                features.Set(addresses.Object);
+                _ = Host.Setup(_ => _.ServerFeatures).Returns(features);
+                return Host.Object;
+            });
+        }
     }
 
-    static void SetupAddresses(Mock<IWebHost> host, string url)
+    sealed class GenericHostFixture
     {
-        var addresses = new Mock<IServerAddressesFeature>();
-        _ = addresses.Setup(_ => _.Addresses).Returns(new[] { url });
-        var features = new FeatureCollection();
-        features.Set(addresses.Object);
-        _ = host.Setup(_ => _.ServerFeatures).Returns(features);
+        public Mock<IHost> Host { get; } = new();
+        public TestListener Sut { get; }
+        public string BuildUrl { get; private set; }
+        public AspNetCoreCommunicationListener BuildListener { get; private set; }
+
+        public GenericHostFixture()
+        {
+            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            Sut = new TestListener(fuzzy.ServiceContext(), (url, listener) =>
+            {
+                BuildUrl = url;
+                BuildListener = listener;
+                var addresses = new Mock<IServerAddressesFeature>();
+                _ = addresses.Setup(_ => _.Addresses).Returns(new[] { url });
+                var features = new FeatureCollection();
+                features.Set(addresses.Object);
+                var server = new Mock<IServer>();
+                _ = server.Setup(_ => _.Features).Returns(features);
+                var services = new Mock<IServiceProvider>();
+                _ = services.Setup(_ => _.GetService(typeof(IServer))).Returns(server.Object);
+                _ = Host.Setup(_ => _.Services).Returns(services.Object);
+                return Host.Object;
+            });
+        }
     }
 
     sealed class TestListener : AspNetCoreCommunicationListener
