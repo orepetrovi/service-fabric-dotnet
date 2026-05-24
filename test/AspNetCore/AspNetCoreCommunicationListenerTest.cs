@@ -250,6 +250,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
         protected abstract void VerifyHostStartAsync(CancellationToken expected, Times times);
 
+        protected abstract AspNetCoreCommunicationListener CreateListener(ServiceContext context, string listenerUrl);
+
         [Fact]
         public async Task InvokesBuildDelegateWithGetListenerUrlAndSelf()
         {
@@ -268,13 +270,21 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public async Task ReturnsTaskThatCompletesWithUrl()
+        public async Task ReturnsTaskThatCompletesWithPublishAddressAndUrlSuffix()
         {
-            Task<string> task = Sut.OpenAsync(cancellationToken);
+            StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
+            AspNetCoreCommunicationListener listener = CreateListener(context, "http://+:0/");
+            listener.ConfigureToUseUniqueServiceUrl();
 
-            Assert.NotNull(task);
-            string url = await task;
-            Assert.False(string.IsNullOrEmpty(url));
+            string url = await listener.OpenAsync(cancellationToken);
+
+            string expected = string.Format(
+                CultureInfo.InvariantCulture,
+                "http://{0}:0/{1}/{2}",
+                context.PublishAddress,
+                context.PartitionId,
+                context.ReplicaOrInstanceId);
+            Assert.Equal(expected, url);
         }
 
         public sealed class WithWebHost : OpenAsync
@@ -285,6 +295,8 @@ public abstract class AspNetCoreCommunicationListenerTest
             protected override AspNetCoreCommunicationListener CapturedBuildListener => fixture.BuildListener;
             protected override void VerifyHostStartAsync(CancellationToken expected, Times times) =>
                 fixture.Host.Verify(_ => _.StartAsync(expected), times);
+            protected override AspNetCoreCommunicationListener CreateListener(ServiceContext context, string listenerUrl) =>
+                new WebHostFixture(context, listenerUrl).Sut;
         }
 
         public sealed class WithGenericHost : OpenAsync
@@ -295,6 +307,8 @@ public abstract class AspNetCoreCommunicationListenerTest
             protected override AspNetCoreCommunicationListener CapturedBuildListener => fixture.BuildListener;
             protected override void VerifyHostStartAsync(CancellationToken expected, Times times) =>
                 fixture.Host.Verify(_ => _.StartAsync(expected), times);
+            protected override AspNetCoreCommunicationListener CreateListener(ServiceContext context, string listenerUrl) =>
+                new GenericHostFixture(context, listenerUrl).Sut;
         }
     }
 
@@ -306,10 +320,15 @@ public abstract class AspNetCoreCommunicationListenerTest
         public AspNetCoreCommunicationListener BuildListener { get; private set; }
 
         public WebHostFixture()
+            : this(fuzzy.ServiceContext(), "http://+:0")
+        {
+        }
+
+        public WebHostFixture(ServiceContext context, string listenerUrl)
         {
             _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
             _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-            Sut = new TestListener(fuzzy.ServiceContext(), (url, listener) =>
+            Sut = new TestListener(context, (url, listener) =>
             {
                 BuildUrl = url;
                 BuildListener = listener;
@@ -319,7 +338,8 @@ public abstract class AspNetCoreCommunicationListenerTest
                 features.Set(addresses.Object);
                 _ = Host.Setup(_ => _.ServerFeatures).Returns(features);
                 return Host.Object;
-            });
+            })
+            { ListenerUrl = listenerUrl };
         }
     }
 
@@ -331,10 +351,15 @@ public abstract class AspNetCoreCommunicationListenerTest
         public AspNetCoreCommunicationListener BuildListener { get; private set; }
 
         public GenericHostFixture()
+            : this(fuzzy.ServiceContext(), "http://+:0")
+        {
+        }
+
+        public GenericHostFixture(ServiceContext context, string listenerUrl)
         {
             _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
             _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-            Sut = new TestListener(fuzzy.ServiceContext(), (url, listener) =>
+            Sut = new TestListener(context, (url, listener) =>
             {
                 BuildUrl = url;
                 BuildListener = listener;
@@ -348,7 +373,8 @@ public abstract class AspNetCoreCommunicationListenerTest
                 _ = services.Setup(_ => _.GetService(typeof(IServer))).Returns(server.Object);
                 _ = Host.Setup(_ => _.Services).Returns(services.Object);
                 return Host.Object;
-            });
+            })
+            { ListenerUrl = listenerUrl };
         }
     }
 
