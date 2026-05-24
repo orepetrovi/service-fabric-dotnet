@@ -221,6 +221,9 @@ public abstract class AspNetCoreCommunicationListenerTest
         readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
         readonly TestListener listener;
 
+        // Method parameters
+        readonly string endpointName = fuzzy.String();
+
         public GetEndpointResourceDescription() =>
             listener = new TestListener(context, build);
 
@@ -228,17 +231,17 @@ public abstract class AspNetCoreCommunicationListenerTest
         public void ThrowsArgumentNullExceptionWhenEndpointNameIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => listener.GetEndpointResourceDescription(null));
-            Assert.Equal("endpointName", exception.ParamName);
+            Assert.Equal(nameof(endpointName), exception.ParamName);
         }
 
         [Fact]
         public void ThrowsInvalidOperationExceptionWhenEndpointIsNotInManifest() =>
-            Assert.Throws<InvalidOperationException>(() => listener.GetEndpointResourceDescription(fuzzy.String()));
+            Assert.Throws<InvalidOperationException>(() => listener.GetEndpointResourceDescription(endpointName));
 
         [Fact]
         public void ReturnsEndpointResourceDescriptionFromManifest()
         {
-            var endpoint = new EndpointResourceDescription { Name = fuzzy.String() };
+            var endpoint = new EndpointResourceDescription { Name = endpointName };
             context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
             EndpointResourceDescription actual = listener.GetEndpointResourceDescription(endpoint.Name);
