@@ -531,7 +531,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         {
         }
 
-        public string ListenerUrl { get; set; } = "http://+:0";
+        internal string ListenerUrl = "http://+:0";
 
         protected internal override string GetListenerUrl() =>
             ListenerUrl;
