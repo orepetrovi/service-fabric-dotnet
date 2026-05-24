@@ -37,22 +37,6 @@ public abstract class AspNetCoreCommunicationListenerTest
     public sealed class Abort : AspNetCoreCommunicationListenerTest
     {
         [Fact]
-        public void DoesNotThrowBeforeOpenAsyncOnGenericHost()
-        {
-            var fixture = new GenericHostFixture(serviceContext);
-
-            fixture.Sut.Abort();
-        }
-
-        [Fact]
-        public void DoesNotThrowBeforeOpenAsyncOnWebHost()
-        {
-            var fixture = new WebHostFixture(serviceContext);
-
-            fixture.Sut.Abort();
-        }
-
-        [Fact]
         public async Task InvokesHostDisposeOnGenericHost()
         {
             var fixture = new GenericHostFixture(serviceContext);
@@ -75,27 +59,27 @@ public abstract class AspNetCoreCommunicationListenerTest
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
             fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
         }
+
+        [Fact]
+        public void DoesNotThrowBeforeOpenAsyncOnGenericHost()
+        {
+            var fixture = new GenericHostFixture(serviceContext);
+
+            fixture.Sut.Abort();
+        }
+
+        [Fact]
+        public void DoesNotThrowBeforeOpenAsyncOnWebHost()
+        {
+            var fixture = new WebHostFixture(serviceContext);
+
+            fixture.Sut.Abort();
+        }
     }
 
     public sealed class CloseAsync : AspNetCoreCommunicationListenerTest
     {
         readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-
-        [Fact]
-        public async Task DoesNotThrowBeforeOpenAsyncOnGenericHost()
-        {
-            var fixture = new GenericHostFixture(serviceContext);
-
-            await fixture.Sut.CloseAsync(cancellationToken);
-        }
-
-        [Fact]
-        public async Task DoesNotThrowBeforeOpenAsyncOnWebHost()
-        {
-            var fixture = new WebHostFixture(serviceContext);
-
-            await fixture.Sut.CloseAsync(cancellationToken);
-        }
 
         [Fact]
         public async Task PassesCancellationTokenToHostStopAsyncOnGenericHost()
@@ -181,6 +165,22 @@ public abstract class AspNetCoreCommunicationListenerTest
             tcs.SetResult(null);
             await closeTask;
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
+        }
+
+        [Fact]
+        public async Task DoesNotThrowBeforeOpenAsyncOnGenericHost()
+        {
+            var fixture = new GenericHostFixture(serviceContext);
+
+            await fixture.Sut.CloseAsync(cancellationToken);
+        }
+
+        [Fact]
+        public async Task DoesNotThrowBeforeOpenAsyncOnWebHost()
+        {
+            var fixture = new WebHostFixture(serviceContext);
+
+            await fixture.Sut.CloseAsync(cancellationToken);
         }
     }
 
