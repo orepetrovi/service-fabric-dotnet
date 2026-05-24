@@ -93,7 +93,31 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public async Task PassesCancellationTokenToHostStopAsyncAfterOpenAsyncOnGenericHost()
+        public async Task PassesCancellationTokenToHostStopAsyncOnGenericHost()
+        {
+            var fixture = new GenericHostFixture(serviceContext);
+            _ = await fixture.Sut.OpenAsync(CancellationToken.None);
+
+            await fixture.Sut.CloseAsync(cancellationToken);
+
+            fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once());
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task PassesCancellationTokenToHostStopAsyncOnWebHost()
+        {
+            var fixture = new WebHostFixture(serviceContext);
+            _ = await fixture.Sut.OpenAsync(CancellationToken.None);
+
+            await fixture.Sut.CloseAsync(cancellationToken);
+
+            fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once());
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task DisposesHostAfterStopAsyncOnGenericHost()
         {
             var fixture = new GenericHostFixture(serviceContext);
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
@@ -103,13 +127,11 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             await fixture.Sut.CloseAsync(cancellationToken);
 
-            Assert.True(stopped);
-            fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once());
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
         }
 
         [Fact]
-        public async Task PassesCancellationTokenToHostStopAsyncAfterOpenAsyncOnWebHost()
+        public async Task DisposesHostAfterStopAsyncOnWebHost()
         {
             var fixture = new WebHostFixture(serviceContext);
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
@@ -119,8 +141,6 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             await fixture.Sut.CloseAsync(cancellationToken);
 
-            Assert.True(stopped);
-            fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once());
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
         }
     }
