@@ -172,6 +172,13 @@ public abstract class AspNetCoreCommunicationListenerTest
             sut = new TestListener(serviceContext, build);
 
         [Fact]
+        public void InitializesProperties()
+        {
+            Assert.Equal(string.Empty, sut.UrlSuffix);
+            Assert.Same(serviceContext, sut.ServiceContext);
+        }
+
+        [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new TestListener(null, build));
@@ -185,17 +192,17 @@ public abstract class AspNetCoreCommunicationListenerTest
                 () => new TestListener(serviceContext, (Func<string, AspNetCoreCommunicationListener, IHost>)null));
             Assert.Equal(nameof(build), exception.ParamName);
         }
+    }
 
+    public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : AspNetCoreCommunicationListenerTest
+    {
         [Fact]
         public void InitializesProperties()
         {
             Assert.Equal(string.Empty, sut.UrlSuffix);
             Assert.Same(serviceContext, sut.ServiceContext);
         }
-    }
 
-    public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : AspNetCoreCommunicationListenerTest
-    {
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
         {
@@ -209,13 +216,6 @@ public abstract class AspNetCoreCommunicationListenerTest
             var exception = Assert.Throws<ArgumentNullException>(
                 () => new TestListener(serviceContext, (Func<string, AspNetCoreCommunicationListener, IWebHost>)null));
             Assert.Equal(nameof(build), exception.ParamName);
-        }
-
-        [Fact]
-        public void InitializesProperties()
-        {
-            Assert.Equal(string.Empty, sut.UrlSuffix);
-            Assert.Same(serviceContext, sut.ServiceContext);
         }
     }
 
@@ -233,17 +233,6 @@ public abstract class AspNetCoreCommunicationListenerTest
             listener = new TestListener(context, build);
 
         [Fact]
-        public void ThrowsArgumentNullExceptionWhenEndpointNameIsNull()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(() => listener.GetEndpointResourceDescription(null));
-            Assert.Equal(nameof(endpointName), exception.ParamName);
-        }
-
-        [Fact]
-        public void ThrowsInvalidOperationExceptionWhenEndpointIsNotInManifest() =>
-            Assert.Throws<InvalidOperationException>(() => listener.GetEndpointResourceDescription(endpointName));
-
-        [Fact]
         public void ReturnsEndpointResourceDescriptionFromManifest()
         {
             var endpoint = new EndpointResourceDescription { Name = endpointName };
@@ -253,6 +242,17 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             Assert.Same(endpoint, actual);
         }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenEndpointNameIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => listener.GetEndpointResourceDescription(null));
+            Assert.Equal(nameof(endpointName), exception.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsInvalidOperationExceptionWhenEndpointIsNotInManifest() =>
+            Assert.Throws<InvalidOperationException>(() => listener.GetEndpointResourceDescription(endpointName));
     }
 
     public sealed class OpenAsync : AspNetCoreCommunicationListenerTest
