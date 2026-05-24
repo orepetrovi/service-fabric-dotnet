@@ -31,7 +31,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    protected AspNetCoreCommunicationListenerTest() =>
+    AspNetCoreCommunicationListenerTest() =>
         sut = new TestListener(serviceContext, build);
 
     public sealed class Abort : AspNetCoreCommunicationListenerTest
