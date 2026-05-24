@@ -374,8 +374,9 @@ public abstract class AspNetCoreCommunicationListenerTest
         public async Task ReturnsUrlFromServerAddressFeatureOnGenericHost()
         {
             StatelessServiceContext context = fuzzy.StatelessServiceContext();
-            ushort serverPort = fuzzy.UInt16();
-            var fixture = new GenericHostFixture(context, "http://+:" + fuzzy.UInt16(), "http://+:" + serverPort + "/");
+            ushort serverPort = fuzzy.UInt16().Maximum((ushort)(ushort.MaxValue - 5));
+            ushort listenerPort = (ushort)(serverPort + fuzzy.SByte().Between(1, 5));
+            var fixture = new GenericHostFixture(context, "http://+:" + listenerPort, "http://+:" + serverPort + "/");
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
@@ -386,8 +387,9 @@ public abstract class AspNetCoreCommunicationListenerTest
         public async Task ReturnsUrlFromServerAddressFeatureOnWebHost()
         {
             StatelessServiceContext context = fuzzy.StatelessServiceContext();
-            ushort serverPort = fuzzy.UInt16();
-            var fixture = new WebHostFixture(context, "http://+:" + fuzzy.UInt16(), "http://+:" + serverPort + "/");
+            ushort serverPort = fuzzy.UInt16().Maximum((ushort)(ushort.MaxValue - 5));
+            ushort listenerPort = (ushort)(serverPort + fuzzy.SByte().Between(1, 5));
+            var fixture = new WebHostFixture(context, "http://+:" + listenerPort, "http://+:" + serverPort + "/");
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
