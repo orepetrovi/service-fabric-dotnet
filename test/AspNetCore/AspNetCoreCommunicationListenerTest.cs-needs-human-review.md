@@ -41,3 +41,17 @@ Flagged for human review to decide whether the `sut` convention applies to every
 `gemini` view: The SUT's `OpenAsync` is a one-line delegate to the private internal listener; the branches belong to private `WebHostCommunicationListener` and `GenericHostCommunicationListener`. The user's scope is "Test AspNetCoreCommunicationListener… fixing bugs is out of scope", so adding tests for delegated internal logic stretches scope and overlaps with the separate finding that URL-shape testing belongs in dedicated internal-listener test files.
 
 Tension: this finding overlaps with the elevated ⚠️ "URL-shape assertion belongs to internal listeners" finding above. If the URL-shape test is moved to dedicated internal-listener test files, the additional branch coverage should follow it there rather than be added to `AspNetCoreCommunicationListenerTest`. Flagged for human review to decide where these branch tests live.
+
+---
+
+## ❓ Needs Human Review — Fixture duplication between `WebHostFixture` and `GenericHostFixture`
+
+*Reported by `opus` 💡; `gpt` Agree (narrow); `gemini` Disagree. `opus` Insisted in narrow form.*
+
+`opus` view (insisted): `WebHostFixture` and `GenericHostFixture` duplicate URL capture, addresses-feature mock setup, and a literal copy of the `CompletedTask()` helper. [test.instructions.md](.github/instructions/test.instructions.md) says "Place helpers applicable to multiple targets in their first common base class, below the test classes" — *multiple*, not "three or more". This rule is more specific than the general Rule of Three and applies. Insist on extracting the duplicated helpers; do not insist on a generic fixture hierarchy.
+
+`gpt` view: Real duplication exists and at minimum `CompletedTask()` and the address-feature creation should be shared; cautious about a heavy generic abstraction because the two host types expose features differently.
+
+`gemini` view: Atwood's Rule of Three from [coding.instructions.md](.github/instructions/coding.instructions.md) — only two fixtures exist and they differ in mock-feature setup; extraction is premature abstraction.
+
+Tension is between the general Rule of Three and the test-organization rule about helpers used by "multiple targets". Flagged for human decision on which rule governs here.
