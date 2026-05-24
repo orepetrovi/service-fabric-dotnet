@@ -300,6 +300,30 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             fixture.Host.Verify(_ => _.StartAsync(cancellationToken), Times.Once());
         }
+
+        [Fact]
+        public async Task ReturnsUrlFromServerAddressFeatureOnGenericHost()
+        {
+            StatelessServiceContext context = fuzzy.StatelessServiceContext();
+            ushort port = fuzzy.UInt16();
+            var fixture = new GenericHostFixture(context, "http://+:" + port + "/");
+
+            string actual = await fixture.Sut.OpenAsync(cancellationToken);
+
+            Assert.Equal($"http://{context.PublishAddress}:{port}", actual);
+        }
+
+        [Fact]
+        public async Task ReturnsUrlFromServerAddressFeatureOnWebHost()
+        {
+            StatelessServiceContext context = fuzzy.StatelessServiceContext();
+            ushort port = fuzzy.UInt16();
+            var fixture = new WebHostFixture(context, "http://+:" + port + "/");
+
+            string actual = await fixture.Sut.OpenAsync(cancellationToken);
+
+            Assert.Equal($"http://{context.PublishAddress}:{port}", actual);
+        }
     }
 
     sealed class WebHostFixture
