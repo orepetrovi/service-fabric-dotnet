@@ -89,7 +89,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new TestListener(null, build));
-            Assert.Equal("serviceContext", exception.ParamName);
+            Assert.Equal(nameof(serviceContext), exception.ParamName);
         }
 
         [Fact]
@@ -97,7 +97,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         {
             var exception = Assert.Throws<ArgumentNullException>(
                 () => new TestListener(serviceContext, (Func<string, AspNetCoreCommunicationListener, IHost>)null));
-            Assert.Equal("build", exception.ParamName);
+            Assert.Equal(nameof(build), exception.ParamName);
         }
 
         [Fact]
@@ -114,7 +114,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new TestListener(null, build));
-            Assert.Equal("serviceContext", exception.ParamName);
+            Assert.Equal(nameof(serviceContext), exception.ParamName);
         }
 
         [Fact]
@@ -122,7 +122,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         {
             var exception = Assert.Throws<ArgumentNullException>(
                 () => new TestListener(serviceContext, (Func<string, AspNetCoreCommunicationListener, IWebHost>)null));
-            Assert.Equal("build", exception.ParamName);
+            Assert.Equal(nameof(build), exception.ParamName);
         }
 
         [Fact]
