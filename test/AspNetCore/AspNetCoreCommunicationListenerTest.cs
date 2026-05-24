@@ -169,7 +169,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public void InitializesProperties()
         {
-            Assert.Equal(string.Empty, sut.UrlSuffix);
+            Assert.Empty(sut.UrlSuffix);
             Assert.Same(serviceContext, sut.ServiceContext);
         }
 
@@ -199,7 +199,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public void InitializesProperties()
         {
-            Assert.Equal(string.Empty, sut.UrlSuffix);
+            Assert.Empty(sut.UrlSuffix);
             Assert.Same(serviceContext, sut.ServiceContext);
         }
 
