@@ -362,8 +362,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
         public WebHostFixture(ServiceContext context, string listenerUrl = "http://+:0")
         {
-            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<object>(null));
-            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<object>(null));
+            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(CompletedTask());
+            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(CompletedTask());
             Sut = new TestListener(context, (url, listener) =>
             {
                 BuildUrl = url;
@@ -377,6 +377,13 @@ public abstract class AspNetCoreCommunicationListenerTest
             })
             { ListenerUrl = listenerUrl };
         }
+
+        static Task CompletedTask()
+        {
+            var tcs = new TaskCompletionSource<object>();
+            tcs.SetResult(null);
+            return tcs.Task;
+        }
     }
 
     sealed class GenericHostFixture
@@ -388,8 +395,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
         public GenericHostFixture(ServiceContext context, string listenerUrl = "http://+:0")
         {
-            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<object>(null));
-            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<object>(null));
+            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(CompletedTask());
+            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(CompletedTask());
             Sut = new TestListener(context, (url, listener) =>
             {
                 BuildUrl = url;
@@ -406,6 +413,13 @@ public abstract class AspNetCoreCommunicationListenerTest
                 return Host.Object;
             })
             { ListenerUrl = listenerUrl };
+        }
+
+        static Task CompletedTask()
+        {
+            var tcs = new TaskCompletionSource<object>();
+            tcs.SetResult(null);
+            return tcs.Task;
         }
     }
 
