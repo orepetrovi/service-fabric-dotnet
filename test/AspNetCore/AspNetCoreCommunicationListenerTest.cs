@@ -148,6 +148,40 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
         }
+
+        [Fact]
+        public async Task AwaitsHostStopAsyncBeforeReturningOnGenericHost()
+        {
+            var fixture = new GenericHostFixture(serviceContext);
+            _ = await fixture.Sut.OpenAsync(CancellationToken.None);
+            var tcs = new TaskCompletionSource<object>();
+            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Returns(tcs.Task);
+
+            Task closeTask = fixture.Sut.CloseAsync(cancellationToken);
+
+            Assert.False(closeTask.IsCompleted);
+            fixture.Host.Verify(_ => _.Dispose(), Times.Never());
+            tcs.SetResult(null);
+            await closeTask;
+            fixture.Host.Verify(_ => _.Dispose(), Times.Once());
+        }
+
+        [Fact]
+        public async Task AwaitsHostStopAsyncBeforeReturningOnWebHost()
+        {
+            var fixture = new WebHostFixture(serviceContext);
+            _ = await fixture.Sut.OpenAsync(CancellationToken.None);
+            var tcs = new TaskCompletionSource<object>();
+            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Returns(tcs.Task);
+
+            Task closeTask = fixture.Sut.CloseAsync(cancellationToken);
+
+            Assert.False(closeTask.IsCompleted);
+            fixture.Host.Verify(_ => _.Dispose(), Times.Never());
+            tcs.SetResult(null);
+            await closeTask;
+            fixture.Host.Verify(_ => _.Dispose(), Times.Once());
+        }
     }
 
     public sealed class ConfigureToUseUniqueServiceUrl : AspNetCoreCommunicationListenerTest
@@ -384,6 +418,36 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             string expected = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}", context.PartitionId, context.ReplicaOrInstanceId);
             Assert.EndsWith(expected, actual);
+        }
+
+        [Fact]
+        public async Task AwaitsHostStartAsyncBeforeReturningOnGenericHost()
+        {
+            var fixture = new GenericHostFixture(serviceContext);
+            var tcs = new TaskCompletionSource<object>();
+            _ = fixture.Host.Setup(_ => _.StartAsync(cancellationToken)).Returns(tcs.Task);
+
+            Task<string> openTask = fixture.Sut.OpenAsync(cancellationToken);
+
+            Assert.False(openTask.IsCompleted);
+            tcs.SetResult(null);
+            string actual = await openTask;
+            Assert.NotNull(actual);
+        }
+
+        [Fact]
+        public async Task AwaitsHostStartAsyncBeforeReturningOnWebHost()
+        {
+            var fixture = new WebHostFixture(serviceContext);
+            var tcs = new TaskCompletionSource<object>();
+            _ = fixture.Host.Setup(_ => _.StartAsync(cancellationToken)).Returns(tcs.Task);
+
+            Task<string> openTask = fixture.Sut.OpenAsync(cancellationToken);
+
+            Assert.False(openTask.IsCompleted);
+            tcs.SetResult(null);
+            string actual = await openTask;
+            Assert.NotNull(actual);
         }
     }
 
