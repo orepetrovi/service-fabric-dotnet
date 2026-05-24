@@ -97,9 +97,13 @@ public abstract class AspNetCoreCommunicationListenerTest
         {
             var fixture = new GenericHostFixture(serviceContext);
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
+            bool stopped = false;
+            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Callback(() => stopped = true).Returns(Task.FromResult<object>(null));
+            fixture.Host.Setup(_ => _.Dispose()).Callback(() => Assert.True(stopped, "Dispose called before StopAsync"));
 
             await fixture.Sut.CloseAsync(cancellationToken);
 
+            Assert.True(stopped);
             fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once());
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
         }
@@ -109,9 +113,13 @@ public abstract class AspNetCoreCommunicationListenerTest
         {
             var fixture = new WebHostFixture(serviceContext);
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
+            bool stopped = false;
+            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Callback(() => stopped = true).Returns(Task.FromResult<object>(null));
+            fixture.Host.Setup(_ => _.Dispose()).Callback(() => Assert.True(stopped, "Dispose called before StopAsync"));
 
             await fixture.Sut.CloseAsync(cancellationToken);
 
+            Assert.True(stopped);
             fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once());
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
         }
