@@ -207,6 +207,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
         protected abstract void VerifyHostStopAsync(CancellationToken expected, Times times);
 
+        protected abstract void VerifyHostDispose(Times times);
+
         [Fact]
         public async Task DoesNotThrowBeforeOpenAsync() =>
             await Sut.CloseAsync(cancellationToken);
@@ -219,6 +221,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             await Sut.CloseAsync(cancellationToken);
 
             VerifyHostStopAsync(cancellationToken, Times.Once());
+            VerifyHostDispose(Times.Once());
         }
 
         public sealed class WithWebHost : CloseAsync
@@ -227,6 +230,8 @@ public abstract class AspNetCoreCommunicationListenerTest
             protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
             protected override void VerifyHostStopAsync(CancellationToken expected, Times times) =>
                 fixture.Host.Verify(_ => _.StopAsync(expected), times);
+            protected override void VerifyHostDispose(Times times) =>
+                fixture.Host.Verify(_ => _.Dispose(), times);
         }
 
         public sealed class WithGenericHost : CloseAsync
@@ -235,6 +240,8 @@ public abstract class AspNetCoreCommunicationListenerTest
             protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
             protected override void VerifyHostStopAsync(CancellationToken expected, Times times) =>
                 fixture.Host.Verify(_ => _.StopAsync(expected), times);
+            protected override void VerifyHostDispose(Times times) =>
+                fixture.Host.Verify(_ => _.Dispose(), times);
         }
     }
 
