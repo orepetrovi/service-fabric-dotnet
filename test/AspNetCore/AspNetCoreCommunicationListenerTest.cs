@@ -463,12 +463,12 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     sealed class WebHostFixture
     {
-        public readonly Mock<IWebHost> Host = new();
-        public readonly TestListener Sut;
-        public string BuildUrl;
-        public AspNetCoreCommunicationListener BuildListener;
+        internal readonly Mock<IWebHost> Host = new();
+        internal readonly TestListener Sut;
+        internal string BuildUrl;
+        internal AspNetCoreCommunicationListener BuildListener;
 
-        public WebHostFixture(ServiceContext context, string listenerUrl = "http://+:0", string serverAddress = null)
+        internal WebHostFixture(ServiceContext context, string listenerUrl = "http://+:0", string serverAddress = null)
         {
             var startTcs = new TaskCompletionSource<object>();
             startTcs.SetResult(null);
@@ -491,12 +491,12 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     sealed class GenericHostFixture
     {
-        public readonly Mock<IHost> Host = new();
-        public readonly TestListener Sut;
-        public string BuildUrl;
-        public AspNetCoreCommunicationListener BuildListener;
+        internal readonly Mock<IHost> Host = new();
+        internal readonly TestListener Sut;
+        internal string BuildUrl;
+        internal AspNetCoreCommunicationListener BuildListener;
 
-        public GenericHostFixture(ServiceContext context, string listenerUrl = "http://+:0", string serverAddress = null)
+        internal GenericHostFixture(ServiceContext context, string listenerUrl = "http://+:0", string serverAddress = null)
         {
             var startTcs = new TaskCompletionSource<object>();
             startTcs.SetResult(null);
@@ -521,12 +521,12 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     sealed class TestListener : AspNetCoreCommunicationListener
     {
-        public TestListener(ServiceContext serviceContext, Func<string, AspNetCoreCommunicationListener, IWebHost> build)
+        internal TestListener(ServiceContext serviceContext, Func<string, AspNetCoreCommunicationListener, IWebHost> build)
             : base(serviceContext, build)
         {
         }
 
-        public TestListener(ServiceContext serviceContext, Func<string, AspNetCoreCommunicationListener, IHost> build)
+        internal TestListener(ServiceContext serviceContext, Func<string, AspNetCoreCommunicationListener, IHost> build)
             : base(serviceContext, build)
         {
         }
