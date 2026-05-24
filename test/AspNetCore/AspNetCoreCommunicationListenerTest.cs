@@ -128,7 +128,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
             bool stopped = false;
             _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Callback(() => stopped = true).Returns(Task.FromResult<object>(null));
-            fixture.Host.Setup(_ => _.Dispose()).Callback(() => Assert.True(stopped, "Dispose called before StopAsync"));
+            _ = fixture.Host.Setup(_ => _.Dispose()).Callback(() => Assert.True(stopped, "Dispose called before StopAsync"));
 
             await fixture.Sut.CloseAsync(cancellationToken);
 
@@ -142,7 +142,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
             bool stopped = false;
             _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Callback(() => stopped = true).Returns(Task.FromResult<object>(null));
-            fixture.Host.Setup(_ => _.Dispose()).Callback(() => Assert.True(stopped, "Dispose called before StopAsync"));
+            _ = fixture.Host.Setup(_ => _.Dispose()).Callback(() => Assert.True(stopped, "Dispose called before StopAsync"));
 
             await fixture.Sut.CloseAsync(cancellationToken);
 
