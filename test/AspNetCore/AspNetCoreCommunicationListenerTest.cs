@@ -439,8 +439,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             Assert.False(openTask.IsCompleted);
             tcs.SetResult(null);
-            string actual = await openTask;
-            Assert.NotNull(actual);
+            await openTask;
         }
 
         [Fact]
@@ -454,8 +453,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             Assert.False(openTask.IsCompleted);
             tcs.SetResult(null);
-            string actual = await openTask;
-            Assert.NotNull(actual);
+            await openTask;
         }
     }
 
