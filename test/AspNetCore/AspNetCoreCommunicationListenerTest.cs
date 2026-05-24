@@ -343,10 +343,8 @@ public abstract class AspNetCoreCommunicationListenerTest
             {
                 BuildUrl = url;
                 BuildListener = listener;
-                var addresses = new Mock<IServerAddressesFeature>();
-                _ = addresses.Setup(_ => _.Addresses).Returns(new[] { url });
                 var features = new FeatureCollection();
-                features.Set(addresses.Object);
+                features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { url }));
                 _ = Host.Setup(_ => _.ServerFeatures).Returns(features);
                 return Host.Object;
             })
@@ -376,15 +374,11 @@ public abstract class AspNetCoreCommunicationListenerTest
             {
                 BuildUrl = url;
                 BuildListener = listener;
-                var addresses = new Mock<IServerAddressesFeature>();
-                _ = addresses.Setup(_ => _.Addresses).Returns(new[] { url });
                 var features = new FeatureCollection();
-                features.Set(addresses.Object);
-                var server = new Mock<IServer>();
-                _ = server.Setup(_ => _.Features).Returns(features);
-                var services = new Mock<IServiceProvider>();
-                _ = services.Setup(_ => _.GetService(typeof(IServer))).Returns(server.Object);
-                _ = Host.Setup(_ => _.Services).Returns(services.Object);
+                features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { url }));
+                var server = Mock.Of<IServer>(_ => _.Features == features);
+                var services = Mock.Of<IServiceProvider>(_ => _.GetService(typeof(IServer)) == server);
+                _ = Host.Setup(_ => _.Services).Returns(services);
                 return Host.Object;
             })
             { ListenerUrl = listenerUrl };
