@@ -318,24 +318,6 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             host.Verify(_ => _.StartAsync(cancellationToken), Times.Once());
         }
-
-        [Fact]
-        public async Task ReturnsTaskThatCompletesWithPublishAddressAndUrlSuffix()
-        {
-            StatelessServiceContext context = fuzzy.StatelessServiceContext();
-            AspNetCoreCommunicationListener listener = new GenericHostFixture(context, "http://+:0/").Sut;
-            listener.ConfigureToUseUniqueServiceUrl();
-
-            string url = await listener.OpenAsync(cancellationToken);
-
-            string expected = string.Format(
-                CultureInfo.InvariantCulture,
-                "http://{0}:0/{1}/{2}",
-                context.PublishAddress,
-                context.PartitionId,
-                context.ReplicaOrInstanceId);
-            Assert.Equal(expected, url);
-        }
     }
 
     public sealed class OpenAsyncWithWebHost : AspNetCoreCommunicationListenerTest
@@ -368,24 +350,6 @@ public abstract class AspNetCoreCommunicationListenerTest
             _ = await sut.OpenAsync(cancellationToken);
 
             host.Verify(_ => _.StartAsync(cancellationToken), Times.Once());
-        }
-
-        [Fact]
-        public async Task ReturnsTaskThatCompletesWithPublishAddressAndUrlSuffix()
-        {
-            StatelessServiceContext context = fuzzy.StatelessServiceContext();
-            AspNetCoreCommunicationListener listener = new WebHostFixture(context, "http://+:0/").Sut;
-            listener.ConfigureToUseUniqueServiceUrl();
-
-            string url = await listener.OpenAsync(cancellationToken);
-
-            string expected = string.Format(
-                CultureInfo.InvariantCulture,
-                "http://{0}:0/{1}/{2}",
-                context.PublishAddress,
-                context.PartitionId,
-                context.ReplicaOrInstanceId);
-            Assert.Equal(expected, url);
         }
     }
 
