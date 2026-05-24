@@ -400,26 +400,28 @@ public abstract class AspNetCoreCommunicationListenerTest
         public async Task AppendsUrlSuffixToReturnedUrlOnGenericHost()
         {
             StatelessServiceContext context = fuzzy.StatelessServiceContext();
-            var fixture = new GenericHostFixture(context, "http://+:" + fuzzy.UInt16() + "/");
+            ushort port = fuzzy.UInt16();
+            var fixture = new GenericHostFixture(context, "http://+:" + port + "/");
             fixture.Sut.ConfigureToUseUniqueServiceUrl();
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
-            string expected = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}", context.PartitionId, context.ReplicaOrInstanceId);
-            Assert.EndsWith(expected, actual);
+            string suffix = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}", context.PartitionId, context.ReplicaOrInstanceId);
+            Assert.Equal($"http://{context.PublishAddress}:{port}{suffix}", actual);
         }
 
         [Fact]
         public async Task AppendsUrlSuffixToReturnedUrlOnWebHost()
         {
             StatelessServiceContext context = fuzzy.StatelessServiceContext();
-            var fixture = new WebHostFixture(context, "http://+:" + fuzzy.UInt16() + "/");
+            ushort port = fuzzy.UInt16();
+            var fixture = new WebHostFixture(context, "http://+:" + port + "/");
             fixture.Sut.ConfigureToUseUniqueServiceUrl();
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
-            string expected = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}", context.PartitionId, context.ReplicaOrInstanceId);
-            Assert.EndsWith(expected, actual);
+            string suffix = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}", context.PartitionId, context.ReplicaOrInstanceId);
+            Assert.Equal($"http://{context.PublishAddress}:{port}{suffix}", actual);
         }
 
         [Fact]
