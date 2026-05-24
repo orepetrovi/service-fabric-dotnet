@@ -39,7 +39,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public void AppendsPartitionAndInstanceToUrlSuffixForStatelessContext()
         {
-            StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
+            StatelessServiceContext context = fuzzy.StatelessServiceContext();
             var listener = new TestListener(context, build);
 
             listener.ConfigureToUseUniqueServiceUrl();
@@ -51,7 +51,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public void AppendsPartitionReplicaAndNonEmptyGuidToUrlSuffixForStatefulContext()
         {
-            StatefulServiceContext context = TestMocksRepository.GetMockStatefulServiceContext();
+            StatefulServiceContext context = fuzzy.StatefulServiceContext();
             var listener = new TestListener(context, build);
 
             listener.ConfigureToUseUniqueServiceUrl();
@@ -65,7 +65,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public void DoesNotChangeUrlSuffixOnSecondCall()
         {
-            StatefulServiceContext context = TestMocksRepository.GetMockStatefulServiceContext();
+            StatefulServiceContext context = fuzzy.StatefulServiceContext();
             var listener = new TestListener(context, build);
             listener.ConfigureToUseUniqueServiceUrl();
             string first = listener.UrlSuffix;
@@ -135,6 +135,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     public sealed class GetEndpointResourceDescription : AspNetCoreCommunicationListenerTest
     {
+        // TestMocksRepository wires an endpoint collection into the mocked ICodePackageActivationContext
+        // that these tests mutate; fuzzy.StatelessServiceContext() does not provide that plumbing.
         readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
         readonly TestListener listener;
 
@@ -279,7 +281,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public async Task ReturnsTaskThatCompletesWithPublishAddressAndUrlSuffix()
         {
-            StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
+            StatelessServiceContext context = fuzzy.StatelessServiceContext();
             AspNetCoreCommunicationListener listener = CreateListener(context, "http://+:0/");
             listener.ConfigureToUseUniqueServiceUrl();
 
