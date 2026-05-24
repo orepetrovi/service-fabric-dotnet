@@ -55,3 +55,21 @@ Tension: this finding overlaps with the elevated ⚠️ "URL-shape assertion bel
 `gemini` view: Atwood's Rule of Three from [coding.instructions.md](.github/instructions/coding.instructions.md) — only two fixtures exist and they differ in mock-feature setup; extraction is premature abstraction.
 
 Tension is between the general Rule of Three and the test-organization rule about helpers used by "multiple targets". Flagged for human decision on which rule governs here.
+
+
+---
+
+### ❓ Needs Human Review — Use `var` where the type is repeated in the initializer
+*Reported by `opus` 💡; `gemini` Agree, `gpt` Disagree; `opus` Insisted.*
+
+`opus`/`gemini` view: [csharp.instructions.md](.github/instructions/csharp.instructions.md) says "Use `var` to prevent duplication of the variable type in the initialization expression." The canonical example `DateTime today = DateTime.Today;` → `var` is structurally identical to `StatelessServiceContext context = fuzzy.StatelessServiceContext();`. Affected lines:
+- `StatelessServiceContext context = fuzzy.StatelessServiceContext();`
+- `StatefulServiceContext context = fuzzy.StatefulServiceContext();`
+- `Guid trailing = Guid.Parse(...)`
+- `StatelessServiceContext context = fuzzy.StatelessServiceContext();` (in OpenAsync return-value tests)
+
+`gpt` view: `.editorconfig` (`csharp_style_var_when_type_is_apparent`) requires the type to appear *explicitly* in the initialization statement. `Guid trailing = Guid.Parse(...)` qualifies; `StatelessServiceContext context = fuzzy.StatelessServiceContext();` does not — the method name is a factory method whose return type is not syntactically present.
+
+`opus` insisted: A factory method whose name matches the produced type (`fuzzy.StatelessServiceContext()`) makes the type "apparent" the same way `new StatelessServiceContext(...)` does (Roslyn IDE0007 treats them equivalently). `gpt`'s reading would also reject the rule's own canonical example.
+
+Flagged for human review to decide whether the rule's "apparent type" applies to type-named factory methods on a different receiver.
