@@ -34,6 +34,87 @@ public abstract class AspNetCoreCommunicationListenerTest
     AspNetCoreCommunicationListenerTest() =>
         sut = new TestListener(serviceContext, build);
 
+    public abstract class Abort
+    {
+        protected abstract AspNetCoreCommunicationListener Sut { get; }
+
+        protected abstract void VerifyHostDisposed(Times times);
+
+        [Fact]
+        public void DoesNotThrowBeforeOpenAsync() =>
+            Sut.Abort();
+
+        [Fact]
+        public async Task DisposesHostAfterOpenAsync()
+        {
+            _ = await Sut.OpenAsync(CancellationToken.None);
+
+            Sut.Abort();
+
+            VerifyHostDisposed(Times.Once());
+        }
+
+        public sealed class WithWebHost : Abort
+        {
+            readonly WebHostFixture fixture = new();
+            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
+            protected override void VerifyHostDisposed(Times times) => fixture.Host.Verify(_ => _.Dispose(), times);
+        }
+
+        public sealed class WithGenericHost : Abort
+        {
+            readonly GenericHostFixture fixture = new();
+            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
+            protected override void VerifyHostDisposed(Times times) => fixture.Host.Verify(_ => _.Dispose(), times);
+        }
+    }
+
+    public abstract class CloseAsync
+    {
+        readonly CancellationToken cancellationToken = new CancellationTokenSource().Token;
+
+        protected abstract AspNetCoreCommunicationListener Sut { get; }
+
+        protected abstract void VerifyHostStopAsync(CancellationToken expected, Times times);
+
+        protected abstract void VerifyHostDispose(Times times);
+
+        [Fact]
+        public async Task DoesNotThrowBeforeOpenAsync() =>
+            await Sut.CloseAsync(cancellationToken);
+
+        [Fact]
+        public async Task PassesCancellationTokenToHostStopAsyncAfterOpenAsync()
+        {
+            _ = await Sut.OpenAsync(CancellationToken.None);
+
+            await Sut.CloseAsync(cancellationToken);
+
+            VerifyHostStopAsync(cancellationToken, Times.Once());
+            VerifyHostDispose(Times.Once());
+        }
+
+        public sealed class WithWebHost : CloseAsync
+        {
+            readonly WebHostFixture fixture = new();
+            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
+            protected override void VerifyHostStopAsync(CancellationToken expected, Times times) =>
+                fixture.Host.Verify(_ => _.StopAsync(expected), times);
+            protected override void VerifyHostDispose(Times times) =>
+                fixture.Host.Verify(_ => _.Dispose(), times);
+        }
+
+        public sealed class WithGenericHost : CloseAsync
+        {
+            readonly GenericHostFixture fixture = new();
+            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
+            protected override void VerifyHostStopAsync(CancellationToken expected, Times times) =>
+                fixture.Host.Verify(_ => _.StopAsync(expected), times);
+            protected override void VerifyHostDispose(Times times) =>
+                fixture.Host.Verify(_ => _.Dispose(), times);
+        }
+    }
+
     public sealed class ConfigureToUseUniqueServiceUrl : AspNetCoreCommunicationListenerTest
     {
         [Fact]
@@ -163,87 +244,6 @@ public abstract class AspNetCoreCommunicationListenerTest
             EndpointResourceDescription actual = listener.GetEndpointResourceDescription(endpoint.Name);
 
             Assert.Same(endpoint, actual);
-        }
-    }
-
-    public abstract class Abort
-    {
-        protected abstract AspNetCoreCommunicationListener Sut { get; }
-
-        protected abstract void VerifyHostDisposed(Times times);
-
-        [Fact]
-        public void DoesNotThrowBeforeOpenAsync() =>
-            Sut.Abort();
-
-        [Fact]
-        public async Task DisposesHostAfterOpenAsync()
-        {
-            _ = await Sut.OpenAsync(CancellationToken.None);
-
-            Sut.Abort();
-
-            VerifyHostDisposed(Times.Once());
-        }
-
-        public sealed class WithWebHost : Abort
-        {
-            readonly WebHostFixture fixture = new();
-            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
-            protected override void VerifyHostDisposed(Times times) => fixture.Host.Verify(_ => _.Dispose(), times);
-        }
-
-        public sealed class WithGenericHost : Abort
-        {
-            readonly GenericHostFixture fixture = new();
-            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
-            protected override void VerifyHostDisposed(Times times) => fixture.Host.Verify(_ => _.Dispose(), times);
-        }
-    }
-
-    public abstract class CloseAsync
-    {
-        readonly CancellationToken cancellationToken = new CancellationTokenSource().Token;
-
-        protected abstract AspNetCoreCommunicationListener Sut { get; }
-
-        protected abstract void VerifyHostStopAsync(CancellationToken expected, Times times);
-
-        protected abstract void VerifyHostDispose(Times times);
-
-        [Fact]
-        public async Task DoesNotThrowBeforeOpenAsync() =>
-            await Sut.CloseAsync(cancellationToken);
-
-        [Fact]
-        public async Task PassesCancellationTokenToHostStopAsyncAfterOpenAsync()
-        {
-            _ = await Sut.OpenAsync(CancellationToken.None);
-
-            await Sut.CloseAsync(cancellationToken);
-
-            VerifyHostStopAsync(cancellationToken, Times.Once());
-            VerifyHostDispose(Times.Once());
-        }
-
-        public sealed class WithWebHost : CloseAsync
-        {
-            readonly WebHostFixture fixture = new();
-            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
-            protected override void VerifyHostStopAsync(CancellationToken expected, Times times) =>
-                fixture.Host.Verify(_ => _.StopAsync(expected), times);
-            protected override void VerifyHostDispose(Times times) =>
-                fixture.Host.Verify(_ => _.Dispose(), times);
-        }
-
-        public sealed class WithGenericHost : CloseAsync
-        {
-            readonly GenericHostFixture fixture = new();
-            protected override AspNetCoreCommunicationListener Sut => fixture.Sut;
-            protected override void VerifyHostStopAsync(CancellationToken expected, Times times) =>
-                fixture.Host.Verify(_ => _.StopAsync(expected), times);
-            protected override void VerifyHostDispose(Times times) =>
-                fixture.Host.Verify(_ => _.Dispose(), times);
         }
     }
 
