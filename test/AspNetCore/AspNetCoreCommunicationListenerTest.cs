@@ -23,16 +23,11 @@ namespace Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 
 public abstract class AspNetCoreCommunicationListenerTest
 {
-    readonly AspNetCoreCommunicationListener sut;
-
     // Constructor parameters
     readonly ServiceContext serviceContext = fuzzy.ServiceContext();
     readonly Func<string, AspNetCoreCommunicationListener, IWebHost> build = (_, _) => Mock.Of<IWebHost>();
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-
-    AspNetCoreCommunicationListenerTest() =>
-        sut = new TestListener(serviceContext, build);
 
     public sealed class Abort : AspNetCoreCommunicationListenerTest
     {
@@ -164,7 +159,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : AspNetCoreCommunicationListenerTest
     {
-        new readonly AspNetCoreCommunicationListener sut;
+        readonly AspNetCoreCommunicationListener sut;
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
@@ -196,6 +191,11 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : AspNetCoreCommunicationListenerTest
     {
+        readonly AspNetCoreCommunicationListener sut;
+
+        public Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost() =>
+            sut = new TestListener(serviceContext, build);
+
         [Fact]
         public void InitializesProperties()
         {
