@@ -226,11 +226,6 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : AspNetCoreCommunicationListenerTest
     {
-        new readonly AspNetCoreCommunicationListener sut;
-
-        public Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost() =>
-            sut = new TestListener(serviceContext, build);
-
         [Fact]
         public void InitializesProperties()
         {
