@@ -330,10 +330,10 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     sealed class WebHostFixture
     {
-        public Mock<IWebHost> Host { get; } = new();
-        public TestListener Sut { get; }
-        public string BuildUrl { get; private set; }
-        public AspNetCoreCommunicationListener BuildListener { get; private set; }
+        public readonly Mock<IWebHost> Host = new();
+        public readonly TestListener Sut;
+        public string BuildUrl;
+        public AspNetCoreCommunicationListener BuildListener;
 
         public WebHostFixture(ServiceContext context, string listenerUrl = "http://+:0")
         {
@@ -363,10 +363,10 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     sealed class GenericHostFixture
     {
-        public Mock<IHost> Host { get; } = new();
-        public TestListener Sut { get; }
-        public string BuildUrl { get; private set; }
-        public AspNetCoreCommunicationListener BuildListener { get; private set; }
+        public readonly Mock<IHost> Host = new();
+        public readonly TestListener Sut;
+        public string BuildUrl;
+        public AspNetCoreCommunicationListener BuildListener;
 
         public GenericHostFixture(ServiceContext context, string listenerUrl = "http://+:0")
         {
