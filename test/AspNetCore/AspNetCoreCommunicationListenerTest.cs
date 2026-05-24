@@ -262,22 +262,24 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public async Task InvokesBuildDelegateWithGetListenerUrlAndSelfOnGenericHost()
         {
-            var fixture = new GenericHostFixture(serviceContext);
+            string listenerUrl = "http://+:" + fuzzy.UInt16();
+            var fixture = new GenericHostFixture(serviceContext, listenerUrl);
 
             _ = await fixture.Sut.OpenAsync(cancellationToken);
 
-            Assert.Equal(fixture.Sut.ListenerUrl, fixture.BuildUrl);
+            Assert.Equal(listenerUrl, fixture.BuildUrl);
             Assert.Same(fixture.Sut, fixture.BuildListener);
         }
 
         [Fact]
         public async Task InvokesBuildDelegateWithGetListenerUrlAndSelfOnWebHost()
         {
-            var fixture = new WebHostFixture(serviceContext);
+            string listenerUrl = "http://+:" + fuzzy.UInt16();
+            var fixture = new WebHostFixture(serviceContext, listenerUrl);
 
             _ = await fixture.Sut.OpenAsync(cancellationToken);
 
-            Assert.Equal(fixture.Sut.ListenerUrl, fixture.BuildUrl);
+            Assert.Equal(listenerUrl, fixture.BuildUrl);
             Assert.Same(fixture.Sut, fixture.BuildListener);
         }
 
