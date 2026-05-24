@@ -79,7 +79,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     public sealed class CloseAsync : AspNetCoreCommunicationListenerTest
     {
-        readonly CancellationToken cancellationToken = new CancellationTokenSource().Token;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         [Fact]
         public async Task DoesNotThrowBeforeOpenAsyncOnGenericHost()
@@ -287,7 +287,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     public sealed class OpenAsync : AspNetCoreCommunicationListenerTest
     {
-        readonly CancellationToken cancellationToken = new CancellationTokenSource().Token;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         [Fact]
         public async Task InvokesBuildDelegateWithGetListenerUrlAndSelfOnGenericHost()
