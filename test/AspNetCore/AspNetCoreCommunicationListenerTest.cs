@@ -56,6 +56,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             fixture.Sut.Abort();
 
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
         }
 
         [Fact]
@@ -67,6 +68,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             fixture.Sut.Abort();
 
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
         }
     }
 
