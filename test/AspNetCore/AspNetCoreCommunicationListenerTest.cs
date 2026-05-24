@@ -76,13 +76,13 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
     }
 
-    public sealed class Constructor_ServiceContext_FuncOfStringAspNetCoreCommunicationListenerIHost : AspNetCoreCommunicationListenerTest
+    public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : AspNetCoreCommunicationListenerTest
     {
         new readonly AspNetCoreCommunicationListener sut;
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
-        public Constructor_ServiceContext_FuncOfStringAspNetCoreCommunicationListenerIHost() =>
+        public Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost() =>
             sut = new TestListener(serviceContext, build);
 
         [Fact]
@@ -108,7 +108,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
     }
 
-    public sealed class Constructor_ServiceContext_FuncOfStringAspNetCoreCommunicationListenerIWebHost : AspNetCoreCommunicationListenerTest
+    public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : AspNetCoreCommunicationListenerTest
     {
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
