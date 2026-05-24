@@ -307,24 +307,24 @@ public abstract class AspNetCoreCommunicationListenerTest
         public async Task ReturnsUrlFromServerAddressFeatureOnGenericHost()
         {
             StatelessServiceContext context = fuzzy.StatelessServiceContext();
-            ushort port = fuzzy.UInt16();
-            var fixture = new GenericHostFixture(context, "http://+:" + port + "/");
+            ushort serverPort = fuzzy.UInt16();
+            var fixture = new GenericHostFixture(context, "http://+:" + fuzzy.UInt16(), "http://+:" + serverPort + "/");
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
-            Assert.Equal($"http://{context.PublishAddress}:{port}", actual);
+            Assert.Equal($"http://{context.PublishAddress}:{serverPort}", actual);
         }
 
         [Fact]
         public async Task ReturnsUrlFromServerAddressFeatureOnWebHost()
         {
             StatelessServiceContext context = fuzzy.StatelessServiceContext();
-            ushort port = fuzzy.UInt16();
-            var fixture = new WebHostFixture(context, "http://+:" + port + "/");
+            ushort serverPort = fuzzy.UInt16();
+            var fixture = new WebHostFixture(context, "http://+:" + fuzzy.UInt16(), "http://+:" + serverPort + "/");
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
-            Assert.Equal($"http://{context.PublishAddress}:{port}", actual);
+            Assert.Equal($"http://{context.PublishAddress}:{serverPort}", actual);
         }
     }
 
@@ -335,7 +335,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         public string BuildUrl;
         public AspNetCoreCommunicationListener BuildListener;
 
-        public WebHostFixture(ServiceContext context, string listenerUrl = "http://+:0")
+        public WebHostFixture(ServiceContext context, string listenerUrl = "http://+:0", string serverAddress = null)
         {
             _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(CompletedTask());
             _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(CompletedTask());
@@ -344,7 +344,7 @@ public abstract class AspNetCoreCommunicationListenerTest
                 BuildUrl = url;
                 BuildListener = listener;
                 var features = new FeatureCollection();
-                features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { url }));
+                features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { serverAddress ?? url }));
                 _ = Host.Setup(_ => _.ServerFeatures).Returns(features);
                 return Host.Object;
             })
@@ -366,7 +366,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         public string BuildUrl;
         public AspNetCoreCommunicationListener BuildListener;
 
-        public GenericHostFixture(ServiceContext context, string listenerUrl = "http://+:0")
+        public GenericHostFixture(ServiceContext context, string listenerUrl = "http://+:0", string serverAddress = null)
         {
             _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(CompletedTask());
             _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(CompletedTask());
@@ -375,7 +375,7 @@ public abstract class AspNetCoreCommunicationListenerTest
                 BuildUrl = url;
                 BuildListener = listener;
                 var features = new FeatureCollection();
-                features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { url }));
+                features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { serverAddress ?? url }));
                 var server = Mock.Of<IServer>(_ => _.Features == features);
                 var services = Mock.Of<IServiceProvider>(_ => _.GetService(typeof(IServer)) == server);
                 _ = Host.Setup(_ => _.Services).Returns(services);
