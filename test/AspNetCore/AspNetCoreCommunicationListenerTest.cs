@@ -287,7 +287,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
         [Fact]
         public void ThrowsInvalidOperationExceptionWhenEndpointIsNotInManifest() =>
-            Assert.Throws<InvalidOperationException>(() => listener.GetEndpointResourceDescription(endpointName));
+            _ = Assert.Throws<InvalidOperationException>(() => listener.GetEndpointResourceDescription(endpointName));
     }
 
     public sealed class OpenAsync : AspNetCoreCommunicationListenerTest
