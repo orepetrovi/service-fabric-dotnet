@@ -266,7 +266,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             _ = await fixture.Sut.OpenAsync(cancellationToken);
 
-            Assert.Equal(fixture.Sut.GetListenerUrl(), fixture.BuildUrl);
+            Assert.Equal(fixture.Sut.ListenerUrl, fixture.BuildUrl);
             Assert.Same(fixture.Sut, fixture.BuildListener);
         }
 
@@ -277,7 +277,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             _ = await fixture.Sut.OpenAsync(cancellationToken);
 
-            Assert.Equal(fixture.Sut.GetListenerUrl(), fixture.BuildUrl);
+            Assert.Equal(fixture.Sut.ListenerUrl, fixture.BuildUrl);
             Assert.Same(fixture.Sut, fixture.BuildListener);
         }
 
