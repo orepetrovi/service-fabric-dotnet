@@ -326,6 +326,32 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             Assert.Equal($"http://{context.PublishAddress}:{serverPort}", actual);
         }
+
+        [Fact]
+        public async Task AppendsUrlSuffixToReturnedUrlOnGenericHost()
+        {
+            StatelessServiceContext context = fuzzy.StatelessServiceContext();
+            var fixture = new GenericHostFixture(context, "http://+:" + fuzzy.UInt16() + "/");
+            fixture.Sut.ConfigureToUseUniqueServiceUrl();
+
+            string actual = await fixture.Sut.OpenAsync(cancellationToken);
+
+            string expected = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}", context.PartitionId, context.ReplicaOrInstanceId);
+            Assert.EndsWith(expected, actual);
+        }
+
+        [Fact]
+        public async Task AppendsUrlSuffixToReturnedUrlOnWebHost()
+        {
+            StatelessServiceContext context = fuzzy.StatelessServiceContext();
+            var fixture = new WebHostFixture(context, "http://+:" + fuzzy.UInt16() + "/");
+            fixture.Sut.ConfigureToUseUniqueServiceUrl();
+
+            string actual = await fixture.Sut.OpenAsync(cancellationToken);
+
+            string expected = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}", context.PartitionId, context.ReplicaOrInstanceId);
+            Assert.EndsWith(expected, actual);
+        }
     }
 
     sealed class WebHostFixture
