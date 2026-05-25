@@ -358,6 +358,25 @@ public abstract class GenericHostCommunicationListenerTest
 
             Assert.Equal($"http://{serviceContext.PublishAddress}:{port}{listener.UrlSuffix}", actual);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Second OpenAsync overwrites first host without disposing it.
+        public async Task DisposesPreviousHostWhenInvokedTwice()
+        {
+            // SUT unconditionally assigns this.host = this.build(...) on every OpenAsync call,
+            // so a second open overwrites the first reference, leaking the previous host.
+            // Expected behavior is to dispose the previous host before replacing it.
+            _ = await sut.OpenAsync(cancellation);
+            var secondHost = new Mock<IHost>();
+            var startTcs = new TaskCompletionSource<object>();
+            startTcs.SetResult(null);
+            _ = secondHost.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(startTcs.Task);
+            _ = secondHost.Setup(_ => _.Services).Returns(host.Object.Services);
+            buildHost = secondHost.Object;
+
+            _ = await sut.OpenAsync(cancellation);
+
+            host.Verify(_ => _.Dispose(), Times.Once());
+        }
     }
 
     sealed class TestListener : AspNetCoreCommunicationListener
