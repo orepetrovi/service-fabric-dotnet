@@ -104,9 +104,7 @@ public abstract class GenericHostCommunicationListenerTest
             _ = await sut.OpenAsync(CancellationToken.None);
             bool stopped = false;
             bool stoppedBeforeDispose = false;
-            var stopTcs = new TaskCompletionSource<object>();
-            stopTcs.SetResult(null);
-            _ = host.Setup(_ => _.StopAsync(cancellation)).Callback(() => stopped = true).Returns(stopTcs.Task);
+            _ = host.Setup(_ => _.StopAsync(cancellation)).Callback(() => stopped = true).Returns(Task.CompletedTask);
             _ = host.Setup(_ => _.Dispose()).Callback(() => stoppedBeforeDispose = stopped);
 
             await sut.CloseAsync(cancellation);
