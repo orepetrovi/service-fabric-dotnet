@@ -171,7 +171,7 @@ public abstract class GenericHostCommunicationListenerTest
             // SUT currently stores `build` without validation and throws NullReferenceException
             // when OpenAsync dereferences it. Expected behavior is to fail fast in the constructor.
             var exception = Assert.Throws<ArgumentNullException>(() => new GenericHostCommunicationListener(null, listener));
-            Assert.Equal("build", exception.ParamName);
+            Assert.Equal(nameof(build), exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing arg null validation.
@@ -180,7 +180,7 @@ public abstract class GenericHostCommunicationListenerTest
             // SUT currently dereferences `listener.ServiceContext` without validation,
             // throwing NullReferenceException instead of ArgumentNullException.
             var exception = Assert.Throws<ArgumentNullException>(() => new GenericHostCommunicationListener(build, null));
-            Assert.Equal("listener", exception.ParamName);
+            Assert.Equal(nameof(listener), exception.ParamName);
         }
     }
 
