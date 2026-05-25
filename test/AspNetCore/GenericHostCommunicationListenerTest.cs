@@ -393,7 +393,7 @@ public abstract class GenericHostCommunicationListenerTest
         _ = host.Setup(_ => _.Services).Returns(services);
     }
 
-    sealed class TestListener(ServiceContext serviceContext, Func<string, AspNetCoreCommunicationListener, IHost> build, string listenerUrl = "http://+:0")
+    sealed class TestListener(ServiceContext serviceContext, Func<string, AspNetCoreCommunicationListener, IHost> build, string listenerUrl)
         : AspNetCoreCommunicationListener(serviceContext, build)
     {
         protected internal override string GetListenerUrl() => listenerUrl;
