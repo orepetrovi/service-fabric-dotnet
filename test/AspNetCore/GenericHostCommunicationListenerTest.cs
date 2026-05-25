@@ -338,6 +338,30 @@ public abstract class GenericHostCommunicationListenerTest
         }
 
         [Fact]
+        public async Task AppendsUrlSuffixConfiguredDuringBuild()
+        {
+            // Guards against a regression where UrlSuffix is read before invoking build(...).
+            // UseServiceFabricIntegration configures the listener from inside the host-builder delegate,
+            // so the suffix isn't known until after build returns.
+            ushort port = fuzzy.UInt16();
+            SetupServer($"http://+:{port}");
+            AspNetCoreCommunicationListener configuredListener = null;
+            Func<string, AspNetCoreCommunicationListener, IHost> buildThatConfiguresSuffix = (url, l) =>
+            {
+                l.ConfigureToUseUniqueServiceUrl();
+                configuredListener = l;
+                return buildHost;
+            };
+            var localListener = new TestListener(serviceContext, buildThatConfiguresSuffix, listenerUrl);
+            var localSut = new GenericHostCommunicationListener(buildThatConfiguresSuffix, localListener);
+
+            string actual = await localSut.OpenAsync(cancellation);
+
+            Assert.Same(localListener, configuredListener);
+            Assert.Equal($"http://{serviceContext.PublishAddress}:{port}{localListener.UrlSuffix}", actual);
+        }
+
+        [Fact]
         public async Task UsesFirstServerAddressWhenMultipleAreConfigured()
         {
             ushort firstPort = fuzzy.UInt16().Maximum((ushort)(ushort.MaxValue - 5));
