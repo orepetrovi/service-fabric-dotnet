@@ -179,6 +179,7 @@ public abstract class GenericHostCommunicationListenerTest
             _ = await sut.OpenAsync(cancellation);
 
             host.Verify(_ => _.StartAsync(cancellation), Times.Once());
+            host.Verify(_ => _.StartAsync(It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Fact]
