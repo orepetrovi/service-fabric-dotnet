@@ -111,7 +111,7 @@ public abstract class GenericHostCommunicationListenerTest
 
             await sut.CloseAsync(cancellation);
 
-            Assert.True(stoppedBeforeDispose, "Dispose called before StopAsync");
+            Assert.True(stoppedBeforeDispose, $"{nameof(IDisposable.Dispose)} called before {nameof(IHost.StopAsync)}");
             host.Verify(_ => _.Dispose(), Times.Once());
         }
 
@@ -237,7 +237,7 @@ public abstract class GenericHostCommunicationListenerTest
             var services = new Mock<IServiceProvider>();
             _ = services.Setup(_ => _.GetService(typeof(IServer))).Returns(() =>
             {
-                Assert.True(started, "IServer resolved before host.StartAsync completed");
+                Assert.True(started, $"{nameof(IServer)} resolved before host.{nameof(IHost.StartAsync)} completed");
                 return server;
             });
             _ = host.Setup(_ => _.Services).Returns(services.Object);
