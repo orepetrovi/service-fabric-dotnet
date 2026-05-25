@@ -192,13 +192,14 @@ public abstract class GenericHostCommunicationListenerTest
         public async Task InvokesBuildDelegateWithListenerUrlAndListener()
         {
             string listenerUrl = "http://+:" + fuzzy.UInt16();
-            ((TestListener)listener).ListenerUrl = listenerUrl;
+            var customListener = new TestListener(serviceContext, build, listenerUrl);
+            var customSut = new GenericHostCommunicationListener(build, customListener);
 
-            _ = await sut.OpenAsync(cancellation);
+            _ = await customSut.OpenAsync(cancellation);
 
             Assert.Equal(1, buildCallCount);
             Assert.Equal(listenerUrl, buildUrl);
-            Assert.Same(listener, buildListener);
+            Assert.Same(customListener, buildListener);
         }
 
         [Fact]
@@ -322,12 +323,11 @@ public abstract class GenericHostCommunicationListenerTest
 
     sealed class TestListener : AspNetCoreCommunicationListener
     {
-        internal TestListener(ServiceContext serviceContext, Func<string, AspNetCoreCommunicationListener, IHost> build)
-            : base(serviceContext, build)
-        {
-        }
+        internal TestListener(ServiceContext serviceContext, Func<string, AspNetCoreCommunicationListener, IHost> build, string listenerUrl = "http://+:0")
+            : base(serviceContext, build) =>
+            ListenerUrl = listenerUrl;
 
-        internal string ListenerUrl = "http://+:0";
+        internal readonly string ListenerUrl;
 
         protected internal override string GetListenerUrl() =>
             ListenerUrl;
