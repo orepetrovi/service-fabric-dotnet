@@ -370,7 +370,7 @@ public abstract class GenericHostCommunicationListenerTest
             var secondHost = new Mock<IHost>();
             var startTcs = new TaskCompletionSource<object>();
             startTcs.SetResult(null);
-            _ = secondHost.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(startTcs.Task);
+            _ = secondHost.Setup(_ => _.StartAsync(cancellation)).Returns(startTcs.Task);
             _ = secondHost.Setup(_ => _.Services).Returns(host.Object.Services);
             buildHost = secondHost.Object;
 
