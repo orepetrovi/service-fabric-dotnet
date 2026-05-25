@@ -241,7 +241,7 @@ public abstract class GenericHostCommunicationListenerTest
             _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(startTcs.Task);
 
             var features = new FeatureCollection();
-            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { "http://+:80" }));
+            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { "http://+:" + fuzzy.UInt16() }));
             var server = Mock.Of<IServer>(_ => _.Features == features);
             var services = new Mock<IServiceProvider>();
             _ = services.Setup(_ => _.GetService(typeof(IServer))).Returns(() =>
