@@ -354,8 +354,8 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task UsesFirstServerAddressWhenMultipleAreConfigured()
         {
-            ushort firstPort = fuzzy.UInt16();
-            ushort secondPort = fuzzy.UInt16();
+            ushort firstPort = fuzzy.UInt16().Maximum((ushort)(ushort.MaxValue - 5));
+            ushort secondPort = (ushort)(firstPort + fuzzy.SByte().Between(1, 5));
             var features = new FeatureCollection();
             features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { "http://+:" + firstPort, "http://+:" + secondPort }));
             SetupServer(Mock.Of<IServer>(_ => _.Features == features));
