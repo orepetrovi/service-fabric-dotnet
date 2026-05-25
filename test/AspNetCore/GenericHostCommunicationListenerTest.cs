@@ -225,6 +225,7 @@ public abstract class GenericHostCommunicationListenerTest
             // StartAsync completes. In real hosting (e.g. Kestrel ":0") addresses are populated
             // during IServer.StartAsync, so an early read would return stale/unbound addresses.
             bool started = false;
+            bool resolvedBeforeStart = false;
             var startTcs = new TaskCompletionSource<object>();
             _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(startTcs.Task);
 
@@ -234,7 +235,7 @@ public abstract class GenericHostCommunicationListenerTest
             var services = new Mock<IServiceProvider>();
             _ = services.Setup(_ => _.GetService(typeof(IServer))).Returns(() =>
             {
-                Assert.True(started, $"{nameof(IServer)} resolved before host.{nameof(IHost.StartAsync)} completed");
+                resolvedBeforeStart |= !started;
                 return server;
             });
             _ = host.Setup(_ => _.Services).Returns(services.Object);
@@ -245,6 +246,8 @@ public abstract class GenericHostCommunicationListenerTest
             started = true;
             startTcs.SetResult(null);
             _ = await open;
+
+            Assert.False(resolvedBeforeStart, $"{nameof(IServer)} resolved before host.{nameof(IHost.StartAsync)} completed");
         }
 
         [Fact]
