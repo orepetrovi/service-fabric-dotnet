@@ -78,9 +78,7 @@ public abstract class GenericHostCommunicationListenerTest
         public async Task DisposesHostAfterOpenAsync()
         {
             _ = await sut.OpenAsync(CancellationToken.None);
-
             sut.Abort();
-
             host.Verify(_ => _.Dispose(), Times.Once());
         }
 
@@ -88,9 +86,7 @@ public abstract class GenericHostCommunicationListenerTest
         public async Task DoesNotInvokeStopAsync()
         {
             _ = await sut.OpenAsync(CancellationToken.None);
-
             sut.Abort();
-
             host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
         }
 
