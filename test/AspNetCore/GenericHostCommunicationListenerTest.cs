@@ -249,6 +249,17 @@ public abstract class GenericHostCommunicationListenerTest
             Assert.Equal(SR.ErrorNoUrlFromAspNetCore, exception.Message);
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing null check on IServerAddressesFeature.
+        public async Task ThrowsInvalidOperationExceptionWhenServerAddressesFeatureIsNotRegistered()
+        {
+            // SUT currently dereferences server.Features.Get<IServerAddressesFeature>() without a null check,
+            // throwing NullReferenceException instead of InvalidOperationException with SR.ErrorNoUrlFromAspNetCore.
+            SetupServer(Mock.Of<IServer>(_ => _.Features == new FeatureCollection()));
+
+            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
+            Assert.Equal(SR.ErrorNoUrlFromAspNetCore, exception.Message);
+        }
+
         [Fact]
         public async Task ReplacesPlusWildcardWithPublishAddress()
         {
