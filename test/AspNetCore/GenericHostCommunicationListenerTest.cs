@@ -162,6 +162,19 @@ public abstract class GenericHostCommunicationListenerTest
             host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
             host.Verify(_ => _.Dispose(), Times.Never());
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. CloseAsync skips Dispose when StopAsync throws.
+        public async Task DisposesHostWhenStopAsyncThrows()
+        {
+            // SUT awaits host.StopAsync then calls Dispose without try/finally,
+            // so a faulted stop leaks the host. Expected behavior is to always Dispose.
+            _ = await sut.OpenAsync(CancellationToken.None);
+            _ = host.Setup(_ => _.StopAsync(cancellation)).ThrowsAsync(new InvalidOperationException());
+
+            _ = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CloseAsync(cancellation));
+
+            host.Verify(_ => _.Dispose(), Times.Once());
+        }
     }
 
     public sealed class Constructor : GenericHostCommunicationListenerTest
