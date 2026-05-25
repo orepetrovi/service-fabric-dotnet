@@ -54,19 +54,6 @@ public abstract class GenericHostCommunicationListenerTest
         SetupServer($"http://+:{fuzzy.UInt16()}");
     }
 
-    void SetupServer(string address)
-    {
-        var features = new FeatureCollection();
-        features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { address }));
-        SetupServer(Mock.Of<IServer>(_ => _.Features == features));
-    }
-
-    void SetupServer(IServer server)
-    {
-        var services = Mock.Of<IServiceProvider>(_ => _.GetService(typeof(IServer)) == server);
-        _ = host.Setup(_ => _.Services).Returns(services);
-    }
-
     public sealed class Abort : GenericHostCommunicationListenerTest
     {
         [Fact]
@@ -394,6 +381,19 @@ public abstract class GenericHostCommunicationListenerTest
 
             host.Verify(_ => _.Dispose(), Times.Once());
         }
+    }
+
+    void SetupServer(string address)
+    {
+        var features = new FeatureCollection();
+        features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { address }));
+        SetupServer(Mock.Of<IServer>(_ => _.Features == features));
+    }
+
+    void SetupServer(IServer server)
+    {
+        var services = Mock.Of<IServiceProvider>(_ => _.GetService(typeof(IServer)) == server);
+        _ = host.Setup(_ => _.Services).Returns(services);
     }
 
     sealed class TestListener(ServiceContext serviceContext, Func<string, AspNetCoreCommunicationListener, IHost> build, string listenerUrl = "http://+:0")
