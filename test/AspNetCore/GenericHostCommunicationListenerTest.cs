@@ -397,15 +397,9 @@ public abstract class GenericHostCommunicationListenerTest
         }
     }
 
-    sealed class TestListener : AspNetCoreCommunicationListener
+    sealed class TestListener(ServiceContext serviceContext, Func<string, AspNetCoreCommunicationListener, IHost> build, string listenerUrl = "http://+:0")
+        : AspNetCoreCommunicationListener(serviceContext, build)
     {
-        internal TestListener(ServiceContext serviceContext, Func<string, AspNetCoreCommunicationListener, IHost> build, string listenerUrl = "http://+:0")
-            : base(serviceContext, build) =>
-            this.listenerUrl = listenerUrl;
-
-        readonly string listenerUrl;
-
-        protected internal override string GetListenerUrl() =>
-            this.listenerUrl;
+        protected internal override string GetListenerUrl() => listenerUrl;
     }
 }
