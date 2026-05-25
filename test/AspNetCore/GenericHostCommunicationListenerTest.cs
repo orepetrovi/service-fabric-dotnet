@@ -234,6 +234,35 @@ public abstract class GenericHostCommunicationListenerTest
         }
 
         [Fact]
+        public async Task ResolvesServerAfterHostStartAsyncCompletes()
+        {
+            // Guards against a regression where IServer/IServerAddressesFeature is read before
+            // StartAsync completes. In real hosting (e.g. Kestrel ":0") addresses are populated
+            // during IServer.StartAsync, so an early read would return stale/unbound addresses.
+            bool started = false;
+            var startTcs = new TaskCompletionSource<object>();
+            _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(startTcs.Task);
+
+            var features = new FeatureCollection();
+            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { "http://+:80" }));
+            var server = Mock.Of<IServer>(_ => _.Features == features);
+            var services = new Mock<IServiceProvider>();
+            _ = services.Setup(_ => _.GetService(typeof(IServer))).Returns(() =>
+            {
+                Assert.True(started, "IServer resolved before host.StartAsync completed");
+                return server;
+            });
+            _ = host.Setup(_ => _.Services).Returns(services.Object);
+
+            Task<string> openTask = sut.OpenAsync(cancellation);
+
+            Assert.False(openTask.IsCompleted);
+            started = true;
+            startTcs.SetResult(null);
+            _ = await openTask;
+        }
+
+        [Fact]
         public async Task ThrowsInvalidOperationExceptionWhenServerIsNotRegistered()
         {
             SetupServer((IServer)null);
