@@ -269,7 +269,7 @@ public abstract class GenericHostCommunicationListenerTest
         }
 
         [Fact]
-        public async Task ThrowsInvalidOperationExceptionWhenAddressIsNull()
+        public async Task ThrowsInvalidOperationExceptionWhenServerHasNoAddresses()
         {
             var features = new FeatureCollection();
             features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == Array.Empty<string>()));
