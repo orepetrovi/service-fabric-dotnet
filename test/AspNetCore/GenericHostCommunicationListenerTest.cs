@@ -238,6 +238,17 @@ public abstract class GenericHostCommunicationListenerTest
         }
 
         [Fact]
+        public async Task ReturnsServerAddressUnchangedWhenNoWildcard()
+        {
+            ushort port = fuzzy.UInt16();
+            SetupServer($"http://127.0.0.1:{port}");
+
+            string actual = await sut.OpenAsync(cancellation);
+
+            Assert.Equal($"http://127.0.0.1:{port}", actual);
+        }
+
+        [Fact]
         public async Task TrimsTrailingSlashFromServerAddress()
         {
             ushort port = fuzzy.UInt16();
