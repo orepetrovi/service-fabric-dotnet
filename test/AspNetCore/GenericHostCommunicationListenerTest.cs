@@ -99,7 +99,7 @@ public abstract class GenericHostCommunicationListenerTest
         {
             sut.Abort();
 
-            Assert.Null(buildUrl);
+            Assert.Equal(0, buildCallCount);
             host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
             host.Verify(_ => _.Dispose(), Times.Never());
         }
@@ -158,7 +158,7 @@ public abstract class GenericHostCommunicationListenerTest
         {
             await sut.CloseAsync(cancellation);
 
-            Assert.Null(buildUrl);
+            Assert.Equal(0, buildCallCount);
             host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
             host.Verify(_ => _.Dispose(), Times.Never());
         }
