@@ -32,6 +32,7 @@ public abstract class GenericHostCommunicationListenerTest
     IHost buildHost;
     string buildUrl;
     AspNetCoreCommunicationListener buildListener;
+    int buildCallCount;
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
@@ -47,6 +48,7 @@ public abstract class GenericHostCommunicationListenerTest
 
         build = (url, l) =>
         {
+            buildCallCount++;
             buildUrl = url;
             buildListener = l;
             return buildHost;
@@ -194,6 +196,7 @@ public abstract class GenericHostCommunicationListenerTest
 
             _ = await sut.OpenAsync(cancellation);
 
+            Assert.Equal(1, buildCallCount);
             Assert.Equal(listenerUrl, buildUrl);
             Assert.Same(listener, buildListener);
         }
