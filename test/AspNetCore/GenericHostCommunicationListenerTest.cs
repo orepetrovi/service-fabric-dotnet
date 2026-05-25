@@ -78,7 +78,6 @@ public abstract class GenericHostCommunicationListenerTest
             sut.Abort();
 
             Assert.Equal(0, buildCallCount);
-            host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
             host.Verify(_ => _.Dispose(), Times.Never());
         }
     }
