@@ -27,6 +27,7 @@ public abstract class GenericHostCommunicationListenerTest
     readonly Func<string, AspNetCoreCommunicationListener, IHost> build;
     readonly AspNetCoreCommunicationListener listener;
 
+    readonly string listenerUrl = "http://+:" + fuzzy.UInt16();
     readonly StatelessServiceContext serviceContext = fuzzy.StatelessServiceContext();
     readonly Mock<IHost> host = new();
     IHost buildHost;
@@ -53,7 +54,7 @@ public abstract class GenericHostCommunicationListenerTest
             buildListener = l;
             return buildHost;
         };
-        listener = new TestListener(serviceContext, build);
+        listener = new TestListener(serviceContext, build, listenerUrl);
         sut = new GenericHostCommunicationListener(build, listener);
         SetupServer("http://+:80");
     }
@@ -191,15 +192,11 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task InvokesBuildDelegateWithListenerUrlAndListener()
         {
-            string listenerUrl = "http://+:" + fuzzy.UInt16();
-            var customListener = new TestListener(serviceContext, build, listenerUrl);
-            var customSut = new GenericHostCommunicationListener(build, customListener);
-
-            _ = await customSut.OpenAsync(cancellation);
+            _ = await sut.OpenAsync(cancellation);
 
             Assert.Equal(1, buildCallCount);
             Assert.Equal(listenerUrl, buildUrl);
-            Assert.Same(customListener, buildListener);
+            Assert.Same(listener, buildListener);
         }
 
         [Fact]
