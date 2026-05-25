@@ -92,8 +92,14 @@ public abstract class GenericHostCommunicationListenerTest
         }
 
         [Fact]
-        public void DoesNotThrowBeforeOpenAsync() =>
+        public void IsNoOpBeforeOpenAsync()
+        {
             sut.Abort();
+
+            Assert.Null(buildUrl);
+            host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
+            host.Verify(_ => _.Dispose(), Times.Never());
+        }
     }
 
     public sealed class CloseAsync : GenericHostCommunicationListenerTest
@@ -145,8 +151,14 @@ public abstract class GenericHostCommunicationListenerTest
         }
 
         [Fact]
-        public async Task DoesNotThrowBeforeOpenAsync() =>
+        public async Task IsNoOpBeforeOpenAsync()
+        {
             await sut.CloseAsync(cancellation);
+
+            Assert.Null(buildUrl);
+            host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
+            host.Verify(_ => _.Dispose(), Times.Never());
+        }
     }
 
     public sealed class OpenAsync : GenericHostCommunicationListenerTest
