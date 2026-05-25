@@ -27,7 +27,7 @@ public abstract class GenericHostCommunicationListenerTest
     readonly Func<string, AspNetCoreCommunicationListener, IHost> build;
     readonly AspNetCoreCommunicationListener listener;
 
-    readonly string listenerUrl = "http://+:" + fuzzy.UInt16();
+    readonly string listenerUrl = $"http://+:{fuzzy.UInt16()}";
     readonly StatelessServiceContext serviceContext = fuzzy.StatelessServiceContext();
     readonly Mock<IHost> host = new();
     IHost buildHost;
@@ -52,7 +52,7 @@ public abstract class GenericHostCommunicationListenerTest
         };
         listener = new TestListener(serviceContext, build, listenerUrl);
         sut = new GenericHostCommunicationListener(build, listener);
-        SetupServer("http://+:" + fuzzy.UInt16());
+        SetupServer($"http://+:{fuzzy.UInt16()}");
     }
 
     void SetupServer(string address)
@@ -246,7 +246,7 @@ public abstract class GenericHostCommunicationListenerTest
             _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(startTcs.Task);
 
             var features = new FeatureCollection();
-            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { "http://+:" + fuzzy.UInt16() }));
+            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { $"http://+:{fuzzy.UInt16()}" }));
             var server = Mock.Of<IServer>(_ => _.Features == features);
             var services = new Mock<IServiceProvider>();
             _ = services.Setup(_ => _.GetService(typeof(IServer))).Returns(() =>
@@ -299,7 +299,7 @@ public abstract class GenericHostCommunicationListenerTest
         public async Task ReplacesPlusWildcardWithPublishAddress()
         {
             ushort port = fuzzy.UInt16();
-            SetupServer("http://+:" + port);
+            SetupServer($"http://+:{port}");
 
             string actual = await sut.OpenAsync(cancellation);
 
@@ -310,7 +310,7 @@ public abstract class GenericHostCommunicationListenerTest
         public async Task ReplacesIPv6WildcardWithPublishAddress()
         {
             ushort port = fuzzy.UInt16();
-            SetupServer("http://[::]:" + port);
+            SetupServer($"http://[::]:{port}");
 
             string actual = await sut.OpenAsync(cancellation);
 
@@ -332,7 +332,7 @@ public abstract class GenericHostCommunicationListenerTest
         public async Task TrimsTrailingSlashFromServerAddress()
         {
             ushort port = fuzzy.UInt16();
-            SetupServer("http://+:" + port + "/");
+            SetupServer($"http://+:{port}/");
 
             string actual = await sut.OpenAsync(cancellation);
 
@@ -343,7 +343,7 @@ public abstract class GenericHostCommunicationListenerTest
         public async Task AppendsUrlSuffixFromListener()
         {
             ushort port = fuzzy.UInt16();
-            SetupServer("http://+:" + port);
+            SetupServer($"http://+:{port}");
             listener.ConfigureToUseUniqueServiceUrl();
 
             string actual = await sut.OpenAsync(cancellation);
@@ -357,7 +357,7 @@ public abstract class GenericHostCommunicationListenerTest
             ushort firstPort = fuzzy.UInt16().Maximum((ushort)(ushort.MaxValue - 5));
             ushort secondPort = (ushort)(firstPort + fuzzy.SByte().Between(1, 5));
             var features = new FeatureCollection();
-            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { "http://+:" + firstPort, "http://+:" + secondPort }));
+            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { $"http://+:{firstPort}", $"http://+:{secondPort}" }));
             SetupServer(Mock.Of<IServer>(_ => _.Features == features));
 
             string actual = await sut.OpenAsync(cancellation);
