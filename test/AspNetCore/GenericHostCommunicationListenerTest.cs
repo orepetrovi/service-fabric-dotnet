@@ -355,6 +355,20 @@ public abstract class GenericHostCommunicationListenerTest
             Assert.Equal($"http://{serviceContext.PublishAddress}:{port}{listener.UrlSuffix}", actual);
         }
 
+        [Fact]
+        public async Task UsesFirstServerAddressWhenMultipleAreConfigured()
+        {
+            ushort firstPort = fuzzy.UInt16();
+            ushort secondPort = fuzzy.UInt16();
+            var features = new FeatureCollection();
+            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { "http://+:" + firstPort, "http://+:" + secondPort }));
+            SetupServer(Mock.Of<IServer>(_ => _.Features == features));
+
+            string actual = await sut.OpenAsync(cancellation);
+
+            Assert.Equal($"http://{serviceContext.PublishAddress}:{firstPort}", actual);
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug. Second OpenAsync overwrites first host without disposing it.
         public async Task DisposesPreviousHostWhenInvokedTwice()
         {
