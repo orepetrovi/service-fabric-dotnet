@@ -95,7 +95,7 @@ public abstract class GenericHostCommunicationListenerTest
         }
 
         [Fact]
-        public void IsNoOpBeforeOpenAsync()
+        public void DoesNotInvokeHostBeforeOpenAsync()
         {
             sut.Abort();
 
@@ -154,7 +154,7 @@ public abstract class GenericHostCommunicationListenerTest
         }
 
         [Fact]
-        public async Task IsNoOpBeforeOpenAsync()
+        public async Task DoesNotInvokeHostBeforeOpenAsync()
         {
             await sut.CloseAsync(cancellation);
 
