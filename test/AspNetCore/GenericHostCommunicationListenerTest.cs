@@ -56,7 +56,7 @@ public abstract class GenericHostCommunicationListenerTest
         };
         listener = new TestListener(serviceContext, build, listenerUrl);
         sut = new GenericHostCommunicationListener(build, listener);
-        SetupServer("http://+:80");
+        SetupServer("http://+:" + fuzzy.UInt16());
     }
 
     void SetupServer(string address)
