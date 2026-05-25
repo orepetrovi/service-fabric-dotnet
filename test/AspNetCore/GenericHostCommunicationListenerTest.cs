@@ -207,7 +207,7 @@ public abstract class GenericHostCommunicationListenerTest
         {
             buildHost = null;
 
-            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
             Assert.Equal(SR.HostNullExceptionMessage, exception.Message);
         }
 
@@ -267,7 +267,7 @@ public abstract class GenericHostCommunicationListenerTest
         {
             SetupServer((IServer)null);
 
-            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
             Assert.Equal(SR.WebServerNotFound, exception.Message);
         }
 
@@ -278,7 +278,7 @@ public abstract class GenericHostCommunicationListenerTest
             features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == Array.Empty<string>()));
             SetupServer(Mock.Of<IServer>(_ => _.Features == features));
 
-            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
             Assert.Equal(SR.ErrorNoUrlFromAspNetCore, exception.Message);
         }
 
@@ -289,7 +289,7 @@ public abstract class GenericHostCommunicationListenerTest
             // throwing NullReferenceException instead of InvalidOperationException with SR.ErrorNoUrlFromAspNetCore.
             SetupServer(Mock.Of<IServer>(_ => _.Features == new FeatureCollection()));
 
-            InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
             Assert.Equal(SR.ErrorNoUrlFromAspNetCore, exception.Message);
         }
 
