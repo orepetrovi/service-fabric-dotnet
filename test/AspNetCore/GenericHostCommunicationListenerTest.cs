@@ -351,11 +351,11 @@ public abstract class GenericHostCommunicationListenerTest
     {
         internal TestListener(ServiceContext serviceContext, Func<string, AspNetCoreCommunicationListener, IHost> build, string listenerUrl = "http://+:0")
             : base(serviceContext, build) =>
-            ListenerUrl = listenerUrl;
+            this.listenerUrl = listenerUrl;
 
-        internal readonly string ListenerUrl;
+        readonly string listenerUrl;
 
         protected internal override string GetListenerUrl() =>
-            ListenerUrl;
+            this.listenerUrl;
     }
 }
