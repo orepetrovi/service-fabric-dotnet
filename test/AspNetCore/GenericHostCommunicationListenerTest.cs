@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Hosting;
+using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Moq;
 using Xunit;
 
@@ -20,7 +21,7 @@ namespace Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 
 public abstract class GenericHostCommunicationListenerTest
 {
-    readonly GenericHostCommunicationListener sut;
+    readonly ICommunicationListener sut;
 
     // Constructor parameters
     readonly Func<string, AspNetCoreCommunicationListener, IHost> build;
