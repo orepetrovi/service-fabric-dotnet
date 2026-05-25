@@ -368,9 +368,7 @@ public abstract class GenericHostCommunicationListenerTest
             // Expected behavior is to dispose the previous host before replacing it.
             _ = await sut.OpenAsync(cancellation);
             var secondHost = new Mock<IHost>();
-            var startTcs = new TaskCompletionSource<object>();
-            startTcs.SetResult(null);
-            _ = secondHost.Setup(_ => _.StartAsync(cancellation)).Returns(startTcs.Task);
+            _ = secondHost.Setup(_ => _.StartAsync(cancellation)).Returns(Task.CompletedTask);
             _ = secondHost.Setup(_ => _.Services).Returns(host.Object.Services);
             buildHost = secondHost.Object;
 
