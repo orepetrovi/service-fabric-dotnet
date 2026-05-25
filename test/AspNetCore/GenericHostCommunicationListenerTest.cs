@@ -365,6 +365,18 @@ public abstract class GenericHostCommunicationListenerTest
             Assert.Equal($"http://{serviceContext.PublishAddress}:{firstPort}", actual);
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. OpenAsync skips Dispose when StartAsync throws.
+        public async Task DisposesHostWhenStartAsyncThrows()
+        {
+            // SUT assigns this.host = build(...) before awaiting host.StartAsync without try/finally,
+            // so a faulted start leaks the host. Expected behavior is to Dispose the host on failure.
+            _ = host.Setup(_ => _.StartAsync(cancellation)).ThrowsAsync(new InvalidOperationException());
+
+            _ = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
+
+            host.Verify(_ => _.Dispose(), Times.Once());
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug. Second OpenAsync overwrites first host without disposing it.
         public async Task DisposesPreviousHostWhenInvokedTwice()
         {
