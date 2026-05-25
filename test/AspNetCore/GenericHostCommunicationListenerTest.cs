@@ -161,6 +161,27 @@ public abstract class GenericHostCommunicationListenerTest
         }
     }
 
+    public sealed class Constructor : GenericHostCommunicationListenerTest
+    {
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing arg null validation.
+        public void ThrowsArgumentNullExceptionWhenBuildIsNull()
+        {
+            // SUT currently stores `build` without validation and throws NullReferenceException
+            // when OpenAsync dereferences it. Expected behavior is to fail fast in the constructor.
+            var e = Assert.Throws<ArgumentNullException>(() => new GenericHostCommunicationListener(null, listener));
+            Assert.Equal("build", e.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing arg null validation.
+        public void ThrowsArgumentNullExceptionWhenListenerIsNull()
+        {
+            // SUT currently dereferences `listener.ServiceContext` without validation,
+            // throwing NullReferenceException instead of ArgumentNullException.
+            var e = Assert.Throws<ArgumentNullException>(() => new GenericHostCommunicationListener(build, null));
+            Assert.Equal("listener", e.ParamName);
+        }
+    }
+
     public sealed class OpenAsync : GenericHostCommunicationListenerTest
     {
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
