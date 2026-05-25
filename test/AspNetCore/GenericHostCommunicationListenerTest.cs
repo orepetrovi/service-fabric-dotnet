@@ -119,12 +119,12 @@ public abstract class GenericHostCommunicationListenerTest
             var tcs = new TaskCompletionSource<object>();
             _ = host.Setup(_ => _.StopAsync(cancellation)).Returns(tcs.Task);
 
-            Task closeTask = sut.CloseAsync(cancellation);
+            Task close = sut.CloseAsync(cancellation);
 
-            Assert.False(closeTask.IsCompleted);
+            Assert.False(close.IsCompleted);
             host.Verify(_ => _.Dispose(), Times.Never());
             tcs.SetResult(null);
-            await closeTask;
+            await close;
             host.Verify(_ => _.Dispose(), Times.Once());
         }
 
@@ -211,11 +211,11 @@ public abstract class GenericHostCommunicationListenerTest
             var tcs = new TaskCompletionSource<object>();
             _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(tcs.Task);
 
-            Task<string> openTask = sut.OpenAsync(cancellation);
+            Task<string> open = sut.OpenAsync(cancellation);
 
-            Assert.False(openTask.IsCompleted);
+            Assert.False(open.IsCompleted);
             tcs.SetResult(null);
-            await openTask;
+            await open;
         }
 
         [Fact]
@@ -239,12 +239,12 @@ public abstract class GenericHostCommunicationListenerTest
             });
             _ = host.Setup(_ => _.Services).Returns(services.Object);
 
-            Task<string> openTask = sut.OpenAsync(cancellation);
+            Task<string> open = sut.OpenAsync(cancellation);
 
-            Assert.False(openTask.IsCompleted);
+            Assert.False(open.IsCompleted);
             started = true;
             startTcs.SetResult(null);
-            _ = await openTask;
+            _ = await open;
         }
 
         [Fact]
