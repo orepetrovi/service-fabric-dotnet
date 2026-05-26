@@ -52,7 +52,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
         {
             string name1 = fuzzy.String();
-            string name2 = fuzzy.String();
+            string name2 = name1 + fuzzy.String();
             IConfiguration empty = new ConfigurationBuilder().Build();
             var multi = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>
             {
@@ -105,7 +105,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
         {
             string name1 = fuzzy.String();
-            string name2 = fuzzy.String();
+            string name2 = name1 + fuzzy.String();
             IConfiguration empty = new ConfigurationBuilder().Build();
             var multi = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>
             {
@@ -122,7 +122,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         public void InvokesOptionsDelegateForEachConfigurationPackage()
         {
             string name1 = fuzzy.String();
-            string name2 = fuzzy.String();
+            string name2 = name1 + fuzzy.String();
             IConfiguration empty = new ConfigurationBuilder().Build();
             var multi = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>
             {
