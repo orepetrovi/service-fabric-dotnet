@@ -37,13 +37,6 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         readonly ICodePackageActivationContext context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
 
         [Fact]
-        public void ReturnsBuilder()
-        {
-            IConfigurationBuilder actual = builder.AddServiceFabricConfiguration(context);
-            Assert.Same(builder, actual);
-        }
-
-        [Fact]
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
         {
             string name1 = fuzzy.String();
@@ -61,6 +54,13 @@ public abstract class ServiceFabricConfigurationExtensionsTest
                 builder.Sources,
                 source => AssertSource(source, multi, name1),
                 source => AssertSource(source, multi, name2));
+        }
+
+        [Fact]
+        public void ReturnsBuilder()
+        {
+            IConfigurationBuilder actual = builder.AddServiceFabricConfiguration(context);
+            Assert.Same(builder, actual);
         }
 
         [Fact]
@@ -91,13 +91,6 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         readonly IConfigurationBuilder builder = new ConfigurationBuilder();
         readonly ICodePackageActivationContext context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
         readonly Action<ServiceFabricConfigurationOptions> optionsDelegate = Mock.Of<Action<ServiceFabricConfigurationOptions>>();
-
-        [Fact]
-        public void ReturnsBuilder()
-        {
-            IConfigurationBuilder actual = builder.AddServiceFabricConfiguration(context, optionsDelegate);
-            Assert.Same(builder, actual);
-        }
 
         [Fact]
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
@@ -157,6 +150,13 @@ public abstract class ServiceFabricConfigurationExtensionsTest
 
             IConfigurationSource source = Assert.Single(builder.Sources);
             Assert.Same(context, source.Property<ICodePackageActivationContext>().Value);
+        }
+
+        [Fact]
+        public void ReturnsBuilder()
+        {
+            IConfigurationBuilder actual = builder.AddServiceFabricConfiguration(context, optionsDelegate);
+            Assert.Same(builder, actual);
         }
 
         [Fact]
