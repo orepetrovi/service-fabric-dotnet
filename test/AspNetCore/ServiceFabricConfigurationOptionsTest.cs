@@ -32,7 +32,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
     {
         // Method parameters
         readonly ConfigurationPackage config;
-        readonly Dictionary<string, string> data = new();
+        readonly IDictionary<string, string> data = new Dictionary<string, string>();
 
         readonly string section1 = "Section" + fuzzy.String().LettersOrDigits();
         readonly string param1a = "Param" + fuzzy.String().LettersOrDigits();
