@@ -34,8 +34,10 @@ public abstract class ServiceFabricConfigurationOptionsTest
         readonly Dictionary<string, string> data = new();
 
         readonly string section1 = "Section" + fuzzy.String().LettersOrDigits();
-        readonly string param1 = "Param" + fuzzy.String().LettersOrDigits();
-        readonly string value1 = fuzzy.String();
+        readonly string param1a = "Param" + fuzzy.String().LettersOrDigits();
+        readonly string value1a = fuzzy.String();
+        readonly string param1b = "Param" + fuzzy.String().LettersOrDigits();
+        readonly string value1b = fuzzy.String();
         readonly string section2 = "Section" + fuzzy.String().LettersOrDigits();
         readonly string param2 = "Param" + fuzzy.String().LettersOrDigits();
         readonly string value2 = fuzzy.String();
@@ -44,7 +46,8 @@ public abstract class ServiceFabricConfigurationOptionsTest
         {
             IConfigurationRoot config = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { $"{section1}:{param1}", value1 },
+                { $"{section1}:{param1a}", value1a },
+                { $"{section1}:{param1b}", value1b },
                 { $"{section2}:{param2}", value2 },
             }).Build();
             package = MockConfigurationPackage.CreateDefaultPackage(config, packageName);
@@ -62,7 +65,8 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
             Dictionary<string, string> customExpected = new()
             {
-                [$"{keyPrefix}:{section1}:{param1}"] = $"{valuePrefix}:{value1}",
+                [$"{keyPrefix}:{section1}:{param1a}"] = $"{valuePrefix}:{value1a}",
+                [$"{keyPrefix}:{section1}:{param1b}"] = $"{valuePrefix}:{value1b}",
                 [$"{keyPrefix}:{section2}:{param2}"] = $"{valuePrefix}:{value2}",
             };
             Assert.Equal(customExpected, data);
