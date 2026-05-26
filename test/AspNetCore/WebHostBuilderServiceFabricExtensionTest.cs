@@ -86,7 +86,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
             ServiceDescriptor descriptor = InvokeAndCaptureStartupFilterDescriptor(options);
 
             Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
-            ServiceFabricSetupFilter filter = Assert.IsType<ServiceFabricSetupFilter>(descriptor.ImplementationInstance);
+            ServiceFabricSetupFilter filter = (ServiceFabricSetupFilter)descriptor.ImplementationInstance;
             Assert.Equal(listener.UrlSuffix, filter.Field<string>().Value);
         }
 
@@ -99,7 +99,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         {
             ServiceDescriptor descriptor = InvokeAndCaptureStartupFilterDescriptor(options);
 
-            ServiceFabricSetupFilter filter = Assert.IsType<ServiceFabricSetupFilter>(descriptor.ImplementationInstance);
+            ServiceFabricSetupFilter filter = (ServiceFabricSetupFilter)descriptor.ImplementationInstance;
             Assert.Equal(options, filter.Field<ServiceFabricIntegrationOptions>().Value);
         }
 
