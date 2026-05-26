@@ -41,8 +41,8 @@ public abstract class PathStringExtensionsTest
         {
             PathStringExtensions.StartsWithSegments(other, other, out PathString matched, out PathString remaining);
 
-            Assert.Equal(other, matched);
-            Assert.Equal(PathString.Empty, remaining);
+            Assert.Equal(other.Value, matched.Value);
+            Assert.Equal(string.Empty, remaining.Value);
         }
 
         [Fact]
@@ -128,8 +128,8 @@ public abstract class PathStringExtensionsTest
         {
             PathStringExtensions.StartsWithSegments(pathString, default, out PathString matched, out PathString remaining);
 
-            Assert.Equal(PathString.Empty, matched);
-            Assert.Equal(pathString, remaining);
+            Assert.Equal(string.Empty, matched.Value);
+            Assert.Equal(pathString.Value, remaining.Value);
         }
     }
 }
