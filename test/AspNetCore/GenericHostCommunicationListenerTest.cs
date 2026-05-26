@@ -51,11 +51,12 @@ public abstract class GenericHostCommunicationListenerTest
         };
         listener = new TestListener(serviceContext, build, listenerUrl);
         sut = new GenericHostCommunicationListener(build, listener);
-        SetupServer($"http://+:{fuzzy.UInt16()}");
     }
 
     public sealed class Abort : GenericHostCommunicationListenerTest
     {
+        public Abort() => SetupServer($"http://+:{fuzzy.UInt16()}");
+
         [Fact]
         public async Task DisposesHostAfterOpenAsync()
         {
@@ -85,6 +86,8 @@ public abstract class GenericHostCommunicationListenerTest
     public sealed class CloseAsync : GenericHostCommunicationListenerTest
     {
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
+
+        public CloseAsync() => SetupServer($"http://+:{fuzzy.UInt16()}");
 
         [Fact]
         public async Task PassesCancellationTokenToHostStopAsync()
@@ -176,6 +179,8 @@ public abstract class GenericHostCommunicationListenerTest
     public sealed class OpenAsync : GenericHostCommunicationListenerTest
     {
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
+
+        public OpenAsync() => SetupServer($"http://+:{fuzzy.UInt16()}");
 
         [Fact]
         public async Task InvokesBuildWithListenerUrlAndListener()
