@@ -38,11 +38,10 @@ public abstract class ServiceFabricSetupFilterTest
 
         public Configure()
         {
-            var mock = Mock.Get(app);
-            _ = mock.Setup(_ => _.ApplicationServices).Returns(Mock.Of<IServiceProvider>());
-            _ = mock.Setup(_ => _.Use(It.IsAny<Func<RequestDelegate, RequestDelegate>>()))
+            _ = Mock.Get(app).Setup(_ => _.ApplicationServices).Returns(Mock.Of<IServiceProvider>());
+            _ = Mock.Get(app).Setup(_ => _.Use(It.IsAny<Func<RequestDelegate, RequestDelegate>>()))
                 .Callback<Func<RequestDelegate, RequestDelegate>>(factories.Add)
-                .Returns(mock.Object);
+                .Returns(app);
         }
 
         IReadOnlyList<object> RegisteredMiddlewares() =>
