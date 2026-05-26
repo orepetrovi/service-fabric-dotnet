@@ -69,10 +69,10 @@ public abstract class PathStringExtensionsTest
         public void AssignsMatchedToPrefixOfPathStringPreservingItsCase()
         {
             string upperSegment = segment.ToUpperInvariant();
-            var pathString = new PathString(upperSegment + "/" + fuzzy.String().LettersOrDigits());
-            var other = new PathString(segment.ToLowerInvariant());
+            var upperPathString = new PathString(upperSegment + "/" + fuzzy.String().LettersOrDigits());
+            var lowerOther = new PathString(segment.ToLowerInvariant());
 
-            pathString.StartsWithSegments(other, out PathString matched, out _);
+            upperPathString.StartsWithSegments(lowerOther, out PathString matched, out _);
 
             Assert.Equal(upperSegment, matched.Value);
         }
@@ -81,9 +81,9 @@ public abstract class PathStringExtensionsTest
         public void AssignsRemainingToSuffixOfPathStringAfterMatched()
         {
             string suffix = "/" + fuzzy.String().LettersOrDigits();
-            var pathString = new PathString(segment + suffix);
+            var extended = new PathString(segment + suffix);
 
-            pathString.StartsWithSegments(other, out _, out PathString remaining);
+            extended.StartsWithSegments(other, out _, out PathString remaining);
 
             Assert.Equal(suffix, remaining.Value);
         }
@@ -160,8 +160,8 @@ public abstract class PathStringExtensionsTest
         public void ReturnsFalseWhenOtherHasTrailingSlashAndPathStringContinuesWithoutSegmentSeparator()
         {
             var otherWithSlash = new PathString(segment + "/");
-            var pathString = new PathString(segment + "/" + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits());
-            bool result = pathString.StartsWithSegments(otherWithSlash, out _, out _);
+            var input = new PathString(segment + "/" + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits());
+            bool result = input.StartsWithSegments(otherWithSlash, out _, out _);
             Assert.False(result);
         }
 
@@ -169,8 +169,8 @@ public abstract class PathStringExtensionsTest
         public void ReturnsTrueWhenOtherHasTrailingSlashAndPathStringContinuesWithSegmentSeparator()
         {
             var otherWithSlash = new PathString(segment + "/");
-            var pathString = new PathString(segment + "//" + fuzzy.String().LettersOrDigits());
-            bool result = pathString.StartsWithSegments(otherWithSlash, out _, out _);
+            var input = new PathString(segment + "//" + fuzzy.String().LettersOrDigits());
+            bool result = input.StartsWithSegments(otherWithSlash, out _, out _);
             Assert.True(result);
         }
     }
