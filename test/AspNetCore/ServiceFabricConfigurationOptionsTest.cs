@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Fabric;
 using System.Fabric.Description;
 using Fuzzy;
+using Inspector;
 using Microsoft.Extensions.Configuration;
 using Microsoft.ServiceFabric.AspNetCore.Tests;
 using Xunit;
@@ -193,17 +194,17 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
     static ConfigurationSection Section(string name)
     {
-        var section = TestHelper.CreateInstanced<ConfigurationSection>();
-        section.Set(nameof(ConfigurationSection.Name), name);
+        var section = Type<ConfigurationSection>.Uninitialized();
+        section.Property<string>(nameof(ConfigurationSection.Name)).Set(name);
         return section;
     }
 
     static ConfigurationProperty Property(string name = null, string value = null, bool isEncrypted = false)
     {
-        var property = TestHelper.CreateInstanced<ConfigurationProperty>();
-        property.Set(nameof(ConfigurationProperty.Name), name ?? fuzzy.String());
-        property.Set(nameof(ConfigurationProperty.Value), value ?? fuzzy.String());
-        property.Set(nameof(ConfigurationProperty.IsEncrypted), isEncrypted);
+        var property = Type<ConfigurationProperty>.Uninitialized();
+        property.Property<string>(nameof(ConfigurationProperty.Name)).Set(name ?? fuzzy.String());
+        property.Property<string>(nameof(ConfigurationProperty.Value)).Set(value ?? fuzzy.String());
+        property.Property<bool>(nameof(ConfigurationProperty.IsEncrypted)).Set(isEncrypted);
         return property;
     }
 }
