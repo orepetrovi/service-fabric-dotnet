@@ -66,53 +66,32 @@ public abstract class PathStringExtensionsTest
         }
 
         [Fact]
-        public void AssignsMatchedToPrefixOfPathStringPreservingItsCase()
+        public void AssignsMatchedAndRemainingPreservingCaseOfPathString()
         {
             string upperSegment = segment.ToUpperInvariant();
-            var upperPathString = new PathString(upperSegment + "/" + fuzzy.String().LettersOrDigits());
+            string suffix = "/" + fuzzy.String().LettersOrDigits();
+            var upperPathString = new PathString(upperSegment + suffix);
             var lowerOther = new PathString(segment.ToLowerInvariant());
 
-            PathStringExtensions.StartsWithSegments(upperPathString, lowerOther, out PathString matched, out _);
+            PathStringExtensions.StartsWithSegments(upperPathString, lowerOther, out PathString matched, out PathString remaining);
 
             Assert.Equal(upperSegment, matched.Value);
-        }
-
-        [Fact]
-        public void AssignsRemainingToSuffixOfPathStringAfterMatched()
-        {
-            string suffix = "/" + fuzzy.String().LettersOrDigits();
-            var extended = new PathString(segment + suffix);
-
-            PathStringExtensions.StartsWithSegments(extended, other, out _, out PathString remaining);
-
             Assert.Equal(suffix, remaining.Value);
         }
 
         [Fact]
-        public void AssignsMatchedToPathStringWhenPathStringEqualsOther()
+        public void AssignsMatchedToPathStringAndRemainingToEmptyWhenPathStringEqualsOther()
         {
-            PathStringExtensions.StartsWithSegments(other, other, out PathString matched, out _);
+            PathStringExtensions.StartsWithSegments(other, other, out PathString matched, out PathString remaining);
             Assert.Equal(other.Value, matched.Value);
-        }
-
-        [Fact]
-        public void AssignsRemainingToEmptyWhenPathStringEqualsOther()
-        {
-            PathStringExtensions.StartsWithSegments(other, other, out _, out PathString remaining);
             Assert.Equal(PathString.Empty, remaining);
         }
 
         [Fact]
-        public void AssignsMatchedToEmptyWhenPathStringDoesNotStartWithOther()
+        public void AssignsMatchedAndRemainingToEmptyWhenPathStringDoesNotStartWithOther()
         {
-            PathStringExtensions.StartsWithSegments(different, other, out PathString matched, out _);
+            PathStringExtensions.StartsWithSegments(different, other, out PathString matched, out PathString remaining);
             Assert.Equal(PathString.Empty, matched);
-        }
-
-        [Fact]
-        public void AssignsRemainingToEmptyWhenPathStringDoesNotStartWithOther()
-        {
-            PathStringExtensions.StartsWithSegments(different, other, out _, out PathString remaining);
             Assert.Equal(PathString.Empty, remaining);
         }
 
@@ -121,16 +100,10 @@ public abstract class PathStringExtensionsTest
             Assert.True(PathStringExtensions.StartsWithSegments(default, default, out _, out _));
 
         [Fact]
-        public void AssignsMatchedToEmptyWhenPathStringAndOtherAreBothEmpty()
+        public void AssignsMatchedAndRemainingToEmptyWhenPathStringAndOtherAreBothEmpty()
         {
-            PathStringExtensions.StartsWithSegments(default, default, out PathString matched, out _);
+            PathStringExtensions.StartsWithSegments(default, default, out PathString matched, out PathString remaining);
             Assert.Equal(PathString.Empty, matched);
-        }
-
-        [Fact]
-        public void AssignsRemainingToEmptyWhenPathStringAndOtherAreBothEmpty()
-        {
-            PathStringExtensions.StartsWithSegments(default, default, out _, out PathString remaining);
             Assert.Equal(PathString.Empty, remaining);
         }
 
@@ -143,16 +116,10 @@ public abstract class PathStringExtensionsTest
             Assert.True(PathStringExtensions.StartsWithSegments(pathString, default, out _, out _));
 
         [Fact]
-        public void AssignsMatchedToEmptyWhenOtherIsEmptyAndPathStringStartsWithSegmentSeparator()
+        public void AssignsMatchedToEmptyAndRemainingToPathStringWhenOtherIsEmptyAndPathStringStartsWithSegmentSeparator()
         {
-            PathStringExtensions.StartsWithSegments(pathString, default, out PathString matched, out _);
+            PathStringExtensions.StartsWithSegments(pathString, default, out PathString matched, out PathString remaining);
             Assert.Equal(PathString.Empty, matched);
-        }
-
-        [Fact]
-        public void AssignsRemainingToPathStringWhenOtherIsEmptyAndPathStringStartsWithSegmentSeparator()
-        {
-            PathStringExtensions.StartsWithSegments(pathString, default, out _, out PathString remaining);
             Assert.Equal(pathString, remaining);
         }
 
