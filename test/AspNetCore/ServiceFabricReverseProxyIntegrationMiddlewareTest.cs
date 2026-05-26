@@ -107,10 +107,14 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
             Assert.Equal("ResourceNotFound", headers["X-ServiceFabric"]);
         }
 
-        [Fact]
-        public async Task CallbackDoesNotSetXServiceFabricHeaderWhenResponseStatusCodeIsNot404()
+        [Theory]
+        [InlineData(StatusCodes.Status200OK)]
+        [InlineData(StatusCodes.Status301MovedPermanently)]
+        [InlineData(StatusCodes.Status400BadRequest)]
+        [InlineData(StatusCodes.Status403Forbidden)]
+        [InlineData(StatusCodes.Status500InternalServerError)]
+        public async Task CallbackDoesNotSetXServiceFabricHeaderWhenResponseStatusCodeIsNot404(int statusCode)
         {
-            int statusCode = StatusCodes.Status404NotFound + fuzzy.SByte().Between(1, 5);
             var headers = new HeaderDictionary();
             _ = response.SetupGet(_ => _.StatusCode).Returns(StatusCodes.Status404NotFound);
             _ = response.SetupGet(_ => _.Headers).Returns(headers);
