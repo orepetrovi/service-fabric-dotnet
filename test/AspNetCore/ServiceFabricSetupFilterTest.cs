@@ -82,7 +82,7 @@ public abstract class ServiceFabricSetupFilterTest
             sut.Configure(next)(app.Object);
 
             ServiceFabricMiddleware middleware = RegisteredMiddlewares().OfType<ServiceFabricMiddleware>().Single();
-            Assert.Equal(urlSuffix, middleware.Field<string>().Value);
+            Assert.Same(urlSuffix, middleware.Field<string>().Value);
         }
 
         [Fact]
