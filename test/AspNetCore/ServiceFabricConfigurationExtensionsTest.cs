@@ -49,11 +49,11 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         [Fact]
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
         {
-            TestCodePackageActivationContext multi = CreateMultiPackageContext(out string name1, out string name2);
+            TestCodePackageActivationContext multi = CreateMultiPackageContext();
 
             _ = builder.AddServiceFabricConfiguration(multi);
 
-            AssertSources(builder.Sources, multi, name1, name2);
+            AssertSources(builder.Sources, multi);
         }
 
         [Fact]
@@ -99,17 +99,17 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         [Fact]
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
         {
-            TestCodePackageActivationContext multi = CreateMultiPackageContext(out string name1, out string name2);
+            TestCodePackageActivationContext multi = CreateMultiPackageContext();
 
             _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate);
 
-            AssertSources(builder.Sources, multi, name1, name2);
+            AssertSources(builder.Sources, multi);
         }
 
         [Fact]
         public void InvokesOptionsDelegateForEachConfigurationPackage()
         {
-            TestCodePackageActivationContext multi = CreateMultiPackageContext(out string name1, out string name2);
+            TestCodePackageActivationContext multi = CreateMultiPackageContext();
 
             var captured = new List<string>();
             _ = Mock.Get(optionsDelegate).Setup(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()))
@@ -117,7 +117,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
 
             _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate);
 
-            Assert.Equal(new[] { name1, name2 }.OrderBy(_ => _), captured.OrderBy(_ => _));
+            Assert.Equal(multi.GetConfigurationPackageNames(), captured);
         }
 
         [Fact]
@@ -176,17 +176,17 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         }
     }
 
-    static void AssertSources(IList<IConfigurationSource> sources, ICodePackageActivationContext expectedContext, params string[] expectedPackageNames)
+    static void AssertSources(IList<IConfigurationSource> sources, ICodePackageActivationContext expectedContext)
     {
         Assert.All(sources, source => Assert.Same(expectedContext, source.Property<ICodePackageActivationContext>().Value));
         IEnumerable<string> actual = sources.Select(source => source.Field<ServiceFabricConfigurationOptions>().Value.PackageName);
-        Assert.Equal(expectedPackageNames.OrderBy(_ => _), actual.OrderBy(_ => _));
+        Assert.Equal(expectedContext.GetConfigurationPackageNames(), actual);
     }
 
-    static TestCodePackageActivationContext CreateMultiPackageContext(out string name1, out string name2)
+    static TestCodePackageActivationContext CreateMultiPackageContext()
     {
-        name1 = fuzzy.String();
-        name2 = name1 + fuzzy.String();
+        string name1 = fuzzy.String();
+        string name2 = name1 + fuzzy.String();
         IConfiguration empty = new ConfigurationBuilder().Build();
         return new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>
         {
