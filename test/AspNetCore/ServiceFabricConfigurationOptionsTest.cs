@@ -28,8 +28,13 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
     public sealed class ConfigAction : ServiceFabricConfigurationOptionsTest
     {
-        [Fact]
-        public void PopulatesDataDictionaryWithExtractedKeysAndValues()
+        // Method parameters
+        readonly ConfigurationPackage package;
+        readonly Dictionary<string, string> data = new();
+
+        readonly Dictionary<string, string> expected;
+
+        public ConfigAction()
         {
             string section1 = "Section" + fuzzy.String().LettersOrDigits();
             string section2 = section1 + fuzzy.String().LettersOrDigits();
@@ -42,24 +47,26 @@ public abstract class ServiceFabricConfigurationOptionsTest
                 { $"{section1}:{param1}", value1 },
                 { $"{section2}:{param2}", value2 },
             }).Build();
-            ConfigurationPackage package = MockConfigurationPackage.CreateDefaultPackage(config, packageName);
-            var data = new Dictionary<string, string>();
-
-            sut.ConfigAction(package, data);
-
+            package = MockConfigurationPackage.CreateDefaultPackage(config, packageName);
             string d = ConfigurationPath.KeyDelimiter;
-            var expected = new Dictionary<string, string>
+            expected = new Dictionary<string, string>
             {
                 { $"{packageName}{d}{section1}{d}{param1}", value1 },
                 { $"{packageName}{d}{section2}{d}{param2}", value2 },
             };
+        }
+
+        [Fact]
+        public void PopulatesDataDictionaryWithExtractedKeysAndValues()
+        {
+            sut.ConfigAction(package, data);
             Assert.Equal(expected, data);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug — DefaultConfigAction does not validate the config argument; fixing the SUT is out of scope.
         public void ThrowsArgumentNullExceptionWhenConfigIsNull()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(null, new Dictionary<string, string>()));
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(null, data));
             Assert.Equal("config", exception.ParamName);
         }
     }
