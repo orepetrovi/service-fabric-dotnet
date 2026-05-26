@@ -37,28 +37,6 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         readonly ICodePackageActivationContext context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
 
         [Fact]
-        public void ThrowsArgumentNullExceptionWhenBuilderIsNull()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(
-                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(null, context));
-            string expected = typeof(ServiceFabricConfigurationExtensions)
-                .Method<Func<IConfigurationBuilder, ICodePackageActivationContext, IConfigurationBuilder>>(nameof(ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration))
-                .Parameter<IConfigurationBuilder>().Name;
-            Assert.Equal(expected, exception.ParamName);
-        }
-
-        [Fact]
-        public void ThrowsArgumentNullExceptionWhenContextIsNull()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(
-                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder, null));
-            string expected = typeof(ServiceFabricConfigurationExtensions)
-                .Method<Func<IConfigurationBuilder, ICodePackageActivationContext, IConfigurationBuilder>>(nameof(ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration))
-                .Parameter<ICodePackageActivationContext>().Name;
-            Assert.Equal(expected, exception.ParamName);
-        }
-
-        [Fact]
         public void ReturnsBuilder()
         {
             IConfigurationBuilder actual = builder.AddServiceFabricConfiguration(context);
@@ -84,21 +62,14 @@ public abstract class ServiceFabricConfigurationExtensionsTest
                 source => AssertSource(source, multi, name1),
                 source => AssertSource(source, multi, name2));
         }
-    }
-
-    public sealed class AddServiceFabricConfiguration_IConfigurationBuilder_ICodePackageActivationContext_ActionOfServiceFabricConfigurationOptions : ServiceFabricConfigurationExtensionsTest
-    {
-        readonly IConfigurationBuilder builder = new ConfigurationBuilder();
-        readonly ICodePackageActivationContext context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
-        readonly Action<ServiceFabricConfigurationOptions> optionsDelegate = Mock.Of<Action<ServiceFabricConfigurationOptions>>();
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenBuilderIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(
-                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(null, context, optionsDelegate));
+                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(null, context));
             string expected = typeof(ServiceFabricConfigurationExtensions)
-                .Method<Func<IConfigurationBuilder, ICodePackageActivationContext, Action<ServiceFabricConfigurationOptions>, IConfigurationBuilder>>(nameof(ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration))
+                .Method<Func<IConfigurationBuilder, ICodePackageActivationContext, IConfigurationBuilder>>(nameof(ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration))
                 .Parameter<IConfigurationBuilder>().Name;
             Assert.Equal(expected, exception.ParamName);
         }
@@ -107,12 +78,19 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         public void ThrowsArgumentNullExceptionWhenContextIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(
-                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder, null, optionsDelegate));
+                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder, null));
             string expected = typeof(ServiceFabricConfigurationExtensions)
-                .Method<Func<IConfigurationBuilder, ICodePackageActivationContext, Action<ServiceFabricConfigurationOptions>, IConfigurationBuilder>>(nameof(ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration))
+                .Method<Func<IConfigurationBuilder, ICodePackageActivationContext, IConfigurationBuilder>>(nameof(ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration))
                 .Parameter<ICodePackageActivationContext>().Name;
             Assert.Equal(expected, exception.ParamName);
         }
+    }
+
+    public sealed class AddServiceFabricConfiguration_IConfigurationBuilder_ICodePackageActivationContext_ActionOfServiceFabricConfigurationOptions : ServiceFabricConfigurationExtensionsTest
+    {
+        readonly IConfigurationBuilder builder = new ConfigurationBuilder();
+        readonly ICodePackageActivationContext context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
+        readonly Action<ServiceFabricConfigurationOptions> optionsDelegate = Mock.Of<Action<ServiceFabricConfigurationOptions>>();
 
         [Fact]
         public void ReturnsBuilder()
@@ -179,6 +157,28 @@ public abstract class ServiceFabricConfigurationExtensionsTest
 
             IConfigurationSource source = Assert.Single(builder.Sources);
             Assert.Same(context, source.Property<ICodePackageActivationContext>().Value);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenBuilderIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(null, context, optionsDelegate));
+            string expected = typeof(ServiceFabricConfigurationExtensions)
+                .Method<Func<IConfigurationBuilder, ICodePackageActivationContext, Action<ServiceFabricConfigurationOptions>, IConfigurationBuilder>>(nameof(ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration))
+                .Parameter<IConfigurationBuilder>().Name;
+            Assert.Equal(expected, exception.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenContextIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder, null, optionsDelegate));
+            string expected = typeof(ServiceFabricConfigurationExtensions)
+                .Method<Func<IConfigurationBuilder, ICodePackageActivationContext, Action<ServiceFabricConfigurationOptions>, IConfigurationBuilder>>(nameof(ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration))
+                .Parameter<ICodePackageActivationContext>().Name;
+            Assert.Equal(expected, exception.ParamName);
         }
     }
 
