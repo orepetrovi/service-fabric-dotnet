@@ -71,7 +71,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         }
 
         [Fact]
-        public void MarksHostBuilderSettingToPreventDoubleConfiguration()
+        public void MarksHostBuilderSettingToTrue()
         {
             hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
