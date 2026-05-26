@@ -21,7 +21,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
     readonly ServiceFabricConfigurationOptions sut;
 
     // Constructor parameters
-    readonly string packageName = fuzzy.String();
+    readonly string packageName = fuzzy.String().LettersOrDigits();
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
