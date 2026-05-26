@@ -35,11 +35,11 @@ public abstract class ServiceFabricConfigurationOptionsTest
         readonly ConfigurationPackage config;
         readonly IDictionary<string, string> data = new Dictionary<string, string>();
 
-        readonly string section1 = "Section" + fuzzy.String().LettersOrDigits();
-        readonly string param1a = "Param" + fuzzy.String().LettersOrDigits();
-        readonly string param1b = "Param" + fuzzy.String().LettersOrDigits();
-        readonly string section2 = "Section" + fuzzy.String().LettersOrDigits();
-        readonly string param2 = "Param" + fuzzy.String().LettersOrDigits();
+        readonly string section1 = fuzzy.String().LettersOrDigits();
+        readonly string param1a = fuzzy.String().LettersOrDigits();
+        readonly string param1b = fuzzy.String().LettersOrDigits();
+        readonly string section2 = fuzzy.String().LettersOrDigits();
+        readonly string param2 = fuzzy.String().LettersOrDigits();
 
         // Placeholder satisfies MockConfigurationPackage.CreateDefaultPackage; ExtractValueFunc is mocked in the test
         // so the actual parameter values are never read.
