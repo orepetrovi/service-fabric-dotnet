@@ -335,7 +335,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
 
         [Fact]
-        public async Task InvokesBuildDelegateWithGetListenerUrlAndSelfOnGenericHost()
+        public async Task InvokesBuildWithGetListenerUrlAndSelfOnGenericHost()
         {
             string listenerUrl = "http://+:" + fuzzy.UInt16();
             var fixture = new GenericHostFixture(serviceContext, listenerUrl);
@@ -347,7 +347,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public async Task InvokesBuildDelegateWithGetListenerUrlAndSelfOnWebHost()
+        public async Task InvokesBuildWithGetListenerUrlAndSelfOnWebHost()
         {
             string listenerUrl = "http://+:" + fuzzy.UInt16();
             var fixture = new WebHostFixture(serviceContext, listenerUrl);
