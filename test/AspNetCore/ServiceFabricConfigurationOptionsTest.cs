@@ -195,7 +195,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal("property", exception.ParamName);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT testability limitation.
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. ConfigurationProperty.DecryptValue() is a non-virtual instance method and cannot be substituted; exercising the decryption branch requires refactoring the SUT to accept an injectable decryptor.
         public void ReturnsDecryptedValueWhenPropertyIsEncryptedAndDecryptValueIsTrue()
         {
             // The decryption branch of DefaultExtractValueFunc calls the non-virtual instance method
