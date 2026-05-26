@@ -14,7 +14,7 @@ public abstract class PathStringExtensionsTest
 
     public sealed class StartsWithSegments : PathStringExtensionsTest
     {
-        readonly string segment = "/" + fuzzy.String().LettersOrDigits();
+        readonly string segment = "/" + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits();
         readonly PathString pathString;
         readonly PathString other;
 
