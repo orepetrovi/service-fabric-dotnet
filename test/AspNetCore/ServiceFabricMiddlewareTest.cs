@@ -57,6 +57,7 @@ public abstract class ServiceFabricMiddlewareTest
             var middleware = new ServiceFabricMiddleware(next.Object, string.Empty);
             await middleware.Invoke(context);
             next.Verify(_ => _(context), Times.Once);
+            next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
         }
 
         [Fact]
@@ -91,6 +92,7 @@ public abstract class ServiceFabricMiddlewareTest
             // Assert
             Assert.Equal(remainingPath, actualPath.Value);
             Assert.Equal(originalPathBase + urlSuffix, actualPathBase.Value);
+            next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
         }
 
         [Fact]
