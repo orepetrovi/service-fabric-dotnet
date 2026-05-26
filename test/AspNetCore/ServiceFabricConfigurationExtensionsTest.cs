@@ -51,14 +51,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         [Fact]
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
         {
-            string name1 = fuzzy.String();
-            string name2 = name1 + fuzzy.String();
-            IConfiguration empty = new ConfigurationBuilder().Build();
-            var multi = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>
-            {
-                { name1, empty },
-                { name2, empty },
-            });
+            var multi = CreateMultiPackageContext(out string name1, out string name2);
 
             _ = builder.AddServiceFabricConfiguration(multi);
 
@@ -104,14 +97,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         [Fact]
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
         {
-            string name1 = fuzzy.String();
-            string name2 = name1 + fuzzy.String();
-            IConfiguration empty = new ConfigurationBuilder().Build();
-            var multi = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>
-            {
-                { name1, empty },
-                { name2, empty },
-            });
+            var multi = CreateMultiPackageContext(out string name1, out string name2);
 
             _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate.Object);
 
@@ -121,14 +107,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         [Fact]
         public void InvokesOptionsDelegateForEachConfigurationPackage()
         {
-            string name1 = fuzzy.String();
-            string name2 = name1 + fuzzy.String();
-            IConfiguration empty = new ConfigurationBuilder().Build();
-            var multi = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>
-            {
-                { name1, empty },
-                { name2, empty },
-            });
+            var multi = CreateMultiPackageContext(out string name1, out string name2);
 
             var captured = new List<string>();
             optionsDelegate.Setup(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()))
@@ -206,6 +185,18 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         Assert.All(sources, source => Assert.Same(expectedContext, source.Property<ICodePackageActivationContext>().Value));
         var actual = sources.Select(source => source.Field<ServiceFabricConfigurationOptions>().Value.PackageName).ToList();
         Assert.Equal(expectedPackageNames.OrderBy(name => name), actual.OrderBy(name => name));
+    }
+
+    static TestCodePackageActivationContext CreateMultiPackageContext(out string name1, out string name2)
+    {
+        name1 = fuzzy.String();
+        name2 = name1 + fuzzy.String();
+        IConfiguration empty = new ConfigurationBuilder().Build();
+        return new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>
+        {
+            { name1, empty },
+            { name2, empty },
+        });
     }
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
