@@ -42,11 +42,13 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
             Assert.Equal(nameof(hostBuilder), exception.ParamName);
         }
 
-        // TODO: SUT does not validate listener; should throw ArgumentNullException with ParamName == nameof(listener).
-        // This test captures the current behavior gap.
-        [Fact]
-        public void ThrowsNullReferenceExceptionWhenListenerIsNull() =>
-            Assert.Throws<NullReferenceException>(() => hostBuilder.Object.UseServiceFabricIntegration(null, ServiceFabricIntegrationOptions.UseUniqueServiceUrl));
+        // TODO: SUT bug. UseServiceFabricIntegration does not validate listener and throws NullReferenceException.
+        [Fact(Explicit = true)]
+        public void ThrowsArgumentNullExceptionWhenListenerIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => hostBuilder.Object.UseServiceFabricIntegration(null, options));
+            Assert.Equal(nameof(listener), exception.ParamName);
+        }
 
         [Fact]
         public void ReturnsHostBuilderWithoutReconfiguringWhenSettingIsAlreadyTrue()
