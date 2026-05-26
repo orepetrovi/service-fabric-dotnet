@@ -212,10 +212,10 @@ public abstract class ServiceFabricConfigurationOptionsTest
         [Fact]
         public void ReturnsPropertyValueWhenPropertyIsEncryptedAndDecryptValueIsFalse()
         {
-            ConfigurationProperty property = Property(value: fuzzy.String(), isEncrypted: true);
+            ConfigurationProperty encryptedProperty = Property(value: fuzzy.String(), isEncrypted: true);
             sut.DecryptValue = false;
-            string actual = sut.ExtractValueFunc(section, property);
-            Assert.Same(property.Value, actual);
+            string actual = sut.ExtractValueFunc(section, encryptedProperty);
+            Assert.Same(encryptedProperty.Value, actual);
         }
 
         [Fact]
