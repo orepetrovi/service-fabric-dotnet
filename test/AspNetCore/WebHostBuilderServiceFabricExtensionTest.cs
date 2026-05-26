@@ -19,9 +19,6 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
 
     readonly Mock<IWebHostBuilder> hostBuilder = new();
 
-    WebHostBuilderServiceFabricExtensionTest() =>
-        _ = hostBuilder.Setup(_ => _.UseSetting(It.IsAny<string>(), It.IsAny<string>())).Returns(hostBuilder.Object);
-
     public sealed class UseServiceFabricIntegration : WebHostBuilderServiceFabricExtensionTest
     {
         const string SettingName = "UseServiceFabricIntegration";
@@ -130,8 +127,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
             Action<IServiceCollection> captured = null;
             _ = hostBuilder
                 .Setup(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()))
-                .Callback<Action<IServiceCollection>>(a => captured = a)
-                .Returns(hostBuilder.Object);
+                .Callback<Action<IServiceCollection>>(a => captured = a);
 
             hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
