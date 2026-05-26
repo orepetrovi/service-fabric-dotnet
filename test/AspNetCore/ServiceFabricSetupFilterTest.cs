@@ -128,7 +128,7 @@ public abstract class ServiceFabricSetupFilterTest
 
             sut.Configure(next)(app.Object);
 
-            Assert.Equal(2, middlewareCountWhenNextCalled);
+            Assert.Equal(factories.Count, middlewareCountWhenNextCalled);
         }
     }
 }
