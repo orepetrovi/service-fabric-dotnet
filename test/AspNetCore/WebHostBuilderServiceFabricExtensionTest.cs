@@ -58,6 +58,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
             IWebHostBuilder actual = hostBuilder.Object.UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.UseUniqueServiceUrl);
 
             Assert.Same(hostBuilder.Object, actual);
+            hostBuilder.Verify(_ => _.GetSetting(It.IsAny<string>()), Times.Once);
             hostBuilder.Verify(_ => _.UseSetting(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             hostBuilder.Verify(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()), Times.Never);
             Assert.Empty(listener.UrlSuffix);
