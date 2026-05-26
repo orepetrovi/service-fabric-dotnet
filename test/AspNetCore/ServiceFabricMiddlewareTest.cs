@@ -55,6 +55,7 @@ public abstract class ServiceFabricMiddlewareTest
         public async Task CallsNextWhenUrlSuffixIsEmpty()
         {
             var middleware = new ServiceFabricMiddleware(next.Object, string.Empty);
+            _ = next.Setup(_ => _(context)).Returns(Task.CompletedTask);
             await middleware.Invoke(context);
             next.Verify(_ => _(context), Times.Once);
             next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
@@ -103,6 +104,7 @@ public abstract class ServiceFabricMiddlewareTest
             PathString originalPath = urlSuffix + remainingPath;
             context.Request.PathBase = originalPathBase;
             context.Request.Path = originalPath;
+            _ = next.Setup(_ => _(context)).Returns(Task.CompletedTask);
 
             await sut.Invoke(context);
 
