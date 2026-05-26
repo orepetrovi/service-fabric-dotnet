@@ -73,7 +73,7 @@ public abstract class ServiceFabricSetupFilterTest
             // (NullReferenceException) or forwards null to `next` silently. Expected behavior is to fail fast.
             var sut = new ServiceFabricSetupFilter(null, ServiceFabricIntegrationOptions.None);
             var exception = Assert.Throws<ArgumentNullException>(() => sut.Configure(next.Object)(null));
-            Assert.Equal("app", exception.ParamName);
+            Assert.Equal(nameof(app), exception.ParamName);
         }
 
         [Fact]
