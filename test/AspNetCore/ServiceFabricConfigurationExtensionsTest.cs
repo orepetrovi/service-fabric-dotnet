@@ -78,6 +78,16 @@ public abstract class ServiceFabricConfigurationExtensionsTest
                 () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder, null));
             Assert.Equal(nameof(context), exception.ParamName);
         }
+
+        [Fact]
+        public void AddsNoSourcesWhenContextHasNoConfigurationPackages()
+        {
+            var empty = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>());
+
+            _ = builder.AddServiceFabricConfiguration(empty);
+
+            Assert.Empty(builder.Sources);
+        }
     }
 
     public sealed class AddServiceFabricConfiguration_IConfigurationBuilder_ICodePackageActivationContext_ActionOfServiceFabricConfigurationOptions : ServiceFabricConfigurationExtensionsTest
