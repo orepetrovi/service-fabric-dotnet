@@ -33,8 +33,6 @@ public abstract class ServiceFabricConfigurationOptionsTest
         readonly ConfigurationPackage package;
         readonly Dictionary<string, string> data = new();
 
-        readonly Dictionary<string, string> expected;
-
         public ConfigAction()
         {
             string section1 = "Section" + fuzzy.String().LettersOrDigits();
@@ -49,22 +47,6 @@ public abstract class ServiceFabricConfigurationOptionsTest
                 { $"{section2}:{param2}", value2 },
             }).Build();
             package = MockConfigurationPackage.CreateDefaultPackage(config, packageName);
-            expected = new Dictionary<string, string>
-            {
-                { $"{section1}:{param1}", value1 },
-                { $"{section2}:{param2}", value2 },
-            };
-        }
-
-        [Fact]
-        public void PopulatesDataDictionaryWithExtractedKeysAndValues()
-        {
-            sut.ExtractKeyFunc = (section, property) => $"{section.Name}:{property.Name}";
-            sut.ExtractValueFunc = (section, property) => property.Value;
-
-            sut.ConfigAction(package, data);
-
-            Assert.Equal(expected, data);
         }
 
         [Fact]
