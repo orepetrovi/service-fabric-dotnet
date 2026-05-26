@@ -27,12 +27,6 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         readonly AspNetCoreCommunicationListener listener = new TestCommunicationListener(fuzzy.StatelessServiceContext());
         readonly ServiceFabricIntegrationOptions options = fuzzy.Enum<ServiceFabricIntegrationOptions>();
 
-        sealed class TestCommunicationListener(ServiceContext serviceContext)
-            : AspNetCoreCommunicationListener(serviceContext, (_, _) => Mock.Of<IWebHost>())
-        {
-            protected internal override string GetListenerUrl() => string.Empty;
-        }
-
         [Fact]
         public void ReturnsHostBuilderAfterConfiguringIt()
         {
@@ -135,6 +129,12 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
             ServiceCollection services = new();
             captured(services);
             return services.Single(_ => _.ServiceType == typeof(IStartupFilter));
+        }
+
+        sealed class TestCommunicationListener(ServiceContext serviceContext)
+            : AspNetCoreCommunicationListener(serviceContext, (_, _) => Mock.Of<IWebHost>())
+        {
+            protected internal override string GetListenerUrl() => string.Empty;
         }
     }
 }
