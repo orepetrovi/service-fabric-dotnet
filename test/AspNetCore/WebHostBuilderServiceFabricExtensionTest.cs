@@ -27,7 +27,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         readonly ServiceFabricIntegrationOptions options = fuzzy.Enum<ServiceFabricIntegrationOptions>();
 
         [Fact]
-        public void ReturnsHostBuilderAfterConfiguringIt()
+        public void ReturnsHostBuilder()
         {
             IWebHostBuilder actual = hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
