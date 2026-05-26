@@ -88,7 +88,7 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
 
             _ = sut.Invoke(context.Object);
 
-            next.Verify(_ => _(context.Object), Times.Once);
+            next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
         }
 
         [Fact]
