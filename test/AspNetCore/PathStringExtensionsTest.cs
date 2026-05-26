@@ -143,6 +143,20 @@ public abstract class PathStringExtensionsTest
             Assert.True(pathString.StartsWithSegments(default, out _, out _));
 
         [Fact]
+        public void AssignsMatchedToEmptyWhenOtherIsEmptyAndPathStringStartsWithSegmentSeparator()
+        {
+            pathString.StartsWithSegments(default, out PathString matched, out _);
+            Assert.Equal(PathString.Empty, matched);
+        }
+
+        [Fact]
+        public void AssignsRemainingToPathStringWhenOtherIsEmptyAndPathStringStartsWithSegmentSeparator()
+        {
+            pathString.StartsWithSegments(default, out _, out PathString remaining);
+            Assert.Equal(pathString, remaining);
+        }
+
+        [Fact]
         public void ReturnsFalseWhenOtherHasTrailingSlashAndPathStringContinuesWithoutSegmentSeparator()
         {
             var otherWithSlash = new PathString(segment + "/");
