@@ -64,13 +64,13 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
             sut.ConfigAction(config, data);
 
-            Dictionary<string, string> customExpected = new()
+            Dictionary<string, string> expected = new()
             {
                 [$"{keyPrefix}:{section1}:{param1a}"] = $"{valuePrefix}:{value1a}",
                 [$"{keyPrefix}:{section1}:{param1b}"] = $"{valuePrefix}:{value1b}",
                 [$"{keyPrefix}:{section2}:{param2}"] = $"{valuePrefix}:{value2}",
             };
-            Assert.Equal(customExpected, data);
+            Assert.Equal(expected, data);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug — DefaultConfigAction does not validate the config argument; fixing the SUT is out of scope.
