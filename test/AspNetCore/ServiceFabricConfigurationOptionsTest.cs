@@ -30,7 +30,6 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
     public sealed class ConfigAction : ServiceFabricConfigurationOptionsTest
     {
-        // Method parameters
         readonly ConfigurationPackage package;
         readonly Dictionary<string, string> data = new();
 
