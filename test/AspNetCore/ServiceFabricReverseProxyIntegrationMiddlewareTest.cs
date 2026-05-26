@@ -44,7 +44,7 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
         public Invoke()
         {
             _ = context.SetupGet(_ => _.Response).Returns(response.Object);
-            _ = response.Setup(_ => _.OnStarting(It.IsAny<Func<object, Task>>(), It.IsAny<object>()))
+            _ = response.Setup(_ => _.OnStarting(It.IsAny<Func<object, Task>>(), response.Object))
                 .Callback<Func<object, Task>, object>((callback, state) =>
                 {
                     capturedCallback = callback;
