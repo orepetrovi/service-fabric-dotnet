@@ -89,6 +89,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
 
             hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
+            hostBuilder.Verify(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()), Times.Once);
             ServiceCollection services = new();
             captured(services);
             ServiceDescriptor descriptor = services.Single(_ => _.ServiceType == typeof(IStartupFilter));
@@ -112,6 +113,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
 
             hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
+            hostBuilder.Verify(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()), Times.Once);
             ServiceCollection services = new();
             captured(services);
             ServiceDescriptor descriptor = services.Single(_ => _.ServiceType == typeof(IStartupFilter));
