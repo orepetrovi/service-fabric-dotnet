@@ -2,6 +2,7 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 
 using System;
+using System.Fabric;
 using System.Linq;
 using Fuzzy;
 using Inspector;
@@ -24,8 +25,14 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
     public sealed class UseServiceFabricIntegration : WebHostBuilderServiceFabricExtensionTest
     {
         // Method parameters
-        readonly AspNetCoreCommunicationListener listener = new KestrelCommunicationListener(fuzzy.StatelessServiceContext(), (_, _) => Mock.Of<IWebHost>());
+        readonly AspNetCoreCommunicationListener listener = new TestCommunicationListener(fuzzy.StatelessServiceContext());
         readonly ServiceFabricIntegrationOptions options = fuzzy.Enum<ServiceFabricIntegrationOptions>();
+
+        sealed class TestCommunicationListener(ServiceContext serviceContext)
+            : AspNetCoreCommunicationListener(serviceContext, (_, _) => Mock.Of<IWebHost>())
+        {
+            protected internal override string GetListenerUrl() => string.Empty;
+        }
 
         [Fact]
         public void ReturnsHostBuilderAfterConfiguringIt()
