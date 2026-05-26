@@ -55,6 +55,13 @@ public abstract class ServiceFabricConfigurationOptionsTest
             };
             Assert.Equal(expected, data);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug — DefaultConfigAction does not validate the config argument; fixing the SUT is out of scope.
+        public void ThrowsArgumentNullExceptionWhenConfigIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(null, new Dictionary<string, string>()));
+            Assert.Equal("config", exception.ParamName);
+        }
     }
 
     public sealed class Constructor : ServiceFabricConfigurationOptionsTest
@@ -102,6 +109,20 @@ public abstract class ServiceFabricConfigurationOptionsTest
             string d = ConfigurationPath.KeyDelimiter;
             Assert.Equal($"{section.Name}{d}{property.Name}", actual);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug — DefaultExtractKeyFunc does not validate the section argument; fixing the SUT is out of scope.
+        public void ThrowsArgumentNullExceptionWhenSectionIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractKeyFunc(null, property));
+            Assert.Equal("section", exception.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug — DefaultExtractKeyFunc does not validate the property argument; fixing the SUT is out of scope.
+        public void ThrowsArgumentNullExceptionWhenPropertyIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractKeyFunc(section, null));
+            Assert.Equal("property", exception.ParamName);
+        }
     }
 
     public sealed class ExtractValueFunc : ServiceFabricConfigurationOptionsTest
@@ -123,6 +144,13 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.False(sut.DecryptValue);
             string actual = sut.ExtractValueFunc(section, property);
             Assert.Equal(property.Value, actual);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug — DefaultExtractValueFunc does not validate the property argument; fixing the SUT is out of scope.
+        public void ThrowsArgumentNullExceptionWhenPropertyIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractValueFunc(section, null));
+            Assert.Equal("property", exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Cannot mock ConfigurationProperty.DecryptValue() to verify decryption branch.
