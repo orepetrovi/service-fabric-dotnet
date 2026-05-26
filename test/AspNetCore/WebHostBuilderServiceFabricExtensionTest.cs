@@ -17,13 +17,12 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
 {
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    readonly Mock<IWebHostBuilder> hostBuilder = new();
-
     public sealed class UseServiceFabricIntegration : WebHostBuilderServiceFabricExtensionTest
     {
         const string SettingName = "UseServiceFabricIntegration";
         static readonly string SettingValue = true.ToString();
 
+        readonly Mock<IWebHostBuilder> hostBuilder = new();
         readonly AspNetCoreCommunicationListener listener = new TestCommunicationListener(fuzzy.StatelessServiceContext());
         readonly ServiceFabricIntegrationOptions options = fuzzy.Enum<ServiceFabricIntegrationOptions>();
 
