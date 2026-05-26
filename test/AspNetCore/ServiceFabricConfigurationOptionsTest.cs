@@ -52,7 +52,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
                 { $"{section1}:{param1b}", value1b },
                 { $"{section2}:{param2}", value2 },
             }).Build();
-            this.config = MockConfigurationPackage.CreateDefaultPackage(root, packageName);
+            config = MockConfigurationPackage.CreateDefaultPackage(root, packageName);
         }
 
         [Fact]
