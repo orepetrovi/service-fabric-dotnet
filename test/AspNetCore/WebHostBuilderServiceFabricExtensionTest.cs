@@ -39,7 +39,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         public void ThrowsArgumentNullExceptionWhenHostBuilderIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => WebHostBuilderServiceFabricExtension.UseServiceFabricIntegration(null, listener, options));
-            Assert.Equal(nameof(hostBuilder), exception.ParamName);
+            Assert.Equal(typeof(WebHostBuilderServiceFabricExtension).Method(nameof(WebHostBuilderServiceFabricExtension.UseServiceFabricIntegration)).Parameter<IWebHostBuilder>().Name, exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. UseServiceFabricIntegration does not validate listener and throws NullReferenceException.
@@ -48,7 +48,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
             // UseServiceFabricIntegration dereferences listener without a null check, so calling it with a null listener
             // throws NullReferenceException instead of the expected ArgumentNullException.
             var exception = Assert.Throws<ArgumentNullException>(() => hostBuilder.Object.UseServiceFabricIntegration(null, options));
-            Assert.Equal(nameof(listener), exception.ParamName);
+            Assert.Equal(typeof(WebHostBuilderServiceFabricExtension).Method(nameof(WebHostBuilderServiceFabricExtension.UseServiceFabricIntegration)).Parameter<AspNetCoreCommunicationListener>().Name, exception.ParamName);
         }
 
         [Fact]
