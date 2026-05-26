@@ -33,15 +33,16 @@ public abstract class ServiceFabricSetupFilterTest
         // Method parameters
         readonly Action<IApplicationBuilder> next = Mock.Of<Action<IApplicationBuilder>>();
 
-        readonly Mock<IApplicationBuilder> app = new();
+        readonly IApplicationBuilder app = Mock.Of<IApplicationBuilder>();
         readonly List<Func<RequestDelegate, RequestDelegate>> factories = new();
 
         public Configure()
         {
-            _ = app.Setup(_ => _.ApplicationServices).Returns(Mock.Of<IServiceProvider>());
-            _ = app.Setup(_ => _.Use(It.IsAny<Func<RequestDelegate, RequestDelegate>>()))
+            var mock = Mock.Get(app);
+            _ = mock.Setup(_ => _.ApplicationServices).Returns(Mock.Of<IServiceProvider>());
+            _ = mock.Setup(_ => _.Use(It.IsAny<Func<RequestDelegate, RequestDelegate>>()))
                 .Callback<Func<RequestDelegate, RequestDelegate>>(factories.Add)
-                .Returns(app.Object);
+                .Returns(mock.Object);
         }
 
         IReadOnlyList<object> RegisteredMiddlewares() =>
@@ -51,9 +52,9 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatCallsNextWithApplicationBuilder()
         {
             Action<IApplicationBuilder> configured = sut.Configure(next);
-            configured(app.Object);
+            configured(app);
 
-            Mock.Get(next).Verify(_ => _(app.Object), Times.Once);
+            Mock.Get(next).Verify(_ => _(app), Times.Once);
             Mock.Get(next).Verify(_ => _(It.IsAny<IApplicationBuilder>()), Times.Once);
         }
 
@@ -79,7 +80,7 @@ public abstract class ServiceFabricSetupFilterTest
         [Fact]
         public void ReturnsActionThatRegistersServiceFabricMiddlewareWithUrlSuffixWhenUrlSuffixIsNotEmpty()
         {
-            sut.Configure(next)(app.Object);
+            sut.Configure(next)(app);
 
             ServiceFabricMiddleware middleware = RegisteredMiddlewares().OfType<ServiceFabricMiddleware>().Single();
             Assert.Same(urlSuffix, middleware.Field<string>().Value);
@@ -89,7 +90,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatDoesNotRegisterServiceFabricMiddlewareWhenUrlSuffixIsNull()
         {
             var sut = new ServiceFabricSetupFilter(null, options);
-            sut.Configure(next)(app.Object);
+            sut.Configure(next)(app);
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricMiddleware>());
         }
 
@@ -97,7 +98,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatDoesNotRegisterServiceFabricMiddlewareWhenUrlSuffixIsEmpty()
         {
             var sut = new ServiceFabricSetupFilter(string.Empty, options);
-            sut.Configure(next)(app.Object);
+            sut.Configure(next)(app);
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricMiddleware>());
         }
 
@@ -105,7 +106,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatRegistersReverseProxyIntegrationMiddlewareWhenUrlSuffixIsNull()
         {
             var sut = new ServiceFabricSetupFilter(null, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
-            sut.Configure(next)(app.Object);
+            sut.Configure(next)(app);
             Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
@@ -113,7 +114,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatRegistersReverseProxyIntegrationMiddlewareWhenUrlSuffixIsEmpty()
         {
             var sut = new ServiceFabricSetupFilter(string.Empty, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
-            sut.Configure(next)(app.Object);
+            sut.Configure(next)(app);
             Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
@@ -122,7 +123,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatRegistersReverseProxyIntegrationMiddlewareWhenOptionsHasUseReverseProxyIntegration(ServiceFabricIntegrationOptions options)
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, options);
-            sut.Configure(next)(app.Object);
+            sut.Configure(next)(app);
             Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
@@ -130,7 +131,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatDoesNotRegisterReverseProxyIntegrationMiddlewareWhenOptionsDoesNotHaveUseReverseProxyIntegration(ServiceFabricIntegrationOptions options)
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, options);
-            sut.Configure(next)(app.Object);
+            sut.Configure(next)(app);
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
@@ -138,7 +139,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatRegistersServiceFabricMiddlewareBeforeReverseProxyIntegrationMiddleware()
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
-            sut.Configure(next)(app.Object);
+            sut.Configure(next)(app);
 
             Type[] middlewareTypes = RegisteredMiddlewares().Select(_ => _.GetType()).ToArray();
             Assert.Equal(new[] { typeof(ServiceFabricMiddleware), typeof(ServiceFabricReverseProxyIntegrationMiddleware) }, middlewareTypes);
@@ -149,9 +150,9 @@ public abstract class ServiceFabricSetupFilterTest
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
             int middlewareCountWhenNextCalled = -1;
-            _ = Mock.Get(next).Setup(_ => _(app.Object)).Callback(() => middlewareCountWhenNextCalled = factories.Count);
+            _ = Mock.Get(next).Setup(_ => _(app)).Callback(() => middlewareCountWhenNextCalled = factories.Count);
 
-            sut.Configure(next)(app.Object);
+            sut.Configure(next)(app);
 
             Assert.Equal(2, middlewareCountWhenNextCalled);
         }
