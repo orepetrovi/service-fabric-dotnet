@@ -64,6 +64,27 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal(expected, data);
         }
 
+        [Fact]
+        public void ExecutesExtractKeyFuncAndExtractValueFuncToPopulateData()
+        {
+            string keyPrefix = fuzzy.String().LettersOrDigits();
+            string valuePrefix = fuzzy.String().LettersOrDigits();
+            sut.ExtractKeyFunc = (section, property) => $"{keyPrefix}:{section.Name}:{property.Name}";
+            sut.ExtractValueFunc = (section, property) => $"{valuePrefix}:{property.Value}";
+
+            sut.ConfigAction(package, data);
+
+            var customExpected = new Dictionary<string, string>();
+            foreach (var section in package.Settings.Sections)
+            {
+                foreach (var property in section.Parameters)
+                {
+                    customExpected[$"{keyPrefix}:{section.Name}:{property.Name}"] = $"{valuePrefix}:{property.Value}";
+                }
+            }
+            Assert.Equal(customExpected, data);
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug — DefaultConfigAction does not validate the config argument; fixing the SUT is out of scope.
         public void ThrowsArgumentNullExceptionWhenConfigIsNull()
         {
