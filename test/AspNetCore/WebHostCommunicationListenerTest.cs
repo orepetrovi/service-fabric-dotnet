@@ -182,7 +182,7 @@ public abstract class WebHostCommunicationListenerTest
         public OpenAsync() => SetupServer($"http://+:{fuzzy.UInt16()}");
 
         [Fact]
-        public async Task InvokesBuildDelegateWithListenerUrlAndListener()
+        public async Task InvokesBuildWithListenerUrlAndListener()
         {
             _ = await sut.OpenAsync(cancellation);
 
