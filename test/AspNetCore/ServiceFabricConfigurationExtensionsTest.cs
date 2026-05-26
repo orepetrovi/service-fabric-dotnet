@@ -33,7 +33,6 @@ public abstract class ServiceFabricConfigurationExtensionsTest
 
     public sealed class AddServiceFabricConfiguration_IConfigurationBuilder_ICodePackageActivationContext : ServiceFabricConfigurationExtensionsTest
     {
-        // Method parameters
         readonly IConfigurationBuilder builder = new ConfigurationBuilder();
         readonly ICodePackageActivationContext context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
 
@@ -89,7 +88,6 @@ public abstract class ServiceFabricConfigurationExtensionsTest
 
     public sealed class AddServiceFabricConfiguration_IConfigurationBuilder_ICodePackageActivationContext_ActionOfServiceFabricConfigurationOptions : ServiceFabricConfigurationExtensionsTest
     {
-        // Method parameters
         readonly IConfigurationBuilder builder = new ConfigurationBuilder();
         readonly ICodePackageActivationContext context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
         readonly Action<ServiceFabricConfigurationOptions> optionsDelegate = Mock.Of<Action<ServiceFabricConfigurationOptions>>();
