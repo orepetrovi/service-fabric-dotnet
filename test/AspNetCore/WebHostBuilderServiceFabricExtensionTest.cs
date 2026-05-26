@@ -101,7 +101,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
             Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
             var filter = (ServiceFabricSetupFilter)descriptor.ImplementationInstance;
             Assert.NotEmpty(listener.UrlSuffix);
-            Assert.Equal(listener.UrlSuffix, filter.Field<string>().Value);
+            Assert.Same(listener.UrlSuffix, filter.Field<string>().Value);
         }
 
         [Theory]
