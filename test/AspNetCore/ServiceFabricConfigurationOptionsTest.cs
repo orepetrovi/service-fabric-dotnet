@@ -165,6 +165,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
         public void IncludesPackageNameWhenIncludePackageNameIsTrue()
         {
             string actual = sut.ExtractKeyFunc(section, property);
+
             string d = ConfigurationPath.KeyDelimiter;
             Assert.Equal($"{packageName}{d}{section.Name}{d}{property.Name}", actual);
         }
@@ -173,7 +174,9 @@ public abstract class ServiceFabricConfigurationOptionsTest
         public void ExcludesPackageNameWhenIncludePackageNameIsFalse()
         {
             sut.IncludePackageName = false;
+
             string actual = sut.ExtractKeyFunc(section, property);
+
             string d = ConfigurationPath.KeyDelimiter;
             Assert.Equal($"{section.Name}{d}{property.Name}", actual);
         }
