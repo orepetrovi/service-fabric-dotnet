@@ -84,7 +84,7 @@ public abstract class PathStringExtensionsTest
         public void AssignsMatchedToPathStringAndRemainingToEmptyWhenPathStringEqualsOther()
         {
             PathStringExtensions.StartsWithSegments(other, other, out PathString matched, out PathString remaining);
-            Assert.Equal(other.Value, matched.Value);
+            Assert.Equal(other, matched);
             Assert.Equal(PathString.Empty, remaining);
         }
 
