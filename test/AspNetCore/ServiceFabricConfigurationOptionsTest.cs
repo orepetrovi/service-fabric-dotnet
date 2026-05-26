@@ -45,13 +45,13 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
         public ConfigAction()
         {
-            IConfigurationRoot config = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            IConfigurationRoot root = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
                 { $"{section1}:{param1a}", value1a },
                 { $"{section1}:{param1b}", value1b },
                 { $"{section2}:{param2}", value2 },
             }).Build();
-            this.config = MockConfigurationPackage.CreateDefaultPackage(config, packageName);
+            this.config = MockConfigurationPackage.CreateDefaultPackage(root, packageName);
         }
 
         [Fact]
