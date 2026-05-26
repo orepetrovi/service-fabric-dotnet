@@ -37,6 +37,15 @@ public abstract class PathStringExtensionsTest
             Assert.True(PathStringExtensions.StartsWithSegments(other, other, out _, out _));
 
         [Fact]
+        public void AssignsMatchedToPathStringAndRemainingToEmptyWhenPathStringEqualsOther()
+        {
+            PathStringExtensions.StartsWithSegments(other, other, out PathString matched, out PathString remaining);
+
+            Assert.Equal(other, matched);
+            Assert.Equal(PathString.Empty, remaining);
+        }
+
+        [Fact]
         public void ReturnsTrueWhenPathStringMatchesOtherWithDifferentCase()
         {
             var casedSegment = segment + fuzzy.Char().Between('a', 'z');
@@ -45,17 +54,6 @@ public abstract class PathStringExtensionsTest
 
             Assert.True(PathStringExtensions.StartsWithSegments(upper, lower, out _, out _));
         }
-
-        [Fact]
-        public void ReturnsFalseWhenPathStringExtendsOtherWithoutSegmentSeparator()
-        {
-            var extended = new PathString(segment + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits());
-            Assert.False(PathStringExtensions.StartsWithSegments(extended, other, out _, out _));
-        }
-
-        [Fact]
-        public void ReturnsFalseWhenPathStringDoesNotStartWithOther() =>
-            Assert.False(PathStringExtensions.StartsWithSegments(different, other, out _, out _));
 
         [Fact]
         public void AssignsMatchedAndRemainingPreservingCaseOfPathString()
@@ -73,13 +71,15 @@ public abstract class PathStringExtensionsTest
         }
 
         [Fact]
-        public void AssignsMatchedToPathStringAndRemainingToEmptyWhenPathStringEqualsOther()
+        public void ReturnsFalseWhenPathStringExtendsOtherWithoutSegmentSeparator()
         {
-            PathStringExtensions.StartsWithSegments(other, other, out PathString matched, out PathString remaining);
-
-            Assert.Equal(other, matched);
-            Assert.Equal(PathString.Empty, remaining);
+            var extended = new PathString(segment + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits());
+            Assert.False(PathStringExtensions.StartsWithSegments(extended, other, out _, out _));
         }
+
+        [Fact]
+        public void ReturnsFalseWhenPathStringDoesNotStartWithOther() =>
+            Assert.False(PathStringExtensions.StartsWithSegments(different, other, out _, out _));
 
         [Fact]
         public void AssignsMatchedAndRemainingToEmptyWhenPathStringDoesNotStartWithOther()
