@@ -82,7 +82,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         [Fact]
         public void RegistersServiceFabricSetupFilterAsSingletonStartupFilter()
         {
-            ServiceDescriptor descriptor = InvokeAndCaptureStartupFilterDescriptor(options);
+            ServiceDescriptor descriptor = InvokeAndCaptureStartupFilterDescriptor(ServiceFabricIntegrationOptions.UseUniqueServiceUrl);
 
             Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
             ServiceFabricSetupFilter filter = (ServiceFabricSetupFilter)descriptor.ImplementationInstance;
