@@ -14,6 +14,7 @@ public abstract class ServiceFabricMiddlewareTest
 {
     readonly ServiceFabricMiddleware sut;
 
+    // Constructor parameters
     readonly RequestDelegate next = Mock.Of<RequestDelegate>(_ => _(It.IsAny<HttpContext>()) == Task.CompletedTask);
     readonly string urlSuffix = "/" + fuzzy.String().LettersOrDigits();
 
