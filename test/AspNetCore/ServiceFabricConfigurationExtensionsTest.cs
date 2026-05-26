@@ -102,7 +102,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
             var multi = CreateMultiPackageContext(out string name1, out string name2);
 
             var captured = new List<string>();
-            optionsDelegate.Setup(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()))
+            _ = optionsDelegate.Setup(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()))
                 .Callback((ServiceFabricConfigurationOptions o) => captured.Add(o.PackageName));
 
             _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate.Object);
