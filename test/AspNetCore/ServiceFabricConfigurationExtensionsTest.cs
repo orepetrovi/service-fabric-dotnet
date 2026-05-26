@@ -130,11 +130,13 @@ public abstract class ServiceFabricConfigurationExtensionsTest
                 { name2, empty },
             });
 
+            var captured = new List<string>();
+            optionsDelegate.Setup(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()))
+                .Callback((ServiceFabricConfigurationOptions o) => captured.Add(o.PackageName));
+
             _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate.Object);
 
-            optionsDelegate.Verify(_ => _(It.Is<ServiceFabricConfigurationOptions>(o => o.PackageName == name1)), Times.Once);
-            optionsDelegate.Verify(_ => _(It.Is<ServiceFabricConfigurationOptions>(o => o.PackageName == name2)), Times.Once);
-            optionsDelegate.Verify(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()), Times.Exactly(2));
+            Assert.Equal(new[] { name1, name2 }.OrderBy(n => n), captured.OrderBy(n => n));
         }
 
         [Fact]
