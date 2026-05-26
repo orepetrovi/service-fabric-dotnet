@@ -100,7 +100,19 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
 
             Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
             var filter = (ServiceFabricSetupFilter)descriptor.ImplementationInstance;
+            Assert.NotEmpty(listener.UrlSuffix);
             Assert.Equal(listener.UrlSuffix, filter.Field<string>().Value);
+        }
+
+        [Theory]
+        [InlineData(ServiceFabricIntegrationOptions.None)]
+        [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
+        public void RegistersServiceFabricSetupFilterWithEmptyUrlSuffixWhenOptionsDoesNotHaveUseUniqueServiceUrlFlag(ServiceFabricIntegrationOptions options)
+        {
+            ServiceDescriptor descriptor = InvokeAndCaptureStartupFilterDescriptor(options);
+
+            var filter = (ServiceFabricSetupFilter)descriptor.ImplementationInstance;
+            Assert.Empty(filter.Field<string>().Value);
         }
 
         [Theory]
