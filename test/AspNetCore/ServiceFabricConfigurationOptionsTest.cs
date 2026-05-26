@@ -160,15 +160,15 @@ public abstract class ServiceFabricConfigurationOptionsTest
     static ConfigurationSection Section(string name)
     {
         var section = TestHelper.CreateInstanced<ConfigurationSection>();
-        section.Set("Name", name);
+        section.Set(nameof(ConfigurationSection.Name), name);
         return section;
     }
 
     static ConfigurationProperty Property(string name = null, string value = null, bool isEncrypted = false)
     {
         var property = TestHelper.CreateInstanced<ConfigurationProperty>();
-        property.Set("Name", name ?? fuzzy.String());
-        property.Set("Value", value ?? fuzzy.String());
+        property.Set(nameof(ConfigurationProperty.Name), name ?? fuzzy.String());
+        property.Set(nameof(ConfigurationProperty.Value), value ?? fuzzy.String());
         property.Set(nameof(ConfigurationProperty.IsEncrypted), isEncrypted);
         return property;
     }
