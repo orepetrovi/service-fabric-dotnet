@@ -48,7 +48,7 @@ public abstract class PathStringExtensionsTest
         [Fact]
         public void ReturnsTrueWhenPathStringMatchesOtherWithDifferentCase()
         {
-            var casedSegment = segment + fuzzy.Char().Between('a', 'z');
+            string casedSegment = segment + fuzzy.Char().Between('a', 'z');
             var upper = new PathString(casedSegment.ToUpperInvariant());
             var lower = new PathString(casedSegment.ToLowerInvariant());
 
