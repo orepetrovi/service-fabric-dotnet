@@ -77,7 +77,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
             sut.ConfigAction(package, data);
 
-            var customExpected = new Dictionary<string, string>();
+            Dictionary<string, string> customExpected = new();
             foreach (ConfigurationSection section in package.Settings.Sections)
             {
                 foreach (ConfigurationProperty property in section.Parameters)
