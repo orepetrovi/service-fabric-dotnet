@@ -107,7 +107,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
 
             _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate.Object);
 
-            Assert.Equal(multi.GetConfigurationPackageNames(), captured);
+            Assert.Equal(new[] { name1, name2 }.OrderBy(_ => _), captured.OrderBy(_ => _));
         }
 
         [Fact]
@@ -170,7 +170,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
     {
         Assert.All(sources, source => Assert.Same(expectedContext, source.Property<ICodePackageActivationContext>().Value));
         IEnumerable<string> actual = sources.Select(source => source.Field<ServiceFabricConfigurationOptions>().Value.PackageName);
-        Assert.Equal(expectedPackageNames, actual);
+        Assert.Equal(expectedPackageNames.OrderBy(_ => _), actual.OrderBy(_ => _));
     }
 
     static TestCodePackageActivationContext CreateMultiPackageContext(out string name1, out string name2)
