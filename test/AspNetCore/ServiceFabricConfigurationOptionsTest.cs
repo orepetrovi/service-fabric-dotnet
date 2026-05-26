@@ -76,6 +76,10 @@ public abstract class ServiceFabricConfigurationOptionsTest
         [Fact(Explicit = true)] // TODO: SUT bug — DefaultConfigAction does not validate the config argument; fixing the SUT is out of scope.
         public void ThrowsArgumentNullExceptionWhenConfigIsNull()
         {
+            // DefaultConfigAction dereferences its `config` parameter without a null check, so passing null produces a
+            // NullReferenceException instead of the ArgumentNullException expected for a public-facing delegate. This
+            // test asserts the correct behavior and will fail until the SUT validates the argument. Fixing the SUT is
+            // out of scope for the current change.
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(null, data));
             Assert.Equal(sut.ConfigAction.Method.Parameter<ConfigurationPackage>().Name, exception.ParamName);
         }
@@ -83,6 +87,10 @@ public abstract class ServiceFabricConfigurationOptionsTest
         [Fact(Explicit = true)] // TODO: SUT bug — DefaultConfigAction does not validate the data argument; fixing the SUT is out of scope.
         public void ThrowsArgumentNullExceptionWhenDataIsNull()
         {
+            // DefaultConfigAction dereferences its `data` parameter without a null check, so passing null produces a
+            // NullReferenceException instead of the ArgumentNullException expected for a public-facing delegate. This
+            // test asserts the correct behavior and will fail until the SUT validates the argument. Fixing the SUT is
+            // out of scope for the current change.
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(package, null));
             Assert.Equal(sut.ConfigAction.Method.Parameter<IDictionary<string, string>>().Name, exception.ParamName);
         }
@@ -104,6 +112,10 @@ public abstract class ServiceFabricConfigurationOptionsTest
         [Fact(Explicit = true)] // TODO: SUT bug — ctor passes null value to ArgumentNullException instead of nameof(packageName); fixing the SUT is out of scope.
         public void ThrowsArgumentNullExceptionWhenPackageNameIsNull()
         {
+            // The constructor throws `new ArgumentNullException(packageName)`, passing the (null) value as the
+            // paramName argument instead of `nameof(packageName)`. As a result, the resulting exception's ParamName is
+            // null and gives callers no indication which argument was invalid. This test asserts the correct paramName
+            // and will fail until the SUT is fixed. Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentNullException>(() => new ServiceFabricConfigurationOptions(null));
             Assert.Equal(sut.Constructor().Parameter<string>().Name, exception.ParamName);
         }
@@ -134,6 +146,10 @@ public abstract class ServiceFabricConfigurationOptionsTest
         [Fact(Explicit = true)] // TODO: SUT bug — DefaultExtractKeyFunc does not validate the section argument; fixing the SUT is out of scope.
         public void ThrowsArgumentNullExceptionWhenSectionIsNull()
         {
+            // DefaultExtractKeyFunc dereferences its `section` parameter without a null check, so passing null produces
+            // a NullReferenceException instead of the ArgumentNullException expected for a public-facing delegate. This
+            // test asserts the correct behavior and will fail until the SUT validates the argument. Fixing the SUT is
+            // out of scope for the current change.
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractKeyFunc(null, property));
             Assert.Equal(sut.ExtractKeyFunc.Method.Parameter<ConfigurationSection>().Name, exception.ParamName);
         }
@@ -141,6 +157,10 @@ public abstract class ServiceFabricConfigurationOptionsTest
         [Fact(Explicit = true)] // TODO: SUT bug — DefaultExtractKeyFunc does not validate the property argument; fixing the SUT is out of scope.
         public void ThrowsArgumentNullExceptionWhenPropertyIsNull()
         {
+            // DefaultExtractKeyFunc dereferences its `property` parameter without a null check, so passing null
+            // produces a NullReferenceException instead of the ArgumentNullException expected for a public-facing
+            // delegate. This test asserts the correct behavior and will fail until the SUT validates the argument.
+            // Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractKeyFunc(section, null));
             Assert.Equal(sut.ExtractKeyFunc.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
         }
@@ -179,6 +199,10 @@ public abstract class ServiceFabricConfigurationOptionsTest
         [Fact(Explicit = true)] // TODO: SUT bug — DefaultExtractValueFunc does not validate the property argument; fixing the SUT is out of scope.
         public void ThrowsArgumentNullExceptionWhenPropertyIsNull()
         {
+            // DefaultExtractValueFunc dereferences its `property` parameter without a null check, so passing null
+            // produces a NullReferenceException instead of the ArgumentNullException expected for a public-facing
+            // delegate. This test asserts the correct behavior and will fail until the SUT validates the argument.
+            // Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractValueFunc(section, null));
             Assert.Equal(sut.ExtractValueFunc.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
         }
