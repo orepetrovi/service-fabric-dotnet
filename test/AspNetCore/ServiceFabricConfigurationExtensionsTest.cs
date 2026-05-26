@@ -137,6 +137,17 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         }
 
         [Fact]
+        public void AddsNoSourcesWhenContextHasNoConfigurationPackages()
+        {
+            var empty = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>());
+
+            _ = builder.AddServiceFabricConfiguration(empty, optionsDelegate);
+
+            Assert.Empty(builder.Sources);
+            Mock.Get(optionsDelegate).Verify(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()), Times.Never);
+        }
+
+        [Fact]
         public void AppliesOptionsDelegateChangesToAddedSource()
         {
             Action<ServiceFabricConfigurationOptions> mutate = options => options.IncludePackageName = false;
