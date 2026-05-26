@@ -179,6 +179,15 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal(property.Value, actual);
         }
 
+        [Fact]
+        public void ReturnsPropertyValueWhenPropertyIsNotEncryptedAndDecryptValueIsTrue()
+        {
+            ConfigurationProperty property = Property(value: fuzzy.String(), isEncrypted: false);
+            sut.DecryptValue = true;
+            string actual = sut.ExtractValueFunc(section, property);
+            Assert.Equal(property.Value, actual);
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug — DefaultExtractValueFunc does not validate the property argument; fixing the SUT is out of scope.
         public void ThrowsArgumentNullExceptionWhenPropertyIsNull()
         {
