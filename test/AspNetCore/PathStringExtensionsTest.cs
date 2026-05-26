@@ -19,7 +19,7 @@ public abstract class PathStringExtensionsTest
         readonly PathString other;
 
         readonly PathString different;
-        readonly string segment = "/" + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits();
+        readonly string segment = "/" + fuzzy.String().LettersOrDigits();
 
         public StartsWithSegments()
         {
@@ -39,8 +39,9 @@ public abstract class PathStringExtensionsTest
         [Fact]
         public void ReturnsTrueWhenPathStringMatchesOtherWithDifferentCase()
         {
-            var upper = new PathString(segment.ToUpperInvariant());
-            var lower = new PathString(segment.ToLowerInvariant());
+            var casedSegment = segment + fuzzy.Char().Between('a', 'z');
+            var upper = new PathString(casedSegment.ToUpperInvariant());
+            var lower = new PathString(casedSegment.ToLowerInvariant());
             Assert.True(PathStringExtensions.StartsWithSegments(upper, lower, out _, out _));
         }
 
@@ -58,10 +59,11 @@ public abstract class PathStringExtensionsTest
         [Fact]
         public void AssignsMatchedAndRemainingPreservingCaseOfPathString()
         {
-            string upperSegment = segment.ToUpperInvariant();
+            string casedSegment = segment + fuzzy.Char().Between('a', 'z');
+            string upperSegment = casedSegment.ToUpperInvariant();
             string suffix = "/" + fuzzy.String().LettersOrDigits();
             var upper = new PathString(upperSegment + suffix);
-            var lower = new PathString(segment.ToLowerInvariant());
+            var lower = new PathString(casedSegment.ToLowerInvariant());
 
             PathStringExtensions.StartsWithSegments(upper, lower, out PathString matched, out PathString remaining);
 
