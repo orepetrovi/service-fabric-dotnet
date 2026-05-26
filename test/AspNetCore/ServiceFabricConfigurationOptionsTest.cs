@@ -49,18 +49,21 @@ public abstract class ServiceFabricConfigurationOptionsTest
                 { $"{section2}:{param2}", value2 },
             }).Build();
             package = MockConfigurationPackage.CreateDefaultPackage(config, packageName);
-            string d = ConfigurationPath.KeyDelimiter;
             expected = new Dictionary<string, string>
             {
-                { $"{packageName}{d}{section1}{d}{param1}", value1 },
-                { $"{packageName}{d}{section2}{d}{param2}", value2 },
+                { $"{section1}:{param1}", value1 },
+                { $"{section2}:{param2}", value2 },
             };
         }
 
         [Fact]
         public void PopulatesDataDictionaryWithExtractedKeysAndValues()
         {
+            sut.ExtractKeyFunc = (section, property) => $"{section.Name}:{property.Name}";
+            sut.ExtractValueFunc = (section, property) => property.Value;
+
             sut.ConfigAction(package, data);
+
             Assert.Equal(expected, data);
         }
 
