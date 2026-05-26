@@ -20,15 +20,6 @@ public abstract class ServiceFabricConfigurationExtensionsTest
 {
     public sealed class AddServiceFabricConfiguration_IConfigurationBuilder : ServiceFabricConfigurationExtensionsTest
     {
-        [Fact]
-        public void ThrowsArgumentNullExceptionWhenBuilderIsNull()
-        {
-            IConfigurationBuilder builder = null;
-            var exception = Assert.Throws<ArgumentNullException>(
-                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder));
-            Assert.Equal(nameof(builder), exception.ParamName);
-        }
-
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Non-null path calls FabricRuntime.GetActivationContext().
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
         {
@@ -38,6 +29,15 @@ public abstract class ServiceFabricConfigurationExtensionsTest
             // an injectable factory for ICodePackageActivationContext. Fixing the underlying testability limitation is
             // out of scope for the current change.
             throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenBuilderIsNull()
+        {
+            IConfigurationBuilder builder = null;
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder));
+            Assert.Equal(nameof(builder), exception.ParamName);
         }
     }
 
