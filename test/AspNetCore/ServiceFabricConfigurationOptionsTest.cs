@@ -226,6 +226,16 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Same(property.Value, actual);
         }
 
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Decryption branch cannot be substituted.
+        public void ReturnsDecryptedValueWhenPropertyIsEncryptedAndDecryptValueIsTrue()
+        {
+            // The decryption branch of DefaultExtractValueFunc calls the non-virtual instance method
+            // ConfigurationProperty.DecryptValue(), which cannot be substituted in unit tests. Exercising this branch
+            // is not possible without refactoring the SUT to accept an injectable decryptor. Fixing the underlying
+            // testability limitation is out of scope for the current change.
+            throw new NotImplementedException();
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug. Missing property argument validation.
         public void ThrowsArgumentNullExceptionWhenPropertyIsNull()
         {
@@ -235,16 +245,6 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractValueFunc(section, null));
             Assert.Equal(sut.ExtractValueFunc.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT testability limitation. Decryption branch cannot be substituted.
-        public void ReturnsDecryptedValueWhenPropertyIsEncryptedAndDecryptValueIsTrue()
-        {
-            // The decryption branch of DefaultExtractValueFunc calls the non-virtual instance method
-            // ConfigurationProperty.DecryptValue(), which cannot be substituted in unit tests. Exercising this branch
-            // is not possible without refactoring the SUT to accept an injectable decryptor. Fixing the underlying
-            // testability limitation is out of scope for the current change.
-            throw new NotImplementedException();
         }
     }
 
