@@ -122,6 +122,20 @@ public abstract class PathStringExtensionsTest
             Assert.True(default(PathString).StartsWithSegments(default, out _, out _));
 
         [Fact]
+        public void AssignsMatchedToEmptyWhenPathStringAndOtherAreBothEmpty()
+        {
+            default(PathString).StartsWithSegments(default, out PathString matched, out _);
+            Assert.Equal(PathString.Empty, matched);
+        }
+
+        [Fact]
+        public void AssignsRemainingToEmptyWhenPathStringAndOtherAreBothEmpty()
+        {
+            default(PathString).StartsWithSegments(default, out _, out PathString remaining);
+            Assert.Equal(PathString.Empty, remaining);
+        }
+
+        [Fact]
         public void ReturnsFalseWhenPathStringIsEmptyAndOtherIsNonEmpty() =>
             Assert.False(default(PathString).StartsWithSegments(other, out _, out _));
 
