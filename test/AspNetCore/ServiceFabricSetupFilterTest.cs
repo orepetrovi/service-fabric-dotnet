@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Fuzzy;
 using Inspector;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using Xunit;
@@ -16,7 +17,7 @@ namespace Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 
 public abstract class ServiceFabricSetupFilterTest
 {
-    readonly ServiceFabricSetupFilter sut;
+    readonly IStartupFilter sut;
 
     // Constructor parameters
     readonly string urlSuffix = "/" + fuzzy.String().LettersOrDigits();
