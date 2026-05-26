@@ -44,11 +44,8 @@ public abstract class ServiceFabricSetupFilterTest
                 .Returns(app.Object);
         }
 
-        IReadOnlyList<object> RegisteredMiddlewares()
-        {
-            RequestDelegate terminal = _ => Task.CompletedTask;
-            return factories.Select(f => f(terminal).Target).ToList();
-        }
+        IReadOnlyList<object> RegisteredMiddlewares() =>
+            factories.Select(f => f(_ => Task.CompletedTask).Target).ToList();
 
         [Fact]
         public void ReturnsActionThatCallsNextWithApplicationBuilder()
