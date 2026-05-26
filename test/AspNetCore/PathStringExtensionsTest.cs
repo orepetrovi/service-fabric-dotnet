@@ -92,7 +92,7 @@ public abstract class PathStringExtensionsTest
         public void AssignsMatchedToPathStringWhenPathStringEqualsOther()
         {
             other.StartsWithSegments(other, out PathString matched, out _);
-            Assert.Equal(other, matched);
+            Assert.Equal(other.Value, matched.Value);
         }
 
         [Fact]
