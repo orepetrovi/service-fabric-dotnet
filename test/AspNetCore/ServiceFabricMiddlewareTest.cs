@@ -62,7 +62,7 @@ public abstract class ServiceFabricMiddlewareTest
         }
 
         [Fact]
-        public async Task SetsStatusCodeGoneWhenPathDoesNotStartWithUrlSuffix()
+        public async Task SetsStatusCodeGoneWhenPathDoesNotStartWithUrlSuffixSegment()
         {
             context.Request.Path = urlSuffix + fuzzy.String().LettersOrDigits(); // appended without '/' so not a segment match
 
