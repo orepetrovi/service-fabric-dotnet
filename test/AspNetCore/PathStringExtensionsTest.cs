@@ -71,10 +71,13 @@ public abstract class PathStringExtensionsTest
         }
 
         [Fact]
-        public void ReturnsFalseWhenPathStringExtendsOtherWithoutSegmentSeparator()
+        public void ReturnsFalseAndAssignsMatchedAndRemainingToEmptyWhenPathStringExtendsOtherWithoutSegmentSeparator()
         {
             var extended = new PathString(segment + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits());
-            Assert.False(PathStringExtensions.StartsWithSegments(extended, other, out _, out _));
+
+            Assert.False(PathStringExtensions.StartsWithSegments(extended, other, out PathString matched, out PathString remaining));
+            Assert.Equal(PathString.Empty, matched);
+            Assert.Equal(PathString.Empty, remaining);
         }
 
         [Fact]
