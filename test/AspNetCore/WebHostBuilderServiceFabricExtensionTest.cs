@@ -73,6 +73,26 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
             hostBuilder.Verify(_ => _.UseSetting(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
+        [Theory]
+        [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
+        [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl | ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
+        public void ConfiguresListenerToUseUniqueServiceUrlWhenOptionsHasUseUniqueServiceUrlFlag(ServiceFabricIntegrationOptions options)
+        {
+            hostBuilder.Object.UseServiceFabricIntegration(listener, options);
+
+            Assert.NotEmpty(listener.UrlSuffix);
+        }
+
+        [Theory]
+        [InlineData(ServiceFabricIntegrationOptions.None)]
+        [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
+        public void DoesNotConfigureListenerToUseUniqueServiceUrlWhenOptionsDoesNotHaveUseUniqueServiceUrlFlag(ServiceFabricIntegrationOptions options)
+        {
+            hostBuilder.Object.UseServiceFabricIntegration(listener, options);
+
+            Assert.Empty(listener.UrlSuffix);
+        }
+
         [Fact]
         public void RegistersServiceFabricSetupFilterAsSingletonStartupFilter()
         {
@@ -94,26 +114,6 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
 
             var filter = (ServiceFabricSetupFilter)descriptor.ImplementationInstance;
             Assert.Equal(options, filter.Field<ServiceFabricIntegrationOptions>().Value);
-        }
-
-        [Theory]
-        [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
-        [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl | ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
-        public void ConfiguresListenerToUseUniqueServiceUrlWhenOptionsHasUseUniqueServiceUrlFlag(ServiceFabricIntegrationOptions options)
-        {
-            hostBuilder.Object.UseServiceFabricIntegration(listener, options);
-
-            Assert.NotEmpty(listener.UrlSuffix);
-        }
-
-        [Theory]
-        [InlineData(ServiceFabricIntegrationOptions.None)]
-        [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
-        public void DoesNotConfigureListenerToUseUniqueServiceUrlWhenOptionsDoesNotHaveUseUniqueServiceUrlFlag(ServiceFabricIntegrationOptions options)
-        {
-            hostBuilder.Object.UseServiceFabricIntegration(listener, options);
-
-            Assert.Empty(listener.UrlSuffix);
         }
 
         ServiceDescriptor InvokeAndCaptureStartupFilterDescriptor(ServiceFabricIntegrationOptions options)
