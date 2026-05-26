@@ -93,6 +93,9 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal(packageName, sut.PackageName);
             Assert.True(sut.IncludePackageName);
             Assert.False(sut.DecryptValue);
+            Assert.NotNull(sut.ConfigAction);
+            Assert.NotNull(sut.ExtractKeyFunc);
+            Assert.NotNull(sut.ExtractValueFunc);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug — ctor passes null value to ArgumentNullException instead of nameof(packageName); fixing the SUT is out of scope.
