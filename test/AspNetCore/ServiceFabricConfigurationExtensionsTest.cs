@@ -99,7 +99,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         [Fact]
         public void InvokesOptionsDelegateForEachConfigurationPackage()
         {
-            var multi = CreateMultiPackageContext(out string name1, out string name2);
+            TestCodePackageActivationContext multi = CreateMultiPackageContext(out string name1, out string name2);
 
             var captured = new List<string>();
             _ = optionsDelegate.Setup(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()))
@@ -129,7 +129,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
             _ = builder.AddServiceFabricConfiguration(context, mutate);
 
             IConfigurationSource source = Assert.Single(builder.Sources);
-            ServiceFabricConfigurationOptions options = source.Field<ServiceFabricConfigurationOptions>().Value;
+            var options = source.Field<ServiceFabricConfigurationOptions>().Value;
             Assert.False(options.IncludePackageName);
         }
 
