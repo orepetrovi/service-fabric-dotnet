@@ -72,16 +72,16 @@ public abstract class ServiceFabricSetupFilterTest
         [Fact]
         public void ReturnsActionThatDoesNotRegisterServiceFabricMiddlewareWhenUrlSuffixIsNull()
         {
-            var filter = new ServiceFabricSetupFilter(null, options);
-            filter.Configure(next.Object)(app.Object);
+            var sut = new ServiceFabricSetupFilter(null, options);
+            sut.Configure(next.Object)(app.Object);
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricMiddleware>());
         }
 
         [Fact]
         public void ReturnsActionThatDoesNotRegisterServiceFabricMiddlewareWhenUrlSuffixIsEmpty()
         {
-            var filter = new ServiceFabricSetupFilter(string.Empty, options);
-            filter.Configure(next.Object)(app.Object);
+            var sut = new ServiceFabricSetupFilter(string.Empty, options);
+            sut.Configure(next.Object)(app.Object);
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricMiddleware>());
         }
 
@@ -89,16 +89,16 @@ public abstract class ServiceFabricSetupFilterTest
         [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration | ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
         public void ReturnsActionThatRegistersReverseProxyIntegrationMiddlewareWhenOptionsHasUseReverseProxyIntegration(ServiceFabricIntegrationOptions options)
         {
-            var filter = new ServiceFabricSetupFilter(urlSuffix, options);
-            filter.Configure(next.Object)(app.Object);
+            var sut = new ServiceFabricSetupFilter(urlSuffix, options);
+            sut.Configure(next.Object)(app.Object);
             Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
         [Theory, InlineData(ServiceFabricIntegrationOptions.None), InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
         public void ReturnsActionThatDoesNotRegisterReverseProxyIntegrationMiddlewareWhenOptionsDoesNotHaveUseReverseProxyIntegration(ServiceFabricIntegrationOptions options)
         {
-            var filter = new ServiceFabricSetupFilter(urlSuffix, options);
-            filter.Configure(next.Object)(app.Object);
+            var sut = new ServiceFabricSetupFilter(urlSuffix, options);
+            sut.Configure(next.Object)(app.Object);
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
