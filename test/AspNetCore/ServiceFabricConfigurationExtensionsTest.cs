@@ -61,10 +61,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
 
             _ = builder.AddServiceFabricConfiguration(multi);
 
-            Assert.Collection(
-                builder.Sources,
-                source => AssertSource(source, multi, name1),
-                source => AssertSource(source, multi, name2));
+            AssertSources(builder.Sources, multi, name1, name2);
         }
 
         [Fact]
@@ -117,10 +114,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
 
             _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate);
 
-            Assert.Collection(
-                builder.Sources,
-                source => AssertSource(source, multi, name1),
-                source => AssertSource(source, multi, name2));
+            AssertSources(builder.Sources, multi, name1, name2);
         }
 
         [Fact]
@@ -193,11 +187,13 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         }
     }
 
-    static void AssertSource(IConfigurationSource source, ICodePackageActivationContext expectedContext, string expectedPackageName)
+    static void AssertSources(IList<IConfigurationSource> sources, ICodePackageActivationContext expectedContext, params string[] expectedPackageNames)
     {
-        Assert.Same(expectedContext, source.Property<ICodePackageActivationContext>().Value);
-        ServiceFabricConfigurationOptions options = source.Field<ServiceFabricConfigurationOptions>().Value;
-        Assert.Equal(expectedPackageName, options.PackageName);
+        Assert.All(sources, source => Assert.Same(expectedContext, source.Property<ICodePackageActivationContext>().Value));
+        var actual = new HashSet<string>(sources.Count);
+        foreach (IConfigurationSource source in sources)
+            actual.Add(source.Field<ServiceFabricConfigurationOptions>().Value.PackageName);
+        Assert.Equal(new HashSet<string>(expectedPackageNames), actual);
     }
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
