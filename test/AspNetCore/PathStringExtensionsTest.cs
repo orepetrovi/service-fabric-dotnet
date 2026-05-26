@@ -14,10 +14,11 @@ public abstract class PathStringExtensionsTest
 
     public sealed class StartsWithSegments : PathStringExtensionsTest
     {
+        // Method parameters
         readonly PathString pathString;
         readonly PathString other;
-        readonly PathString different;
 
+        readonly PathString different;
         readonly string segment = "/" + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits();
 
         public StartsWithSegments()
