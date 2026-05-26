@@ -29,42 +29,31 @@ public abstract class PathStringExtensionsTest
         }
 
         [Fact]
-        public void ReturnsTrueWhenPathStringStartsWithOtherFollowedBySegmentSeparator()
-        {
-            bool result = PathStringExtensions.StartsWithSegments(pathString, other, out _, out _);
-            Assert.True(result);
-        }
+        public void ReturnsTrueWhenPathStringStartsWithOtherFollowedBySegmentSeparator() =>
+            Assert.True(PathStringExtensions.StartsWithSegments(pathString, other, out _, out _));
 
         [Fact]
-        public void ReturnsTrueWhenPathStringEqualsOther()
-        {
-            bool result = PathStringExtensions.StartsWithSegments(other, other, out _, out _);
-            Assert.True(result);
-        }
+        public void ReturnsTrueWhenPathStringEqualsOther() =>
+            Assert.True(PathStringExtensions.StartsWithSegments(other, other, out _, out _));
 
         [Fact]
         public void ReturnsTrueWhenPathStringMatchesOtherWithDifferentCase()
         {
             var upper = new PathString(segment.ToUpperInvariant());
             var lower = new PathString(segment.ToLowerInvariant());
-            bool result = PathStringExtensions.StartsWithSegments(upper, lower, out _, out _);
-            Assert.True(result);
+            Assert.True(PathStringExtensions.StartsWithSegments(upper, lower, out _, out _));
         }
 
         [Fact]
         public void ReturnsFalseWhenPathStringExtendsOtherWithoutSegmentSeparator()
         {
             var extended = new PathString(segment + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits());
-            bool result = PathStringExtensions.StartsWithSegments(extended, other, out _, out _);
-            Assert.False(result);
+            Assert.False(PathStringExtensions.StartsWithSegments(extended, other, out _, out _));
         }
 
         [Fact]
-        public void ReturnsFalseWhenPathStringDoesNotStartWithOther()
-        {
-            bool result = PathStringExtensions.StartsWithSegments(different, other, out _, out _);
-            Assert.False(result);
-        }
+        public void ReturnsFalseWhenPathStringDoesNotStartWithOther() =>
+            Assert.False(PathStringExtensions.StartsWithSegments(different, other, out _, out _));
 
         [Fact]
         public void AssignsMatchedAndRemainingPreservingCaseOfPathString()
@@ -129,10 +118,7 @@ public abstract class PathStringExtensionsTest
         {
             var otherWithSlash = new PathString(segment + "/");
             var input = new PathString(segment + "/" + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits());
-
-            bool result = PathStringExtensions.StartsWithSegments(input, otherWithSlash, out _, out _);
-
-            Assert.False(result);
+            Assert.False(PathStringExtensions.StartsWithSegments(input, otherWithSlash, out _, out _));
         }
 
         [Fact]
@@ -140,10 +126,7 @@ public abstract class PathStringExtensionsTest
         {
             var otherWithSlash = new PathString(segment + "/");
             var input = new PathString(segment + "//" + fuzzy.String().LettersOrDigits());
-
-            bool result = PathStringExtensions.StartsWithSegments(input, otherWithSlash, out _, out _);
-
-            Assert.True(result);
+            Assert.True(PathStringExtensions.StartsWithSegments(input, otherWithSlash, out _, out _));
         }
     }
 }
