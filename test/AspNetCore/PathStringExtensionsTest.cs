@@ -87,6 +87,20 @@ public abstract class PathStringExtensionsTest
         }
 
         [Fact]
+        public void AssignsMatchedToPathStringWhenPathStringEqualsOther()
+        {
+            other.StartsWithSegments(other, out PathString matched, out _);
+            Assert.Equal(other, matched);
+        }
+
+        [Fact]
+        public void AssignsRemainingToEmptyWhenPathStringEqualsOther()
+        {
+            other.StartsWithSegments(other, out _, out PathString remaining);
+            Assert.Equal(PathString.Empty, remaining);
+        }
+
+        [Fact]
         public void AssignsMatchedToEmptyWhenNotMatched()
         {
             var different = new PathString("/_" + fuzzy.String().LettersOrDigits());
