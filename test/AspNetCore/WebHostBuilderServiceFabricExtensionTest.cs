@@ -49,6 +49,19 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
             Assert.Throws<NullReferenceException>(() => hostBuilder.Object.UseServiceFabricIntegration(null, ServiceFabricIntegrationOptions.UseUniqueServiceUrl));
 
         [Fact]
+        public void ReturnsHostBuilderWithoutReconfiguringWhenSettingIsAlreadyTrue()
+        {
+            _ = hostBuilder.Setup(_ => _.GetSetting("UseServiceFabricIntegration")).Returns("True");
+
+            IWebHostBuilder actual = hostBuilder.Object.UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.UseUniqueServiceUrl);
+
+            Assert.Same(hostBuilder.Object, actual);
+            hostBuilder.Verify(_ => _.UseSetting(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            hostBuilder.Verify(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()), Times.Never);
+            Assert.Empty(listener.UrlSuffix);
+        }
+
+        [Fact]
         public void MarksHostBuilderSettingToPreventDoubleConfiguration()
         {
             hostBuilder.Object.UseServiceFabricIntegration(listener, options);
@@ -114,19 +127,6 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         {
             hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
-            Assert.Empty(listener.UrlSuffix);
-        }
-
-        [Fact]
-        public void ReturnsHostBuilderWithoutReconfiguringWhenSettingIsAlreadyTrue()
-        {
-            _ = hostBuilder.Setup(_ => _.GetSetting("UseServiceFabricIntegration")).Returns("True");
-
-            IWebHostBuilder actual = hostBuilder.Object.UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.UseUniqueServiceUrl);
-
-            Assert.Same(hostBuilder.Object, actual);
-            hostBuilder.Verify(_ => _.UseSetting(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-            hostBuilder.Verify(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()), Times.Never);
             Assert.Empty(listener.UrlSuffix);
         }
     }
