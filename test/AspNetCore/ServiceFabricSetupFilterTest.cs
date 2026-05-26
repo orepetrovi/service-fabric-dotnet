@@ -66,6 +66,16 @@ public abstract class ServiceFabricSetupFilterTest
             Assert.Equal(nameof(next), exception.ParamName);
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing arg null validation.
+        public void ReturnsActionThatThrowsArgumentNullExceptionWhenAppIsNull()
+        {
+            // SUT's returned action does not validate `app`. Depending on branch it dereferences `app`
+            // (NullReferenceException) or forwards null to `next` silently. Expected behavior is to fail fast.
+            var sut = new ServiceFabricSetupFilter(null, ServiceFabricIntegrationOptions.None);
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.Configure(next)(null));
+            Assert.Equal("app", exception.ParamName);
+        }
+
         [Fact]
         public void ReturnsActionThatRegistersServiceFabricMiddlewareWithUrlSuffixWhenUrlSuffixIsNotEmpty()
         {
