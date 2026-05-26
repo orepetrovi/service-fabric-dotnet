@@ -24,7 +24,9 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         readonly AspNetCoreCommunicationListener listener = new TestCommunicationListener(fuzzy.StatelessServiceContext());
         readonly ServiceFabricIntegrationOptions options = fuzzy.Enum<ServiceFabricIntegrationOptions>();
 
-        const string SettingName = nameof(WebHostBuilderServiceFabricExtension.UseServiceFabricIntegration);
+        // Wire-format configuration key the SUT contracts on; intentionally a literal, not nameof(...), because the
+        // key is independent of the method name and must remain stable across renames for back-compat.
+        const string SettingName = "UseServiceFabricIntegration";
         static readonly string SettingValue = true.ToString();
 
         [Fact]
