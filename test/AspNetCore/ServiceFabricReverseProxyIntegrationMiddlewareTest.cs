@@ -97,12 +97,11 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
         public async Task CallbackSetsXServiceFabricHeaderToResourceNotFoundWhenResponseStatusCodeIs404()
         {
             var headers = new HeaderDictionary();
-            var callbackResponse = new Mock<HttpResponse>();
-            _ = callbackResponse.SetupGet(_ => _.StatusCode).Returns(StatusCodes.Status404NotFound);
-            _ = callbackResponse.SetupGet(_ => _.Headers).Returns(headers);
+            _ = response.SetupGet(_ => _.StatusCode).Returns(StatusCodes.Status404NotFound);
+            _ = response.SetupGet(_ => _.Headers).Returns(headers);
             _ = sut.Invoke(context.Object);
 
-            await capturedCallback(callbackResponse.Object);
+            await capturedCallback(capturedState);
 
             Assert.Equal("ResourceNotFound", headers["X-ServiceFabric"]);
         }
@@ -112,12 +111,11 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
         {
             int statusCode = StatusCodes.Status404NotFound + fuzzy.SByte().Between(1, 5);
             var headers = new HeaderDictionary();
-            var callbackResponse = new Mock<HttpResponse>();
-            _ = callbackResponse.SetupGet(_ => _.StatusCode).Returns(statusCode);
-            _ = callbackResponse.SetupGet(_ => _.Headers).Returns(headers);
+            _ = response.SetupGet(_ => _.StatusCode).Returns(statusCode);
+            _ = response.SetupGet(_ => _.Headers).Returns(headers);
             _ = sut.Invoke(context.Object);
 
-            await capturedCallback(callbackResponse.Object);
+            await capturedCallback(capturedState);
 
             Assert.False(headers.ContainsKey("X-ServiceFabric"));
         }
