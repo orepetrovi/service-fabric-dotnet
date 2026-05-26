@@ -73,7 +73,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal(expected, data);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug — DefaultConfigAction does not validate the config argument; fixing the SUT is out of scope.
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing config argument validation.
         public void ThrowsArgumentNullExceptionWhenConfigIsNull()
         {
             // DefaultConfigAction dereferences its `config` parameter without a null check, so passing null produces a
@@ -84,7 +84,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal(sut.ConfigAction.Method.Parameter<ConfigurationPackage>().Name, exception.ParamName);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug — DefaultConfigAction does not validate the data argument; fixing the SUT is out of scope.
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing data argument validation.
         public void ThrowsArgumentNullExceptionWhenDataIsNull()
         {
             // DefaultConfigAction dereferences its `data` parameter without a null check, so passing null produces a
@@ -109,7 +109,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.NotNull(sut.ExtractValueFunc);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug — ctor passes null value to ArgumentNullException instead of nameof(packageName); fixing the SUT is out of scope.
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing packageName argument validation.
         public void ThrowsArgumentNullExceptionWhenPackageNameIsNull()
         {
             // The constructor throws `new ArgumentNullException(packageName)`, passing the (null) value as the
@@ -143,7 +143,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal($"{section.Name}{d}{property.Name}", actual);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug — DefaultExtractKeyFunc does not validate the section argument; fixing the SUT is out of scope.
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing section argument validation.
         public void ThrowsArgumentNullExceptionWhenSectionIsNull()
         {
             // DefaultExtractKeyFunc dereferences its `section` parameter without a null check, so passing null produces
@@ -154,7 +154,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal(sut.ExtractKeyFunc.Method.Parameter<ConfigurationSection>().Name, exception.ParamName);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug — DefaultExtractKeyFunc does not validate the property argument; fixing the SUT is out of scope.
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing property argument validation.
         public void ThrowsArgumentNullExceptionWhenPropertyIsNull()
         {
             // DefaultExtractKeyFunc dereferences its `property` parameter without a null check, so passing null
@@ -195,7 +195,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Same(property.Value, actual);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug — DefaultExtractValueFunc does not validate the property argument; fixing the SUT is out of scope.
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing property argument validation.
         public void ThrowsArgumentNullExceptionWhenPropertyIsNull()
         {
             // DefaultExtractValueFunc dereferences its `property` parameter without a null check, so passing null
@@ -206,7 +206,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal(sut.ExtractValueFunc.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT testability limitation. ConfigurationProperty.DecryptValue() is a non-virtual instance method and cannot be substituted; exercising the decryption branch requires refactoring the SUT to accept an injectable decryptor.
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Decryption branch cannot be substituted.
         public void ReturnsDecryptedValueWhenPropertyIsEncryptedAndDecryptValueIsTrue()
         {
             // The decryption branch of DefaultExtractValueFunc calls the non-virtual instance method
