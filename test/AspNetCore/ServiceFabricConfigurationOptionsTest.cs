@@ -186,8 +186,15 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal("property", exception.ParamName);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT testability limitation. Cannot mock ConfigurationProperty.DecryptValue() to verify decryption branch.
-        public void DemonstratesTestabilityLimitationForDecryptedValues() => throw new NotImplementedException();
+        [Fact(Explicit = true)] // TODO: SUT testability limitation.
+        public void ReturnsDecryptedValueWhenPropertyIsEncryptedAndDecryptValueIsTrue()
+        {
+            // The decryption branch of DefaultExtractValueFunc calls the non-virtual instance method
+            // ConfigurationProperty.DecryptValue(), which cannot be substituted in unit tests. Exercising this branch
+            // is not possible without refactoring the SUT to accept an injectable decryptor. Fixing the underlying
+            // testability limitation is out of scope for the current change.
+            throw new NotImplementedException();
+        }
     }
 
     static ConfigurationSection Section(string name)
