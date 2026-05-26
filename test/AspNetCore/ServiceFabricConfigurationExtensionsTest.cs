@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Fabric;
+using System.Linq;
 using Fuzzy;
 using Inspector;
 using Microsoft.Extensions.Configuration;
@@ -201,10 +202,8 @@ public abstract class ServiceFabricConfigurationExtensionsTest
     static void AssertSources(IList<IConfigurationSource> sources, ICodePackageActivationContext expectedContext, params string[] expectedPackageNames)
     {
         Assert.All(sources, source => Assert.Same(expectedContext, source.Property<ICodePackageActivationContext>().Value));
-        var actual = new HashSet<string>(sources.Count);
-        foreach (IConfigurationSource source in sources)
-            actual.Add(source.Field<ServiceFabricConfigurationOptions>().Value.PackageName);
-        Assert.Equal(new HashSet<string>(expectedPackageNames), actual);
+        var actual = sources.Select(source => source.Field<ServiceFabricConfigurationOptions>().Value.PackageName).ToList();
+        Assert.Equal(expectedPackageNames.OrderBy(name => name), actual.OrderBy(name => name));
     }
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
