@@ -84,14 +84,14 @@ public abstract class ServiceFabricConfigurationExtensionsTest
     {
         readonly IConfigurationBuilder builder = new ConfigurationBuilder();
         readonly ICodePackageActivationContext context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
-        readonly Mock<Action<ServiceFabricConfigurationOptions>> optionsDelegate = new();
+        readonly Action<ServiceFabricConfigurationOptions> optionsDelegate = Mock.Of<Action<ServiceFabricConfigurationOptions>>();
 
         [Fact]
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
         {
             TestCodePackageActivationContext multi = CreateMultiPackageContext(out string name1, out string name2);
 
-            _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate.Object);
+            _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate);
 
             AssertSources(builder.Sources, multi, name1, name2);
         }
@@ -102,10 +102,10 @@ public abstract class ServiceFabricConfigurationExtensionsTest
             TestCodePackageActivationContext multi = CreateMultiPackageContext(out string name1, out string name2);
 
             var captured = new List<string>();
-            _ = optionsDelegate.Setup(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()))
+            _ = Mock.Get(optionsDelegate).Setup(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()))
                 .Callback((ServiceFabricConfigurationOptions o) => captured.Add(o.PackageName));
 
-            _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate.Object);
+            _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate);
 
             Assert.Equal(new[] { name1, name2 }.OrderBy(_ => _), captured.OrderBy(_ => _));
         }
@@ -115,10 +115,10 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         {
             var empty = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>());
 
-            _ = builder.AddServiceFabricConfiguration(empty, optionsDelegate.Object);
+            _ = builder.AddServiceFabricConfiguration(empty, optionsDelegate);
 
             Assert.Empty(builder.Sources);
-            optionsDelegate.Verify(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()), Times.Never);
+            Mock.Get(optionsDelegate).Verify(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()), Times.Never);
         }
 
         [Fact]
@@ -145,7 +145,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         [Fact]
         public void ReturnsBuilder()
         {
-            IConfigurationBuilder actual = builder.AddServiceFabricConfiguration(context, optionsDelegate.Object);
+            IConfigurationBuilder actual = builder.AddServiceFabricConfiguration(context, optionsDelegate);
             Assert.Same(builder, actual);
         }
 
@@ -153,7 +153,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         public void ThrowsArgumentNullExceptionWhenBuilderIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(
-                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(null, context, optionsDelegate.Object));
+                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(null, context, optionsDelegate));
             Assert.Equal(nameof(builder), exception.ParamName);
         }
 
@@ -161,7 +161,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         public void ThrowsArgumentNullExceptionWhenContextIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(
-                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder, null, optionsDelegate.Object));
+                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder, null, optionsDelegate));
             Assert.Equal(nameof(context), exception.ParamName);
         }
     }
