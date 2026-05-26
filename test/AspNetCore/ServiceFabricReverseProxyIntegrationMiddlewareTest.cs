@@ -82,6 +82,18 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
         }
 
         [Fact]
+        public void RegistersOnStartingCallbackBeforeInvokingNext()
+        {
+            _ = next.Setup(_ => _(context.Object))
+                .Callback(() => Assert.NotNull(capturedCallback))
+                .Returns(Task.CompletedTask);
+
+            _ = sut.Invoke(context.Object);
+
+            next.Verify(_ => _(context.Object), Times.Once);
+        }
+
+        [Fact]
         public async Task CallbackSetsXServiceFabricHeaderToResourceNotFoundWhenResponseStatusCodeIs404()
         {
             var headers = new HeaderDictionary();
