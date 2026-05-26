@@ -75,14 +75,14 @@ public abstract class ServiceFabricConfigurationOptionsTest
         public void ThrowsArgumentNullExceptionWhenConfigIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(null, data));
-            Assert.Equal("config", exception.ParamName);
+            Assert.Equal(sut.ConfigAction.Method.Parameter<ConfigurationPackage>().Name, exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug — DefaultConfigAction does not validate the data argument; fixing the SUT is out of scope.
         public void ThrowsArgumentNullExceptionWhenDataIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(package, null));
-            Assert.Equal("data", exception.ParamName);
+            Assert.Equal(sut.ConfigAction.Method.Parameter<IDictionary<string, string>>().Name, exception.ParamName);
         }
     }
 
@@ -103,7 +103,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
         public void ThrowsArgumentNullExceptionWhenPackageNameIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new ServiceFabricConfigurationOptions(null));
-            Assert.Equal(nameof(packageName), exception.ParamName);
+            Assert.Equal(sut.Constructor().Parameter<string>().Name, exception.ParamName);
         }
     }
 
@@ -133,14 +133,14 @@ public abstract class ServiceFabricConfigurationOptionsTest
         public void ThrowsArgumentNullExceptionWhenSectionIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractKeyFunc(null, property));
-            Assert.Equal("section", exception.ParamName);
+            Assert.Equal(sut.ExtractKeyFunc.Method.Parameter<ConfigurationSection>().Name, exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug — DefaultExtractKeyFunc does not validate the property argument; fixing the SUT is out of scope.
         public void ThrowsArgumentNullExceptionWhenPropertyIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractKeyFunc(section, null));
-            Assert.Equal("property", exception.ParamName);
+            Assert.Equal(sut.ExtractKeyFunc.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
         }
     }
 
@@ -178,7 +178,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
         public void ThrowsArgumentNullExceptionWhenPropertyIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractValueFunc(section, null));
-            Assert.Equal("property", exception.ParamName);
+            Assert.Equal(sut.ExtractValueFunc.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. ConfigurationProperty.DecryptValue() is a non-virtual instance method and cannot be substituted; exercising the decryption branch requires refactoring the SUT to accept an injectable decryptor.
