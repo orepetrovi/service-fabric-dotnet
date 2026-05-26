@@ -129,7 +129,9 @@ public abstract class PathStringExtensionsTest
         {
             var otherWithSlash = new PathString(segment + "/");
             var input = new PathString(segment + "/" + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits());
+
             bool result = PathStringExtensions.StartsWithSegments(input, otherWithSlash, out _, out _);
+
             Assert.False(result);
         }
 
@@ -138,7 +140,9 @@ public abstract class PathStringExtensionsTest
         {
             var otherWithSlash = new PathString(segment + "/");
             var input = new PathString(segment + "//" + fuzzy.String().LettersOrDigits());
+
             bool result = PathStringExtensions.StartsWithSegments(input, otherWithSlash, out _, out _);
+
             Assert.True(result);
         }
     }
