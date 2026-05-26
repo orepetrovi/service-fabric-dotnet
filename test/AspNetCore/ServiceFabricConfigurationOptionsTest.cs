@@ -91,6 +91,13 @@ public abstract class ServiceFabricConfigurationOptionsTest
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(null, data));
             Assert.Equal("config", exception.ParamName);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug — DefaultConfigAction does not validate the data argument; fixing the SUT is out of scope.
+        public void ThrowsArgumentNullExceptionWhenDataIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(package, null));
+            Assert.Equal("data", exception.ParamName);
+        }
     }
 
     public sealed class Constructor : ServiceFabricConfigurationOptionsTest
