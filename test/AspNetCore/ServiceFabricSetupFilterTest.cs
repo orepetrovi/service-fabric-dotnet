@@ -50,15 +50,6 @@ public abstract class ServiceFabricSetupFilterTest
             return factories.Select(f => f(terminal).Target).ToList();
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing arg null validation.
-        public void ThrowsArgumentNullExceptionWhenNextIsNull()
-        {
-            // SUT returns an action without validation; it throws NullReferenceException when the action
-            // dereferences `next`. Expected behavior is to fail fast in Configure.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.Configure(null));
-            Assert.Equal(nameof(next), exception.ParamName);
-        }
-
         [Fact]
         public void ReturnsActionThatCallsNextWithApplicationBuilder()
         {
@@ -67,6 +58,15 @@ public abstract class ServiceFabricSetupFilterTest
 
             Mock.Get(next).Verify(_ => _(app.Object), Times.Once);
             Mock.Get(next).Verify(_ => _(It.IsAny<IApplicationBuilder>()), Times.Once);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing arg null validation.
+        public void ThrowsArgumentNullExceptionWhenNextIsNull()
+        {
+            // SUT returns an action without validation; it throws NullReferenceException when the action
+            // dereferences `next`. Expected behavior is to fail fast in Configure.
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.Configure(null));
+            Assert.Equal(nameof(next), exception.ParamName);
         }
 
         [Fact]
