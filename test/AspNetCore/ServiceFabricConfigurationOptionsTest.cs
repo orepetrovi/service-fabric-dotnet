@@ -41,8 +41,8 @@ public abstract class ServiceFabricConfigurationOptionsTest
             string section2 = section1 + fuzzy.String().LettersOrDigits();
             string param1 = "Param" + fuzzy.String().LettersOrDigits();
             string param2 = param1 + fuzzy.String().LettersOrDigits();
-            string value1 = fuzzy.String().LettersOrDigits();
-            string value2 = fuzzy.String().LettersOrDigits();
+            string value1 = fuzzy.String();
+            string value2 = fuzzy.String();
             IConfigurationRoot config = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
                 { $"{section1}:{param1}", value1 },
