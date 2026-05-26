@@ -128,6 +128,7 @@ public abstract class ServiceFabricSetupFilterTest
         [Fact]
         public void ReturnsActionThatRegistersMiddlewaresBeforeCallingNext()
         {
+            var sut = new ServiceFabricSetupFilter(urlSuffix, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
             int middlewareCountWhenNextCalled = -1;
             _ = Mock.Get(next).Setup(_ => _(app.Object)).Callback(() => middlewareCountWhenNextCalled = factories.Count);
 
