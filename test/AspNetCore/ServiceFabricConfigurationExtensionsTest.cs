@@ -23,12 +23,10 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         [Fact]
         public void ThrowsArgumentNullExceptionWhenBuilderIsNull()
         {
+            IConfigurationBuilder builder = null;
             var exception = Assert.Throws<ArgumentNullException>(
-                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(null));
-            string expected = typeof(ServiceFabricConfigurationExtensions)
-                .Method<Func<IConfigurationBuilder, IConfigurationBuilder>>()
-                .Parameter<IConfigurationBuilder>().Name;
-            Assert.Equal(expected, exception.ParamName);
+                () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder));
+            Assert.Equal(nameof(builder), exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Non-null path calls FabricRuntime.GetActivationContext().
@@ -70,10 +68,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         {
             var exception = Assert.Throws<ArgumentNullException>(
                 () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(null, context));
-            string expected = typeof(ServiceFabricConfigurationExtensions)
-                .Method<Func<IConfigurationBuilder, ICodePackageActivationContext, IConfigurationBuilder>>()
-                .Parameter<IConfigurationBuilder>().Name;
-            Assert.Equal(expected, exception.ParamName);
+            Assert.Equal(nameof(builder), exception.ParamName);
         }
 
         [Fact]
@@ -81,10 +76,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         {
             var exception = Assert.Throws<ArgumentNullException>(
                 () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder, null));
-            string expected = typeof(ServiceFabricConfigurationExtensions)
-                .Method<Func<IConfigurationBuilder, ICodePackageActivationContext, IConfigurationBuilder>>()
-                .Parameter<ICodePackageActivationContext>().Name;
-            Assert.Equal(expected, exception.ParamName);
+            Assert.Equal(nameof(context), exception.ParamName);
         }
     }
 
@@ -162,10 +154,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         {
             var exception = Assert.Throws<ArgumentNullException>(
                 () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(null, context, optionsDelegate.Object));
-            string expected = typeof(ServiceFabricConfigurationExtensions)
-                .Method<Func<IConfigurationBuilder, ICodePackageActivationContext, Action<ServiceFabricConfigurationOptions>, IConfigurationBuilder>>()
-                .Parameter<IConfigurationBuilder>().Name;
-            Assert.Equal(expected, exception.ParamName);
+            Assert.Equal(nameof(builder), exception.ParamName);
         }
 
         [Fact]
@@ -173,10 +162,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         {
             var exception = Assert.Throws<ArgumentNullException>(
                 () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder, null, optionsDelegate.Object));
-            string expected = typeof(ServiceFabricConfigurationExtensions)
-                .Method<Func<IConfigurationBuilder, ICodePackageActivationContext, Action<ServiceFabricConfigurationOptions>, IConfigurationBuilder>>()
-                .Parameter<ICodePackageActivationContext>().Name;
-            Assert.Equal(expected, exception.ParamName);
+            Assert.Equal(nameof(context), exception.ParamName);
         }
     }
 
