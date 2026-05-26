@@ -178,7 +178,7 @@ public abstract class GenericHostCommunicationListenerTest
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
 
         [Fact]
-        public async Task InvokesBuildDelegateWithListenerUrlAndListener()
+        public async Task InvokesBuildWithListenerUrlAndListener()
         {
             _ = await sut.OpenAsync(cancellation);
 
