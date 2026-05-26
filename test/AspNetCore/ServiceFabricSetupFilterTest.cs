@@ -21,7 +21,7 @@ public abstract class ServiceFabricSetupFilterTest
 
     // Constructor parameters
     readonly string urlSuffix = fuzzy.String();
-    readonly ServiceFabricIntegrationOptions options = ServiceFabricIntegrationOptions.UseReverseProxyIntegration;
+    readonly ServiceFabricIntegrationOptions options = fuzzy.Enum<ServiceFabricIntegrationOptions>();
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
@@ -118,6 +118,7 @@ public abstract class ServiceFabricSetupFilterTest
         [Fact]
         public void ReturnsActionThatRegistersServiceFabricMiddlewareBeforeReverseProxyIntegrationMiddleware()
         {
+            var sut = new ServiceFabricSetupFilter(urlSuffix, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
             sut.Configure(next)(app.Object);
 
             Type[] middlewareTypes = RegisteredMiddlewares().Select(_ => _.GetType()).ToArray();
