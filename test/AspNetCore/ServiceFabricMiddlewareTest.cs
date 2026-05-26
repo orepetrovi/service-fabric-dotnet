@@ -97,6 +97,29 @@ public abstract class ServiceFabricMiddlewareTest
         }
 
         [Fact]
+        public async Task CallsNextWithEmptyPathAndExtendedPathBaseWhenPathEqualsUrlSuffix()
+        {
+            // Arrange
+            string originalPathBase = "/" + fuzzy.String().LettersOrDigits();
+            context.Request.PathBase = originalPathBase;
+            context.Request.Path = urlSuffix;
+
+            PathString actualPath = default;
+            PathString actualPathBase = default;
+            _ = next.Setup(_ => _(context))
+                .Callback<HttpContext>(c => { actualPath = c.Request.Path; actualPathBase = c.Request.PathBase; })
+                .Returns(Task.FromResult(fuzzy.Int32()));
+
+            // Act
+            await sut.Invoke(context);
+
+            // Assert
+            Assert.Equal(PathString.Empty, actualPath);
+            Assert.Equal(originalPathBase + urlSuffix, actualPathBase.Value);
+            next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
+        }
+
+        [Fact]
         public async Task RestoresPathAndPathBaseAfterCallingNext()
         {
             string remainingPath = "/" + fuzzy.String().LettersOrDigits();
