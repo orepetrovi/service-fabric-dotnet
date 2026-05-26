@@ -59,6 +59,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
         [Fact]
         public void ExecutesExtractKeyFuncAndExtractValueFuncToPopulateData()
         {
+            // Arrange
             ConfigurationSection sec1 = config.Settings.Sections[section1];
             ConfigurationSection sec2 = config.Settings.Sections[section2];
             ConfigurationProperty p1a = sec1.Parameters[param1a];
@@ -84,8 +85,10 @@ public abstract class ServiceFabricConfigurationOptionsTest
             _ = extractValue.Setup(_ => _(sec2, p2)).Returns(val2);
             sut.ExtractValueFunc = extractValue.Object;
 
+            // Act
             sut.ConfigAction(config, data);
 
+            // Assert
             Dictionary<string, string> expected = new()
             {
                 [key1a] = val1a,
