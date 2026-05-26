@@ -54,7 +54,6 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatCallsNextWithApplicationBuilder()
         {
             Action<IApplicationBuilder> configured = sut.Configure(next.Object);
-
             configured(app.Object);
 
             next.Verify(_ => _(app.Object), Times.Once);
@@ -74,9 +73,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatDoesNotRegisterServiceFabricMiddlewareWhenUrlSuffixIsNull()
         {
             var filter = new ServiceFabricSetupFilter(null, options);
-
             filter.Configure(next.Object)(app.Object);
-
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricMiddleware>());
         }
 
@@ -84,9 +81,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatDoesNotRegisterServiceFabricMiddlewareWhenUrlSuffixIsEmpty()
         {
             var filter = new ServiceFabricSetupFilter(string.Empty, options);
-
             filter.Configure(next.Object)(app.Object);
-
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricMiddleware>());
         }
 
@@ -96,9 +91,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatRegistersReverseProxyIntegrationMiddlewareWhenOptionsHasUseReverseProxyIntegration(ServiceFabricIntegrationOptions options)
         {
             var filter = new ServiceFabricSetupFilter(urlSuffix, options);
-
             filter.Configure(next.Object)(app.Object);
-
             Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
@@ -108,9 +101,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatDoesNotRegisterReverseProxyIntegrationMiddlewareWhenOptionsDoesNotHaveUseReverseProxyIntegration(ServiceFabricIntegrationOptions options)
         {
             var filter = new ServiceFabricSetupFilter(urlSuffix, options);
-
             filter.Configure(next.Object)(app.Object);
-
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
