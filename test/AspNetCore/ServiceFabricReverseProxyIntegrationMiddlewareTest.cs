@@ -84,7 +84,7 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
         {
             _ = next.Setup(_ => _(context.Object))
                 .Callback(() => Assert.NotNull(capturedCallback))
-                .Returns(Task.CompletedTask);
+                .Returns(Task.FromResult(fuzzy.Int32()));
 
             _ = sut.Invoke(context.Object);
 
