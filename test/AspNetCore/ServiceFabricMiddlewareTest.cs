@@ -15,13 +15,13 @@ public abstract class ServiceFabricMiddlewareTest
     readonly ServiceFabricMiddleware sut;
 
     // Constructor parameters
-    readonly RequestDelegate next = Mock.Of<RequestDelegate>(_ => _(It.IsAny<HttpContext>()) == Task.CompletedTask);
+    readonly Mock<RequestDelegate> next = new();
     readonly string urlSuffix = "/" + fuzzy.String().LettersOrDigits();
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
     ServiceFabricMiddlewareTest() =>
-        sut = new ServiceFabricMiddleware(next, urlSuffix);
+        sut = new ServiceFabricMiddleware(next.Object, urlSuffix);
 
     public sealed class Constructor : ServiceFabricMiddlewareTest
     {
@@ -35,7 +35,7 @@ public abstract class ServiceFabricMiddlewareTest
         [Fact]
         public void ThrowsArgumentNullExceptionWhenUrlSuffixIsNull()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ServiceFabricMiddleware(next, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => new ServiceFabricMiddleware(next.Object, null));
             Assert.Equal(nameof(urlSuffix), exception.ParamName);
         }
     }
@@ -54,9 +54,9 @@ public abstract class ServiceFabricMiddlewareTest
         [Fact]
         public async Task CallsNextWhenUrlSuffixIsEmpty()
         {
-            var middleware = new ServiceFabricMiddleware(next, string.Empty);
+            var middleware = new ServiceFabricMiddleware(next.Object, string.Empty);
             await middleware.Invoke(context);
-            Mock.Get(next).Verify(_ => _(context), Times.Once);
+            next.Verify(_ => _(context), Times.Once);
         }
 
         [Fact]
@@ -67,7 +67,7 @@ public abstract class ServiceFabricMiddlewareTest
             await sut.Invoke(context);
 
             Assert.Equal(StatusCodes.Status410Gone, context.Response.StatusCode);
-            Mock.Get(next).Verify(_ => _(It.IsAny<HttpContext>()), Times.Never);
+            next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Never);
         }
 
         [Fact]
@@ -81,8 +81,7 @@ public abstract class ServiceFabricMiddlewareTest
 
             PathString actualPath = default;
             PathString actualPathBase = default;
-            Mock.Get(next)
-                .Setup(_ => _(context))
+            next.Setup(_ => _(context))
                 .Callback<HttpContext>(c => { actualPath = c.Request.Path; actualPathBase = c.Request.PathBase; })
                 .Returns(Task.CompletedTask);
 
@@ -120,7 +119,7 @@ public abstract class ServiceFabricMiddlewareTest
             context.Request.Path = originalPath;
 
             var expected = new InvalidOperationException();
-            Mock.Get(next).Setup(_ => _(context)).ThrowsAsync(expected);
+            next.Setup(_ => _(context)).ThrowsAsync(expected);
 
             // Act
             var actual = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Invoke(context));
