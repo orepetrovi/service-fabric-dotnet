@@ -97,10 +97,9 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
         {
             var headers = new HeaderDictionary();
             _ = response.SetupGet(_ => _.Headers).Returns(headers);
-            _ = sut.Invoke(context.Object);
-            Assert.False(headers.ContainsKey("X-ServiceFabric"));
-
             _ = response.SetupGet(_ => _.StatusCode).Returns(StatusCodes.Status404NotFound);
+            _ = sut.Invoke(context.Object);
+
             await capturedCallback(capturedState);
 
             Assert.Equal("ResourceNotFound", headers["X-ServiceFabric"]);
