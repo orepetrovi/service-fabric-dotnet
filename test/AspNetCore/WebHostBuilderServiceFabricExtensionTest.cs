@@ -22,7 +22,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
     public sealed class UseServiceFabricIntegration : WebHostBuilderServiceFabricExtensionTest
     {
         const string SettingName = "UseServiceFabricIntegration";
-        const string SettingValue = "True";
+        static readonly string SettingValue = true.ToString();
 
         readonly AspNetCoreCommunicationListener listener = new TestCommunicationListener(fuzzy.StatelessServiceContext());
         readonly ServiceFabricIntegrationOptions options = fuzzy.Enum<ServiceFabricIntegrationOptions>();
