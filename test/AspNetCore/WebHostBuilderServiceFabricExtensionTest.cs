@@ -94,13 +94,21 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         }
 
         [Fact]
-        public void RegistersServiceFabricSetupFilterAsSingletonStartupFilter()
+        public void RegistersServiceFabricSetupFilterAsSingleton()
         {
-            ServiceDescriptor descriptor = InvokeAndCaptureStartupFilterDescriptor(ServiceFabricIntegrationOptions.UseUniqueServiceUrl);
+            ServiceDescriptor descriptor = InvokeAndCaptureStartupFilterDescriptor(options);
 
             Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
+        }
+
+        [Theory]
+        [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
+        [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl | ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
+        public void RegistersServiceFabricSetupFilterWithNonEmptyUrlSuffixWhenOptionsHasUseUniqueServiceUrlFlag(ServiceFabricIntegrationOptions options)
+        {
+            ServiceDescriptor descriptor = InvokeAndCaptureStartupFilterDescriptor(options);
+
             var filter = (ServiceFabricSetupFilter)descriptor.ImplementationInstance;
-            Assert.NotEmpty(listener.UrlSuffix);
             Assert.Same(listener.UrlSuffix, filter.Field<string>().Value);
         }
 
