@@ -24,6 +24,9 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
 
     public sealed class UseServiceFabricIntegration : WebHostBuilderServiceFabricExtensionTest
     {
+        const string SettingName = "UseServiceFabricIntegration";
+        const string SettingValue = "True";
+
         readonly AspNetCoreCommunicationListener listener = new TestCommunicationListener(fuzzy.StatelessServiceContext());
         readonly ServiceFabricIntegrationOptions options = fuzzy.Enum<ServiceFabricIntegrationOptions>();
 
@@ -59,7 +62,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         [Fact]
         public void ReturnsHostBuilderWithoutReconfiguringWhenSettingIsAlreadyTrue()
         {
-            _ = hostBuilder.Setup(_ => _.GetSetting("UseServiceFabricIntegration")).Returns("True");
+            _ = hostBuilder.Setup(_ => _.GetSetting(SettingName)).Returns(SettingValue);
 
             IWebHostBuilder actual = hostBuilder.Object.UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.UseUniqueServiceUrl);
 
@@ -74,7 +77,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         {
             hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
-            hostBuilder.Verify(_ => _.UseSetting("UseServiceFabricIntegration", "True"), Times.Once);
+            hostBuilder.Verify(_ => _.UseSetting(SettingName, SettingValue), Times.Once);
         }
 
         [Fact]
