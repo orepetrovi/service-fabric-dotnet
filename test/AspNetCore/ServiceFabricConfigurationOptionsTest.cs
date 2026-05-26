@@ -57,8 +57,8 @@ public abstract class ServiceFabricConfigurationOptionsTest
         [Fact]
         public void ExecutesExtractKeyFuncAndExtractValueFuncToPopulateData()
         {
-            string keyPrefix = fuzzy.String().LettersOrDigits();
-            string valuePrefix = fuzzy.String().LettersOrDigits();
+            string keyPrefix = fuzzy.String();
+            string valuePrefix = fuzzy.String();
             sut.ExtractKeyFunc = (section, property) => $"{keyPrefix}:{section.Name}:{property.Name}";
             sut.ExtractValueFunc = (section, property) => $"{valuePrefix}:{property.Value}";
 
