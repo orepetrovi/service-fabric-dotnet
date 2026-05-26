@@ -60,10 +60,10 @@ public abstract class PathStringExtensionsTest
         {
             string upperSegment = segment.ToUpperInvariant();
             string suffix = "/" + fuzzy.String().LettersOrDigits();
-            var upperPathString = new PathString(upperSegment + suffix);
-            var lowerOther = new PathString(segment.ToLowerInvariant());
+            var upper = new PathString(upperSegment + suffix);
+            var lower = new PathString(segment.ToLowerInvariant());
 
-            PathStringExtensions.StartsWithSegments(upperPathString, lowerOther, out PathString matched, out PathString remaining);
+            PathStringExtensions.StartsWithSegments(upper, lower, out PathString matched, out PathString remaining);
 
             Assert.Equal(upperSegment, matched.Value);
             Assert.Equal(suffix, remaining.Value);
