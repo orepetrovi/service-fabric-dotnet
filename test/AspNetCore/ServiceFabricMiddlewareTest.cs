@@ -81,7 +81,7 @@ public abstract class ServiceFabricMiddlewareTest
 
             PathString actualPath = default;
             PathString actualPathBase = default;
-            next.Setup(_ => _(context))
+            _ = next.Setup(_ => _(context))
                 .Callback<HttpContext>(c => { actualPath = c.Request.Path; actualPathBase = c.Request.PathBase; })
                 .Returns(Task.CompletedTask);
 
@@ -119,7 +119,7 @@ public abstract class ServiceFabricMiddlewareTest
             context.Request.Path = originalPath;
 
             var expected = new InvalidOperationException();
-            next.Setup(_ => _(context)).ThrowsAsync(expected);
+            _ = next.Setup(_ => _(context)).ThrowsAsync(expected);
 
             // Act
             var actual = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Invoke(context));
