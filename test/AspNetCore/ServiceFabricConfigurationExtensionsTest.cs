@@ -29,6 +29,17 @@ public abstract class ServiceFabricConfigurationExtensionsTest
                 .Parameter<IConfigurationBuilder>().Name;
             Assert.Equal(expected, exception.ParamName);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Non-null path calls FabricRuntime.GetActivationContext().
+        public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
+        {
+            // The non-null branch of AddServiceFabricConfiguration(IConfigurationBuilder) calls the static
+            // FabricRuntime.GetActivationContext(), which requires a hosted Service Fabric runtime and cannot be
+            // substituted in unit tests. Exercising this branch is not possible without refactoring the SUT to accept
+            // an injectable factory for ICodePackageActivationContext. Fixing the underlying testability limitation is
+            // out of scope for the current change.
+            throw new NotImplementedException();
+        }
     }
 
     public sealed class AddServiceFabricConfiguration_IConfigurationBuilder_ICodePackageActivationContext : ServiceFabricConfigurationExtensionsTest
