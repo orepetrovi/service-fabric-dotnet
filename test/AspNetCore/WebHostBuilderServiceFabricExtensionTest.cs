@@ -46,7 +46,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         {
             // UseServiceFabricIntegration dereferences listener without a null check, so calling it with a null listener
             // throws NullReferenceException instead of the expected ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => hostBuilder.Object.UseServiceFabricIntegration(null, options));
+            var exception = Assert.Throws<ArgumentNullException>(() => hostBuilder.Object.UseServiceFabricIntegration(null, ServiceFabricIntegrationOptions.UseUniqueServiceUrl));
             Assert.Equal(typeof(WebHostBuilderServiceFabricExtension).Declared().Method().Parameter<AspNetCoreCommunicationListener>().Name, exception.ParamName);
         }
 
