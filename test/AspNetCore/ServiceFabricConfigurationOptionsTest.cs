@@ -169,7 +169,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
     public sealed class ExtractValueFunc : ServiceFabricConfigurationOptionsTest
     {
         readonly ConfigurationSection section = Section(fuzzy.String());
-        ConfigurationProperty property = Property(value: fuzzy.String(), isEncrypted: false);
+        readonly ConfigurationProperty property = Property(value: fuzzy.String(), isEncrypted: false);
 
         [Fact]
         public void ReturnsPropertyValueWhenPropertyIsNotEncrypted()
@@ -181,7 +181,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
         [Fact]
         public void ReturnsPropertyValueWhenPropertyIsEncryptedAndDecryptValueIsFalse()
         {
-            property = Property(value: fuzzy.String(), isEncrypted: true);
+            var property = Property(value: fuzzy.String(), isEncrypted: true);
             sut.DecryptValue = false;
             string actual = sut.ExtractValueFunc(section, property);
             Assert.Same(property.Value, actual);
