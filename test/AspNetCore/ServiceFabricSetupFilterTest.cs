@@ -81,7 +81,7 @@ public abstract class ServiceFabricSetupFilterTest
         {
             sut.Configure(next.Object)(app.Object);
 
-            ServiceFabricMiddleware middleware = RegisteredMiddlewares().OfType<ServiceFabricMiddleware>().Single();
+            var middleware = RegisteredMiddlewares().OfType<ServiceFabricMiddleware>().Single();
             Assert.Same(urlSuffix, middleware.Field<string>().Value);
         }
 
