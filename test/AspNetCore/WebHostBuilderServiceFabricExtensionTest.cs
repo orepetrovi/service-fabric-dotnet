@@ -24,7 +24,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         readonly AspNetCoreCommunicationListener listener = new TestCommunicationListener(fuzzy.StatelessServiceContext());
         readonly ServiceFabricIntegrationOptions options = fuzzy.Enum<ServiceFabricIntegrationOptions>();
 
-        const string SettingName = "UseServiceFabricIntegration";
+        const string SettingName = nameof(WebHostBuilderServiceFabricExtension.UseServiceFabricIntegration);
         static readonly string SettingValue = true.ToString();
 
         [Fact]
