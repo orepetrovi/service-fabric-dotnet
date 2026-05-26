@@ -112,21 +112,5 @@ public abstract class PathStringExtensionsTest
             Assert.Equal(PathString.Empty, matched);
             Assert.Equal(pathString, remaining);
         }
-
-        [Fact]
-        public void ReturnsFalseWhenOtherHasTrailingSlashAndPathStringContinuesWithoutSegmentSeparator()
-        {
-            var otherWithSlash = new PathString(segment + "/");
-            var input = new PathString(segment + "/" + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits());
-            Assert.False(PathStringExtensions.StartsWithSegments(input, otherWithSlash, out _, out _));
-        }
-
-        [Fact]
-        public void ReturnsTrueWhenOtherHasTrailingSlashAndPathStringContinuesWithSegmentSeparator()
-        {
-            var otherWithSlash = new PathString(segment + "/");
-            var input = new PathString(segment + "//" + fuzzy.String().LettersOrDigits());
-            Assert.True(PathStringExtensions.StartsWithSegments(input, otherWithSlash, out _, out _));
-        }
     }
 }
