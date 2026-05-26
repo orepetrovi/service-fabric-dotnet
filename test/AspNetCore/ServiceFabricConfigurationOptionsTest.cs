@@ -31,7 +31,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
     public sealed class ConfigAction : ServiceFabricConfigurationOptionsTest
     {
         // Method parameters
-        readonly ConfigurationPackage package;
+        readonly ConfigurationPackage config;
         readonly Dictionary<string, string> data = new();
 
         readonly string section1 = "Section" + fuzzy.String().LettersOrDigits();
@@ -51,7 +51,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
                 { $"{section1}:{param1b}", value1b },
                 { $"{section2}:{param2}", value2 },
             }).Build();
-            package = MockConfigurationPackage.CreateDefaultPackage(config, packageName);
+            this.config = MockConfigurationPackage.CreateDefaultPackage(config, packageName);
         }
 
         [Fact]
@@ -62,7 +62,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             sut.ExtractKeyFunc = (section, property) => $"{keyPrefix}:{section.Name}:{property.Name}";
             sut.ExtractValueFunc = (section, property) => $"{valuePrefix}:{property.Value}";
 
-            sut.ConfigAction(package, data);
+            sut.ConfigAction(config, data);
 
             Dictionary<string, string> customExpected = new()
             {
@@ -91,7 +91,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // NullReferenceException instead of the ArgumentNullException expected for a public-facing delegate. This
             // test asserts the correct behavior and will fail until the SUT validates the argument. Fixing the SUT is
             // out of scope for the current change.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(package, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(config, null));
             Assert.Equal(sut.ConfigAction.Method.Parameter<IDictionary<string, string>>().Name, exception.ParamName);
         }
     }
