@@ -24,7 +24,6 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
 
     public sealed class UseServiceFabricIntegration : WebHostBuilderServiceFabricExtensionTest
     {
-        // Method parameters
         readonly AspNetCoreCommunicationListener listener = new TestCommunicationListener(fuzzy.StatelessServiceContext());
         readonly ServiceFabricIntegrationOptions options = fuzzy.Enum<ServiceFabricIntegrationOptions>();
 
