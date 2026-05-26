@@ -34,14 +34,15 @@ public abstract class ServiceFabricConfigurationOptionsTest
         readonly ConfigurationPackage package;
         readonly Dictionary<string, string> data = new();
 
+        readonly string section1 = "Section" + fuzzy.String().LettersOrDigits();
+        readonly string param1 = "Param" + fuzzy.String().LettersOrDigits();
+        readonly string value1 = fuzzy.String();
+        readonly string section2 = "Section" + fuzzy.String().LettersOrDigits();
+        readonly string param2 = "Param" + fuzzy.String().LettersOrDigits();
+        readonly string value2 = fuzzy.String();
+
         public ConfigAction()
         {
-            string section1 = "Section" + fuzzy.String().LettersOrDigits();
-            string section2 = section1 + fuzzy.String().LettersOrDigits();
-            string param1 = "Param" + fuzzy.String().LettersOrDigits();
-            string param2 = param1 + fuzzy.String().LettersOrDigits();
-            string value1 = fuzzy.String();
-            string value2 = fuzzy.String();
             IConfigurationRoot config = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
                 { $"{section1}:{param1}", value1 },
@@ -60,14 +61,11 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
             sut.ConfigAction(package, data);
 
-            Dictionary<string, string> customExpected = new();
-            foreach (ConfigurationSection section in package.Settings.Sections)
+            Dictionary<string, string> customExpected = new()
             {
-                foreach (ConfigurationProperty property in section.Parameters)
-                {
-                    customExpected[$"{keyPrefix}:{section.Name}:{property.Name}"] = $"{valuePrefix}:{property.Value}";
-                }
-            }
+                [$"{keyPrefix}:{section1}:{param1}"] = $"{valuePrefix}:{value1}",
+                [$"{keyPrefix}:{section2}:{param2}"] = $"{valuePrefix}:{value2}",
+            };
             Assert.Equal(customExpected, data);
         }
 
