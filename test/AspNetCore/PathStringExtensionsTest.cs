@@ -54,7 +54,7 @@ public abstract class PathStringExtensionsTest
         [Fact]
         public void ReturnsFalseWhenPathStringExtendsOtherWithoutSegmentSeparator()
         {
-            var extended = new PathString(segment + fuzzy.String().LettersOrDigits());
+            var extended = new PathString(segment + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits());
             bool result = PathStringExtensions.StartsWithSegments(extended, other, out _, out _);
             Assert.False(result);
         }
