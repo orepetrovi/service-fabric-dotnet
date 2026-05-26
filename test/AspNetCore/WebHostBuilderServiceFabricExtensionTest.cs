@@ -79,6 +79,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
             hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
             hostBuilder.Verify(_ => _.UseSetting(SettingName, SettingValue), Times.Once);
+            hostBuilder.Verify(_ => _.UseSetting(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
         [Fact]
