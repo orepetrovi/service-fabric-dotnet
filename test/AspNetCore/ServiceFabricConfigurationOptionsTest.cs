@@ -193,7 +193,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
     static ConfigurationSection Section(string name)
     {
         var section = Type<ConfigurationSection>.Uninitialized();
-        section.Property<string>(nameof(ConfigurationSection.Name)).Set(name);
+        section.Property<string>().Set(name);
         return section;
     }
 
