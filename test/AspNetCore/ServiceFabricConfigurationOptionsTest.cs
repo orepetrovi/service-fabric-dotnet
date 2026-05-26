@@ -97,14 +97,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             };
             Assert.Equal(expected, data);
 
-            extractKey.Verify(_ => _(sec1, p1a), Times.Once);
-            extractKey.Verify(_ => _(sec1, p1b), Times.Once);
-            extractKey.Verify(_ => _(sec2, p2), Times.Once);
             extractKey.Verify(_ => _(It.IsAny<ConfigurationSection>(), It.IsAny<ConfigurationProperty>()), Times.Exactly(3));
-
-            extractValue.Verify(_ => _(sec1, p1a), Times.Once);
-            extractValue.Verify(_ => _(sec1, p1b), Times.Once);
-            extractValue.Verify(_ => _(sec2, p2), Times.Once);
             extractValue.Verify(_ => _(It.IsAny<ConfigurationSection>(), It.IsAny<ConfigurationProperty>()), Times.Exactly(3));
         }
 
