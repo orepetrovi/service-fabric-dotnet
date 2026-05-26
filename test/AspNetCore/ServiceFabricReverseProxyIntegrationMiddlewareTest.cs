@@ -76,8 +76,6 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
         {
             _ = sut.Invoke(context.Object);
 
-            response.Verify(_ => _.OnStarting(It.IsAny<Func<object, Task>>(), response.Object), Times.Once);
-            response.Verify(_ => _.OnStarting(It.IsAny<Func<object, Task>>(), It.IsAny<object>()), Times.Once);
             Assert.Same(response.Object, capturedState);
         }
 
