@@ -42,6 +42,7 @@ public abstract class PathStringExtensionsTest
             var casedSegment = segment + fuzzy.Char().Between('a', 'z');
             var upper = new PathString(casedSegment.ToUpperInvariant());
             var lower = new PathString(casedSegment.ToLowerInvariant());
+
             Assert.True(PathStringExtensions.StartsWithSegments(upper, lower, out _, out _));
         }
 
@@ -75,6 +76,7 @@ public abstract class PathStringExtensionsTest
         public void AssignsMatchedToPathStringAndRemainingToEmptyWhenPathStringEqualsOther()
         {
             PathStringExtensions.StartsWithSegments(other, other, out PathString matched, out PathString remaining);
+
             Assert.Equal(other, matched);
             Assert.Equal(PathString.Empty, remaining);
         }
@@ -83,6 +85,7 @@ public abstract class PathStringExtensionsTest
         public void AssignsMatchedAndRemainingToEmptyWhenPathStringDoesNotStartWithOther()
         {
             PathStringExtensions.StartsWithSegments(different, other, out PathString matched, out PathString remaining);
+
             Assert.Equal(PathString.Empty, matched);
             Assert.Equal(PathString.Empty, remaining);
         }
@@ -95,6 +98,7 @@ public abstract class PathStringExtensionsTest
         public void AssignsMatchedAndRemainingToEmptyWhenPathStringAndOtherAreBothEmpty()
         {
             PathStringExtensions.StartsWithSegments(default, default, out PathString matched, out PathString remaining);
+
             Assert.Equal(PathString.Empty, matched);
             Assert.Equal(PathString.Empty, remaining);
         }
@@ -111,6 +115,7 @@ public abstract class PathStringExtensionsTest
         public void AssignsMatchedToEmptyAndRemainingToPathStringWhenOtherIsEmptyAndPathStringStartsWithSegmentSeparator()
         {
             PathStringExtensions.StartsWithSegments(pathString, default, out PathString matched, out PathString remaining);
+
             Assert.Equal(PathString.Empty, matched);
             Assert.Equal(pathString, remaining);
         }
