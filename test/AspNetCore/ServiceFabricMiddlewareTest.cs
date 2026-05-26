@@ -42,7 +42,6 @@ public abstract class ServiceFabricMiddlewareTest
 
     public sealed class Invoke : ServiceFabricMiddlewareTest
     {
-        // Method parameters
         readonly HttpContext context = new DefaultHttpContext();
 
         [Fact]
