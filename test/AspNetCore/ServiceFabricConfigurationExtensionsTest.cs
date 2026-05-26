@@ -49,7 +49,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         [Fact]
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
         {
-            var multi = CreateMultiPackageContext(out string name1, out string name2);
+            TestCodePackageActivationContext multi = CreateMultiPackageContext(out string name1, out string name2);
 
             _ = builder.AddServiceFabricConfiguration(multi);
 
@@ -89,7 +89,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         [Fact]
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
         {
-            var multi = CreateMultiPackageContext(out string name1, out string name2);
+            TestCodePackageActivationContext multi = CreateMultiPackageContext(out string name1, out string name2);
 
             _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate.Object);
 
@@ -169,7 +169,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
     static void AssertSources(IList<IConfigurationSource> sources, ICodePackageActivationContext expectedContext, params string[] expectedPackageNames)
     {
         Assert.All(sources, source => Assert.Same(expectedContext, source.Property<ICodePackageActivationContext>().Value));
-        var actual = sources.Select(source => source.Field<ServiceFabricConfigurationOptions>().Value.PackageName);
+        IEnumerable<string> actual = sources.Select(source => source.Field<ServiceFabricConfigurationOptions>().Value.PackageName);
         Assert.Equal(expectedPackageNames, actual);
     }
 
