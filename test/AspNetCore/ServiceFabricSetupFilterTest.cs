@@ -20,7 +20,7 @@ public abstract class ServiceFabricSetupFilterTest
     readonly IStartupFilter sut;
 
     // Constructor parameters
-    readonly string urlSuffix = "/" + fuzzy.String().LettersOrDigits();
+    readonly string urlSuffix = fuzzy.String();
     readonly ServiceFabricIntegrationOptions options = ServiceFabricIntegrationOptions.UseReverseProxyIntegration;
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
