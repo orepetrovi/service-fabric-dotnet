@@ -80,18 +80,8 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         [Fact]
         public void RegistersServiceFabricSetupFilterAsSingletonStartupFilter()
         {
-            Action<IServiceCollection> captured = null;
-            _ = hostBuilder
-                .Setup(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()))
-                .Callback<Action<IServiceCollection>>(a => captured = a)
-                .Returns(hostBuilder.Object);
+            ServiceDescriptor descriptor = InvokeAndCaptureStartupFilterDescriptor(options);
 
-            hostBuilder.Object.UseServiceFabricIntegration(listener, options);
-
-            hostBuilder.Verify(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()), Times.Once);
-            ServiceCollection services = new();
-            captured(services);
-            ServiceDescriptor descriptor = services.Single(_ => _.ServiceType == typeof(IStartupFilter));
             Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
             ServiceFabricSetupFilter filter = Assert.IsType<ServiceFabricSetupFilter>(descriptor.ImplementationInstance);
             Assert.Equal(listener.UrlSuffix, filter.Field<string>().Value);
@@ -104,18 +94,8 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl | ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
         public void StoresOptionsInServiceFabricSetupFilter(ServiceFabricIntegrationOptions options)
         {
-            Action<IServiceCollection> captured = null;
-            _ = hostBuilder
-                .Setup(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()))
-                .Callback<Action<IServiceCollection>>(a => captured = a)
-                .Returns(hostBuilder.Object);
+            ServiceDescriptor descriptor = InvokeAndCaptureStartupFilterDescriptor(options);
 
-            hostBuilder.Object.UseServiceFabricIntegration(listener, options);
-
-            hostBuilder.Verify(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()), Times.Once);
-            ServiceCollection services = new();
-            captured(services);
-            ServiceDescriptor descriptor = services.Single(_ => _.ServiceType == typeof(IStartupFilter));
             ServiceFabricSetupFilter filter = Assert.IsType<ServiceFabricSetupFilter>(descriptor.ImplementationInstance);
             Assert.Equal(options, filter.Field<ServiceFabricIntegrationOptions>().Value);
         }
@@ -138,6 +118,22 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
             hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
             Assert.Empty(listener.UrlSuffix);
+        }
+
+        ServiceDescriptor InvokeAndCaptureStartupFilterDescriptor(ServiceFabricIntegrationOptions options)
+        {
+            Action<IServiceCollection> captured = null;
+            _ = hostBuilder
+                .Setup(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()))
+                .Callback<Action<IServiceCollection>>(a => captured = a)
+                .Returns(hostBuilder.Object);
+
+            hostBuilder.Object.UseServiceFabricIntegration(listener, options);
+
+            hostBuilder.Verify(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()), Times.Once);
+            ServiceCollection services = new();
+            captured(services);
+            return services.Single(_ => _.ServiceType == typeof(IStartupFilter));
         }
     }
 }
