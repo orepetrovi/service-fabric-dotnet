@@ -11,6 +11,7 @@ using Fuzzy;
 using Inspector;
 using Microsoft.Extensions.Configuration;
 using Microsoft.ServiceFabric.AspNetCore.Tests;
+using Moq;
 using Xunit;
 using ConfigurationSection = System.Fabric.Description.ConfigurationSection;
 
@@ -57,20 +58,50 @@ public abstract class ServiceFabricConfigurationOptionsTest
         [Fact]
         public void ExecutesExtractKeyFuncAndExtractValueFuncToPopulateData()
         {
-            string keyPrefix = fuzzy.String();
-            string valuePrefix = fuzzy.String();
-            sut.ExtractKeyFunc = (section, property) => $"{keyPrefix}:{section.Name}:{property.Name}";
-            sut.ExtractValueFunc = (section, property) => $"{valuePrefix}:{property.Value}";
+            ConfigurationSection sec1 = config.Settings.Sections[section1];
+            ConfigurationSection sec2 = config.Settings.Sections[section2];
+            ConfigurationProperty p1a = sec1.Parameters[param1a];
+            ConfigurationProperty p1b = sec1.Parameters[param1b];
+            ConfigurationProperty p2 = sec2.Parameters[param2];
+
+            string key1a = fuzzy.String();
+            string key1b = fuzzy.String();
+            string key2 = fuzzy.String();
+            string val1a = fuzzy.String();
+            string val1b = fuzzy.String();
+            string val2 = fuzzy.String();
+
+            Mock<Func<ConfigurationSection, ConfigurationProperty, string>> extractKey = new();
+            _ = extractKey.Setup(_ => _(sec1, p1a)).Returns(key1a);
+            _ = extractKey.Setup(_ => _(sec1, p1b)).Returns(key1b);
+            _ = extractKey.Setup(_ => _(sec2, p2)).Returns(key2);
+            sut.ExtractKeyFunc = extractKey.Object;
+
+            Mock<Func<ConfigurationSection, ConfigurationProperty, string>> extractValue = new();
+            _ = extractValue.Setup(_ => _(sec1, p1a)).Returns(val1a);
+            _ = extractValue.Setup(_ => _(sec1, p1b)).Returns(val1b);
+            _ = extractValue.Setup(_ => _(sec2, p2)).Returns(val2);
+            sut.ExtractValueFunc = extractValue.Object;
 
             sut.ConfigAction(config, data);
 
             Dictionary<string, string> expected = new()
             {
-                [$"{keyPrefix}:{section1}:{param1a}"] = $"{valuePrefix}:{value1a}",
-                [$"{keyPrefix}:{section1}:{param1b}"] = $"{valuePrefix}:{value1b}",
-                [$"{keyPrefix}:{section2}:{param2}"] = $"{valuePrefix}:{value2}",
+                [key1a] = val1a,
+                [key1b] = val1b,
+                [key2] = val2,
             };
             Assert.Equal(expected, data);
+
+            extractKey.Verify(_ => _(sec1, p1a), Times.Once);
+            extractKey.Verify(_ => _(sec1, p1b), Times.Once);
+            extractKey.Verify(_ => _(sec2, p2), Times.Once);
+            extractKey.Verify(_ => _(It.IsAny<ConfigurationSection>(), It.IsAny<ConfigurationProperty>()), Times.Exactly(3));
+
+            extractValue.Verify(_ => _(sec1, p1a), Times.Once);
+            extractValue.Verify(_ => _(sec1, p1b), Times.Once);
+            extractValue.Verify(_ => _(sec2, p2), Times.Once);
+            extractValue.Verify(_ => _(It.IsAny<ConfigurationSection>(), It.IsAny<ConfigurationProperty>()), Times.Exactly(3));
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing config argument validation.
