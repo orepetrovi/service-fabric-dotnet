@@ -53,9 +53,9 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
         }
 
         [Fact]
-        public async Task ThrowsArgumentNullExceptionWhenContextIsNull()
+        public void ThrowsArgumentNullExceptionWhenContextIsNull()
         {
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => sut.Invoke(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => { _ = sut.Invoke(null); });
             Assert.Equal(nameof(context), exception.ParamName);
         }
 
