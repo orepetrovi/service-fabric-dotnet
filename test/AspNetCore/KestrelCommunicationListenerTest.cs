@@ -206,10 +206,10 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class GetListenerUrl : KestrelCommunicationListenerTest
     {
+        new readonly KestrelCommunicationListener sut;
         // TestMocksRepository wires an endpoint collection into the mocked ICodePackageActivationContext
         // that these tests mutate; fuzzy.StatelessServiceContext() does not provide that plumbing.
         readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
-        new readonly KestrelCommunicationListener sut;
 
         public GetListenerUrl() =>
             sut = new KestrelCommunicationListener(context, endpointName, build);
