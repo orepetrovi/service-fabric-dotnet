@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.ServiceFabric.AspNetCore.Tests;
 using Moq;
 using Xunit;
+using HttpSysSR = Microsoft.ServiceFabric.AspNetCore.HttpSys.SR;
 
 namespace Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 
@@ -39,14 +40,14 @@ public abstract class HttpSysCommunicationListenerTest
         public void ThrowsArgumentExceptionWhenEndpointNameIsNull()
         {
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, null, build));
-            Assert.Equal("endpointName cannot be null or empty string.", exception.Message);
+            Assert.Equal(HttpSysSR.EndpointNameNullOrEmptyExceptionMessage, exception.Message);
         }
 
         [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, string.Empty, build));
-            Assert.Equal("endpointName cannot be null or empty string.", exception.Message);
+            Assert.Equal(HttpSysSR.EndpointNameNullOrEmptyExceptionMessage, exception.Message);
         }
     }
 
@@ -56,14 +57,14 @@ public abstract class HttpSysCommunicationListenerTest
         public void ThrowsArgumentExceptionWhenEndpointNameIsNull()
         {
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, null, build));
-            Assert.Equal("endpointName cannot be null or empty string.", exception.Message);
+            Assert.Equal(HttpSysSR.EndpointNameNullOrEmptyExceptionMessage, exception.Message);
         }
 
         [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, string.Empty, build));
-            Assert.Equal("endpointName cannot be null or empty string.", exception.Message);
+            Assert.Equal(HttpSysSR.EndpointNameNullOrEmptyExceptionMessage, exception.Message);
         }
     }
 
