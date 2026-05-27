@@ -282,13 +282,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         [InlineData(false)]
         public async Task AbortsClientAndClearsCacheEntryWhenNonTransientRetryAndClientMatchesCacheEntry(bool fireConnectEvents)
         {
-            var sut = new TestFactory(fireConnectEvents, servicePartitionResolver, exceptionHandlers, traceId);
-            try { await AbortsClientAndClearsCacheEntryWhenNonTransientRetryAndClientMatchesCacheEntryBody(sut, fireConnectEvents); }
-            finally { sut.Dispose(); }
-        }
-
-        async Task AbortsClientAndClearsCacheEntryWhenNonTransientRetryAndClientMatchesCacheEntryBody(TestFactory sut, bool fireConnectEvents)
-        {
+            using var sut = new TestFactory(fireConnectEvents, servicePartitionResolver, exceptionHandlers, traceId);
             var cache = sut.Field<CommunicationClientCache<ICommunicationClient>>().Value;
             CommunicationClientCacheEntry<ICommunicationClient> entry =
                 cache.GetOrAddClientCacheEntry(rsp.Info.Id, endpoint, listenerName, rsp);
