@@ -407,18 +407,22 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
             Assert.False(actual.ShouldRetry);
             Assert.Same(aggregate, actual.Exception);
-            handler.Verify(
-                _ => _.TryHandleException(
-                    It.Is<ExceptionInformation>(ei => ei.Exception == aggregate.InnerExceptions[0]),
-                    retrySettings,
-                    out It.Ref<ExceptionHandlingResult>.IsAny),
-                Times.Once);
-            handler.Verify(
-                _ => _.TryHandleException(
-                    It.Is<ExceptionInformation>(ei => ei.Exception == aggregate.InnerExceptions[1]),
-                    retrySettings,
-                    out It.Ref<ExceptionHandlingResult>.IsAny),
-                Times.Once);
+            Mock<IExceptionHandler> handler2 = Mock.Get(exceptionHandlers.Last());
+            foreach (Mock<IExceptionHandler> h in new[] { handler, handler2 })
+            {
+                h.Verify(
+                    _ => _.TryHandleException(
+                        It.Is<ExceptionInformation>(ei => ei.Exception == aggregate.InnerExceptions[0]),
+                        retrySettings,
+                        out It.Ref<ExceptionHandlingResult>.IsAny),
+                    Times.Once);
+                h.Verify(
+                    _ => _.TryHandleException(
+                        It.Is<ExceptionInformation>(ei => ei.Exception == aggregate.InnerExceptions[1]),
+                        retrySettings,
+                        out It.Ref<ExceptionHandlingResult>.IsAny),
+                    Times.Once);
+            }
         }
 
         [Fact]
@@ -445,6 +449,19 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
                     retrySettings,
                     out It.Ref<ExceptionHandlingResult>.IsAny),
                 Times.Once);
+            Mock<IExceptionHandler> handler2 = Mock.Get(exceptionHandlers.Last());
+            handler2.Verify(
+                _ => _.TryHandleException(
+                    It.Is<ExceptionInformation>(ei => ei.Exception == unhandled),
+                    retrySettings,
+                    out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Once);
+            handler2.Verify(
+                _ => _.TryHandleException(
+                    It.Is<ExceptionInformation>(ei => ei.Exception == handled),
+                    retrySettings,
+                    out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Never);
         }
 
         [Fact]
