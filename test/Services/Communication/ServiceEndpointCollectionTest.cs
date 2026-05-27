@@ -244,11 +244,9 @@ public abstract class ServiceEndpointCollectionTest
             Assert.Null(actual);
         }
 
-        [Fact(Explicit = true)]
+        [Fact]
         public void ReturnsFalseAndOutputsNullWhenEndpointsStringIsNull()
         {
-            // TODO: SUT bug. TryParseEndpointsString reaches the false/null result by swallowing
-            // the ArgumentNullException from Encoding.UTF8.GetBytes via a catch-all instead of validating the input.
             bool result = ServiceEndpointCollection.TryParseEndpointsString(null, out ServiceEndpointCollection actual);
 
             Assert.False(result);
