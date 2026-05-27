@@ -46,7 +46,7 @@ public abstract class ConstantRetryPolicyTest
     public sealed class GetNextRetryDelay : ConstantRetryPolicyTest
     {
         // Method parameters
-        readonly RetryDelayParameters retryDelayParameters = new(fuzzy.Int32(), fuzzy.Boolean());
+        readonly int retryAttempt = fuzzy.Int32();
 
         const int Samples = 100;
 
@@ -60,7 +60,7 @@ public abstract class ConstantRetryPolicyTest
 
         void AssertDelayScaledBy(bool isTransient, TimeSpan expectedMax)
         {
-            var parameters = new RetryDelayParameters(retryDelayParameters.RetryAttempt, isTransient);
+            var parameters = new RetryDelayParameters(retryAttempt, isTransient);
 
             TimeSpan observedMax = TimeSpan.Zero;
             for (int i = 0; i < Samples; i++)
