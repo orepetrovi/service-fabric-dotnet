@@ -3,8 +3,6 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
-using System.Threading.Tasks;
-
 namespace Microsoft.ServiceFabric.Actors.Client;
 
 /// <summary>
@@ -14,5 +12,4 @@ namespace Microsoft.ServiceFabric.Actors.Client;
 /// </summary>
 public interface IFactoryTestActor : IActor
 {
-    Task TestMethod();
 }
