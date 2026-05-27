@@ -260,7 +260,6 @@ public abstract class CommunicationClientCacheEntryTest
     {
         var endpoint = new ResolvedServiceEndpoint();
         endpoint.Property<string>().Set(address);
-        endpoint.Property<ServiceEndpointRole>().Set(fuzzy.Enum<ServiceEndpointRole>());
         return endpoint;
     }
 
