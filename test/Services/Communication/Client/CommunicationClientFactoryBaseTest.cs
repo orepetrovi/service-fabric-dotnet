@@ -195,6 +195,18 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             sut.OnClientDisconnected(faultedClient);
     }
 
+    public sealed class OpenClient : CommunicationClientFactoryBaseTest
+    {
+        [Fact]
+        public async Task ReturnsCompletedTaskWithoutThrowing()
+        {
+            Task actual = sut.TestOpenClient(Mock.Of<ICommunicationClient>(), CancellationToken.None);
+
+            Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
+            await actual;
+        }
+    }
+
     public sealed class ReportOperationExceptionAsync : CommunicationClientFactoryBaseTest
     {
         // Method parameters
@@ -472,18 +484,6 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             handler2.Verify(
                 _ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny),
                 Times.Never);
-        }
-    }
-
-    public sealed class OpenClient : CommunicationClientFactoryBaseTest
-    {
-        [Fact]
-        public async Task ReturnsCompletedTaskWithoutThrowing()
-        {
-            Task actual = sut.TestOpenClient(Mock.Of<ICommunicationClient>(), CancellationToken.None);
-
-            Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
-            await actual;
         }
     }
 
