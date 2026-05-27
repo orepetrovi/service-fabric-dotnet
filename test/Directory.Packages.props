@@ -6,6 +6,7 @@
     <PackageVersion Include="Inspector" Version="0.3.12" />
     <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" /> <!-- x.v.c->6.0.0; S.T.J->8.0.0 -->
     <PackageVersion Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.1.12" /> <!-- 3.2.2 breaks SemVer: S.C.I 8.0.0->9.0.8 -->
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.0.6" /> <!-- Last version for M.T.P 1.* -->
     <PackageVersion Include="Microsoft.Testing.Platform" Version="1.9.1" /> <!-- M.T.E.C->1.8.4; x.v.c.m->1.9.1 -->
     <PackageVersion Include="Moq" Version="4.20.72" />
