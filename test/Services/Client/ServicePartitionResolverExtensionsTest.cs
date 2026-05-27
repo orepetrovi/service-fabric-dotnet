@@ -29,7 +29,7 @@ public abstract class ServicePartitionResolverExtensionsTest
         // TODO: SUT should throw ArgumentNullException when partitionResolver is null; the extension
         // dereferences the null receiver, surfacing as NullReferenceException instead.
         [Fact]
-        public void ThrowsNullReferenceExceptionWhenResolverIsNull() =>
+        public void ThrowsNullReferenceExceptionWhenPartitionResolverIsNull() =>
             Assert.Throws<NullReferenceException>(() => ServicePartitionResolverExtensions.DisableNotification(null));
     }
 }
