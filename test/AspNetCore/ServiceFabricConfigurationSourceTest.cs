@@ -44,7 +44,7 @@ public abstract class ServiceFabricConfigurationSourceTest
         [Fact]
         public void ReturnsServiceFabricConfigurationProviderInitializedFromSource()
         {
-            var provider = (ServiceFabricConfigurationProvider)sut.Build(builder);
+            var provider = Assert.IsType<ServiceFabricConfigurationProvider>(sut.Build(builder));
             Assert.Same(activationContext, provider.Field<ICodePackageActivationContext>().Value);
             Assert.Same(options, provider.Field<ServiceFabricConfigurationOptions>().Value);
         }
