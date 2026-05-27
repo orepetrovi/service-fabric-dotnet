@@ -38,6 +38,8 @@ public abstract class ServiceNameFormatTest
         [InlineData("IService", "Service")]
         [InlineData("Ifoo", "IfooService")]
         [InlineData("iservice", "iservice")]
+        [InlineData("", "Service")]
+        [InlineData("I", "Service")]
         public void ReturnsExpectedName(string serviceInterfaceTypeName, string expected) =>
             Assert.Equal(expected, ServiceNameFormat.GetName(serviceInterfaceTypeName));
 
