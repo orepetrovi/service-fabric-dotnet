@@ -93,6 +93,7 @@ public abstract class ActorProxyFactoryTest
             Assert.Same(actorId, proxy.ActorId);
             Assert.Equal(expectedUri, proxy.ActorServicePartitionClientV2.ServiceUri);
             Assert.Equal(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
+            Assert.Same(factory, proxy.ActorServicePartitionClientV2.Factory);
         }
 
         [Fact]
