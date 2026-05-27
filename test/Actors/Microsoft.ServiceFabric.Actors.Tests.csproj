@@ -23,6 +23,7 @@
     <Compile Include="Client\ActorProxyEventExtensionsTest.cs" />
     <Compile Include="Client\ActorProxyFactoryTest.cs" />
     <Compile Include="Client\ActorProxyTest.cs" />
+    <Compile Include="Client\IFactoryTestActor.cs" />
     <Compile Include="IFuzzExtensions.cs" />
   </ItemGroup>
 </Project>
