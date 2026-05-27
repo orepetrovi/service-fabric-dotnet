@@ -100,23 +100,7 @@ public abstract class ServiceTelemetryTest : IDisposable
 
             ServiceTelemetry.StatefulServiceInitializeEvent(context);
 
-            Assert.NotNull(test.Event);
-            Assert.Equal(5, test.Event.EventId);
-            Assert.Equal(EventLevel.Informational, test.Event.Level);
-            test.EventKeywords(ServiceEventSource.Keywords.Default);
-            Assert.Equal("ServiceLifecycleEvent", test.Event.EventName);
-            Assert.Equal(11, test.Event.Payload.Count);
-            test.EventPayload(0, "type", TelemetryConstants.ServiceLifecycleEventName);
-            test.EventPayload(1, "clusterOsType", TelemetryConstants.OsType);
-            test.EventPayload(2, "runtimePlatform", TelemetryConstants.RuntimePlatform);
-            test.EventPayload(3, "partitionId", context.PartitionId.ToString());
-            test.EventPayload(4, "replicaOrInstanceId", context.ReplicaId.ToString());
-            test.EventPayload(5, "serviceName", context.ServiceName.OriginalString);
-            test.EventPayload(6, "serviceTypeName", context.ServiceTypeName);
-            test.EventPayload(7, "applicationName", context.CodePackageActivationContext.ApplicationName);
-            test.EventPayload(8, "applicationTypeName", context.CodePackageActivationContext.ApplicationTypeName);
-            test.EventPayload(9, "lifecycleEvent", TelemetryConstants.LifecycleEventOpened);
-            test.EventPayload(10, "serviceKind", TelemetryConstants.StatefulServiceKind);
+            AssertLifecyclePayload(context, context.ReplicaId.ToString(), TelemetryConstants.LifecycleEventOpened, TelemetryConstants.StatefulServiceKind);
         }
     }
 
@@ -131,23 +115,7 @@ public abstract class ServiceTelemetryTest : IDisposable
 
             ServiceTelemetry.StatefulServiceReplicaCloseEvent(context);
 
-            Assert.NotNull(test.Event);
-            Assert.Equal(5, test.Event.EventId);
-            Assert.Equal(EventLevel.Informational, test.Event.Level);
-            test.EventKeywords(ServiceEventSource.Keywords.Default);
-            Assert.Equal("ServiceLifecycleEvent", test.Event.EventName);
-            Assert.Equal(11, test.Event.Payload.Count);
-            test.EventPayload(0, "type", TelemetryConstants.ServiceLifecycleEventName);
-            test.EventPayload(1, "clusterOsType", TelemetryConstants.OsType);
-            test.EventPayload(2, "runtimePlatform", TelemetryConstants.RuntimePlatform);
-            test.EventPayload(3, "partitionId", context.PartitionId.ToString());
-            test.EventPayload(4, "replicaOrInstanceId", context.ReplicaId.ToString());
-            test.EventPayload(5, "serviceName", context.ServiceName.OriginalString);
-            test.EventPayload(6, "serviceTypeName", context.ServiceTypeName);
-            test.EventPayload(7, "applicationName", context.CodePackageActivationContext.ApplicationName);
-            test.EventPayload(8, "applicationTypeName", context.CodePackageActivationContext.ApplicationTypeName);
-            test.EventPayload(9, "lifecycleEvent", TelemetryConstants.LifecycleEventClosed);
-            test.EventPayload(10, "serviceKind", TelemetryConstants.StatefulServiceKind);
+            AssertLifecyclePayload(context, context.ReplicaId.ToString(), TelemetryConstants.LifecycleEventClosed, TelemetryConstants.StatefulServiceKind);
         }
     }
 
@@ -162,23 +130,7 @@ public abstract class ServiceTelemetryTest : IDisposable
 
             ServiceTelemetry.StatelessServiceInitializeEvent(context);
 
-            Assert.NotNull(test.Event);
-            Assert.Equal(5, test.Event.EventId);
-            Assert.Equal(EventLevel.Informational, test.Event.Level);
-            test.EventKeywords(ServiceEventSource.Keywords.Default);
-            Assert.Equal("ServiceLifecycleEvent", test.Event.EventName);
-            Assert.Equal(11, test.Event.Payload.Count);
-            test.EventPayload(0, "type", TelemetryConstants.ServiceLifecycleEventName);
-            test.EventPayload(1, "clusterOsType", TelemetryConstants.OsType);
-            test.EventPayload(2, "runtimePlatform", TelemetryConstants.RuntimePlatform);
-            test.EventPayload(3, "partitionId", context.PartitionId.ToString());
-            test.EventPayload(4, "replicaOrInstanceId", context.InstanceId.ToString());
-            test.EventPayload(5, "serviceName", context.ServiceName.OriginalString);
-            test.EventPayload(6, "serviceTypeName", context.ServiceTypeName);
-            test.EventPayload(7, "applicationName", context.CodePackageActivationContext.ApplicationName);
-            test.EventPayload(8, "applicationTypeName", context.CodePackageActivationContext.ApplicationTypeName);
-            test.EventPayload(9, "lifecycleEvent", TelemetryConstants.LifecycleEventOpened);
-            test.EventPayload(10, "serviceKind", TelemetryConstants.StatelessServiceKind);
+            AssertLifecyclePayload(context, context.InstanceId.ToString(), TelemetryConstants.LifecycleEventOpened, TelemetryConstants.StatelessServiceKind);
         }
     }
 
@@ -193,23 +145,28 @@ public abstract class ServiceTelemetryTest : IDisposable
 
             ServiceTelemetry.StatelessServiceInstanceCloseEvent(context);
 
-            Assert.NotNull(test.Event);
-            Assert.Equal(5, test.Event.EventId);
-            Assert.Equal(EventLevel.Informational, test.Event.Level);
-            test.EventKeywords(ServiceEventSource.Keywords.Default);
-            Assert.Equal("ServiceLifecycleEvent", test.Event.EventName);
-            Assert.Equal(11, test.Event.Payload.Count);
-            test.EventPayload(0, "type", TelemetryConstants.ServiceLifecycleEventName);
-            test.EventPayload(1, "clusterOsType", TelemetryConstants.OsType);
-            test.EventPayload(2, "runtimePlatform", TelemetryConstants.RuntimePlatform);
-            test.EventPayload(3, "partitionId", context.PartitionId.ToString());
-            test.EventPayload(4, "replicaOrInstanceId", context.InstanceId.ToString());
-            test.EventPayload(5, "serviceName", context.ServiceName.OriginalString);
-            test.EventPayload(6, "serviceTypeName", context.ServiceTypeName);
-            test.EventPayload(7, "applicationName", context.CodePackageActivationContext.ApplicationName);
-            test.EventPayload(8, "applicationTypeName", context.CodePackageActivationContext.ApplicationTypeName);
-            test.EventPayload(9, "lifecycleEvent", TelemetryConstants.LifecycleEventClosed);
-            test.EventPayload(10, "serviceKind", TelemetryConstants.StatelessServiceKind);
+            AssertLifecyclePayload(context, context.InstanceId.ToString(), TelemetryConstants.LifecycleEventClosed, TelemetryConstants.StatelessServiceKind);
         }
+    }
+
+    void AssertLifecyclePayload(ServiceContext context, string replicaOrInstanceId, string lifecycleEvent, string serviceKind)
+    {
+        Assert.NotNull(test.Event);
+        Assert.Equal(5, test.Event.EventId);
+        Assert.Equal(EventLevel.Informational, test.Event.Level);
+        test.EventKeywords(ServiceEventSource.Keywords.Default);
+        Assert.Equal("ServiceLifecycleEvent", test.Event.EventName);
+        Assert.Equal(11, test.Event.Payload.Count);
+        test.EventPayload(0, "type", TelemetryConstants.ServiceLifecycleEventName);
+        test.EventPayload(1, "clusterOsType", TelemetryConstants.OsType);
+        test.EventPayload(2, "runtimePlatform", TelemetryConstants.RuntimePlatform);
+        test.EventPayload(3, "partitionId", context.PartitionId.ToString());
+        test.EventPayload(4, "replicaOrInstanceId", replicaOrInstanceId);
+        test.EventPayload(5, "serviceName", context.ServiceName.OriginalString);
+        test.EventPayload(6, "serviceTypeName", context.ServiceTypeName);
+        test.EventPayload(7, "applicationName", context.CodePackageActivationContext.ApplicationName);
+        test.EventPayload(8, "applicationTypeName", context.CodePackageActivationContext.ApplicationTypeName);
+        test.EventPayload(9, "lifecycleEvent", lifecycleEvent);
+        test.EventPayload(10, "serviceKind", serviceKind);
     }
 }
