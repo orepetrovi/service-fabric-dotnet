@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Fabric;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.ServiceFabric.AspNetCore.Configuration;
@@ -271,6 +272,30 @@ namespace Microsoft.ServiceFabric.AspNetCore.Tests
             Assert.Equal("Lele", config["Section1:Name"]);
             Assert.Equal(1, this.sectionCount);
             Assert.Equal(1, this.valueCount);
+        }
+
+        /// <summary>
+        /// Verifies that a configuration package raised through the modified event without a Description triggers ArgumentNullException.
+        /// </summary>
+        [Fact]
+        public void TestConfigUpdateThrowsWhenPackageDescriptionIsNull()
+        {
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "Section1:Name", "Xiaoxiao" },
+            }).Build();
+
+            var context = new TestCodePackageActivationContext(contextConfig);
+
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            builder.Build();
+
+            var packageWithoutDescription = TestHelper.CreateInstanced<ConfigurationPackage>();
+
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => context.RaiseConfigurationPackageModifiedEvent(packageWithoutDescription));
+            Assert.Equal("package.Description", exception.ParamName);
         }
 
         internal class Person
