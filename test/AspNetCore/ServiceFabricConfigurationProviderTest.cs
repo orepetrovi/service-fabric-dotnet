@@ -6,9 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.Fabric;
+using System.Linq;
 using Fuzzy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.ServiceFabric.AspNetCore.Tests;
+using Moq;
 using Xunit;
 
 namespace Microsoft.ServiceFabric.AspNetCore.Configuration;
@@ -18,13 +20,33 @@ public abstract class ServiceFabricConfigurationProviderTest
     readonly ServiceFabricConfigurationProvider sut;
 
     // Constructor parameters
-    readonly TestCodePackageActivationContext activationContext = new(new ConfigurationBuilder().Build());
+    readonly Mock<ICodePackageActivationContext> activationContext = CreateContext("Config", new ConfigurationBuilder().Build());
     readonly ServiceFabricConfigurationOptions options = new("Config");
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
     ServiceFabricConfigurationProviderTest() =>
-        sut = new ServiceFabricConfigurationProvider(activationContext, options);
+        sut = new ServiceFabricConfigurationProvider(activationContext.Object, options);
+
+    static Mock<ICodePackageActivationContext> CreateContext(string packageName, IConfiguration config) =>
+        CreateContext(new Dictionary<string, IConfiguration> { { packageName, config } });
+
+    static Mock<ICodePackageActivationContext> CreateContext(IDictionary<string, IConfiguration> configs)
+    {
+        Mock<ICodePackageActivationContext> mock = new();
+        _ = mock.Setup(_ => _.GetConfigurationPackageNames()).Returns(configs.Keys.ToList());
+        foreach (var entry in configs)
+            _ = mock.Setup(_ => _.GetConfigurationPackageObject(entry.Key)).Returns(MockConfigurationPackage.CreateDefaultPackage(entry.Value, entry.Key));
+        return mock;
+    }
+
+    static void RaiseModified(Mock<ICodePackageActivationContext> context, ConfigurationPackage oldPackage, ConfigurationPackage newPackage) =>
+        context.Raise(_ => _.ConfigurationPackageModifiedEvent += null,
+            new PackageModifiedEventArgs<ConfigurationPackage> { OldPackage = oldPackage, NewPackage = newPackage });
+
+    static void RaiseAdded(Mock<ICodePackageActivationContext> context, ConfigurationPackage package) =>
+        context.Raise(_ => _.ConfigurationPackageAddedEvent += null,
+            new PackageAddedEventArgs<ConfigurationPackage> { Package = package });
 
     public sealed class ConfigAction : ServiceFabricConfigurationProviderTest
     {
@@ -34,7 +56,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         readonly string val1 = fuzzy.String().LettersOrDigits();
         readonly string val2 = fuzzy.String().LettersOrDigits();
 
-        readonly TestCodePackageActivationContext context;
+        readonly Mock<ICodePackageActivationContext> context;
         readonly IConfiguration config;
         readonly List<(int Sections, int Values)> invocations = new();
 
@@ -48,10 +70,10 @@ public abstract class ServiceFabricConfigurationProviderTest
                 { $"{section}:{key2}", val2 },
             }).Build();
 
-            context = new TestCodePackageActivationContext(contextConfig);
+            context = CreateContext("Config", contextConfig);
 
             var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context, options =>
+            builder.AddServiceFabricConfiguration(context.Object, options =>
             {
                 options.ConfigAction = (package, configData) =>
                 {
@@ -87,14 +109,16 @@ public abstract class ServiceFabricConfigurationProviderTest
         {
             string val1Updated = val1 + fuzzy.String().LettersOrDigits();
 
-            context.TriggerConfigurationPackageModifiedEvent(
+            var newPackage = MockConfigurationPackage.CreateDefaultPackage(
                 new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
                 {
                     { $"{section}:{key1}", val1Updated },
                 }).Build(),
                 "Config");
 
-            Assert.Equal((1, 1), invocations[^1]);
+            RaiseModified(context, context.Object.GetConfigurationPackageObject("Config"), newPackage);
+
+            Assert.Equal((1, 1), invocations[invocations.Count - 1]);
             Assert.Equal(val1Updated, config[$"{section}:{key1}"]);
             Assert.Null(config[$"{section}:{key2}"]);
         }
@@ -115,10 +139,10 @@ public abstract class ServiceFabricConfigurationProviderTest
                 { $"{section}:{key}", initial },
             }).Build();
 
-            var context = new TestCodePackageActivationContext(contextConfig);
+            var context = CreateContext("Config", contextConfig);
 
             var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context);
+            builder.AddServiceFabricConfiguration(context.Object);
             var config = builder.Build();
 
             Assert.Equal(initial, config[$"Config:{section}:{key}"]);
@@ -133,7 +157,7 @@ public abstract class ServiceFabricConfigurationProviderTest
                 }).Build(),
                 "Config");
 
-            context.RaiseConfigurationPackageAddedEvent(addedPackage);
+            RaiseAdded(context, addedPackage);
 
             Assert.Equal(updated, config[$"Config:{section}:{key}"]);
             Assert.True(reloaded);
@@ -162,10 +186,10 @@ public abstract class ServiceFabricConfigurationProviderTest
                 { $"{section}:{key3}", val3 },
             }).Build();
 
-            var context = new TestCodePackageActivationContext(contextConfig);
+            var context = CreateContext("Config", contextConfig);
 
             var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context);
+            builder.AddServiceFabricConfiguration(context.Object);
             var config = builder.Build();
 
             Assert.Equal(val1a, config[$"Config:{section}:{key1}"]);
@@ -175,7 +199,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             var reloadToken = config.GetReloadToken();
             Assert.False(reloadToken.HasChanged);
 
-            context.TriggerConfigurationPackageModifiedEvent(
+            var newPackage = MockConfigurationPackage.CreateDefaultPackage(
                 new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
                 {
                     { $"{section}:{key1}", val1b },
@@ -183,6 +207,8 @@ public abstract class ServiceFabricConfigurationProviderTest
                     { $"{section}:{key3}", val3 },
                 }).Build(),
                 "Config");
+
+            RaiseModified(context, context.Object.GetConfigurationPackageObject("Config"), newPackage);
 
             Assert.True(reloadToken.HasChanged, "Expected configuration reload token to fire after package update.");
             Assert.Equal(val1b, config[$"Config:{section}:{key1}"]);
@@ -222,10 +248,10 @@ public abstract class ServiceFabricConfigurationProviderTest
                 { $"{section2}:{key2b}", val2b },
             }).Build();
 
-            var context = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>() { { "Config1", contextConfig1 }, { "Config2", contextConfig2 } });
+            var context = CreateContext(new Dictionary<string, IConfiguration>() { { "Config1", contextConfig1 }, { "Config2", contextConfig2 } });
 
             var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context);
+            builder.AddServiceFabricConfiguration(context.Object);
             var config = builder.Build();
 
             Assert.Equal(shared1, config[$"Config1:{sharedSection}:{sharedKey}"]);
@@ -272,13 +298,13 @@ public abstract class ServiceFabricConfigurationProviderTest
                 { $"{section2}:{key2b}", val2b },
             }).Build();
 
-            var context = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>() { { "Config1", contextConfig1 }, { "Config2", contextConfig2 } });
+            var context = CreateContext(new Dictionary<string, IConfiguration>() { { "Config1", contextConfig1 }, { "Config2", contextConfig2 } });
 
             var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context);
+            builder.AddServiceFabricConfiguration(context.Object);
             var config = builder.Build() as ConfigurationRoot;
 
-            context.TriggerConfigurationPackageModifiedEvent(
+            var newPackage = MockConfigurationPackage.CreateDefaultPackage(
                 new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
                 {
                     { $"{sharedSection}:{sharedKey}", sharedReloaded },
@@ -286,6 +312,8 @@ public abstract class ServiceFabricConfigurationProviderTest
                     { $"{section1}:{key1b}", val1bReloaded },
                 }).Build(),
                 "Config1");
+
+            RaiseModified(context, context.Object.GetConfigurationPackageObject("Config1"), newPackage);
 
             Assert.Equal(sharedReloaded, config[$"Config1:{sharedSection}:{sharedKey}"]);
             Assert.Equal(val1aReloaded, config[$"Config1:{section1}:{key1a}"]);
@@ -304,16 +332,16 @@ public abstract class ServiceFabricConfigurationProviderTest
                 { $"{fuzzy.String().LettersOrDigits()}:{fuzzy.String().LettersOrDigits()}", fuzzy.String().LettersOrDigits() },
             }).Build();
 
-            var context = new TestCodePackageActivationContext(contextConfig);
+            var context = CreateContext("Config", contextConfig);
 
             var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context);
+            builder.AddServiceFabricConfiguration(context.Object);
             builder.Build();
 
             var packageWithoutDescription = TestHelper.CreateInstanced<ConfigurationPackage>();
 
             var exception = Assert.Throws<ArgumentNullException>(
-                () => context.RaiseConfigurationPackageModifiedEvent(packageWithoutDescription));
+                () => RaiseModified(context, null, packageWithoutDescription));
             Assert.Equal("package.Description", exception.ParamName);
         }
 
@@ -330,10 +358,10 @@ public abstract class ServiceFabricConfigurationProviderTest
                 { $"{section}:{key}", initial },
             }).Build();
 
-            var context = new TestCodePackageActivationContext(contextConfig);
+            var context = CreateContext("Config", contextConfig);
 
             var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context);
+            builder.AddServiceFabricConfiguration(context.Object);
             var config = builder.Build();
 
             Assert.Equal(initial, config[$"Config:{section}:{key}"]);
@@ -348,7 +376,7 @@ public abstract class ServiceFabricConfigurationProviderTest
                 }).Build(),
                 "OtherPackage");
 
-            context.RaiseConfigurationPackageModifiedEvent(otherPackage);
+            RaiseModified(context, null, otherPackage);
 
             Assert.Equal(initial, config[$"Config:{section}:{key}"]);
             Assert.False(reloaded);
@@ -361,7 +389,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void ThrowsArgumentNullExceptionWhenOptionsIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(
-                () => new ServiceFabricConfigurationProvider(activationContext, null));
+                () => new ServiceFabricConfigurationProvider(activationContext.Object, null));
             Assert.Equal(nameof(options), exception.ParamName);
         }
     }
@@ -380,10 +408,10 @@ public abstract class ServiceFabricConfigurationProviderTest
                 { $"{section}:{key}", value },
             }).Build();
 
-            var context = new TestCodePackageActivationContext(contextConfig);
+            var context = CreateContext("Config", contextConfig);
 
             var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context);
+            builder.AddServiceFabricConfiguration(context.Object);
             var config = builder.Build();
 
             Assert.Equal(value, config[$"Config:{section}:{key}"]);
@@ -402,10 +430,10 @@ public abstract class ServiceFabricConfigurationProviderTest
                 { $"{section}:{knownKey}", fuzzy.String().LettersOrDigits() },
             }).Build();
 
-            var context = new TestCodePackageActivationContext(contextConfig);
+            var context = CreateContext("Config", contextConfig);
 
             var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context);
+            builder.AddServiceFabricConfiguration(context.Object);
             var config = builder.Build();
 
             Assert.Null(config[$"Config:{section}:{unknownKey}"]);
@@ -415,10 +443,10 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void LoadsEmptyConfiguration()
         {
             var contextConfig = new ConfigurationBuilder().Build();
-            var context = new TestCodePackageActivationContext(contextConfig);
+            var context = CreateContext("Config", contextConfig);
 
             var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context);
+            builder.AddServiceFabricConfiguration(context.Object);
             var config = builder.Build();
 
             Assert.Empty(config.GetChildren());
