@@ -41,7 +41,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
 
             sut.ClearClientCacheEntries(partitionId);
 
-            Assert.True(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out var cacheEntry));
+            Assert.True(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Same(added, cacheEntry);
         }
 
@@ -56,7 +56,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
         public void InitializesCacheWithoutEntries()
         {
             // No public size/enumeration API. Verify emptiness via TryGetClientCacheEntry.
-            Assert.False(sut.TryGetClientCacheEntry(fuzzy.Guid(), MakeEndpoint(), fuzzy.String(), out var cacheEntry));
+            Assert.False(sut.TryGetClientCacheEntry(fuzzy.Guid(), MakeEndpoint(), fuzzy.String(), out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Null(cacheEntry);
         }
 
@@ -83,7 +83,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
 
             sut.Dispose();
 
-            Assert.False(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out var cacheEntry));
+            Assert.False(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Null(cacheEntry);
         }
 
@@ -238,7 +238,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
         [Fact]
         public void ReturnsFalseAndNullWhenPartitionDoesNotExist()
         {
-            Assert.False(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out var cacheEntry));
+            Assert.False(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Null(cacheEntry);
         }
 
@@ -247,7 +247,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
         {
             sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
 
-            Assert.False(sut.TryGetClientCacheEntry(partitionId, MakeEndpoint(), listenerName, out var cacheEntry));
+            Assert.False(sut.TryGetClientCacheEntry(partitionId, MakeEndpoint(), listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Null(cacheEntry);
         }
 
@@ -256,7 +256,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
         {
             sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
 
-            Assert.False(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName + fuzzy.String(), out var cacheEntry));
+            Assert.False(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName + fuzzy.String(), out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Null(cacheEntry);
         }
 
@@ -267,7 +267,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
             ResolvedServiceEndpoint primary = MakeEndpoint(endpoint.Address, ServiceEndpointRole.StatefulPrimary);
             sut.GetOrAddClientCacheEntry(partitionId, stateless, listenerName, null);
 
-            Assert.False(sut.TryGetClientCacheEntry(partitionId, primary, listenerName, out var cacheEntry));
+            Assert.False(sut.TryGetClientCacheEntry(partitionId, primary, listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Null(cacheEntry);
         }
 
@@ -277,7 +277,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
             CommunicationClientCacheEntry<ICommunicationClient> added =
                 sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
 
-            Assert.True(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out var cacheEntry));
+            Assert.True(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Same(added, cacheEntry);
         }
     }
