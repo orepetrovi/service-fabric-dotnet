@@ -19,16 +19,6 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.Actors.Client;
 
-/// <summary>
-/// Public actor interface used to exercise <see cref="ActorProxyFactory"/>. The dynamic assembly produced
-/// by <c>ActorCodeBuilder</c> cannot access <c>internal</c> interfaces defined in this test assembly,
-/// so the interface must be <c>public</c>.
-/// </summary>
-public interface IFactoryTestActor : IActor
-{
-    Task TestMethod();
-}
-
 public abstract class ActorProxyFactoryTest
 {
     readonly ActorProxyFactory sut;
