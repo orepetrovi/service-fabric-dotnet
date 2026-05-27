@@ -149,7 +149,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         readonly ICommunicationClient newClient = Mock.Of<ICommunicationClient>();
 
         [Fact]
-        public void FiresClientConnectedEventWithGivenClient()
+        public void FiresClientConnectedEventWithNewClient()
         {
             object actualSender = null;
             CommunicationClientEventArgs<ICommunicationClient> actualArgs = null;
@@ -173,7 +173,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         readonly ICommunicationClient faultedClient = Mock.Of<ICommunicationClient>();
 
         [Fact]
-        public void FiresClientDisconnectedEventWithGivenClient()
+        public void FiresClientDisconnectedEventWithFaultedClient()
         {
             object actualSender = null;
             CommunicationClientEventArgs<ICommunicationClient> actualArgs = null;
