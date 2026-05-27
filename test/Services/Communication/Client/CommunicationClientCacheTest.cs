@@ -71,7 +71,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
         [Fact]
         public void InitializesCacheWithoutEntries()
         {
-            // No public size/enumeration API. Verify emptiness via TryGetClientCacheEntry.
+            // No size/enumeration API. Verify emptiness via TryGetClientCacheEntry.
             Assert.False(sut.TryGetClientCacheEntry(fuzzy.Guid(), MakeEndpoint(), fuzzy.String(), out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Null(cacheEntry);
         }
