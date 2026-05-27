@@ -100,3 +100,33 @@ The active tests at [L127](test/AspNetCore/KestrelCommunicationListenerTest.cs#L
 **Recommendation.** Assert the invariant message prefix with `Assert.StartsWith(KestrelSR.EndpointNameEmptyExceptionMessage, exception.Message)` (or `Contains`) and leave `ParamName` to the explicit bug tests.
 
 **Iterator note (oscillation):** An earlier round (round ~9) explicitly directed us to switch FROM `Assert.StartsWith` TO `Assert.Equal` for parity with `HttpSysCommunicationListenerTest.cs` and with rationale "When the bug is fixed, the explicit test becomes non-explicit and the regular test is updated alongside." We complied and aligned both peer files. This round flips that position. Human decides which is correct; whichever way, please align both peer files.
+---
+
+## ⚠️ Should Fix — Base-class `sut` field is dead code
+*Reported by opus; agreed by gemini and gpt.*
+
+The base `sut` at [test/AspNetCore/KestrelCommunicationListenerTest.cs](test/AspNetCore/KestrelCommunicationListenerTest.cs#L29) is initialized in the base constructor but never referenced by any test. Every nested class either shadows it (`new readonly AspNetCoreCommunicationListener sut;` in `GetListenerUrl`) or constructs a fresh SUT locally inside each test. Consequences:
+
+- Each nested test class still pays construction cost of an unused SUT.
+- Constructor argument-null tests pass `null` to a *new* SUT and never touch the base `sut`.
+
+[.github/instructions/test.instructions.md](.github/instructions/test.instructions.md) says *"Don't omit the base-class `sut` variable even if it's not applicable to every test"* — but the example shows the base `sut` being used by at least one nested class. Here no class uses it.
+
+Cross-check consensus: prefer Option 1 — make the base `sut` load-bearing by moving `serviceContext = TestMocksRepository.GetMockStatelessServiceContext()` into the base fixture and having `GetListenerUrl` reuse `base.sut`. This aligns with the repo's pattern where the shared fixture is utilized by at least one nested test class, and resolves the IDE0052 noise documented in the existing `Needs Human Review` finding.
+
+**Iterator note (oscillation):** An earlier round (round ~7) raised the same concern. The coder pushed back with: (1) the pattern is canonical per `test.instructions.md`; (2) HttpSys uses the identical pattern without warning; (3) Release `dotnet build` produces 0 IDE0052 warnings. Now reviewers reopen the finding. Human judgment requested to break the cycle. If the fix is applied, mirror in `HttpSysCommunicationListenerTest.cs`.
+
+---
+
+## ⚠️ Should Fix — `ThrowsArgumentNullExceptionWhenServiceContextIsNull/BuildIsNull` test the base ctor, not the SUT ctor
+*Reported by opus; agreed by gemini and gpt.*
+
+Every constructor overload's `ArgumentNullException` for `serviceContext` and `build` is thrown from the *base* `AspNetCoreCommunicationListener` constructor ([src/AspNetCore/AspNetCoreCommunicationListener.cs](src/AspNetCore/AspNetCoreCommunicationListener.cs#L37-L44) and [L60-L67](src/AspNetCore/AspNetCoreCommunicationListener.cs#L60-L67)) with hard-coded `"serviceContext"`/`"build"` literals. The four `Constructor_*` classes each duplicate the same two argument-null tests — eight tests total — that effectively test the base class's behavior.
+
+`KestrelCommunicationListener` does no argument validation for these parameters before chaining `: base(serviceContext, build)` (see [src/AspNetCore.Kestrel/KestrelCommunicationListener.cs](src/AspNetCore.Kestrel/KestrelCommunicationListener.cs#L28-L41) for the 2-arg overloads and [L56-L63](src/AspNetCore.Kestrel/KestrelCommunicationListener.cs#L56-L63), [L78-L85](src/AspNetCore.Kestrel/KestrelCommunicationListener.cs#L78-L85) for the 3-arg overloads). Only the `endpointName` empty-string check belongs to the SUT. The base behavior is already covered in [test/AspNetCore/AspNetCoreCommunicationListenerTest.cs](test/AspNetCore/AspNetCoreCommunicationListenerTest.cs#L254-L291).
+
+Per test.instructions.md (*"Each test method should verify a single logical aspect of a single member of the SUT"*), these tests don't verify SUT behavior. Consider either:
+1. Dropping the eight base-ctor-forwarding tests (keep only the `endpointName` tests in the two 3-arg classes plus the `GetListenerUrl` default-URL pinning), or
+2. Keeping a single forwarding test per overload.
+
+**Iterator note (oscillation):** An earlier round (round 4 of this iteration) explicitly demanded these tests under the heading "⚠️ Missing Argument Validation — No tests for null `serviceContext` or `build`," with rationale from `test.instructions.md`: *"Create explicit tests for missing argument validation that can cause NullReferenceException, etc. in consuming members."* We complied and added them across all four constructor overloads. This round flips the position, arguing the tests are testing the base class. Both arguments cite the same instructions file. Human judgment requested.
