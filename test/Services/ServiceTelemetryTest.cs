@@ -8,7 +8,6 @@ using System.Diagnostics.Tracing;
 using System.Fabric;
 using Fuzzy;
 using Inspector;
-using Microsoft.ServiceFabric.Services.Tests;
 using Xunit;
 
 namespace Microsoft.ServiceFabric.Services;
@@ -27,7 +26,7 @@ public abstract class ServiceTelemetryTest : IDisposable
 
     public sealed class CommunicationListenerUsageEvent : ServiceTelemetryTest
     {
-        readonly StatefulServiceContext context = TestMocksRepository.GetMockStatefulServiceContext();
+        readonly StatefulServiceContext context = fuzzy.StatefulServiceContext();
         readonly string communicationListenerType = fuzzy.String();
 
         [Fact]
@@ -58,7 +57,7 @@ public abstract class ServiceTelemetryTest : IDisposable
 
     public sealed class FabricTransportServiceRemotingV2Event : ServiceTelemetryTest
     {
-        readonly StatefulServiceContext context = TestMocksRepository.GetMockStatefulServiceContext();
+        readonly StatefulServiceContext context = fuzzy.StatefulServiceContext();
 
         [Theory]
         [InlineData(true)]
@@ -92,7 +91,7 @@ public abstract class ServiceTelemetryTest : IDisposable
 
     public sealed class StatefulServiceInitializeEvent : ServiceTelemetryTest
     {
-        readonly StatefulServiceContext context = TestMocksRepository.GetMockStatefulServiceContext();
+        readonly StatefulServiceContext context = fuzzy.StatefulServiceContext();
 
         [Fact]
         public void PublishesServiceLifecycleEventWithOpenedAndStatefulServiceKind()
@@ -123,7 +122,7 @@ public abstract class ServiceTelemetryTest : IDisposable
 
     public sealed class StatefulServiceReplicaCloseEvent : ServiceTelemetryTest
     {
-        readonly StatefulServiceContext context = TestMocksRepository.GetMockStatefulServiceContext();
+        readonly StatefulServiceContext context = fuzzy.StatefulServiceContext();
 
         [Fact]
         public void PublishesServiceLifecycleEventWithClosedAndStatefulServiceKind()
@@ -154,7 +153,7 @@ public abstract class ServiceTelemetryTest : IDisposable
 
     public sealed class StatelessServiceInitializeEvent : ServiceTelemetryTest
     {
-        readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
+        readonly StatelessServiceContext context = fuzzy.StatelessServiceContext();
 
         [Fact]
         public void PublishesServiceLifecycleEventWithOpenedAndStatelessServiceKind()
@@ -185,7 +184,7 @@ public abstract class ServiceTelemetryTest : IDisposable
 
     public sealed class StatelessServiceInstanceCloseEvent : ServiceTelemetryTest
     {
-        readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
+        readonly StatelessServiceContext context = fuzzy.StatelessServiceContext();
 
         [Fact]
         public void PublishesServiceLifecycleEventWithClosedAndStatelessServiceKind()
