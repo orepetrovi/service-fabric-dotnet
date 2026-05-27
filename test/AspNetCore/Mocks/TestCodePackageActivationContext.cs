@@ -172,6 +172,15 @@ namespace Microsoft.ServiceFabric.AspNetCore.Tests
         }
 
         /// <summary>
+        /// Raises the <see cref="ConfigurationPackageModifiedEvent"/> with the supplied new package.
+        /// </summary>
+        /// <param name="newPackage">The new package to deliver via the event.</param>
+        public void RaiseConfigurationPackageModifiedEvent(ConfigurationPackage newPackage)
+        {
+            this.ConfigurationPackageModifiedEvent(this, new PackageModifiedEventArgs<ConfigurationPackage>() { OldPackage = null, NewPackage = newPackage });
+        }
+
+        /// <summary>
         /// Retrieves the principals defined in the application manifest.
         /// </summary>
         /// <returns>
