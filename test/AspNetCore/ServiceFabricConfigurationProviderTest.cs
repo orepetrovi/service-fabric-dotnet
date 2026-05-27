@@ -36,10 +36,8 @@ public abstract class ServiceFabricConfigurationProviderTest
     {
         readonly ConfigurationPackage matching;
 
-        public Constructor()
-        {
+        public Constructor() =>
             matching = MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName);
-        }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Constructor doesn't validate activationContext.
         public void ThrowsArgumentNullExceptionWhenActivationContextIsNull()
