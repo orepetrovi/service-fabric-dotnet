@@ -109,7 +109,7 @@ public abstract class HttpSysCommunicationListenerTest
                 Name = endpointName,
                 Protocol = protocol,
             };
-            int port = fuzzy.Int32();
+            int port = fuzzy.UInt16();
             endpoint.Property<int>().Set(port);
             context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
