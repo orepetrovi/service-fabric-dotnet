@@ -1,0 +1,261 @@
+// ------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
+// ------------------------------------------------------------
+
+using System;
+using System.Fabric;
+using System.Threading;
+using Fuzzy;
+using Inspector;
+using Moq;
+using Xunit;
+
+namespace Microsoft.ServiceFabric.Services.Communication.Client;
+
+public abstract class CommunicationClientCacheEntryTest
+{
+    readonly CommunicationClientCacheEntry<ICommunicationClient> sut = new();
+
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+    public sealed class Client : CommunicationClientCacheEntryTest
+    {
+        readonly ICommunicationClient client = Mock.Of<ICommunicationClient>();
+
+        [Fact]
+        public void IsNullByDefault() =>
+            Assert.Null(sut.Client);
+
+        [Fact]
+        public void ReturnsValuePreviouslySet()
+        {
+            sut.Client = client;
+            Assert.Same(client, sut.Client);
+        }
+
+        [Fact]
+        public void IsNullAfterSettingToNull()
+        {
+            sut.Client = client;
+            sut.Client = null;
+            Assert.Null(sut.Client);
+        }
+
+        [Fact]
+        public void ReturnsValueViaWeakReferenceAfterStrongReferenceCleared()
+        {
+            sut.Client = client;
+            _ = sut.IsCommunicationClientValid(); // Clears the strong reference
+
+            Assert.Same(client, sut.Client);
+        }
+    }
+
+    public sealed class Constructor : CommunicationClientCacheEntryTest
+    {
+        [Fact]
+        public void InitializesEndpointToNull() =>
+            Assert.Null(sut.Endpoint);
+
+        [Fact]
+        public void InitializesRspToNull() =>
+            Assert.Null(sut.Rsp);
+
+        [Fact]
+        public void InitializesClientToNull() =>
+            Assert.Null(sut.Client);
+
+        [Fact]
+        public void InitializesIsInCacheToTrue() =>
+            Assert.True(sut.IsInCache);
+
+        [Fact]
+        public void InitializesSemaphoreAsBinary()
+        {
+            Assert.NotNull(sut.Semaphore);
+            Assert.Equal(1, sut.Semaphore.CurrentCount);
+        }
+    }
+
+    public sealed class GetEndpoint : CommunicationClientCacheEntryTest
+    {
+        public GetEndpoint() =>
+            sut.Rsp = MakeRsp();
+
+        [Fact]
+        public void ReturnsEndpointAddressWhenAddressIsNotJsonAndListenerNameIsNull()
+        {
+            string address = fuzzy.String();
+            sut.Endpoint = MakeEndpoint(address);
+
+            Assert.Equal(address, sut.GetEndpoint());
+        }
+
+        [Fact]
+        public void ReturnsFirstParsedEndpointAddressWhenAddressIsJsonAndListenerNameIsNull()
+        {
+            string first = fuzzy.String().LettersOrDigits();
+            string second = fuzzy.String().LettersOrDigits();
+            sut.Endpoint = MakeEndpoint(EndpointsJson(
+                (fuzzy.String().LettersOrDigits(), first),
+                (fuzzy.String().LettersOrDigits(), second)));
+
+            Assert.Equal(first, sut.GetEndpoint());
+        }
+
+        [Fact]
+        public void ReturnsNamedEndpointAddressWhenAddressIsJsonAndListenerNameMatches()
+        {
+            string listener = fuzzy.String().LettersOrDigits();
+            string expected = fuzzy.String().LettersOrDigits();
+            sut.Endpoint = MakeEndpoint(EndpointsJson(
+                (fuzzy.String().LettersOrDigits(), fuzzy.String().LettersOrDigits()),
+                (listener, expected)));
+            sut.ListenerName = listener;
+
+            Assert.Equal(expected, sut.GetEndpoint());
+        }
+
+        [Fact]
+        public void ReturnsCachedAddressOnSubsequentCalls()
+        {
+            string address = fuzzy.String();
+            sut.Endpoint = MakeEndpoint(address);
+            string first = sut.GetEndpoint();
+
+            sut.Endpoint = MakeEndpoint(address + fuzzy.String()); // Endpoint setter does not invalidate cache.
+
+            Assert.Equal(first, sut.GetEndpoint());
+        }
+
+        [Fact]
+        public void ThrowsFabricExceptionWhenEndpointAddressIsNull()
+        {
+            sut.Endpoint = MakeEndpoint(null);
+            _ = Assert.Throws<FabricException>(() => sut.GetEndpoint());
+        }
+
+        [Fact]
+        public void ThrowsFabricExceptionWhenEndpointAddressIsEmpty()
+        {
+            sut.Endpoint = MakeEndpoint(string.Empty);
+            _ = Assert.Throws<FabricException>(() => sut.GetEndpoint());
+        }
+
+        [Fact]
+        public void ThrowsFabricInvalidAddressExceptionWhenAddressIsNotJsonAndListenerNameIsSpecified()
+        {
+            sut.Endpoint = MakeEndpoint(fuzzy.String());
+            sut.ListenerName = fuzzy.String();
+
+            _ = Assert.Throws<FabricInvalidAddressException>(() => sut.GetEndpoint());
+        }
+
+        [Fact]
+        public void ThrowsFabricInvalidAddressExceptionWhenAddressIsJsonWithoutEndpointsAndListenerNameIsNull()
+        {
+            sut.Endpoint = MakeEndpoint(EndpointsJson());
+
+            _ = Assert.Throws<FabricInvalidAddressException>(() => sut.GetEndpoint());
+        }
+
+        [Fact]
+        public void ThrowsFabricInvalidAddressExceptionWhenListenerNameIsNotFoundInJson()
+        {
+            string listener = fuzzy.String().LettersOrDigits();
+            sut.Endpoint = MakeEndpoint(EndpointsJson(
+                (listener, fuzzy.String().LettersOrDigits())));
+            sut.ListenerName = listener + fuzzy.String().LettersOrDigits();
+
+            _ = Assert.Throws<FabricInvalidAddressException>(() => sut.GetEndpoint());
+        }
+    }
+
+    public sealed class IsCommunicationClientValid : CommunicationClientCacheEntryTest
+    {
+        readonly ICommunicationClient client = Mock.Of<ICommunicationClient>();
+
+        [Fact]
+        public void ReturnsFalseWhenClientWasNeverSet() =>
+            Assert.False(sut.IsCommunicationClientValid());
+
+        [Fact]
+        public void ReturnsTrueOnFirstCallAfterClientWasSet()
+        {
+            sut.Client = client;
+            Assert.True(sut.IsCommunicationClientValid());
+        }
+
+        [Fact]
+        public void ReturnsTrueOnSubsequentCallWhileWeakReferenceTargetIsAlive()
+        {
+            sut.Client = client;
+            _ = sut.IsCommunicationClientValid();
+
+            Assert.True(sut.IsCommunicationClientValid());
+        }
+
+        [Fact]
+        public void ReturnsFalseAfterClientWasSetToNull()
+        {
+            sut.Client = client;
+            sut.Client = null;
+
+            Assert.False(sut.IsCommunicationClientValid());
+        }
+    }
+
+    public sealed class Rsp : CommunicationClientCacheEntryTest
+    {
+        [Fact]
+        public void ReturnsValuePreviouslySet()
+        {
+            ResolvedServicePartition rsp = MakeRsp();
+            sut.Rsp = rsp;
+            Assert.Same(rsp, sut.Rsp);
+        }
+
+        [Fact]
+        public void InvalidatesCachedEndpointAddress()
+        {
+            sut.Rsp = MakeRsp();
+            string original = fuzzy.String();
+            sut.Endpoint = MakeEndpoint(original);
+            _ = sut.GetEndpoint(); // Caches address.
+
+            string updated = original + fuzzy.String();
+            sut.Endpoint = MakeEndpoint(updated);
+            sut.Rsp = MakeRsp(); // Should invalidate the cached address.
+
+            Assert.Equal(updated, sut.GetEndpoint());
+        }
+    }
+
+    static ResolvedServiceEndpoint MakeEndpoint(string address)
+    {
+        var endpoint = new ResolvedServiceEndpoint();
+        endpoint.Property<string>().Set(address);
+        endpoint.Property<ServiceEndpointRole>().Set(fuzzy.Enum<ServiceEndpointRole>());
+        return endpoint;
+    }
+
+    static ResolvedServicePartition MakeRsp()
+    {
+        ResolvedServicePartition rsp = Type<ResolvedServicePartition>.Uninitialized();
+        rsp.Property<ServicePartitionInformation>().Set(Type<SingletonPartitionInformation>.Uninitialized());
+        return rsp;
+    }
+
+    static string EndpointsJson(params (string Listener, string Address)[] endpoints)
+    {
+        var sb = new System.Text.StringBuilder("{\"Endpoints\":{");
+        for (int i = 0; i < endpoints.Length; i++)
+        {
+            if (i > 0) sb.Append(',');
+            sb.Append('"').Append(endpoints[i].Listener).Append("\":\"").Append(endpoints[i].Address).Append('"');
+        }
+        sb.Append("}}");
+        return sb.ToString();
+    }
+}
