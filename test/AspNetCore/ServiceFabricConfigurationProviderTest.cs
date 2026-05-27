@@ -116,8 +116,8 @@ public abstract class ServiceFabricConfigurationProviderTest
                 _ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()),
                 Times.Never);
             Assert.False(token.HasChanged);
-            Assert.True(sut.TryGet(existingKey, out string actualValue));
-            Assert.Equal(existingValue, actualValue);
+            Assert.True(sut.TryGet(existingKey, out string actual));
+            Assert.Equal(existingValue, actual);
         }
 
         [Fact]
@@ -196,8 +196,8 @@ public abstract class ServiceFabricConfigurationProviderTest
                 _ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()),
                 Times.Never);
             Assert.False(token.HasChanged);
-            Assert.True(sut.TryGet(existingKey, out string actualValue));
-            Assert.Equal(existingValue, actualValue);
+            Assert.True(sut.TryGet(existingKey, out string actual));
+            Assert.Equal(existingValue, actual);
         }
 
         [Fact]
