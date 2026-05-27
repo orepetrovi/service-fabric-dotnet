@@ -37,7 +37,10 @@ public abstract class ServiceEndpointCollectionTest
         {
             sut.AddEndpoint(listenerName, endpointAddress);
 
-            Assert.Same(endpointAddress, sut.ToReadOnlyDictionary()[listenerName]);
+            IReadOnlyDictionary<string, string> actual = sut.ToReadOnlyDictionary();
+            Assert.Equal(2, actual.Count);
+            Assert.Same(base.endpointAddress, actual[base.listenerName]);
+            Assert.Same(endpointAddress, actual[listenerName]);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. AddEndpoint does not validate listenerName.
@@ -94,6 +97,8 @@ public abstract class ServiceEndpointCollectionTest
             sut.AddEndpoints(newEndpoints);
 
             IReadOnlyDictionary<string, string> actual = sut.ToReadOnlyDictionary();
+            Assert.Equal(3, actual.Count);
+            Assert.Same(endpointAddress, actual[listenerName]);
             Assert.Same(newEndpointAddress, actual[newListenerName]);
             Assert.Same(extraEndpointAddress, actual[extraListenerName]);
         }
@@ -225,6 +230,8 @@ public abstract class ServiceEndpointCollectionTest
             IReadOnlyDictionary<string, string> dictionary = actual.ToReadOnlyDictionary();
             Assert.Equal(endpointAddress, dictionary[listenerName]);
             Assert.Single(dictionary);
+            // Exercises endpointsLock re-initialized by [OnDeserialized] (bypassed by DataContractJsonSerializer).
+            Assert.True(actual.TryGetFirstEndpointAddress(out _));
         }
 
         [Fact]
