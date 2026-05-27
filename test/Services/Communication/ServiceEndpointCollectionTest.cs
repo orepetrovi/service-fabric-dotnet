@@ -130,6 +130,29 @@ public abstract class ServiceEndpointCollectionTest
         }
     }
 
+    public sealed class Constructor_String_String : ServiceEndpointCollectionTest
+    {
+        // Constructor parameters
+        new readonly string listenerName = fuzzy.String();
+        new readonly string endpointAddress = fuzzy.String();
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Constructor does not validate listenerName.
+        public void ThrowsArgumentNullExceptionWhenListenerNameIsNull()
+        {
+            // The underlying Dictionary throws ArgumentNullException with ParamName "key" instead of "listenerName".
+            var exception = Assert.Throws<ArgumentNullException>(() => new ServiceEndpointCollection(null, endpointAddress));
+            Assert.Equal(nameof(listenerName), exception.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Constructor does not validate endpointAddress.
+        public void ThrowsArgumentNullExceptionWhenEndpointAddressIsNull()
+        {
+            // Constructor stores null in the dictionary instead of throwing ArgumentNullException.
+            var exception = Assert.Throws<ArgumentNullException>(() => new ServiceEndpointCollection(listenerName, null));
+            Assert.Equal(nameof(endpointAddress), exception.ParamName);
+        }
+    }
+
     public sealed class ToReadOnlyDictionary : ServiceEndpointCollectionTest
     {
         [Fact]
