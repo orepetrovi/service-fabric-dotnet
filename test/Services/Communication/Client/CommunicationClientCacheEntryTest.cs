@@ -197,7 +197,7 @@ public abstract class CommunicationClientCacheEntryTest
             sut.Client = client;
             _ = sut.IsCommunicationClientValid();
 
-            Assert.Null(sut.Field<ICommunicationClient>().Get());
+            Assert.Null(sut.Field<ICommunicationClient>().Value);
         }
 
         [Fact]
