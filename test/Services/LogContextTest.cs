@@ -19,7 +19,7 @@ public abstract class LogContextTest : IDisposable
     LogContextTest() =>
         LogContext.Clear();
 
-    public void Dispose() =>
+    void IDisposable.Dispose() =>
         LogContext.Clear();
 
     public sealed class Clear : LogContextTest
