@@ -77,7 +77,7 @@ public abstract class ServicePartitionResolverTest
     public sealed class Constructor_FabricClientSettings_StringArray : ServicePartitionResolverTest
     {
         readonly FabricClientSettings settings = null;
-        readonly string[] connectionEndpoints = [fuzzy.String(), fuzzy.String()];
+        readonly string[] connectionEndpoints = fuzzy.Array(fuzzy.String);
 
         [Fact]
         public void SetsBothDelegatesToSameNonNullDelegate() =>
@@ -93,7 +93,7 @@ public abstract class ServicePartitionResolverTest
     {
         readonly SecurityCredentials credential = null;
         readonly FabricClientSettings settings = null;
-        readonly string[] connectionEndpoints = [fuzzy.String(), fuzzy.String()];
+        readonly string[] connectionEndpoints = fuzzy.Array(fuzzy.String);
 
         [Fact]
         public void SetsBothDelegatesToSameNonNullDelegate() =>
@@ -108,7 +108,7 @@ public abstract class ServicePartitionResolverTest
     public sealed class Constructor_SecurityCredentials_StringArray : ServicePartitionResolverTest
     {
         readonly SecurityCredentials credential = null;
-        readonly string[] connectionEndpoints = [fuzzy.String(), fuzzy.String()];
+        readonly string[] connectionEndpoints = fuzzy.Array(fuzzy.String);
 
         [Fact]
         public void SetsBothDelegatesToSameNonNullDelegate() =>
@@ -122,7 +122,7 @@ public abstract class ServicePartitionResolverTest
 
     public sealed class Constructor_StringArray : ServicePartitionResolverTest
     {
-        readonly string[] connectionEndpoints = [fuzzy.String(), fuzzy.String()];
+        readonly string[] connectionEndpoints = fuzzy.Array(fuzzy.String);
 
         [Fact]
         public void SetsBothDelegatesToSameNonNullDelegate() =>
