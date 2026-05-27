@@ -113,6 +113,15 @@ public abstract class ServiceFabricConfigurationProviderTest
             Assert.Equal("package.Description", exception.ParamName);
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. HandleNewPackage dereferences package without a null check.
+        public void ThrowsArgumentNullExceptionWhenAddedPackageIsNull()
+        {
+            // HandleNewPackage accesses package.Description immediately, throwing NullReferenceException
+            // instead of an ArgumentNullException naming the offending parameter.
+            var exception = Assert.Throws<ArgumentNullException>(() => RaiseAdded(null));
+            Assert.Equal("package", exception.ParamName);
+        }
+
         [Fact]
         public void InvokesConfigActionWhenModifiedPackageNameMatches()
         {
@@ -161,6 +170,15 @@ public abstract class ServiceFabricConfigurationProviderTest
 
             var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(null, package));
             Assert.Equal("package.Description", exception.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. HandleNewPackage dereferences package without a null check.
+        public void ThrowsArgumentNullExceptionWhenModifiedPackageIsNull()
+        {
+            // HandleNewPackage accesses package.Description immediately, throwing NullReferenceException
+            // instead of an ArgumentNullException naming the offending parameter.
+            var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(null, null));
+            Assert.Equal("package", exception.ParamName);
         }
     }
 
