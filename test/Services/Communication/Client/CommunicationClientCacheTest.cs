@@ -101,7 +101,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
             Guid partitionId = fuzzy.Guid();
             ResolvedServiceEndpoint endpoint = MakeEndpoint();
             string listenerName = fuzzy.String();
-            sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
+            _ = sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
 
             sut.Dispose();
 
@@ -304,7 +304,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
         [Fact]
         public void ReturnsFalseAndNullWhenEndpointNotFoundInExistingPartition()
         {
-            sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
+            _ = sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
 
             Assert.False(sut.TryGetClientCacheEntry(partitionId, MakeEndpoint(endpoint.Address + fuzzy.String(), endpoint.Role), listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Null(cacheEntry);
@@ -313,7 +313,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
         [Fact]
         public void ReturnsFalseAndNullWhenListenerNameNotFoundInExistingPartition()
         {
-            sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
+            _ = sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
 
             Assert.False(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName + fuzzy.String(), out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Null(cacheEntry);
@@ -324,7 +324,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
         {
             ResolvedServiceEndpoint stateless = MakeEndpoint(endpoint.Address, ServiceEndpointRole.Stateless);
             ResolvedServiceEndpoint primary = MakeEndpoint(endpoint.Address, ServiceEndpointRole.StatefulPrimary);
-            sut.GetOrAddClientCacheEntry(partitionId, stateless, listenerName, null);
+            _ = sut.GetOrAddClientCacheEntry(partitionId, stateless, listenerName, null);
 
             Assert.False(sut.TryGetClientCacheEntry(partitionId, primary, listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Null(cacheEntry);
