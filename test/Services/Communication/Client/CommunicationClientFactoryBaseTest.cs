@@ -54,38 +54,31 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         [Fact]
         public void UsesDefaultServicePartitionResolverWhenArgumentIsNull()
         {
-            var other = new TestFactory(fireConnectEvents, null, exceptionHandlers, traceId);
-            try { Assert.Same(ServicePartitionResolver.GetDefault(), other.ServiceResolver); }
-            finally { other.Dispose(); }
+            using var other = new TestFactory(fireConnectEvents, null, exceptionHandlers, traceId);
+            Assert.Same(ServicePartitionResolver.GetDefault(), other.ServiceResolver);
         }
 
         [Fact]
         public void ExposesEmptyExceptionHandlersWhenArgumentIsNull()
         {
-            var other = new TestFactory(fireConnectEvents, servicePartitionResolver, null, traceId);
-            try { Assert.Empty(other.ExceptionHandlers); }
-            finally { other.Dispose(); }
+            using var other = new TestFactory(fireConnectEvents, servicePartitionResolver, null, traceId);
+            Assert.Empty(other.ExceptionHandlers);
         }
 
         [Fact]
         public void GeneratesGuidTraceIdWhenArgumentIsNull()
         {
-            var other = new TestFactory(fireConnectEvents, servicePartitionResolver, exceptionHandlers, null);
-            try { Assert.True(Guid.TryParse(other.TraceIdValue, out _)); }
-            finally { other.Dispose(); }
+            using var other = new TestFactory(fireConnectEvents, servicePartitionResolver, exceptionHandlers, null);
+            Assert.True(Guid.TryParse(other.TraceIdValue, out _));
         }
 
         [Fact]
         public void CopiesExceptionHandlersToAvoidExternalMutation()
         {
             var handlers = new List<IExceptionHandler> { Mock.Of<IExceptionHandler>() };
-            var other = new TestFactory(fireConnectEvents, servicePartitionResolver, handlers, traceId);
-            try
-            {
-                handlers.Add(Mock.Of<IExceptionHandler>());
-                Assert.Single(other.ExceptionHandlers);
-            }
-            finally { other.Dispose(); }
+            using var other = new TestFactory(fireConnectEvents, servicePartitionResolver, handlers, traceId);
+            handlers.Add(Mock.Of<IExceptionHandler>());
+            Assert.Single(other.ExceptionHandlers);
         }
     }
 
@@ -384,7 +377,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         return rsp;
     }
 
-    sealed class TestFactory : CommunicationClientFactoryBase<ICommunicationClient>
+    sealed class TestFactory : CommunicationClientFactoryBase<ICommunicationClient>, IDisposable
     {
         internal ICommunicationClient AbortedClient;
 
