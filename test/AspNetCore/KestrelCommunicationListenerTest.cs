@@ -41,7 +41,7 @@ public abstract class KestrelCommunicationListenerTest
     {
         // TODO: Inspector v0.9.0 sut.Constructor<TSig>() binds multiple overloads when delegate-typed parameters
         // only differ in generic arguments (relaxed signature matching). Track via olegsych/inspector once filed.
-        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener).GetConstructor(new[] { typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IHost>) });
+        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener).GetConstructor(new[] { typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IHost>) })!;
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
