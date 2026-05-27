@@ -266,6 +266,18 @@ public abstract class ServiceEndpointCollectionTest
             Assert.Empty(actual.ToReadOnlyDictionary());
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. JSON without Endpoints key produces a collection with null endpoints.
+        public void ReturnsTrueAndOutputsUsableCollectionWhenEndpointsStringHasNoEndpointsMember()
+        {
+            // DataContractJsonSerializer.ReadObject bypasses constructors. For "{}", endpointsLock is
+            // re-initialized by the [OnDeserialized] callback but the endpoints dictionary stays null,
+            // so any subsequent member access throws NullReferenceException.
+            bool result = ServiceEndpointCollection.TryParseEndpointsString("{}", out ServiceEndpointCollection actual);
+
+            Assert.True(result);
+            Assert.Empty(actual.ToReadOnlyDictionary());
+        }
+
         [Fact]
         public void ReturnsFalseAndOutputsNullWhenEndpointsStringIsInvalidJson()
         {
