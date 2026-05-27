@@ -37,8 +37,7 @@ public abstract class ServiceEndpointCollectionTest
         {
             sut.AddEndpoint(listenerName, endpointAddress);
 
-            Assert.True(sut.TryGetEndpointAddress(listenerName, out string actual));
-            Assert.Same(endpointAddress, actual);
+            Assert.Same(endpointAddress, sut.ToReadOnlyDictionary()[listenerName]);
         }
 
         [Fact]
@@ -78,10 +77,9 @@ public abstract class ServiceEndpointCollectionTest
 
             sut.AddEndpoints(newEndpoints);
 
-            Assert.True(sut.TryGetEndpointAddress(newListenerName, out string firstActual));
-            Assert.Same(newEndpointAddress, firstActual);
-            Assert.True(sut.TryGetEndpointAddress(extraListenerName, out string secondActual));
-            Assert.Same(extraEndpointAddress, secondActual);
+            IReadOnlyDictionary<string, string> actual = sut.ToReadOnlyDictionary();
+            Assert.Same(newEndpointAddress, actual[newListenerName]);
+            Assert.Same(extraEndpointAddress, actual[extraListenerName]);
         }
 
         [Fact]
