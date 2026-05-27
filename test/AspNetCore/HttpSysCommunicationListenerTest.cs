@@ -59,9 +59,7 @@ public abstract class HttpSysCommunicationListenerTest
             // indication which argument was invalid. This test asserts the correct ParamName and will fail until the
             // SUT is fixed. Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, null, build));
-            Assert.Equal(
-                sut.Constructor<Action<ServiceContext, string, Func<string, AspNetCoreCommunicationListener, IHost>>>().Parameter<string>().Name,
-                exception.ParamName);
+            Assert.Equal(nameof(endpointName), exception.ParamName);
         }
     }
 
@@ -89,9 +87,7 @@ public abstract class HttpSysCommunicationListenerTest
             // indication which argument was invalid. This test asserts the correct ParamName and will fail until the
             // SUT is fixed. Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, null, build));
-            Assert.Equal(
-                sut.Constructor<Action<ServiceContext, string, Func<string, AspNetCoreCommunicationListener, IWebHost>>>().Parameter<string>().Name,
-                exception.ParamName);
+            Assert.Equal(nameof(endpointName), exception.ParamName);
         }
     }
 
