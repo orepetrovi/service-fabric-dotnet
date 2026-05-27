@@ -66,3 +66,18 @@ Reported by: `gemini`, `opus`.
 2. Replace `once filed` in both TODO comments with the actual issue URL.
 3. Delete this section.
 
+---
+
+#### ❓ Needs Human Review — Style/analyzer diagnostics on the test file
+
+Reported by **gpt**; cross-check **gemini Agree**, **opus Disagree** (Release build is clean with `TreatWarningsAsErrors=true` reporting 0 warnings; header borders match sibling files; `GetConstructor(...)!` suppressions appear required). **gpt re-evaluated: Insist** with narrowed scope.
+
+- [test/AspNetCore/KestrelCommunicationListenerTest.cs#L1](test/AspNetCore/KestrelCommunicationListenerTest.cs#L1), [test/AspNetCore/KestrelCommunicationListenerTest.cs#L28](test/AspNetCore/KestrelCommunicationListenerTest.cs#L28), [test/AspNetCore/KestrelCommunicationListenerTest.cs#L44](test/AspNetCore/KestrelCommunicationListenerTest.cs#L44), [test/AspNetCore/KestrelCommunicationListenerTest.cs#L65](test/AspNetCore/KestrelCommunicationListenerTest.cs#L65), [test/AspNetCore/KestrelCommunicationListenerTest.cs#L237](test/AspNetCore/KestrelCommunicationListenerTest.cs#L237)
+
+**gpt evidence (after re-evaluation):** Release `dotnet build` is clean across all TFMs; VS Code Problems is clean. However, `dotnet format ... style --verify-no-changes --include test/AspNetCore/KestrelCommunicationListenerTest.cs` exits 1 reporting: IDE0073 header mismatch (line 1), IDE0052 unread base `sut` (line 28), IDE0300 collection initialization simplification at the `GetConstructor(new[] { ... })` calls (e.g. line 44), IDE0370 unnecessary `!` suppression (e.g. line 65), IDE0200 lambda can be removed (line 237).
+
+**gpt caveats:** (a) The unread `sut` should likely be intentionally suppressed, not removed, since the repo's test guidance says to create a readonly `sut` field at the top of the base test class even when not applicable to every test. (b) The header mismatch is relative to `.editorconfig`, but many sibling files use the same legacy border banner, suggesting a repo-wide convention/tooling mismatch rather than a file-specific cleanup item.
+
+**opus evidence (still on record):** Sibling files like [test/AspNetCore/HttpSysCommunicationListenerTest.cs#L1](test/AspNetCore/HttpSysCommunicationListenerTest.cs#L1) and [test/AspNetCore/GenericHostCommunicationListenerTest.cs#L1](test/AspNetCore/GenericHostCommunicationListenerTest.cs#L1) use the same header style without triggering IDE0073 in build; the suppressions are required by the BCL's `ConstructorInfo?` return type.
+
+**Why human review:** The diagnostics are real under `dotnet format style`, but they don't fail the build, and several reflect repo-wide convention vs. `.editorconfig` drift rather than file-specific issues. Decide which to clean up (likely IDE0300/IDE0200) vs. intentionally suppress (IDE0052 for `sut`) vs. defer as a repo-wide concern (IDE0073).
