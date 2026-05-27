@@ -20,5 +20,6 @@
     <Compile Include="ActorEventSourceTest.cs" />
     <Compile Include="ActorRemotingProviderAttributeTest.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Client\ActorProxyEventExtensionsTest.cs" />
   </ItemGroup>
 </Project>
