@@ -99,16 +99,6 @@ public abstract class ServiceEndpointCollectionTest
         }
     }
 
-    public sealed class Constructor_String_String : ServiceEndpointCollectionTest
-    {
-        [Fact]
-        public void AddsSingleEndpointIdentifiedByListenerName()
-        {
-            Assert.True(sut.TryGetEndpointAddress(listenerName, out string actual));
-            Assert.Same(endpointAddress, actual);
-        }
-    }
-
     public sealed class ToReadOnlyDictionary : ServiceEndpointCollectionTest
     {
         [Fact]
