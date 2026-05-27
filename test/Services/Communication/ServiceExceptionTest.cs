@@ -72,23 +72,13 @@ public abstract class ServiceExceptionTest
     public sealed class Constructor_String_String : ServiceExceptionTest
     {
         [Fact]
-        public void SetsActualExceptionTypeToGivenValue() =>
+        public void InitializesProperties()
+        {
             Assert.Same(actualExceptionType, sut.ActualExceptionType);
-
-        [Fact]
-        public void PassesMessageToBaseException() =>
             Assert.Same(message, sut.Message);
-
-        [Fact]
-        public void LeavesActualExceptionDataNull() =>
             Assert.Null(sut.ActualExceptionData);
-
-        [Fact]
-        public void LeavesActualExceptionStackTraceNull() =>
             Assert.Null(sut.ActualExceptionStackTrace);
-
-        [Fact]
-        public void LeavesActualInnerExceptionsNull() =>
             Assert.Null(sut.ActualInnerExceptions);
+        }
     }
 }
