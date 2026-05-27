@@ -9,6 +9,7 @@ using System;
 using System.Fabric;
 using System.Fabric.Description;
 using System.Globalization;
+using System.Reflection;
 using Fuzzy;
 using Inspector;
 using Microsoft.AspNetCore.Hosting;
@@ -38,56 +39,64 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
     {
+        // TODO: Inspector v0.9.0 sut.Constructor<TSig>() binds multiple overloads when delegate-typed parameters
+        // only differ in generic arguments (relaxed signature matching). Track via olegsych/inspector once filed.
+        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener).GetConstructor(new[] { typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IHost>) })!;
+
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(null, build));
-            Assert.Equal(nameof(serviceContext), exception.ParamName);
+            Assert.Equal(ctor.Parameter<ServiceContext>().Name, exception.ParamName);
         }
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenBuildIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(serviceContext, (Func<string, AspNetCoreCommunicationListener, IHost>)null));
-            Assert.Equal(nameof(build), exception.ParamName);
+            Assert.Equal(ctor.Parameter<Func<string, AspNetCoreCommunicationListener, IHost>>().Name, exception.ParamName);
         }
     }
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
     {
+        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener).GetConstructor(new[] { typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>) })!;
+
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(null, build));
-            Assert.Equal(nameof(serviceContext), exception.ParamName);
+            Assert.Equal(ctor.Parameter<ServiceContext>().Name, exception.ParamName);
         }
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenBuildIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(serviceContext, (Func<string, AspNetCoreCommunicationListener, IWebHost>)null));
-            Assert.Equal(nameof(build), exception.ParamName);
+            Assert.Equal(ctor.Parameter<Func<string, AspNetCoreCommunicationListener, IWebHost>>().Name, exception.ParamName);
         }
     }
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
     {
+        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener).GetConstructor(new[] { typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IHost>) })!;
+
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(null, endpointName, build));
-            Assert.Equal(nameof(serviceContext), exception.ParamName);
+            Assert.Equal(ctor.Parameter<ServiceContext>().Name, exception.ParamName);
         }
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenBuildIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(serviceContext, endpointName, (Func<string, AspNetCoreCommunicationListener, IHost>)null));
-            Assert.Equal(nameof(build), exception.ParamName);
+            Assert.Equal(ctor.Parameter<Func<string, AspNetCoreCommunicationListener, IHost>>().Name, exception.ParamName);
         }
 
         [Fact]
@@ -105,24 +114,26 @@ public abstract class KestrelCommunicationListenerTest
             // indication which argument was invalid. This test asserts the correct ParamName and will fail until the
             // SUT is fixed. Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
-            Assert.Equal(nameof(endpointName), exception.ParamName);
+            Assert.Equal(ctor.Parameter<string>().Name, exception.ParamName);
         }
     }
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
     {
+        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener).GetConstructor(new[] { typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>) })!;
+
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(null, endpointName, build));
-            Assert.Equal(nameof(serviceContext), exception.ParamName);
+            Assert.Equal(ctor.Parameter<ServiceContext>().Name, exception.ParamName);
         }
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenBuildIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(serviceContext, endpointName, (Func<string, AspNetCoreCommunicationListener, IWebHost>)null));
-            Assert.Equal(nameof(build), exception.ParamName);
+            Assert.Equal(ctor.Parameter<Func<string, AspNetCoreCommunicationListener, IWebHost>>().Name, exception.ParamName);
         }
 
         [Fact]
@@ -140,7 +151,7 @@ public abstract class KestrelCommunicationListenerTest
             // indication which argument was invalid. This test asserts the correct ParamName and will fail until the
             // SUT is fixed. Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
-            Assert.Equal(nameof(endpointName), exception.ParamName);
+            Assert.Equal(ctor.Parameter<string>().Name, exception.ParamName);
         }
     }
 
