@@ -245,6 +245,7 @@ public abstract class ServiceFabricConfigurationProviderTest
 
             configAction.Verify(_ => _(package, It.IsAny<IDictionary<string, string>>()), Times.Once);
             configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
+            activationContext.Verify(_ => _.GetConfigurationPackageObject(It.IsAny<string>()), Times.Once);
         }
 
         [Fact]
