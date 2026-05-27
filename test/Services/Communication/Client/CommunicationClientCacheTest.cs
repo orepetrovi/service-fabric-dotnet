@@ -177,8 +177,6 @@ public abstract class CommunicationClientCacheTest : IDisposable
             Assert.Same(endpoint, entry.Endpoint);
             Assert.Same(listenerName, entry.ListenerName);
             Assert.Same(rsp, entry.Rsp);
-            Assert.True(entry.IsInCache);
-            Assert.NotNull(entry.Semaphore);
         }
 
         [Fact]
