@@ -19,7 +19,7 @@ public abstract class ServiceFabricConfigurationProviderTest
     readonly ServiceFabricConfigurationProvider sut;
 
     // Constructor parameters
-    readonly Mock<ICodePackageActivationContext> activationContext = new(); // matches SUT parameter name
+    readonly Mock<ICodePackageActivationContext> activationContext = new();
     readonly ServiceFabricConfigurationOptions options;
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
