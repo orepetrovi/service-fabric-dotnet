@@ -50,7 +50,7 @@ public abstract class ServiceExceptionTest
         [Fact]
         public void StoresAssignedValue()
         {
-            var value = new List<ServiceException> { new() };
+            var value = new List<ServiceException>();
             sut.ActualInnerExceptions = value;
             Assert.Same(value, sut.ActualInnerExceptions);
         }
