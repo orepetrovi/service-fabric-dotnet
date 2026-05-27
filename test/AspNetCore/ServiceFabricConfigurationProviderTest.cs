@@ -39,6 +39,25 @@ public abstract class ServiceFabricConfigurationProviderTest
         public Constructor() =>
             matching = Package(packageName);
 
+        [Fact(Explicit = true)] // TODO: SUT bug. Constructor doesn't validate activationContext.
+        public void ThrowsArgumentNullExceptionWhenActivationContextIsNull()
+        {
+            // The constructor stores activationContext without a null check and then dereferences it
+            // when subscribing to ConfigurationPackageModifiedEvent, causing NullReferenceException
+            // instead of an ArgumentNullException naming the offending parameter.
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => new ServiceFabricConfigurationProvider(null, options));
+            Assert.Equal(sut.Constructor().Parameter<ICodePackageActivationContext>().Name, exception.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenOptionsIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => new ServiceFabricConfigurationProvider(activationContext.Object, null));
+            Assert.Equal(sut.Constructor().Parameter<ServiceFabricConfigurationOptions>().Name, exception.ParamName);
+        }
+
         [Fact]
         public void LoadsPackageAndNotifiesChangeWhenAddedPackageNameMatches()
         {
@@ -153,25 +172,6 @@ public abstract class ServiceFabricConfigurationProviderTest
             // instead of an ArgumentNullException naming the offending parameter.
             var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(null));
             Assert.Equal("package", exception.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Constructor doesn't validate activationContext.
-        public void ThrowsArgumentNullExceptionWhenActivationContextIsNull()
-        {
-            // The constructor stores activationContext without a null check and then dereferences it
-            // when subscribing to ConfigurationPackageModifiedEvent, causing NullReferenceException
-            // instead of an ArgumentNullException naming the offending parameter.
-            var exception = Assert.Throws<ArgumentNullException>(
-                () => new ServiceFabricConfigurationProvider(null, options));
-            Assert.Equal(sut.Constructor().Parameter<ICodePackageActivationContext>().Name, exception.ParamName);
-        }
-
-        [Fact]
-        public void ThrowsArgumentNullExceptionWhenOptionsIsNull()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(
-                () => new ServiceFabricConfigurationProvider(activationContext.Object, null));
-            Assert.Equal(sut.Constructor().Parameter<ServiceFabricConfigurationOptions>().Name, exception.ParamName);
         }
 
         void RaiseModified(ConfigurationPackage newPackage) =>
