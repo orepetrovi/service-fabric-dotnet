@@ -19,6 +19,11 @@ public abstract class ServiceNameFormatTest
         [Fact]
         public void StripsLeadingIFromInterfaceTypeNameAndAppendsEndpointSuffix() =>
             Assert.Equal("DisposableServiceEndpoint", ServiceNameFormat.GetEndpointName(typeof(IDisposable)));
+
+        // Pins current behavior: SUT does not validate the argument and dereferences it. Bug fix is out of scope.
+        [Fact]
+        public void ThrowsNullReferenceExceptionWhenServiceInterfaceTypeIsNull() =>
+            Assert.Throws<NullReferenceException>(() => ServiceNameFormat.GetEndpointName(null));
     }
 
     public sealed class GetName_String : ServiceNameFormatTest
@@ -35,6 +40,11 @@ public abstract class ServiceNameFormatTest
         [InlineData("iservice", "iservice")]
         public void ReturnsExpectedName(string serviceInterfaceTypeName, string expected) =>
             Assert.Equal(expected, ServiceNameFormat.GetName(serviceInterfaceTypeName));
+
+        // Pins current behavior: SUT does not validate the argument and dereferences it. Bug fix is out of scope.
+        [Fact]
+        public void ThrowsNullReferenceExceptionWhenServiceInterfaceTypeNameIsNull() =>
+            Assert.Throws<NullReferenceException>(() => ServiceNameFormat.GetName((string)null));
     }
 
     public sealed class GetName_Type : ServiceNameFormatTest
@@ -46,5 +56,10 @@ public abstract class ServiceNameFormatTest
         [Fact]
         public void StripsLeadingIFromInterfaceTypeName() =>
             Assert.Equal("DisposableService", ServiceNameFormat.GetName(typeof(IDisposable)));
+
+        // Pins current behavior: SUT does not validate the argument and dereferences it. Bug fix is out of scope.
+        [Fact]
+        public void ThrowsNullReferenceExceptionWhenServiceInterfaceTypeIsNull() =>
+            Assert.Throws<NullReferenceException>(() => ServiceNameFormat.GetName((Type)null));
     }
 }
