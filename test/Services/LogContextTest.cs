@@ -42,10 +42,11 @@ public abstract class LogContextTest : IDisposable
         [Fact]
         public void ReturnsRequestIdOfCurrentLogContext()
         {
-            sut.RequestId = fuzzy.Guid();
+            Guid expected = fuzzy.Guid();
+            sut.RequestId = expected;
             LogContext.Set(sut);
 
-            Assert.Equal(sut.RequestId, LogContext.GetRequestIdOrDefault());
+            Assert.Equal(expected, LogContext.GetRequestIdOrDefault());
         }
 
         [Fact]
