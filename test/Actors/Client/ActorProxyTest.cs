@@ -35,16 +35,12 @@ public abstract class ActorProxyTest
         }
 
         [Fact]
-        public void StoresServicePartitionClientAccessibleViaActorServicePartitionClientV2() =>
+        public void StoresParametersAccessibleViaProperties()
+        {
             Assert.Same(client, sut.ActorServicePartitionClientV2);
-
-        [Fact]
-        public void StoresServicePartitionClientAccessibleViaActorId() =>
             Assert.Same(client.ActorId, sut.ActorId);
-
-        [Fact]
-        public void StoresMessageBodyFactoryAccessibleViaServiceRemotingMessageBodyFactory() =>
             Assert.Same(serviceRemotingMessageBodyFactory, sut.ServiceRemotingMessageBodyFactory);
+        }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Initialize doesn't validate client.
         public void ThrowsArgumentNullExceptionWhenClientIsNull()
