@@ -105,6 +105,11 @@ public abstract class CommunicationClientCacheTest : IDisposable
         readonly string listenerName = fuzzy.String();
         readonly ResolvedServicePartition rsp = Type<ResolvedServicePartition>.Uninitialized();
 
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for endpoint.
+        public void ThrowsNullReferenceExceptionWhenEndpointIsNull() =>
+            Assert.Throws<NullReferenceException>(() =>
+                sut.GetOrAddClientCacheEntry(partitionId, null, listenerName, rsp));
+
         [Fact]
         public void ReturnsNewEntryInitializedWithGivenArguments()
         {
@@ -215,6 +220,11 @@ public abstract class CommunicationClientCacheTest : IDisposable
         readonly Guid partitionId = fuzzy.Guid();
         readonly ResolvedServiceEndpoint endpoint = MakeEndpoint();
         readonly string listenerName = fuzzy.String();
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for endpoint.
+        public void ThrowsNullReferenceExceptionWhenEndpointIsNull() =>
+            Assert.Throws<NullReferenceException>(() =>
+                sut.TryGetClientCacheEntry(partitionId, null, listenerName, out _));
 
         [Fact]
         public void ReturnsFalseAndNullWhenPartitionDoesNotExist()
