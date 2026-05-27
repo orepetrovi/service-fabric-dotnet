@@ -18,12 +18,13 @@ namespace Microsoft.ServiceFabric.Actors.Client
         public sealed class SubscribeAsync_IActorEventPublisher_TEvent : ActorProxyEventExtensionsTest
         {
             // Method parameters
-            readonly IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
+            readonly IActorEventPublisher actorProxy = new TestProxy();
             readonly IActorEvents subscriber = Mock.Of<IActorEvents>();
 
             [Fact]
             public async Task ThrowsArgumentExceptionWhenActorProxyIsNotActorProxy()
             {
+                IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
                 var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.SubscribeAsync(subscriber));
                 Assert.Equal("actorProxy", exception.ParamName);
             }
@@ -42,13 +43,14 @@ namespace Microsoft.ServiceFabric.Actors.Client
         public sealed class SubscribeAsync_IActorEventPublisher_TEvent_TimeSpan : ActorProxyEventExtensionsTest
         {
             // Method parameters
-            readonly IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
+            readonly IActorEventPublisher actorProxy = new TestProxy();
             readonly IActorEvents subscriber = Mock.Of<IActorEvents>();
             readonly TimeSpan resubscriptionInterval = fuzzy.TimeSpan();
 
             [Fact]
             public async Task ThrowsArgumentExceptionWhenActorProxyIsNotActorProxy()
             {
+                IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
                 var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.SubscribeAsync(subscriber, resubscriptionInterval));
                 Assert.Equal("actorProxy", exception.ParamName);
             }
@@ -66,11 +68,14 @@ namespace Microsoft.ServiceFabric.Actors.Client
 
         public sealed class UnsubscribeAsync : ActorProxyEventExtensionsTest
         {
+            // Method parameters
+            readonly IActorEventPublisher actorProxy = new TestProxy();
+            readonly IActorEvents subscriber = Mock.Of<IActorEvents>();
+
             [Fact]
             public async Task ThrowsArgumentExceptionWhenActorProxyIsNotActorProxy()
             {
                 IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
-                IActorEvents subscriber = Mock.Of<IActorEvents>();
 
                 var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.UnsubscribeAsync(subscriber));
 
@@ -80,7 +85,6 @@ namespace Microsoft.ServiceFabric.Actors.Client
             [Fact]
             public async Task ThrowsArgumentExceptionWhenTEventDoesNotImplementIActorEvents()
             {
-                IActorEventPublisher actorProxy = new TestProxy();
                 string subscriber = fuzzy.String();
 
                 var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.UnsubscribeAsync(subscriber));
