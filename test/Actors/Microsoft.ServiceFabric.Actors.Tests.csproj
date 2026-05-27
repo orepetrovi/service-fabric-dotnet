@@ -21,6 +21,7 @@
     <Compile Include="ActorRemotingProviderAttributeTest.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Client\ActorProxyEventExtensionsTest.cs" />
+    <Compile Include="Client\ActorProxyFactoryTest.cs" />
     <Compile Include="Client\ActorProxyTest.cs" />
     <Compile Include="IFuzzExtensions.cs" />
   </ItemGroup>
