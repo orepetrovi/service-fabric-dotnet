@@ -143,6 +143,21 @@ public abstract class ActorProxyFactoryTest
 
             Assert.Equal(ServiceRemotingProviderAttribute.DefaultV2listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
         }
+
+        [Fact]
+        public void SubstitutesWrappedMessageStackListenerNameWhenOverrideDefaultIsSetForV2_1()
+        {
+            // Exercises the V2_1 branch of OverrideDefaultListenerName. The default sut's proxyFactoryV2 is
+            // already non-null (constructed with a Func), so CreateActorProxy skips lazy init and applies the
+            // override configured here. Reaching this branch via the lazy-init path would require an actor
+            // interface from an assembly carrying an ActorRemotingProviderAttribute with V2_1, which would
+            // change the provider seen by the other tests in this assembly.
+            sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2_1);
+
+            var proxy = (IActorProxy)sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName: null);
+
+            Assert.Equal(ServiceRemotingProviderAttribute.DefaultWrappedMessageStackListenerName, proxy.ActorServicePartitionClientV2.ListenerName);
+        }
     }
 
     public sealed class CreateActorProxy_Type_Uri_ActorId_String : ActorProxyFactoryTest
