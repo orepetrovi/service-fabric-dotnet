@@ -50,6 +50,16 @@ public abstract class CommunicationClientCacheEntryTest
 
             Assert.Same(client, sut.Client);
         }
+
+        [Fact]
+        public void ReturnsNullAfterWeakReferenceTargetWasCollected()
+        {
+            sut.Client = client;
+            sut.Field<ICommunicationClient>().Set(null);
+            sut.Field<WeakReference>().Set(new WeakReference(null)); // Simulates GC collecting the target.
+
+            Assert.Null(sut.Client);
+        }
     }
 
     public sealed class Constructor : CommunicationClientCacheEntryTest
