@@ -27,18 +27,16 @@ public abstract class ServicePartitionResolverTest
     ServicePartitionResolverTest() =>
         sut = new ServicePartitionResolver(createFabricClient, recreateFabricClient);
 
-    public sealed class DefaultResolveTimeout : ServicePartitionResolverTest
+    public sealed class Constructor_CreateFabricClientDelegate : ServicePartitionResolverTest
     {
         [Fact]
-        public void IsThirtySeconds() =>
-            Assert.Equal(TimeSpan.FromSeconds(30), ServicePartitionResolver.DefaultResolveTimeout);
-    }
+        public void StoresGivenDelegateAsCreateAndRecreate()
+        {
+            var sut = new ServicePartitionResolver(createFabricClient);
 
-    public sealed class DefaultMaxRetryBackoffInterval : ServicePartitionResolverTest
-    {
-        [Fact]
-        public void IsFiveSeconds() =>
-            Assert.Equal(TimeSpan.FromSeconds(5), ServicePartitionResolver.DefaultMaxRetryBackoffInterval);
+            Assert.Same(createFabricClient, sut.Field<CreateFabricClientDelegate>("createFabricClient").Value);
+            Assert.Same(createFabricClient, sut.Field<CreateFabricClientDelegate>("recreateFabricClient").Value);
+        }
     }
 
     public sealed class Constructor_CreateFabricClientDelegate_CreateFabricClientDelegate : ServicePartitionResolverTest
@@ -64,27 +62,6 @@ public abstract class ServicePartitionResolverTest
             Assert.True(sut.UseNotification);
     }
 
-    public sealed class Constructor_CreateFabricClientDelegate : ServicePartitionResolverTest
-    {
-        [Fact]
-        public void StoresGivenDelegateAsCreateAndRecreate()
-        {
-            var sut = new ServicePartitionResolver(createFabricClient);
-
-            Assert.Same(createFabricClient, sut.Field<CreateFabricClientDelegate>("createFabricClient").Value);
-            Assert.Same(createFabricClient, sut.Field<CreateFabricClientDelegate>("recreateFabricClient").Value);
-        }
-    }
-
-    public sealed class Constructor_StringArray : ServicePartitionResolverTest
-    {
-        readonly string[] connectionEndpoints = [fuzzy.String(), fuzzy.String()];
-
-        [Fact]
-        public void SetsBothDelegatesToSameNonNullDelegate() =>
-            AssertCreateAndRecreateAreSameNonNullDelegate(new ServicePartitionResolver(connectionEndpoints));
-    }
-
     public sealed class Constructor_FabricClientSettings_StringArray : ServicePartitionResolverTest
     {
         readonly FabricClientSettings settings = null;
@@ -93,6 +70,17 @@ public abstract class ServicePartitionResolverTest
         [Fact]
         public void SetsBothDelegatesToSameNonNullDelegate() =>
             AssertCreateAndRecreateAreSameNonNullDelegate(new ServicePartitionResolver(settings, connectionEndpoints));
+    }
+
+    public sealed class Constructor_SecurityCredentials_FabricClientSettings_StringArray : ServicePartitionResolverTest
+    {
+        readonly SecurityCredentials credential = null;
+        readonly FabricClientSettings settings = null;
+        readonly string[] connectionEndpoints = [fuzzy.String(), fuzzy.String()];
+
+        [Fact]
+        public void SetsBothDelegatesToSameNonNullDelegate() =>
+            AssertCreateAndRecreateAreSameNonNullDelegate(new ServicePartitionResolver(credential, settings, connectionEndpoints));
     }
 
     public sealed class Constructor_SecurityCredentials_StringArray : ServicePartitionResolverTest
@@ -105,15 +93,27 @@ public abstract class ServicePartitionResolverTest
             AssertCreateAndRecreateAreSameNonNullDelegate(new ServicePartitionResolver(credential, connectionEndpoints));
     }
 
-    public sealed class Constructor_SecurityCredentials_FabricClientSettings_StringArray : ServicePartitionResolverTest
+    public sealed class Constructor_StringArray : ServicePartitionResolverTest
     {
-        readonly SecurityCredentials credential = null;
-        readonly FabricClientSettings settings = null;
         readonly string[] connectionEndpoints = [fuzzy.String(), fuzzy.String()];
 
         [Fact]
         public void SetsBothDelegatesToSameNonNullDelegate() =>
-            AssertCreateAndRecreateAreSameNonNullDelegate(new ServicePartitionResolver(credential, settings, connectionEndpoints));
+            AssertCreateAndRecreateAreSameNonNullDelegate(new ServicePartitionResolver(connectionEndpoints));
+    }
+
+    public sealed class DefaultMaxRetryBackoffInterval : ServicePartitionResolverTest
+    {
+        [Fact]
+        public void IsFiveSeconds() =>
+            Assert.Equal(TimeSpan.FromSeconds(5), ServicePartitionResolver.DefaultMaxRetryBackoffInterval);
+    }
+
+    public sealed class DefaultResolveTimeout : ServicePartitionResolverTest
+    {
+        [Fact]
+        public void IsThirtySeconds() =>
+            Assert.Equal(TimeSpan.FromSeconds(30), ServicePartitionResolver.DefaultResolveTimeout);
     }
 
     public sealed class GetDefault : ServicePartitionResolverTest, IDisposable
@@ -134,23 +134,6 @@ public abstract class ServicePartitionResolverTest
         {
             ServicePartitionResolver.SetDefault(null);
             Assert.NotNull(ServicePartitionResolver.GetDefault());
-        }
-    }
-
-    public sealed class SetDefault : ServicePartitionResolverTest, IDisposable
-    {
-        readonly ServicePartitionResolver original = ServicePartitionResolver.GetDefault();
-
-        void IDisposable.Dispose() => ServicePartitionResolver.SetDefault(original);
-
-        [Fact]
-        public void UpdatesValueReturnedByGetDefault()
-        {
-            var defaultServiceResolver = new ServicePartitionResolver(createFabricClient);
-
-            ServicePartitionResolver.SetDefault(defaultServiceResolver);
-
-            Assert.Same(defaultServiceResolver, ServicePartitionResolver.GetDefault());
         }
     }
 
@@ -211,6 +194,23 @@ public abstract class ServicePartitionResolverTest
 
             await Assert.ThrowsAsync<OperationCanceledException>(
                 () => sut.ResolveAsync(serviceUri, null, resolveTimeoutPerTry, maxRetryBackoffInterval, cts.Token));
+        }
+    }
+
+    public sealed class SetDefault : ServicePartitionResolverTest, IDisposable
+    {
+        readonly ServicePartitionResolver original = ServicePartitionResolver.GetDefault();
+
+        void IDisposable.Dispose() => ServicePartitionResolver.SetDefault(original);
+
+        [Fact]
+        public void UpdatesValueReturnedByGetDefault()
+        {
+            var defaultServiceResolver = new ServicePartitionResolver(createFabricClient);
+
+            ServicePartitionResolver.SetDefault(defaultServiceResolver);
+
+            Assert.Same(defaultServiceResolver, ServicePartitionResolver.GetDefault());
         }
     }
 
