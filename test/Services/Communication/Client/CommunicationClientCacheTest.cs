@@ -328,6 +328,31 @@ public abstract class CommunicationClientCacheTest : IDisposable
             Assert.True(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Same(added, cacheEntry);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. PartitionClientCacheKey.GetHashCode is case-sensitive while Equals is case-insensitive.
+        public void ReturnsTrueAndPreviouslyAddedEntryWhenListenerNameDiffersOnlyInCase()
+        {
+            string upper = (listenerName + "abc").ToUpperInvariant();
+            string lower = upper.ToLowerInvariant();
+            CommunicationClientCacheEntry<ICommunicationClient> added =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, upper, null);
+
+            Assert.True(sut.TryGetClientCacheEntry(partitionId, endpoint, lower, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
+            Assert.Same(added, cacheEntry);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. PartitionClientCacheKey.GetHashCode is case-sensitive while Equals is case-insensitive.
+        public void ReturnsTrueAndPreviouslyAddedEntryWhenEndpointAddressDiffersOnlyInCase()
+        {
+            string address = (fuzzy.String() + "abc").ToUpperInvariant();
+            ResolvedServiceEndpoint upper = MakeEndpoint(address, ServiceEndpointRole.Stateless);
+            ResolvedServiceEndpoint lower = MakeEndpoint(address.ToLowerInvariant(), ServiceEndpointRole.Stateless);
+            CommunicationClientCacheEntry<ICommunicationClient> added =
+                sut.GetOrAddClientCacheEntry(partitionId, upper, listenerName, null);
+
+            Assert.True(sut.TryGetClientCacheEntry(partitionId, lower, listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
+            Assert.Same(added, cacheEntry);
+        }
     }
 
     static ResolvedServiceEndpoint MakeEndpoint() =>
