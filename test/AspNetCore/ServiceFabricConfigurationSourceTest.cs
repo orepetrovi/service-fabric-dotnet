@@ -15,7 +15,7 @@ namespace Microsoft.ServiceFabric.AspNetCore.Configuration;
 
 public abstract class ServiceFabricConfigurationSourceTest
 {
-    readonly ServiceFabricConfigurationSource sut;
+    readonly IConfigurationSource sut;
 
     // Constructor parameters
     readonly ICodePackageActivationContext activationContext = Mock.Of<ICodePackageActivationContext>();
@@ -31,6 +31,10 @@ public abstract class ServiceFabricConfigurationSourceTest
 
     public sealed class ActivationContext : ServiceFabricConfigurationSourceTest
     {
+        new readonly ServiceFabricConfigurationSource sut;
+
+        public ActivationContext() => sut = (ServiceFabricConfigurationSource)base.sut;
+
         [Fact]
         public void ReturnsActivationContextPassedToConstructor() =>
             Assert.Same(activationContext, sut.ActivationContext);
