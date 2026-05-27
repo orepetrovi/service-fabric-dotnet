@@ -50,6 +50,19 @@ public abstract class HttpSysCommunicationListenerTest
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, string.Empty, build));
             Assert.Equal(HttpSysSR.EndpointNameNullOrEmptyExceptionMessage, exception.Message);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing paramName argument to ArgumentException.
+        public void SetsParamNameToEndpointNameOnArgumentException()
+        {
+            // The constructor throws `new ArgumentException(SR.EndpointNameNullOrEmptyExceptionMessage)` without
+            // passing the paramName argument, so the resulting exception's ParamName is null and gives callers no
+            // indication which argument was invalid. This test asserts the correct ParamName and will fail until the
+            // SUT is fixed. Fixing the SUT is out of scope for the current change.
+            var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, null, build));
+            Assert.Equal(
+                sut.Constructor<Action<ServiceContext, string, Func<string, AspNetCoreCommunicationListener, IHost>>>().Parameter<string>().Name,
+                exception.ParamName);
+        }
     }
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : HttpSysCommunicationListenerTest
@@ -66,6 +79,19 @@ public abstract class HttpSysCommunicationListenerTest
         {
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, string.Empty, build));
             Assert.Equal(HttpSysSR.EndpointNameNullOrEmptyExceptionMessage, exception.Message);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing paramName argument to ArgumentException.
+        public void SetsParamNameToEndpointNameOnArgumentException()
+        {
+            // The constructor throws `new ArgumentException(SR.EndpointNameNullOrEmptyExceptionMessage)` without
+            // passing the paramName argument, so the resulting exception's ParamName is null and gives callers no
+            // indication which argument was invalid. This test asserts the correct ParamName and will fail until the
+            // SUT is fixed. Fixing the SUT is out of scope for the current change.
+            var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, null, build));
+            Assert.Equal(
+                sut.Constructor<Action<ServiceContext, string, Func<string, AspNetCoreCommunicationListener, IWebHost>>>().Parameter<string>().Name,
+                exception.ParamName);
         }
     }
 
