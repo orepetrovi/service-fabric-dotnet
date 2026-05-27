@@ -1,30 +1,3 @@
-### ❓ Needs Human Review — `WithoutEndpointName` is nested under `GetListenerUrl` but does not inherit it
-Reported by: `opus`. Cross-check: `gemini` Agree, `gpt` Disagree. After cross-check, `opus` insisted.
-
-[test/AspNetCore/KestrelCommunicationListenerTest.cs](test/AspNetCore/KestrelCommunicationListenerTest.cs#L223-L253)
-
-**Original finding (opus):**
-`WithoutEndpointName : KestrelCommunicationListenerTest` is physically nested inside the `GetListenerUrl` abstract class but inherits from the outer top-level base, then re-declares its own `context`, shadowed `sut`, and `WithIHost` / `WithIWebHost` pair. The visual nesting implies "GetListenerUrl > WithoutEndpointName" inheritance, but the class hierarchy is flat. Either:
-- promote `WithoutEndpointName` to a sibling of `GetListenerUrl` (i.e., directly under the outer test class) so nesting matches inheritance, or
-- inherit it from `GetListenerUrl` and let the base's `endpointName` parameterisation handle the null case.
-
-The repo pattern in [.github/instructions/test.instructions.md](.github/instructions/test.instructions.md) — "Use nested test classes to mirror SUT structure" — assumes nesting reflects logical containment. The `HttpSys` peer doesn't have this construct, so the precedent is not in conflict.
-
-**Cross-check — gemini (Agree):**
-Mixing visual containment with flat inheritance is confusing and breaks fixture-reuse patterns. If placed inside to organize subgroups for `GetListenerUrl`, it should inherit from `GetListenerUrl` and adapt the setup; otherwise it should be a sibling. Guideline states nested test classes should mirror product structure and derive from the base to share the fixture.
-
-**Cross-check — gpt (Disagree):**
-Physical nesting under `GetListenerUrl` matches the tested member: `WithoutEndpointName` still tests `sut.GetListenerUrl()`, just using constructor overloads without an endpoint name. Both `GetListenerUrl` and `WithoutEndpointName` explicitly inherit `KestrelCommunicationListenerTest`. The separate fixture is needed because it constructs the SUT through overloads that do not accept `endpointName` ([L229-L240](test/AspNetCore/KestrelCommunicationListenerTest.cs#L229-L240)). Having its own `context` and `sut` is not accidental shadowing; it reflects a different constructor shape. The HttpSys peer rejects null endpoint names so has no equivalent grouping.
-
-**Author response (opus Insist):**
-gpt's argument actually reinforces the problem. If `WithoutEndpointName` tests `sut.GetListenerUrl()`, then the repo convention applies: "Make them inherit from the base test class to reuse the test fixture from the base test class." The current code is nested under `GetListenerUrl` (signaling fixture reuse) but inherits from `KestrelCommunicationListenerTest` (bypassing that fixture) and then re-declares `context`, a shadowed `sut`, and its own `WithIHost`/`WithIWebHost` pair that duplicate the shape of `GetListenerUrl`'s subclasses — exactly the mismatch gemini flagged. gpt's "different constructor shape" justification supports *promoting `WithoutEndpointName` to a sibling*, not the current hybrid. Either fix resolves it:
-- Sibling of `GetListenerUrl`: honest about having its own fixture; loses the visual grouping.
-- Inherit from `GetListenerUrl`: keeps visual grouping; requires the parent's `sut` construction to be overridable (e.g., abstract factory) so the fixture is actually reused — `context` would no longer need re-declaring.
-
-The status quo — nested for grouping, flat-inherited for fixture, duplicated subclass pair — is what the guideline's inheritance rule exists to prevent.
-
----
-
 ### ⚠️ Should Fix — Test file belongs in a dedicated `AspNetCore.Kestrel` test project
 Reported by: `gemini`. Cross-check: `gpt` Agree, `opus` Agree. Author pushed back; deferred for human decision.
 
@@ -101,3 +74,29 @@ Four `GetListenerUrlReturnsDefaultHttpUrl*` tests live inside the four `Construc
 **Decision needed:** keep the per-overload pinning as-is, or refactor into a parameterized test under `GetListenerUrl`.
 
 **Iterator note:** This is part of a multi-round oscillation across reviewers on where null-endpoint `GetListenerUrl` coverage should live. Previous rounds pulled this coverage out of `GetListenerUrl`, into separate sibling classes, then collapsed it back into a single `GetListenerUrl` test, then required per-overload coverage (the current placement). Human judgment is requested to break the cycle.
+
+---
+
+## ⚠️ Should Fix — Missing coverage for the non-null `IHost` constructor's `endpointName` assignment
+
+**Reported by GPT, agreed by Opus, Gemini abstained.**
+
+The `GetListenerUrl` fixture at [test/AspNetCore/KestrelCommunicationListenerTest.cs#L207](test/AspNetCore/KestrelCommunicationListenerTest.cs#L207) constructs the SUT through the base class's `build` delegate field, which is typed `Func<string, AspNetCoreCommunicationListener, IWebHost>` at [test/AspNetCore/KestrelCommunicationListenerTest.cs#L34](test/AspNetCore/KestrelCommunicationListenerTest.cs#L34). The endpoint-backed theories at [L220](test/AspNetCore/KestrelCommunicationListenerTest.cs#L220) and [L240](test/AspNetCore/KestrelCommunicationListenerTest.cs#L240) and the not-in-manifest test at [L281](test/AspNetCore/KestrelCommunicationListenerTest.cs#L281) all flow exclusively through the `IWebHost` 3-arg ctor.
+
+The `IHost` 3-arg ctor's `this.endpointName = endpointName` assignment at [src/AspNetCore.Kestrel/KestrelCommunicationListener.cs#L78-L86](src/AspNetCore.Kestrel/KestrelCommunicationListener.cs#L78-L86) is only reached via `GetListenerUrlReturnsDefaultHttpUrlWhenEndpointNameIsNull` at [L143](test/AspNetCore/KestrelCommunicationListenerTest.cs#L143), which passes `endpointName: null`. If that assignment were removed, no test would observe an endpoint-name regression isolated to the `IHost` overload.
+
+**Recommendation.** Add an `IHost` variant of the endpoint-backed `GetListenerUrl` tests, or parameterize the `GetListenerUrl` fixture over both build-delegate shapes.
+
+**Iterator note (oscillation):** An earlier round of this iteration (round ~7) explicitly directed us to COLLAPSE the `WithIHost`/`WithIWebHost` matrix in `GetListenerUrl`, with rationale "GetListenerUrl does not reference the build delegate at all; the IHost vs IWebHost branch is decided in AspNetCoreCommunicationListener's constructor and never reaches GetListenerUrl." We complied (and also applied the same collapse to HttpSysCommunicationListenerTest.cs for consistency). This round flips that position. Human decides which is correct; whichever way, please align both peer files.
+
+---
+
+## ⚠️ Should Fix — Active empty-`endpointName` tests pin the missing-`ParamName` bug
+
+**Reported by GPT, agreed by Opus, Gemini abstained.**
+
+The active tests at [L127](test/AspNetCore/KestrelCommunicationListenerTest.cs#L127) and [L174](test/AspNetCore/KestrelCommunicationListenerTest.cs#L174) assert `Assert.Equal(KestrelSR.EndpointNameEmptyExceptionMessage, exception.Message)` — exact equality on `Message`. `ArgumentException.Message` is formatted as `"{message} (Parameter '{paramName}')"` when `ParamName` is non-null. Once the SUT is fixed per the adjacent `[Fact(Explicit = true)]` tests at [L128-L137](test/AspNetCore/KestrelCommunicationListenerTest.cs#L128-L137) and [L177-L186](test/AspNetCore/KestrelCommunicationListenerTest.cs#L177-L186), `exception.Message` will gain the `" (Parameter 'endpointName')"` suffix, breaking the equality assertion. The SUT fix would simultaneously turn the explicit tests green and the active tests red.
+
+**Recommendation.** Assert the invariant message prefix with `Assert.StartsWith(KestrelSR.EndpointNameEmptyExceptionMessage, exception.Message)` (or `Contains`) and leave `ParamName` to the explicit bug tests.
+
+**Iterator note (oscillation):** An earlier round (round ~9) explicitly directed us to switch FROM `Assert.StartsWith` TO `Assert.Equal` for parity with `HttpSysCommunicationListenerTest.cs` and with rationale "When the bug is fixed, the explicit test becomes non-explicit and the regular test is updated alongside." We complied and aligned both peer files. This round flips that position. Human decides which is correct; whichever way, please align both peer files.
