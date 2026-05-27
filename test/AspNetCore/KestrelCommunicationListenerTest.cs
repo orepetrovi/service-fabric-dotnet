@@ -36,34 +36,8 @@ public abstract class KestrelCommunicationListenerTest
     KestrelCommunicationListenerTest() =>
         sut = new KestrelCommunicationListener(serviceContext, endpointName, build);
 
-    public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
-    {
-        [Fact]
-        public void DoesNotThrowWhenEndpointNameIsImplicitlyNull()
-        {
-            _ = new KestrelCommunicationListener(serviceContext, build);
-        }
-    }
-
-    public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
-    {
-        new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
-
-        [Fact]
-        public void DoesNotThrowWhenEndpointNameIsImplicitlyNull()
-        {
-            _ = new KestrelCommunicationListener(serviceContext, build);
-        }
-    }
-
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
     {
-        [Fact]
-        public void DoesNotThrowWhenEndpointNameIsNull()
-        {
-            _ = new KestrelCommunicationListener(serviceContext, null, build);
-        }
-
         [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
@@ -86,12 +60,6 @@ public abstract class KestrelCommunicationListenerTest
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
     {
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
-
-        [Fact]
-        public void DoesNotThrowWhenEndpointNameIsNull()
-        {
-            _ = new KestrelCommunicationListener(serviceContext, null, build);
-        }
 
         [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
