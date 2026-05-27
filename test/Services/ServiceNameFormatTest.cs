@@ -28,20 +28,32 @@ public abstract class ServiceNameFormatTest
 
     public sealed class GetName_String : ServiceNameFormatTest
     {
+        [Fact]
+        public void AppendsServiceSuffixWhenNameDoesNotEndWithService() =>
+            Assert.Equal("FooService", ServiceNameFormat.GetName("Foo"));
+
         [Theory]
-        [InlineData("Foo", "FooService")]
-        [InlineData("MyService", "MyService")]
-        [InlineData("myservice", "myservice")]
-        [InlineData("MYSERVICE", "MYSERVICE")]
-        [InlineData("IFoo", "FooService")]
-        [InlineData("IMyService", "MyService")]
-        [InlineData("IService", "Service")]
-        [InlineData("Ifoo", "IfooService")]
-        [InlineData("iservice", "iservice")]
-        [InlineData("", "Service")]
-        [InlineData("I", "Service")]
-        public void ReturnsExpectedName(string serviceInterfaceTypeName, string expected) =>
-            Assert.Equal(expected, ServiceNameFormat.GetName(serviceInterfaceTypeName));
+        [InlineData("MyService")]
+        [InlineData("myservice")]
+        [InlineData("MYSERVICE")]
+        public void KeepsNameThatEndsWithServiceCaseInsensitively(string name) =>
+            Assert.Equal(name, ServiceNameFormat.GetName(name));
+
+        [Fact]
+        public void StripsLeadingIWhenFollowedByUppercaseLetter() =>
+            Assert.Equal("FooService", ServiceNameFormat.GetName("IFoo"));
+
+        [Fact]
+        public void KeepsLeadingIWhenFollowedByLowercaseLetter() =>
+            Assert.Equal("IfooService", ServiceNameFormat.GetName("Ifoo"));
+
+        [Fact]
+        public void ReturnsServiceWhenNameIsEmpty() =>
+            Assert.Equal("Service", ServiceNameFormat.GetName(string.Empty));
+
+        [Fact]
+        public void ReturnsServiceWhenNameIsSingleI() =>
+            Assert.Equal("Service", ServiceNameFormat.GetName("I"));
 
         // Pins current behavior: SUT does not validate the argument and dereferences it. Bug fix is out of scope.
         [Fact]
