@@ -20,7 +20,7 @@ public abstract class ServiceExceptionTest
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    protected ServiceExceptionTest() =>
+    ServiceExceptionTest() =>
         sut = new ServiceException(actualExceptionType, message);
 
     public sealed class ActualExceptionData : ServiceExceptionTest
