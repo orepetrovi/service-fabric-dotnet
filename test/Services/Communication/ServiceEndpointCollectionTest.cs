@@ -287,6 +287,15 @@ public abstract class ServiceEndpointCollectionTest
             Assert.Null(actual);
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. JSON null is reported as a valid collection.
+        public void ReturnsFalseAndOutputsNullWhenEndpointsStringIsJsonNull()
+        {
+            bool result = ServiceEndpointCollection.TryParseEndpointsString("null", out ServiceEndpointCollection actual);
+
+            Assert.False(result);
+            Assert.Null(actual);
+        }
+
         [Fact]
         public void ReturnsFalseAndOutputsNullWhenEndpointsStringIsNull()
         {
