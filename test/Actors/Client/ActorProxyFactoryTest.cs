@@ -11,6 +11,7 @@ using Microsoft.ServiceFabric.Actors.Remoting.V2.Client;
 using Microsoft.ServiceFabric.Actors.Tests;
 using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Communication.Client;
+using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Microsoft.ServiceFabric.Services.Remoting.V2.Client;
 using Moq;
@@ -128,6 +129,32 @@ public abstract class ActorProxyFactoryTest
             var v2 = sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value;
             Assert.NotNull(v2);
             Assert.Same(retrySettings, v2.Field<OperationRetrySettings>().Value);
+        }
+
+        [Fact]
+        public void SubstitutesDefaultListenerNameWhenLazyInitOverrodeItAndCallerSuppliedNull()
+        {
+            // Exercises the override branch in OverrideListenerNameIfConditionMet: lazy init via the no-Func
+            // constructor sets overrideListenerName=true and defaultListenerName from the default provider
+            // (FabricTransportActorRemotingProviderAttribute => V2 => DefaultV2listenerName). The V2 factory
+            // built by lazy init is wired to the default provider whose factory delegate requires the Service
+            // Fabric runtime, so it is replaced with one bound to the mock client factory before creating the
+            // proxy whose ListenerName is then observed.
+            var sut = new ActorProxyFactory(retrySettings);
+            try
+            {
+                sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName);
+            }
+            catch
+            {
+            }
+
+            sut.Field<Remoting.V2.Client.ActorProxyFactory>()
+                .Set(new Remoting.V2.Client.ActorProxyFactory(createServiceRemotingClientFactory, retrySettings));
+
+            var proxy = (IActorProxy)sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName: null);
+
+            Assert.Equal(ServiceRemotingProviderAttribute.DefaultV2listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
         }
     }
 
