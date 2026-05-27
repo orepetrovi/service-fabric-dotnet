@@ -95,6 +95,9 @@ public abstract class ServiceFabricConfigurationProviderTest
         {
             ConfigurationPackage otherPackage =
                 MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), "Other");
+            string existingKey = fuzzy.String().LettersOrDigits();
+            string existingValue = fuzzy.String().LettersOrDigits();
+            sut.Set(existingKey, existingValue);
             IChangeToken token = sut.GetReloadToken();
 
             RaiseAdded(otherPackage);
@@ -103,6 +106,8 @@ public abstract class ServiceFabricConfigurationProviderTest
                 _ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()),
                 Times.Never);
             Assert.False(token.HasChanged);
+            Assert.True(sut.TryGet(existingKey, out string actualValue));
+            Assert.Equal(existingValue, actualValue);
         }
 
         [Fact]
@@ -155,6 +160,9 @@ public abstract class ServiceFabricConfigurationProviderTest
         {
             ConfigurationPackage otherPackage =
                 MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), "Other");
+            string existingKey = fuzzy.String().LettersOrDigits();
+            string existingValue = fuzzy.String().LettersOrDigits();
+            sut.Set(existingKey, existingValue);
             IChangeToken token = sut.GetReloadToken();
 
             RaiseModified(null, otherPackage);
@@ -163,6 +171,8 @@ public abstract class ServiceFabricConfigurationProviderTest
                 _ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()),
                 Times.Never);
             Assert.False(token.HasChanged);
+            Assert.True(sut.TryGet(existingKey, out string actualValue));
+            Assert.Equal(existingValue, actualValue);
         }
 
         [Fact]
