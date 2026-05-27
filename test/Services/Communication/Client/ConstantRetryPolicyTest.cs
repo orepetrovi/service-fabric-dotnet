@@ -1,0 +1,78 @@
+// ------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
+// ------------------------------------------------------------
+
+using System;
+using Fuzzy;
+using Xunit;
+
+namespace Microsoft.ServiceFabric.Services.Communication.Client;
+
+public abstract class ConstantRetryPolicyTest
+{
+    readonly ConstantRetryPolicy sut;
+
+    // Constructor parameters
+    readonly TimeSpan maxRetryBackoffIntervalOnTransientErrors = fuzzy.TimeSpan().Minimum(TimeSpan.FromTicks(1000));
+    readonly TimeSpan maxRetryBackoffIntervalOnNonTransientErrors = fuzzy.TimeSpan().Minimum(TimeSpan.FromTicks(1000));
+    readonly int maxRetryCount = fuzzy.Int32();
+    readonly int maxRetryCountOnNonTransientErrors = fuzzy.Int32();
+    readonly TimeSpan clientRetryTimeout = fuzzy.TimeSpan();
+
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+    ConstantRetryPolicyTest() =>
+        sut = new ConstantRetryPolicy(
+            maxRetryBackoffIntervalOnTransientErrors,
+            maxRetryBackoffIntervalOnNonTransientErrors,
+            maxRetryCount,
+            maxRetryCountOnNonTransientErrors,
+            clientRetryTimeout);
+
+    public sealed class Constructor : ConstantRetryPolicyTest
+    {
+        [Fact]
+        public void InitializesProperties()
+        {
+            Assert.Equal(maxRetryBackoffIntervalOnTransientErrors, sut.MaxRetryBackoffIntervalOnTransientErrors);
+            Assert.Equal(maxRetryBackoffIntervalOnNonTransientErrors, sut.MaxRetryBackoffIntervalOnNonTransientErrors);
+            Assert.Equal(maxRetryCount, sut.TotalNumberOfRetries);
+            Assert.Equal(maxRetryCountOnNonTransientErrors, sut.MaxRetryCountOnNonTransientErrors);
+            Assert.Equal(clientRetryTimeout, sut.ClientRetryTimeout);
+        }
+    }
+
+    public sealed class GetNextRetryDelay : ConstantRetryPolicyTest
+    {
+        // Method parameters
+        readonly RetryDelayParameters retryDelayParameters = new(fuzzy.Int32(), fuzzy.Boolean());
+
+        const int Samples = 100;
+
+        [Fact]
+        public void ReturnsRandomDelayScaledByMaxRetryBackoffIntervalOnTransientErrorsWhenIsTransient() =>
+            AssertDelayScaledBy(isTransient: true, maxRetryBackoffIntervalOnTransientErrors);
+
+        [Fact]
+        public void ReturnsRandomDelayScaledByMaxRetryBackoffIntervalOnNonTransientErrorsWhenIsNotTransient() =>
+            AssertDelayScaledBy(isTransient: false, maxRetryBackoffIntervalOnNonTransientErrors);
+
+        void AssertDelayScaledBy(bool isTransient, TimeSpan expectedMax)
+        {
+            var parameters = new RetryDelayParameters(retryDelayParameters.RetryAttempt, isTransient);
+
+            TimeSpan observedMax = TimeSpan.Zero;
+            for (int i = 0; i < Samples; i++)
+            {
+                TimeSpan delay = sut.GetNextRetryDelay(parameters);
+                Assert.InRange(delay, TimeSpan.Zero, expectedMax);
+                if (delay > observedMax)
+                    observedMax = delay;
+            }
+
+            // Probability of every sample falling below half of the configured max with a uniform [0,1) scale is 2^-Samples.
+            Assert.True(observedMax.Ticks > expectedMax.Ticks / 2);
+        }
+    }
+}
