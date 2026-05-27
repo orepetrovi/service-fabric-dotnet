@@ -213,6 +213,16 @@ public abstract class CommunicationClientCacheEntryTest
         }
     }
 
+    public sealed class IsInCache : CommunicationClientCacheEntryTest
+    {
+        [Fact]
+        public void ReturnsValuePreviouslySet()
+        {
+            sut.IsInCache = false;
+            Assert.False(sut.IsInCache);
+        }
+    }
+
     public sealed class Rsp : CommunicationClientCacheEntryTest
     {
         [Fact]
