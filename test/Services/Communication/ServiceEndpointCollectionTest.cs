@@ -16,8 +16,8 @@ public abstract class ServiceEndpointCollectionTest
     readonly ServiceEndpointCollection sut;
 
     // Constructor parameters
-    readonly string listenerName = fuzzy.String().LettersOrDigits();
-    readonly string endpointAddress = fuzzy.String().LettersOrDigits();
+    readonly string listenerName = fuzzy.String();
+    readonly string endpointAddress = fuzzy.String();
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
@@ -27,8 +27,8 @@ public abstract class ServiceEndpointCollectionTest
     public sealed class AddEndpoint : ServiceEndpointCollectionTest
     {
         // Method parameters
-        new readonly string listenerName = fuzzy.String().LettersOrDigits();
-        new readonly string endpointAddress = fuzzy.String().LettersOrDigits();
+        new readonly string listenerName = fuzzy.String();
+        new readonly string endpointAddress = fuzzy.String();
 
         [Fact]
         public void AddsEndpointToCollection()
@@ -52,7 +52,7 @@ public abstract class ServiceEndpointCollectionTest
             var sut = new ServiceEndpointCollection(string.Empty, endpointAddress);
 
             _ = Assert.Throws<FabricElementAlreadyExistsException>(
-                () => sut.AddEndpoint(string.Empty, fuzzy.String().LettersOrDigits()));
+                () => sut.AddEndpoint(string.Empty, fuzzy.String()));
         }
     }
 
@@ -61,14 +61,14 @@ public abstract class ServiceEndpointCollectionTest
         // Method parameters
         readonly ServiceEndpointCollection newEndpoints = new();
 
-        readonly string newListenerName = fuzzy.String().LettersOrDigits();
-        readonly string newEndpointAddress = fuzzy.String().LettersOrDigits();
+        readonly string newListenerName = fuzzy.String();
+        readonly string newEndpointAddress = fuzzy.String();
 
         [Fact]
         public void AddsAllEndpointsFromGivenCollection()
         {
-            string extraListenerName = newListenerName + fuzzy.String().LettersOrDigits();
-            string extraEndpointAddress = fuzzy.String().LettersOrDigits();
+            string extraListenerName = newListenerName + fuzzy.String();
+            string extraEndpointAddress = fuzzy.String();
             newEndpoints.AddEndpoint(newListenerName, newEndpointAddress);
             newEndpoints.AddEndpoint(extraListenerName, extraEndpointAddress);
 
@@ -114,8 +114,15 @@ public abstract class ServiceEndpointCollectionTest
     public new sealed class ToString : ServiceEndpointCollectionTest
     {
         [Fact]
-        public void ReturnsJsonStringWithDocumentedFormat() =>
+        public void ReturnsJsonStringWithDocumentedFormat()
+        {
+            // Alphanumeric values avoid having to reimplement JSON escaping in the expected string.
+            string listenerName = fuzzy.String().LettersOrDigits();
+            string endpointAddress = fuzzy.String().LettersOrDigits();
+            var sut = new ServiceEndpointCollection(listenerName, endpointAddress);
+
             Assert.Equal($"{{\"Endpoints\":{{\"{listenerName}\":\"{endpointAddress}\"}}}}", sut.ToString());
+        }
 
         [Fact]
         public void ReturnsEmptyStringWhenCollectionIsEmpty() =>
@@ -136,7 +143,7 @@ public abstract class ServiceEndpointCollectionTest
         [Fact]
         public void ReturnsFalseAndOutputsNullWhenListenerNameDoesNotExist()
         {
-            string unknown = listenerName + fuzzy.String().LettersOrDigits();
+            string unknown = listenerName + fuzzy.String();
 
             bool result = sut.TryGetEndpointAddress(unknown, out string actual);
 
@@ -173,6 +180,9 @@ public abstract class ServiceEndpointCollectionTest
         [Fact]
         public void ReturnsTrueAndOutputsCollectionParsedFromJsonString()
         {
+            // Alphanumeric values avoid having to reimplement JSON escaping in the input string.
+            string listenerName = fuzzy.String().LettersOrDigits();
+            string endpointAddress = fuzzy.String().LettersOrDigits();
             string endpointsString = $"{{\"Endpoints\":{{\"{listenerName}\":\"{endpointAddress}\"}}}}";
 
             bool result = ServiceEndpointCollection.TryParseEndpointsString(endpointsString, out ServiceEndpointCollection actual);
