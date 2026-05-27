@@ -26,22 +26,21 @@ public abstract class ServiceFabricConfigurationProviderTest
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
     readonly string packageName = fuzzy.String();
+    readonly Mock<Action<ConfigurationPackage, IDictionary<string, string>>> configAction = new();
 
     ServiceFabricConfigurationProviderTest()
     {
-        options = new(packageName);
+        options = new(packageName) { ConfigAction = configAction.Object };
         sut = new ServiceFabricConfigurationProvider(activationContext.Object, options);
     }
 
     public sealed class Constructor : ServiceFabricConfigurationProviderTest
     {
-        readonly Mock<Action<ConfigurationPackage, IDictionary<string, string>>> configAction = new();
         readonly ConfigurationPackage matchingPackage;
 
         public Constructor()
         {
             matchingPackage = MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName);
-            options.ConfigAction = configAction.Object;
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Constructor doesn't validate activationContext.
@@ -224,13 +223,11 @@ public abstract class ServiceFabricConfigurationProviderTest
 
     public sealed class Load : ServiceFabricConfigurationProviderTest
     {
-        readonly Mock<Action<ConfigurationPackage, IDictionary<string, string>>> configAction = new();
         readonly ConfigurationPackage package;
 
         public Load()
         {
             package = MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName);
-            options.ConfigAction = configAction.Object;
             _ = activationContext.Setup(_ => _.GetConfigurationPackageObject(packageName)).Returns(package);
         }
 
