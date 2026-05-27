@@ -143,3 +143,23 @@ gpt adds: the test instructions' own `ArgumentNullException.ParamName` examples 
 gemini adds: the current dynamic lookup is also weaker as a regression guard — if a SUT parameter is renamed, `ctor.Parameter<T>().Name` adapts silently. `nameof(serviceContext)` pins the expected name so a SUT rename breaks the test (and forces a deliberate fixture-field rename), which is the desired behavior.
 
 **Iterator note (oscillation):** An earlier round (round ~6) explicitly demanded the opposite: switch FROM `nameof(testField)` TO `ctor.Parameter<T>().Name` (the Inspector pattern), with rationale: "nameof(serviceContext) resolves to the local test field. The base AspNetCoreCommunicationListener throws with hard-coded strings, not nameof, so the SUT parameter name and the thrown ParamName are decoupled — the test passes today only by naming coincidence." We complied and aligned both Kestrel and HttpSys peer files. This round flips that position. Human judgment requested. If reverted to `nameof`, apply equivalently to `HttpSysCommunicationListenerTest.cs` and remove the new `InspectorWorkarounds` helper if it has no remaining callers.
+
+
+---
+
+## ❓ Needs Human Review — Cast to `AspNetCoreCommunicationListener` before calling `GetListenerUrl()`
+
+**Reported by:** Opus · **Cross-check:** Gemini Agree, GPT Disagree → Opus **Insist**
+
+In four `Constructor_*` `GetListenerUrlReturnsDefaultHttpUrl*` tests, the listener is cast to `AspNetCoreCommunicationListener` to call `GetListenerUrl()`.
+
+The base declaration at [src/AspNetCore/AspNetCoreCommunicationListener.cs](src/AspNetCore/AspNetCoreCommunicationListener.cs#L163) is `protected internal abstract`. The test assembly has `InternalsVisibleTo` access. Opus argues the cast is unnecessary and the locals can be `var sut = new KestrelCommunicationListener(...)`.
+
+**Cross-check:**
+- *Gemini — Agree:* Experimentally removed the casts; the project builds successfully.
+- *GPT — Disagree:* Argued that the override at [src/AspNetCore.Kestrel/KestrelCommunicationListener.cs](src/AspNetCore.Kestrel/KestrelCommunicationListener.cs#L94) is declared `protected override`, and per the C# reference, an override of a `protected internal` member from a different assembly has only `protected` access — so calling through a `KestrelCommunicationListener`-typed receiver should fail.
+
+**Opus re-evaluation — Insist (with empirical evidence):**
+The test file already contains `new readonly KestrelCommunicationListener sut;` which calls `sut.GetListenerUrl()` directly, and the project builds with 0 errors. GPT applied a plausible-sounding rule without checking actual compiler behavior. The accessibility check for a virtual call considers the original member's declared accessibility on the base.
+
+**Recommendation (pending human confirmation):** Remove the four casts. Consider mirroring in `test/AspNetCore/HttpSysCommunicationListenerTest.cs` if the pattern is identical there.
