@@ -63,9 +63,9 @@ public abstract class KestrelCommunicationListenerTest
         [Fact]
         public void GetListenerUrlReturnsDefaultHttpUrlOnPortZero()
         {
-            // The 2-arg overload chains to the 3-arg ctor with endpointName: null. This test pins the
-            // null-endpoint default-URL path to the duplicated `endpointName?.Length == 0 / this.endpointName = endpointName`
-            // block in this overload so a regression in just one of the two 3-arg ctors is caught here.
+            // The 2-arg overload chains to the 3-arg ctor with endpointName: null. Testing the default-URL
+            // path through the 2-arg entry point pins the IHost-specific 3-arg ctor, so a regression in
+            // just one of the two duplicated 3-arg ctors is caught here.
             var sut = (AspNetCoreCommunicationListener)new KestrelCommunicationListener(serviceContext, build);
             Assert.Equal("http://+:0", sut.GetListenerUrl());
         }
@@ -94,9 +94,9 @@ public abstract class KestrelCommunicationListenerTest
         [Fact]
         public void GetListenerUrlReturnsDefaultHttpUrlOnPortZero()
         {
-            // The 2-arg overload chains to the 3-arg ctor with endpointName: null. This test pins the
-            // null-endpoint default-URL path to the duplicated `endpointName?.Length == 0 / this.endpointName = endpointName`
-            // block in this overload so a regression in just one of the two 3-arg ctors is caught here.
+            // The 2-arg overload chains to the 3-arg ctor with endpointName: null. Testing the default-URL
+            // path through the 2-arg entry point pins the IWebHost-specific 3-arg ctor, so a regression in
+            // just one of the two duplicated 3-arg ctors is caught here.
             var sut = (AspNetCoreCommunicationListener)new KestrelCommunicationListener(serviceContext, build);
             Assert.Equal("http://+:0", sut.GetListenerUrl());
         }
@@ -209,7 +209,7 @@ public abstract class KestrelCommunicationListenerTest
         // TestMocksRepository wires an endpoint collection into the mocked ICodePackageActivationContext
         // that these tests mutate; fuzzy.StatelessServiceContext() does not provide that plumbing.
         readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
-        new readonly AspNetCoreCommunicationListener sut;
+        new readonly KestrelCommunicationListener sut;
 
         public GetListenerUrl() =>
             sut = new KestrelCommunicationListener(context, endpointName, build);
