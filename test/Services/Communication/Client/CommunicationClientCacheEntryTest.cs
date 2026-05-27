@@ -128,17 +128,12 @@ public abstract class CommunicationClientCacheEntryTest
             Assert.Same(first, sut.GetEndpoint());
         }
 
-        [Fact]
-        public void ThrowsFabricExceptionWhenEndpointAddressIsNull()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void ThrowsFabricExceptionWhenEndpointAddressIsNullOrEmpty(string address)
         {
-            sut.Endpoint = MakeEndpoint(null);
-            _ = Assert.Throws<FabricException>(() => sut.GetEndpoint());
-        }
-
-        [Fact]
-        public void ThrowsFabricExceptionWhenEndpointAddressIsEmpty()
-        {
-            sut.Endpoint = MakeEndpoint(string.Empty);
+            sut.Endpoint = MakeEndpoint(address);
             _ = Assert.Throws<FabricException>(() => sut.GetEndpoint());
         }
 
