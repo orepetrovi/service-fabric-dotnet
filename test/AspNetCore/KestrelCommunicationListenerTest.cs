@@ -103,7 +103,7 @@ public abstract class KestrelCommunicationListenerTest
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
-            Assert.StartsWith(KestrelSR.EndpointNameEmptyExceptionMessage, exception.Message);
+            Assert.Equal(KestrelSR.EndpointNameEmptyExceptionMessage, exception.Message);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing paramName argument to ArgumentException.
@@ -140,7 +140,7 @@ public abstract class KestrelCommunicationListenerTest
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
-            Assert.StartsWith(KestrelSR.EndpointNameEmptyExceptionMessage, exception.Message);
+            Assert.Equal(KestrelSR.EndpointNameEmptyExceptionMessage, exception.Message);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing paramName argument to ArgumentException.
