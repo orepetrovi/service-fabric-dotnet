@@ -201,6 +201,7 @@ public abstract class ActorProxyFactoryTest
             Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
             Assert.Equal(listenerName, proxy.ServicePartitionClient2.ListenerName);
             Assert.Equal(actorId.GetPartitionKey(), proxy.ServicePartitionClient2.PartitionKey.Value);
+            Assert.Same(factory, proxy.ServicePartitionClient2.Factory);
         }
     }
 
@@ -219,6 +220,7 @@ public abstract class ActorProxyFactoryTest
             Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
             Assert.Equal(listenerName, proxy.ServicePartitionClient2.ListenerName);
             Assert.Equal(partitionKey, proxy.ServicePartitionClient2.PartitionKey.Value);
+            Assert.Same(factory, proxy.ServicePartitionClient2.Factory);
         }
     }
 
