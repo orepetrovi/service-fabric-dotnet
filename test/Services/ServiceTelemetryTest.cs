@@ -26,7 +26,7 @@ public abstract class ServiceTelemetryTest : IDisposable
 
     public sealed class CommunicationListenerUsageEvent : ServiceTelemetryTest
     {
-        readonly StatefulServiceContext context = fuzzy.StatefulServiceContext();
+        readonly ServiceContext context = fuzzy.ServiceContext();
         readonly string communicationListenerType = fuzzy.String();
 
         [Fact]
@@ -57,7 +57,7 @@ public abstract class ServiceTelemetryTest : IDisposable
 
     public sealed class FabricTransportServiceRemotingV2Event : ServiceTelemetryTest
     {
-        readonly StatefulServiceContext context = fuzzy.StatefulServiceContext();
+        readonly ServiceContext context = fuzzy.ServiceContext();
 
         [Theory]
         [InlineData(true)]
