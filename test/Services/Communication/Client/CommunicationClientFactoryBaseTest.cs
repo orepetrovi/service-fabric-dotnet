@@ -382,6 +382,18 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
             Assert.False(actual.ShouldRetry);
             Assert.Same(aggregate, actual.Exception);
+            handler.Verify(
+                _ => _.TryHandleException(
+                    It.Is<ExceptionInformation>(ei => ei.Exception == aggregate.InnerExceptions[0]),
+                    retrySettings,
+                    out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Once);
+            handler.Verify(
+                _ => _.TryHandleException(
+                    It.Is<ExceptionInformation>(ei => ei.Exception == aggregate.InnerExceptions[1]),
+                    retrySettings,
+                    out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Once);
         }
 
         [Fact]
