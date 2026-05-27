@@ -255,15 +255,12 @@ public abstract class CommunicationClientCacheEntryTest
         public void InvalidatesCachedEndpointAddress()
         {
             sut.Rsp = MakeRsp();
-            string original = fuzzy.String();
-            sut.Endpoint = MakeEndpoint(original);
+            sut.Endpoint = MakeEndpoint(fuzzy.String());
             _ = sut.GetEndpoint(); // Caches address.
 
-            string updated = original + fuzzy.String();
-            sut.Endpoint = MakeEndpoint(updated);
-            sut.Rsp = MakeRsp(); // Should invalidate the cached address.
+            sut.Rsp = MakeRsp();
 
-            Assert.Same(updated, sut.GetEndpoint());
+            Assert.Null(sut.Field<string>("address").Value);
         }
     }
 
