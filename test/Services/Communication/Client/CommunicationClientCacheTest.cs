@@ -5,6 +5,7 @@
 
 using System;
 using System.Fabric;
+using System.Threading;
 using Fuzzy;
 using Inspector;
 using Xunit;
@@ -63,17 +64,17 @@ public abstract class CommunicationClientCacheTest : IDisposable
         [Fact]
         public void DoesNotRestoreExecutionContextFlowWhenAlreadySuppressed()
         {
-            using System.Threading.AsyncFlowControl flow = System.Threading.ExecutionContext.SuppressFlow();
+            using AsyncFlowControl flow = ExecutionContext.SuppressFlow();
             using var other = new CommunicationClientCache<ICommunicationClient>(traceId);
-            Assert.True(System.Threading.ExecutionContext.IsFlowSuppressed());
+            Assert.True(ExecutionContext.IsFlowSuppressed());
         }
 
         [Fact]
         public void RestoresExecutionContextFlowAfterSuppressingIt()
         {
-            Assert.False(System.Threading.ExecutionContext.IsFlowSuppressed());
+            Assert.False(ExecutionContext.IsFlowSuppressed());
             using var other = new CommunicationClientCache<ICommunicationClient>(traceId);
-            Assert.False(System.Threading.ExecutionContext.IsFlowSuppressed());
+            Assert.False(ExecutionContext.IsFlowSuppressed());
         }
     }
 
