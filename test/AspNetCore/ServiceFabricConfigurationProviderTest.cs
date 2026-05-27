@@ -32,14 +32,6 @@ public abstract class ServiceFabricConfigurationProviderTest
         sut = new ServiceFabricConfigurationProvider(activationContext, options);
     }
 
-    void RaiseModified(ConfigurationPackage oldPackage, ConfigurationPackage newPackage) =>
-        Mock.Get(activationContext).Raise(_ => _.ConfigurationPackageModifiedEvent += null,
-            new PackageModifiedEventArgs<ConfigurationPackage> { OldPackage = oldPackage, NewPackage = newPackage });
-
-    void RaiseAdded(ConfigurationPackage package) =>
-        Mock.Get(activationContext).Raise(_ => _.ConfigurationPackageAddedEvent += null,
-            new PackageAddedEventArgs<ConfigurationPackage> { Package = package });
-
     public sealed class Constructor : ServiceFabricConfigurationProviderTest
     {
         readonly Mock<Action<ConfigurationPackage, IDictionary<string, string>>> configAction = new();
@@ -248,4 +240,12 @@ public abstract class ServiceFabricConfigurationProviderTest
             Assert.Same(existingValue, actual);
         }
     }
+
+    void RaiseModified(ConfigurationPackage oldPackage, ConfigurationPackage newPackage) =>
+        Mock.Get(activationContext).Raise(_ => _.ConfigurationPackageModifiedEvent += null,
+            new PackageModifiedEventArgs<ConfigurationPackage> { OldPackage = oldPackage, NewPackage = newPackage });
+
+    void RaiseAdded(ConfigurationPackage package) =>
+        Mock.Get(activationContext).Raise(_ => _.ConfigurationPackageAddedEvent += null,
+            new PackageAddedEventArgs<ConfigurationPackage> { Package = package });
 }
