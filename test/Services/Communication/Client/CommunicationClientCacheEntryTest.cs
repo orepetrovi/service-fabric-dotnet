@@ -185,6 +185,15 @@ public abstract class CommunicationClientCacheEntryTest
         }
 
         [Fact]
+        public void ClearsStrongReferenceOnFirstCall()
+        {
+            sut.Client = client;
+            _ = sut.IsCommunicationClientValid();
+
+            Assert.Null(sut.Field<ICommunicationClient>().Get());
+        }
+
+        [Fact]
         public void ReturnsFalseAfterClientWasSetToNull()
         {
             sut.Client = client;
