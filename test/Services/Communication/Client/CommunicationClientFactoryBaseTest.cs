@@ -350,23 +350,23 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         [InlineData(false)]
         public async Task AbortsClientAndClearsCacheEntryWhenNonTransientRetryAndClientMatchesCacheEntry(bool fireConnectEvents)
         {
-            using var sut = new TestFactory(fireConnectEvents, servicePartitionResolver, exceptionHandlers, traceId);
-            var cache = sut.Field<CommunicationClientCache<ICommunicationClient>>().Value;
+            using var other = new TestFactory(fireConnectEvents, servicePartitionResolver, exceptionHandlers, traceId);
+            var cache = other.Field<CommunicationClientCache<ICommunicationClient>>().Value;
             CommunicationClientCacheEntry<ICommunicationClient> entry =
                 cache.GetOrAddClientCacheEntry(rsp.Info.Id, endpoint, listenerName, rsp);
             entry.Client = client;
 
             var disconnected = new List<ICommunicationClient>();
-            sut.ClientDisconnected += (_, e) => disconnected.Add(e.Client);
+            other.ClientDisconnected += (_, e) => disconnected.Add(e.Client);
 
             var retry = new ExceptionHandlingRetryResult(
                 reportedException, false, fuzzy.TimeSpan(), fuzzy.Int32());
             ExceptionHandlingResult result = retry;
             _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
 
-            _ = await sut.ReportOperationExceptionAsync(client, exceptionInformation, retrySettings, cancellationToken);
+            _ = await other.ReportOperationExceptionAsync(client, exceptionInformation, retrySettings, cancellationToken);
 
-            Assert.Same(client, sut.AbortedClient);
+            Assert.Same(client, other.AbortedClient);
             Assert.Null(entry.Client);
             Assert.Null(entry.Rsp);
             Assert.Equal(fireConnectEvents ? new[] { client } : Array.Empty<ICommunicationClient>(), disconnected);
