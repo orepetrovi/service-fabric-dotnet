@@ -161,6 +161,10 @@ public abstract class CommunicationClientCacheEntryTest
             _ = Assert.Throws<FabricInvalidAddressException>(() => sut.GetEndpoint());
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for Endpoint.
+        public void ThrowsNullReferenceExceptionWhenEndpointIsNull() =>
+            _ = Assert.Throws<NullReferenceException>(() => sut.GetEndpoint());
+
         static string EndpointsJson(params (string Listener, string Address)[] endpoints)
         {
             var sb = new System.Text.StringBuilder("{\"Endpoints\":{");
