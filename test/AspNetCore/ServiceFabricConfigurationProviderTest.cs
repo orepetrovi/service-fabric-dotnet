@@ -274,6 +274,7 @@ namespace Microsoft.ServiceFabric.AspNetCore.Tests
             }).Build(), "Config");
 
             Assert.Equal("Lele", config["Section1:Name"]);
+            Assert.Null(config["Section1:Age"]);
             Assert.Equal(1, this.sectionCount);
             Assert.Equal(1, this.valueCount);
         }
