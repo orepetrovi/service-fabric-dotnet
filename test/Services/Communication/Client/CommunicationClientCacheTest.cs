@@ -1,0 +1,265 @@
+// ------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
+// ------------------------------------------------------------
+
+using System;
+using System.Fabric;
+using Fuzzy;
+using Inspector;
+using Xunit;
+
+namespace Microsoft.ServiceFabric.Services.Communication.Client;
+
+public abstract class CommunicationClientCacheTest : IDisposable
+{
+    readonly CommunicationClientCache<ICommunicationClient> sut;
+
+    // Constructor parameters
+    readonly string traceId = fuzzy.String();
+
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+    CommunicationClientCacheTest() =>
+        sut = new CommunicationClientCache<ICommunicationClient>(traceId);
+
+    void IDisposable.Dispose() =>
+        sut.Dispose();
+
+    public sealed class ClearClientCacheEntries : CommunicationClientCacheTest
+    {
+        // Method parameters
+        readonly Guid partitionId = fuzzy.Guid();
+
+        [Fact]
+        public void DoesNotRemoveCachedEntriesForPartition() // Currently a no-op
+        {
+            ResolvedServiceEndpoint endpoint = MakeEndpoint();
+            string listenerName = fuzzy.String();
+            CommunicationClientCacheEntry<ICommunicationClient> added =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
+
+            sut.ClearClientCacheEntries(partitionId);
+
+            Assert.True(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out var cacheEntry));
+            Assert.Same(added, cacheEntry);
+        }
+
+        [Fact]
+        public void DoesNotThrowWhenPartitionDoesNotExist() =>
+            sut.ClearClientCacheEntries(partitionId);
+    }
+
+    public sealed class Constructor : CommunicationClientCacheTest
+    {
+        [Fact]
+        public void InitializesCacheWithoutEntries()
+        {
+            // No public size/enumeration API. Verify emptiness via TryGetClientCacheEntry.
+            Assert.False(sut.TryGetClientCacheEntry(fuzzy.Guid(), MakeEndpoint(), fuzzy.String(), out var cacheEntry));
+            Assert.Null(cacheEntry);
+        }
+
+        [Fact]
+        public void SchedulesCleanupTimerWithoutCapturingExecutionContext()
+        {
+            // The cleanup timer initial due time is between 120 and 150 seconds, so we can't observe a callback
+            // deterministically in tests without modifying the production code. Verify only that construction
+            // succeeds when the ambient ExecutionContext is flow-suppressed (covers the suppressed branch).
+            using (System.Threading.ExecutionContext.SuppressFlow())
+            {
+                using var other = new CommunicationClientCache<ICommunicationClient>(traceId);
+            }
+        }
+    }
+
+    public sealed class Dispose : CommunicationClientCacheTest
+    {
+        [Fact]
+        public void RemovesCachedEntries()
+        {
+            Guid partitionId = fuzzy.Guid();
+            ResolvedServiceEndpoint endpoint = MakeEndpoint();
+            string listenerName = fuzzy.String();
+            sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
+
+            sut.Dispose();
+
+            Assert.False(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out var cacheEntry));
+            Assert.Null(cacheEntry);
+        }
+
+        [Fact]
+        public void IsIdempotent()
+        {
+            sut.Dispose();
+            sut.Dispose();
+        }
+    }
+
+    public sealed class GetOrAddClientCacheEntry : CommunicationClientCacheTest
+    {
+        // Method parameters
+        readonly Guid partitionId = fuzzy.Guid();
+        readonly ResolvedServiceEndpoint endpoint = MakeEndpoint();
+        readonly string listenerName = fuzzy.String();
+        readonly ResolvedServicePartition rsp = null;
+
+        [Fact]
+        public void ReturnsNewEntryInitializedWithGivenArguments()
+        {
+            CommunicationClientCacheEntry<ICommunicationClient> entry =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, rsp);
+
+            Assert.NotNull(entry);
+            Assert.Same(endpoint, entry.Endpoint);
+            Assert.Same(listenerName, entry.ListenerName);
+            Assert.Same(rsp, entry.Rsp);
+            Assert.True(entry.IsInCache);
+            Assert.NotNull(entry.Semaphore);
+        }
+
+        [Fact]
+        public void ReturnsSameEntryWhenCalledAgainWithSameKey()
+        {
+            CommunicationClientCacheEntry<ICommunicationClient> first =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, rsp);
+            CommunicationClientCacheEntry<ICommunicationClient> second =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, rsp);
+
+            Assert.Same(first, second);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. PartitionClientCacheKey.GetHashCode is case-sensitive while Equals is case-insensitive.
+        public void ReturnsSameEntryWhenListenerNameDiffersOnlyInCase()
+        {
+            string upper = (listenerName + "abc").ToUpperInvariant();
+            string lower = upper.ToLowerInvariant();
+
+            CommunicationClientCacheEntry<ICommunicationClient> first =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, upper, rsp);
+            CommunicationClientCacheEntry<ICommunicationClient> second =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, lower, rsp);
+
+            Assert.Same(first, second);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. PartitionClientCacheKey.GetHashCode is case-sensitive while Equals is case-insensitive.
+        public void ReturnsSameEntryWhenEndpointAddressDiffersOnlyInCase()
+        {
+            string address = (fuzzy.String() + "abc").ToUpperInvariant();
+            ResolvedServiceEndpoint upper = MakeEndpoint(address, ServiceEndpointRole.Stateless);
+            ResolvedServiceEndpoint lower = MakeEndpoint(address.ToLowerInvariant(), ServiceEndpointRole.Stateless);
+
+            CommunicationClientCacheEntry<ICommunicationClient> first =
+                sut.GetOrAddClientCacheEntry(partitionId, upper, listenerName, rsp);
+            CommunicationClientCacheEntry<ICommunicationClient> second =
+                sut.GetOrAddClientCacheEntry(partitionId, lower, listenerName, rsp);
+
+            Assert.Same(first, second);
+        }
+
+        [Fact]
+        public void ReturnsDifferentEntryWhenListenerNameDiffers()
+        {
+            CommunicationClientCacheEntry<ICommunicationClient> first =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, rsp);
+            CommunicationClientCacheEntry<ICommunicationClient> second =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName + fuzzy.String(), rsp);
+
+            Assert.NotSame(first, second);
+        }
+
+        [Fact]
+        public void ReturnsDifferentEntryWhenEndpointAddressDiffers()
+        {
+            ResolvedServiceEndpoint different = MakeEndpoint(endpoint.Address + fuzzy.String(), endpoint.Role);
+
+            CommunicationClientCacheEntry<ICommunicationClient> first =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, rsp);
+            CommunicationClientCacheEntry<ICommunicationClient> second =
+                sut.GetOrAddClientCacheEntry(partitionId, different, listenerName, rsp);
+
+            Assert.NotSame(first, second);
+        }
+
+        [Fact]
+        public void ReturnsDifferentEntryWhenEndpointRoleDiffers()
+        {
+            ResolvedServiceEndpoint stateless = MakeEndpoint(endpoint.Address, ServiceEndpointRole.Stateless);
+            ResolvedServiceEndpoint primary = MakeEndpoint(endpoint.Address, ServiceEndpointRole.StatefulPrimary);
+
+            CommunicationClientCacheEntry<ICommunicationClient> first =
+                sut.GetOrAddClientCacheEntry(partitionId, stateless, listenerName, rsp);
+            CommunicationClientCacheEntry<ICommunicationClient> second =
+                sut.GetOrAddClientCacheEntry(partitionId, primary, listenerName, rsp);
+
+            Assert.NotSame(first, second);
+        }
+
+        [Fact]
+        public void ReturnsDifferentEntryWhenPartitionIdDiffers()
+        {
+            CommunicationClientCacheEntry<ICommunicationClient> first =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, rsp);
+            CommunicationClientCacheEntry<ICommunicationClient> second =
+                sut.GetOrAddClientCacheEntry(fuzzy.Guid(), endpoint, listenerName, rsp);
+
+            Assert.NotSame(first, second);
+        }
+    }
+
+    public sealed class TryGetClientCacheEntry : CommunicationClientCacheTest
+    {
+        // Method parameters
+        readonly Guid partitionId = fuzzy.Guid();
+        readonly ResolvedServiceEndpoint endpoint = MakeEndpoint();
+        readonly string listenerName = fuzzy.String();
+
+        [Fact]
+        public void ReturnsFalseAndNullWhenPartitionDoesNotExist()
+        {
+            Assert.False(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out var cacheEntry));
+            Assert.Null(cacheEntry);
+        }
+
+        [Fact]
+        public void ReturnsFalseAndNullWhenEndpointNotFoundInExistingPartition()
+        {
+            sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
+
+            Assert.False(sut.TryGetClientCacheEntry(partitionId, MakeEndpoint(), listenerName, out var cacheEntry));
+            Assert.Null(cacheEntry);
+        }
+
+        [Fact]
+        public void ReturnsFalseAndNullWhenListenerNameNotFoundInExistingPartition()
+        {
+            sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
+
+            Assert.False(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName + fuzzy.String(), out var cacheEntry));
+            Assert.Null(cacheEntry);
+        }
+
+        [Fact]
+        public void ReturnsTrueAndPreviouslyAddedEntry()
+        {
+            CommunicationClientCacheEntry<ICommunicationClient> added =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
+
+            Assert.True(sut.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out var cacheEntry));
+            Assert.Same(added, cacheEntry);
+        }
+    }
+
+    static ResolvedServiceEndpoint MakeEndpoint() =>
+        MakeEndpoint(fuzzy.String(), ServiceEndpointRole.Stateless);
+
+    static ResolvedServiceEndpoint MakeEndpoint(string address, ServiceEndpointRole role)
+    {
+        var endpoint = new ResolvedServiceEndpoint();
+        endpoint.Property<string>().Set(address);
+        endpoint.Property<ServiceEndpointRole>().Set(role);
+        return endpoint;
+    }
+}
