@@ -21,11 +21,6 @@ public abstract class ActorProxyTest
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    sealed class TestProxy : ActorProxy
-    {
-        protected override object GetReturnValue(int interfaceId, int methodId, object responseBody) => null;
-    }
-
     public sealed class Initialize : ActorProxyTest
     {
         // Method parameters
@@ -76,5 +71,10 @@ public abstract class ActorProxyTest
             var exception = Assert.Throws<ArgumentNullException>(() => sut.Initialize(client, null));
             Assert.Equal("serviceRemotingMessageBodyFactory", exception.ParamName);
         }
+    }
+
+    sealed class TestProxy : ActorProxy
+    {
+        protected override object GetReturnValue(int interfaceId, int methodId, object responseBody) => null;
     }
 }
