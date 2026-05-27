@@ -167,6 +167,18 @@ public abstract class CommunicationClientCacheEntryTest
 
             _ = Assert.Throws<FabricInvalidAddressException>(() => sut.GetEndpoint());
         }
+
+        static string EndpointsJson(params (string Listener, string Address)[] endpoints)
+        {
+            var sb = new System.Text.StringBuilder("{\"Endpoints\":{");
+            for (int i = 0; i < endpoints.Length; i++)
+            {
+                if (i > 0) sb.Append(',');
+                sb.Append('"').Append(endpoints[i].Listener).Append("\":\"").Append(endpoints[i].Address).Append('"');
+            }
+            sb.Append("}}");
+            return sb.ToString();
+        }
     }
 
     public sealed class IsCommunicationClientValid : CommunicationClientCacheEntryTest
@@ -270,17 +282,5 @@ public abstract class CommunicationClientCacheEntryTest
         var rsp = Type<ResolvedServicePartition>.Uninitialized();
         rsp.Property<ServicePartitionInformation>().Set(Type<SingletonPartitionInformation>.Uninitialized());
         return rsp;
-    }
-
-    static string EndpointsJson(params (string Listener, string Address)[] endpoints)
-    {
-        var sb = new System.Text.StringBuilder("{\"Endpoints\":{");
-        for (int i = 0; i < endpoints.Length; i++)
-        {
-            if (i > 0) sb.Append(',');
-            sb.Append('"').Append(endpoints[i].Listener).Append("\":\"").Append(endpoints[i].Address).Append('"');
-        }
-        sb.Append("}}");
-        return sb.ToString();
     }
 }
