@@ -334,7 +334,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         {
             var handler2 = Mock.Get(exceptionHandlers.Last());
             var retry = new ExceptionHandlingRetryResult(
-                reportedException, true, fuzzy.TimeSpan(), fuzzy.Int32().Minimum(1));
+                reportedException, true, fuzzy.TimeSpan(), fuzzy.Int32());
             ExceptionHandlingResult result = retry;
             _ = handler2.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
 
