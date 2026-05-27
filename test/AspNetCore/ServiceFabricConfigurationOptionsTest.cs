@@ -248,10 +248,10 @@ public abstract class ServiceFabricConfigurationOptionsTest
         }
     }
 
-    static ConfigurationSection Section(string name = null)
+    static ConfigurationSection Section()
     {
         var section = Type<ConfigurationSection>.Uninitialized();
-        section.Property<string>().Set(name ?? fuzzy.String());
+        section.Property<string>().Set(fuzzy.String());
         return section;
     }
 
