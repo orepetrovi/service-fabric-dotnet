@@ -105,13 +105,7 @@ public abstract class ActorProxyFactoryTest
             // and is expected to fail in this unit test environment.
             var sut = new ActorProxyFactory(retrySettings);
 
-            try
-            {
-                sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName);
-            }
-            catch
-            {
-            }
+            _ = Assert.ThrowsAny<Exception>(() => sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName));
 
             var v2 = sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value;
             Assert.NotNull(v2);
@@ -128,13 +122,7 @@ public abstract class ActorProxyFactoryTest
             // Fabric runtime, so it is replaced with one bound to the mock client factory before creating the
             // proxy whose ListenerName is then observed.
             var sut = new ActorProxyFactory(retrySettings);
-            try
-            {
-                sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName);
-            }
-            catch
-            {
-            }
+            _ = Assert.ThrowsAny<Exception>(() => sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName));
 
             sut.Field<Remoting.V2.Client.ActorProxyFactory>()
                 .Set(new Remoting.V2.Client.ActorProxyFactory(createServiceRemotingClientFactory, retrySettings));
