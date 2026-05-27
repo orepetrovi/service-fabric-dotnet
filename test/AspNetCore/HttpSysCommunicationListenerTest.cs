@@ -72,10 +72,10 @@ public abstract class HttpSysCommunicationListenerTest
         // TestMocksRepository wires an endpoint collection into the mocked ICodePackageActivationContext
         // that these tests mutate; fuzzy.StatelessServiceContext() does not provide that plumbing.
         readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
-        readonly TestListener listener;
+        readonly Func<string> getListenerUrl;
 
         public GetListenerUrl() =>
-            listener = new TestListener(context, endpointName, build);
+            getListenerUrl = new HttpSysCommunicationListener(context, endpointName, build).Protected().Method<Func<string>>();
 
         [Theory]
         [InlineData(EndpointProtocol.Tcp, "tcp")]
@@ -101,7 +101,7 @@ public abstract class HttpSysCommunicationListenerTest
             endpoint.Property<int>(nameof(EndpointResourceDescription.Port)).Set(port);
             context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
-            string actual = listener.GetListenerUrl();
+            string actual = getListenerUrl();
 
             string expected = string.Format(CultureInfo.InvariantCulture, "{0}://+:{1}", expectedScheme, port);
             Assert.Equal(expected, actual);
@@ -109,17 +109,6 @@ public abstract class HttpSysCommunicationListenerTest
 
         [Fact]
         public void ThrowsInvalidOperationExceptionWhenEndpointIsNotInManifest() =>
-            _ = Assert.Throws<InvalidOperationException>(() => listener.GetListenerUrl());
-
-        sealed class TestListener : HttpSysCommunicationListener
-        {
-            internal TestListener(ServiceContext serviceContext, string endpointName, Func<string, AspNetCoreCommunicationListener, IWebHost> build)
-                : base(serviceContext, endpointName, build)
-            {
-            }
-
-            internal new string GetListenerUrl() =>
-                base.GetListenerUrl();
-        }
+            _ = Assert.Throws<InvalidOperationException>(() => getListenerUrl());
     }
 }
