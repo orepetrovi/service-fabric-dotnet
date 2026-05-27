@@ -55,24 +55,12 @@ public abstract class CommunicationClientCacheEntryTest
     public sealed class Constructor : CommunicationClientCacheEntryTest
     {
         [Fact]
-        public void InitializesEndpointToNull() =>
-            Assert.Null(sut.Endpoint);
-
-        [Fact]
-        public void InitializesRspToNull() =>
-            Assert.Null(sut.Rsp);
-
-        [Fact]
-        public void InitializesClientToNull() =>
-            Assert.Null(sut.Client);
-
-        [Fact]
-        public void InitializesIsInCacheToTrue() =>
-            Assert.True(sut.IsInCache);
-
-        [Fact]
-        public void InitializesSemaphoreAsBinary()
+        public void InitializesProperties()
         {
+            Assert.Null(sut.Endpoint);
+            Assert.Null(sut.Rsp);
+            Assert.Null(sut.Client);
+            Assert.True(sut.IsInCache);
             Assert.NotNull(sut.Semaphore);
             Assert.Equal(1, sut.Semaphore.CurrentCount);
         }
