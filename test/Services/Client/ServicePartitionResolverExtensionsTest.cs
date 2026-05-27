@@ -13,7 +13,7 @@ public abstract class ServicePartitionResolverExtensionsTest
 {
     readonly ServicePartitionResolver sut = new(Mock.Of<CreateFabricClientDelegate>());
 
-    public sealed class DisableNotification_ServicePartitionResolver : ServicePartitionResolverExtensionsTest
+    public sealed class DisableNotification : ServicePartitionResolverExtensionsTest
     {
         [Fact]
         public void SetsUseNotificationToFalse()
