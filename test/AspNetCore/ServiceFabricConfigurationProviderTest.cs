@@ -454,13 +454,4 @@ public abstract class ServiceFabricConfigurationProviderTest
             Assert.Empty(config.GetChildren());
         }
     }
-
-    internal class Person
-    {
-        public string Name { get; set; }
-
-        public string Gender { get; set; }
-
-        public int Age { get; set; }
-    }
 }
