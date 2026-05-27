@@ -6,6 +6,7 @@
 using System;
 using System.Diagnostics.Tracing;
 using System.Fabric;
+using Fuzzy;
 using Inspector;
 using Microsoft.ServiceFabric.Services.Tests;
 using Xunit;
@@ -14,6 +15,8 @@ namespace Microsoft.ServiceFabric.Services;
 
 public abstract class ServiceTelemetryTest : IDisposable
 {
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
     readonly EventSourceTest<ServiceEventSource> test = new();
 
     const EventKeywords Default = (EventKeywords)0x0001;
@@ -145,7 +148,7 @@ public abstract class ServiceTelemetryTest : IDisposable
     public sealed class CommunicationListenerUsageEvent : ServiceTelemetryTest
     {
         readonly StatefulServiceContext context = TestMocksRepository.GetMockStatefulServiceContext();
-        readonly string communicationListenerType = "MockCommunicationListenerType";
+        readonly string communicationListenerType = fuzzy.String();
 
         [Fact]
         public void PublishesCommunicationListenerUsageEventWithGivenListenerType()
