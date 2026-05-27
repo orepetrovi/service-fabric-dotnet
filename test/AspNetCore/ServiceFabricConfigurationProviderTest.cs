@@ -67,7 +67,8 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void InvokesConfigActionWhenAddedPackageNameMatches()
         {
             RaiseAdded(matchingPackage);
-            configAction.Verify(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()));
+            configAction.Verify(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()), Times.Once);
+            configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
         }
 
         [Fact]
@@ -126,7 +127,8 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void InvokesConfigActionWhenModifiedPackageNameMatches()
         {
             RaiseModified(null, matchingPackage);
-            configAction.Verify(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()));
+            configAction.Verify(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()), Times.Once);
+            configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
         }
 
         [Fact]
@@ -198,7 +200,8 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void InvokesConfigActionWithPackageFromActivationContext()
         {
             sut.Load();
-            configAction.Verify(_ => _(package, It.IsAny<IDictionary<string, string>>()));
+            configAction.Verify(_ => _(package, It.IsAny<IDictionary<string, string>>()), Times.Once);
+            configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
         }
 
         [Fact]
