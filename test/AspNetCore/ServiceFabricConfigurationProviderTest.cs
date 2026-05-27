@@ -215,6 +215,14 @@ public abstract class ServiceFabricConfigurationProviderTest
             var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(null));
             Assert.Equal("package", exception.ParamName);
         }
+
+        void RaiseModified(ConfigurationPackage newPackage) =>
+            activationContext.Raise(_ => _.ConfigurationPackageModifiedEvent += null,
+                new PackageModifiedEventArgs<ConfigurationPackage> { NewPackage = newPackage });
+
+        void RaiseAdded(ConfigurationPackage package) =>
+            activationContext.Raise(_ => _.ConfigurationPackageAddedEvent += null,
+                new PackageAddedEventArgs<ConfigurationPackage> { Package = package });
     }
 
     public sealed class Load : ServiceFabricConfigurationProviderTest
@@ -262,12 +270,4 @@ public abstract class ServiceFabricConfigurationProviderTest
             Assert.Same(existingValue, actual);
         }
     }
-
-    void RaiseModified(ConfigurationPackage newPackage) =>
-        activationContext.Raise(_ => _.ConfigurationPackageModifiedEvent += null,
-            new PackageModifiedEventArgs<ConfigurationPackage> { NewPackage = newPackage });
-
-    void RaiseAdded(ConfigurationPackage package) =>
-        activationContext.Raise(_ => _.ConfigurationPackageAddedEvent += null,
-            new PackageAddedEventArgs<ConfigurationPackage> { Package = package });
 }
