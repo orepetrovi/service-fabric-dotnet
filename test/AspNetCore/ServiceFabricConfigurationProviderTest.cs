@@ -4,11 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Fabric;
+using System.Fabric.Description;
 using Fuzzy;
 using Inspector;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
-using Microsoft.ServiceFabric.AspNetCore.Tests;
 using Moq;
 using Xunit;
 
@@ -226,6 +226,12 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
     }
 
-    static ConfigurationPackage Package(string name) =>
-        MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), name);
+    static ConfigurationPackage Package(string name)
+    {
+        var desc = Type<ConfigurationPackageDescription>.Uninitialized();
+        desc.Property<string>(nameof(ConfigurationPackageDescription.Name)).Set(name);
+        var pkg = Type<ConfigurationPackage>.Uninitialized();
+        pkg.Property<ConfigurationPackageDescription>(nameof(ConfigurationPackage.Description)).Set(desc);
+        return pkg;
+    }
 }
