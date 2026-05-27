@@ -27,6 +27,71 @@ public abstract class ServiceTelemetryTest : IDisposable
     void IDisposable.Dispose() =>
         test.Dispose();
 
+    public sealed class CommunicationListenerUsageEvent : ServiceTelemetryTest
+    {
+        readonly StatefulServiceContext context = TestMocksRepository.GetMockStatefulServiceContext();
+        readonly string communicationListenerType = fuzzy.String();
+
+        [Fact]
+        public void PublishesCommunicationListenerUsageEventWithGivenListenerType()
+        {
+            test.EnableEvents(EventLevel.LogAlways);
+
+            ServiceTelemetry.CommunicationListenerUsageEvent(context, communicationListenerType);
+
+            Assert.NotNull(test.Event);
+            Assert.Equal(6, test.Event.EventId);
+            Assert.Equal(EventLevel.Informational, test.Event.Level);
+            test.EventKeywords(Default);
+            Assert.Equal("CommunicationListenerUsageEvent", test.Event.EventName);
+            Assert.Equal(10, test.Event.Payload.Count);
+            test.EventPayload(0, "type", TelemetryConstants.CommunicationListenerUsageEventName);
+            test.EventPayload(1, "clusterOsType", TelemetryConstants.OsType);
+            test.EventPayload(2, "runtimePlatform", TelemetryConstants.RuntimePlatform);
+            test.EventPayload(3, "partitionId", context.PartitionId.ToString());
+            test.EventPayload(4, "replicaId", context.ReplicaOrInstanceId.ToString());
+            test.EventPayload(5, "serviceName", context.ServiceName.OriginalString);
+            test.EventPayload(6, "serviceTypeName", context.ServiceTypeName);
+            test.EventPayload(7, "applicationName", context.CodePackageActivationContext.ApplicationName);
+            test.EventPayload(8, "applicationTypeName", context.CodePackageActivationContext.ApplicationTypeName);
+            test.EventPayload(9, "communicationListenerType", communicationListenerType);
+        }
+    }
+
+    public sealed class FabricTransportServiceRemotingV2Event : ServiceTelemetryTest
+    {
+        readonly StatefulServiceContext context = TestMocksRepository.GetMockStatefulServiceContext();
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void PublishesServiceRemotingUsageEventWithV2AndFabricTransport(bool isSecure)
+        {
+            test.EnableEvents(EventLevel.LogAlways);
+
+            ServiceTelemetry.FabricTransportServiceRemotingV2Event(context, isSecure);
+
+            Assert.NotNull(test.Event);
+            Assert.Equal(7, test.Event.EventId);
+            Assert.Equal(EventLevel.Informational, test.Event.Level);
+            test.EventKeywords(Default);
+            Assert.Equal("ServiceRemotingUsageEvent", test.Event.EventName);
+            Assert.Equal(12, test.Event.Payload.Count);
+            test.EventPayload(0, "type", TelemetryConstants.ServiceRemotingUsageEventName);
+            test.EventPayload(1, "clusterOsType", TelemetryConstants.OsType);
+            test.EventPayload(2, "runtimePlatform", TelemetryConstants.RuntimePlatform);
+            test.EventPayload(3, "partitionId", context.PartitionId.ToString());
+            test.EventPayload(4, "replicaId", context.ReplicaOrInstanceId.ToString());
+            test.EventPayload(5, "serviceName", context.ServiceName.OriginalString);
+            test.EventPayload(6, "serviceTypeName", context.ServiceTypeName);
+            test.EventPayload(7, "applicationName", context.CodePackageActivationContext.ApplicationName);
+            test.EventPayload(8, "applicationTypeName", context.CodePackageActivationContext.ApplicationTypeName);
+            test.EventPayload(9, "isSecure", isSecure);
+            test.EventPayload(10, "remotingVersion", TelemetryConstants.RemotingVersionV2);
+            test.EventPayload(11, "communicationListenerType", TelemetryConstants.FabricTransportCommunicationListener);
+        }
+    }
+
     public sealed class StatefulServiceInitializeEvent : ServiceTelemetryTest
     {
         readonly StatefulServiceContext context = TestMocksRepository.GetMockStatefulServiceContext();
@@ -148,71 +213,6 @@ public abstract class ServiceTelemetryTest : IDisposable
             test.EventPayload(8, "applicationTypeName", context.CodePackageActivationContext.ApplicationTypeName);
             test.EventPayload(9, "lifecycleEvent", TelemetryConstants.LifecycleEventClosed);
             test.EventPayload(10, "serviceKind", TelemetryConstants.StatelessServiceKind);
-        }
-    }
-
-    public sealed class CommunicationListenerUsageEvent : ServiceTelemetryTest
-    {
-        readonly StatefulServiceContext context = TestMocksRepository.GetMockStatefulServiceContext();
-        readonly string communicationListenerType = fuzzy.String();
-
-        [Fact]
-        public void PublishesCommunicationListenerUsageEventWithGivenListenerType()
-        {
-            test.EnableEvents(EventLevel.LogAlways);
-
-            ServiceTelemetry.CommunicationListenerUsageEvent(context, communicationListenerType);
-
-            Assert.NotNull(test.Event);
-            Assert.Equal(6, test.Event.EventId);
-            Assert.Equal(EventLevel.Informational, test.Event.Level);
-            test.EventKeywords(Default);
-            Assert.Equal("CommunicationListenerUsageEvent", test.Event.EventName);
-            Assert.Equal(10, test.Event.Payload.Count);
-            test.EventPayload(0, "type", TelemetryConstants.CommunicationListenerUsageEventName);
-            test.EventPayload(1, "clusterOsType", TelemetryConstants.OsType);
-            test.EventPayload(2, "runtimePlatform", TelemetryConstants.RuntimePlatform);
-            test.EventPayload(3, "partitionId", context.PartitionId.ToString());
-            test.EventPayload(4, "replicaId", context.ReplicaOrInstanceId.ToString());
-            test.EventPayload(5, "serviceName", context.ServiceName.OriginalString);
-            test.EventPayload(6, "serviceTypeName", context.ServiceTypeName);
-            test.EventPayload(7, "applicationName", context.CodePackageActivationContext.ApplicationName);
-            test.EventPayload(8, "applicationTypeName", context.CodePackageActivationContext.ApplicationTypeName);
-            test.EventPayload(9, "communicationListenerType", communicationListenerType);
-        }
-    }
-
-    public sealed class FabricTransportServiceRemotingV2Event : ServiceTelemetryTest
-    {
-        readonly StatefulServiceContext context = TestMocksRepository.GetMockStatefulServiceContext();
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void PublishesServiceRemotingUsageEventWithV2AndFabricTransport(bool isSecure)
-        {
-            test.EnableEvents(EventLevel.LogAlways);
-
-            ServiceTelemetry.FabricTransportServiceRemotingV2Event(context, isSecure);
-
-            Assert.NotNull(test.Event);
-            Assert.Equal(7, test.Event.EventId);
-            Assert.Equal(EventLevel.Informational, test.Event.Level);
-            test.EventKeywords(Default);
-            Assert.Equal("ServiceRemotingUsageEvent", test.Event.EventName);
-            Assert.Equal(12, test.Event.Payload.Count);
-            test.EventPayload(0, "type", TelemetryConstants.ServiceRemotingUsageEventName);
-            test.EventPayload(1, "clusterOsType", TelemetryConstants.OsType);
-            test.EventPayload(2, "runtimePlatform", TelemetryConstants.RuntimePlatform);
-            test.EventPayload(3, "partitionId", context.PartitionId.ToString());
-            test.EventPayload(4, "replicaId", context.ReplicaOrInstanceId.ToString());
-            test.EventPayload(5, "serviceName", context.ServiceName.OriginalString);
-            test.EventPayload(6, "serviceTypeName", context.ServiceTypeName);
-            test.EventPayload(7, "applicationName", context.CodePackageActivationContext.ApplicationName);
-            test.EventPayload(8, "applicationTypeName", context.CodePackageActivationContext.ApplicationTypeName);
-            test.EventPayload(9, "isSecure", isSecure);
-            test.EventPayload(10, "remotingVersion", TelemetryConstants.RemotingVersionV2);
-            test.EventPayload(11, "communicationListenerType", TelemetryConstants.FabricTransportCommunicationListener);
         }
     }
 }
