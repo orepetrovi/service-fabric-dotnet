@@ -3,10 +3,13 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
+extern alias KestrelAssembly;
+
 using System;
 using System.Fabric;
 using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 using Xunit;
+using KestrelAssembly::Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 
 namespace Microsoft.ServiceFabric.AspNetCore.Tests
 {
