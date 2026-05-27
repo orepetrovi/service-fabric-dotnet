@@ -105,7 +105,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             var disconnected = new List<ICommunicationClient>();
             other.ClientDisconnected += (_, e) => disconnected.Add(e.Client);
 
-            var handler = Mock.Get(exceptionHandlers.First());
+            Mock<IExceptionHandler> handler = Mock.Get(exceptionHandlers.First());
             var reported = new InvalidOperationException(fuzzy.String());
             var info = new ExceptionInformation(reported);
             var settings = new OperationRetrySettings();
@@ -234,7 +234,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         [Fact]
         public async Task ReturnsShouldRetryFalseAndOriginalExceptionWhenNoHandlerMatches()
         {
-            var handler2 = Mock.Get(exceptionHandlers.Last());
+            Mock<IExceptionHandler> handler2 = Mock.Get(exceptionHandlers.Last());
 
             OperationRetryControl actual = await sut.ReportOperationExceptionAsync(
                 client, exceptionInformation, retrySettings, cancellationToken);
@@ -447,7 +447,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         [Fact]
         public async Task InvokesSubsequentHandlerWhenPreviousHandlerDoesNotMatch()
         {
-            var handler2 = Mock.Get(exceptionHandlers.Last());
+            Mock<IExceptionHandler> handler2 = Mock.Get(exceptionHandlers.Last());
             var retry = new ExceptionHandlingRetryResult(
                 reportedException, true, fuzzy.TimeSpan(), fuzzy.Int32());
             ExceptionHandlingResult result = retry;
@@ -473,7 +473,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         {
             ExceptionHandlingResult result = new ExceptionHandlingThrowResult();
             _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
-            var handler2 = Mock.Get(exceptionHandlers.Last());
+            Mock<IExceptionHandler> handler2 = Mock.Get(exceptionHandlers.Last());
 
             _ = await sut.ReportOperationExceptionAsync(
                 client, exceptionInformation, retrySettings, cancellationToken);
