@@ -178,7 +178,7 @@ public abstract class KestrelCommunicationListenerTest
                 Name = endpointName,
                 Protocol = protocol,
             };
-            int port = fuzzy.UInt16();
+            int port = fuzzy.UInt16().Minimum(1);
             endpoint.Property<int>().Set(port);
             context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
@@ -196,7 +196,7 @@ public abstract class KestrelCommunicationListenerTest
                 Name = endpointName + fuzzy.String(),
                 Protocol = EndpointProtocol.Https,
             };
-            other.Property<int>().Set(fuzzy.UInt16());
+            other.Property<int>().Set(fuzzy.UInt16().Minimum(1));
             context.CodePackageActivationContext.GetEndpoints().Add(other);
 
             var endpoint = new EndpointResourceDescription
@@ -204,7 +204,7 @@ public abstract class KestrelCommunicationListenerTest
                 Name = endpointName,
                 Protocol = EndpointProtocol.Http,
             };
-            int port = fuzzy.UInt16();
+            int port = fuzzy.UInt16().Minimum(1);
             endpoint.Property<int>().Set(port);
             context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
