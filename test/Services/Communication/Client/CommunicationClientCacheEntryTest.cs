@@ -84,7 +84,7 @@ public abstract class CommunicationClientCacheEntryTest
             string address = fuzzy.String();
             sut.Endpoint = MakeEndpoint(address);
 
-            Assert.Equal(address, sut.GetEndpoint());
+            Assert.Same(address, sut.GetEndpoint());
         }
 
         [Fact]
@@ -123,7 +123,7 @@ public abstract class CommunicationClientCacheEntryTest
 
             sut.Endpoint = MakeEndpoint(address + fuzzy.String()); // Endpoint setter does not invalidate cache.
 
-            Assert.Equal(first, sut.GetEndpoint());
+            Assert.Same(first, sut.GetEndpoint());
         }
 
         [Fact]
