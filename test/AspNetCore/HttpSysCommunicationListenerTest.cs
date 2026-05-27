@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.ServiceFabric.AspNetCore.Tests;
 using Moq;
 using Xunit;
+using AspNetCoreSR = Microsoft.ServiceFabric.Services.Communication.AspNetCore.SR;
 using HttpSysSR = Microsoft.ServiceFabric.AspNetCore.HttpSys.SR;
 
 namespace Microsoft.ServiceFabric.Services.Communication.AspNetCore;
@@ -121,7 +122,10 @@ public abstract class HttpSysCommunicationListenerTest
         }
 
         [Fact]
-        public void ThrowsInvalidOperationExceptionWhenEndpointIsNotInManifest() =>
-            _ = Assert.Throws<InvalidOperationException>(() => getListenerUrl());
+        public void ThrowsInvalidOperationExceptionWhenEndpointIsNotInManifest()
+        {
+            var exception = Assert.Throws<InvalidOperationException>(() => getListenerUrl());
+            Assert.Equal(string.Format(CultureInfo.InvariantCulture, AspNetCoreSR.EndpointNameNotFoundExceptionMessage, endpointName), exception.Message);
+        }
     }
 }
