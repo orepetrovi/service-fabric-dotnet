@@ -81,6 +81,15 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         readonly CancellationToken cancellationToken = default;
 
         [Fact]
+        public void InitializesProperties()
+        {
+            using var other = new TestFactory(servicePartitionResolver, exceptionHandlers, traceId);
+            Assert.Same(servicePartitionResolver, other.ServiceResolver);
+            Assert.Equal(exceptionHandlers, other.ExceptionHandlers);
+            Assert.Equal(traceId, other.TraceIdValue);
+        }
+
+        [Fact]
         public async Task DefaultsFireConnectEventsToFalse()
         {
             using var other = new TestFactory(servicePartitionResolver, exceptionHandlers, traceId);
