@@ -20,20 +20,20 @@ public abstract class ServiceFabricConfigurationProviderTest
     readonly ServiceFabricConfigurationProvider sut;
 
     // Constructor parameters
-    readonly Mock<ICodePackageActivationContext> activationContext = new();
+    readonly ICodePackageActivationContext activationContext = Mock.Of<ICodePackageActivationContext>();
     readonly ServiceFabricConfigurationOptions options = new("Config");
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
     ServiceFabricConfigurationProviderTest() =>
-        sut = new ServiceFabricConfigurationProvider(activationContext.Object, options);
+        sut = new ServiceFabricConfigurationProvider(activationContext, options);
 
     void RaiseModified(ConfigurationPackage oldPackage, ConfigurationPackage newPackage) =>
-        activationContext.Raise(_ => _.ConfigurationPackageModifiedEvent += null,
+        Mock.Get(activationContext).Raise(_ => _.ConfigurationPackageModifiedEvent += null,
             new PackageModifiedEventArgs<ConfigurationPackage> { OldPackage = oldPackage, NewPackage = newPackage });
 
     void RaiseAdded(ConfigurationPackage package) =>
-        activationContext.Raise(_ => _.ConfigurationPackageAddedEvent += null,
+        Mock.Get(activationContext).Raise(_ => _.ConfigurationPackageAddedEvent += null,
             new PackageAddedEventArgs<ConfigurationPackage> { Package = package });
 
     public sealed class Constructor : ServiceFabricConfigurationProviderTest
@@ -59,7 +59,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void ThrowsArgumentNullExceptionWhenOptionsIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(
-                () => new ServiceFabricConfigurationProvider(activationContext.Object, null));
+                () => new ServiceFabricConfigurationProvider(activationContext, null));
             Assert.Equal(nameof(options), exception.ParamName);
         }
 
@@ -191,7 +191,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         public Load()
         {
             options.ConfigAction = configAction.Object;
-            _ = activationContext.Setup(_ => _.GetConfigurationPackageObject("Config")).Returns(package);
+            _ = Mock.Get(activationContext).Setup(_ => _.GetConfigurationPackageObject("Config")).Returns(package);
         }
 
         [Fact]
