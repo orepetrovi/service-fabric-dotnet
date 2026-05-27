@@ -246,7 +246,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         }
 
         [Fact]
-        public async Task DoesNotAbortClientWhenNonTransientRetryResultButCacheEntryHasDifferentClient()
+        public async Task DoesNotAbortClientWhenNonTransientRetryAndCacheEntryHasNoClient()
         {
             var retry = new ExceptionHandlingRetryResult(
                 reportedException, false, fuzzy.TimeSpan(), fuzzy.Int32().Minimum(1));
@@ -259,6 +259,29 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             Assert.True(actual.ShouldRetry);
             Assert.False(actual.IsTransient);
             Assert.Null(sut.AbortedClient);
+        }
+
+        [Fact]
+        public async Task DoesNotAbortClientWhenNonTransientRetryAndCacheEntryHasDifferentClient()
+        {
+            var cache = sut.Field<CommunicationClientCache<ICommunicationClient>>().Value;
+            CommunicationClientCacheEntry<ICommunicationClient> entry =
+                cache.GetOrAddClientCacheEntry(rsp.Info.Id, endpoint, listenerName, rsp);
+            var cachedClient = Mock.Of<ICommunicationClient>();
+            entry.Client = cachedClient;
+
+            var retry = new ExceptionHandlingRetryResult(
+                reportedException, false, fuzzy.TimeSpan(), fuzzy.Int32().Minimum(1));
+            ExceptionHandlingResult result = retry;
+            _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
+
+            OperationRetryControl actual = await sut.ReportOperationExceptionAsync(
+                client, exceptionInformation, retrySettings, cancellationToken);
+
+            Assert.True(actual.ShouldRetry);
+            Assert.False(actual.IsTransient);
+            Assert.Null(sut.AbortedClient);
+            Assert.Same(cachedClient, entry.Client);
         }
 
         [Theory]
