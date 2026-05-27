@@ -63,11 +63,9 @@ public abstract class CommunicationClientCacheTest : IDisposable
         [Fact]
         public void DoesNotRestoreExecutionContextFlowWhenAlreadySuppressed()
         {
-            using (System.Threading.ExecutionContext.SuppressFlow())
-            {
-                using var other = new CommunicationClientCache<ICommunicationClient>(traceId);
-                Assert.True(System.Threading.ExecutionContext.IsFlowSuppressed());
-            }
+            using System.Threading.AsyncFlowControl flow = System.Threading.ExecutionContext.SuppressFlow();
+            using var other = new CommunicationClientCache<ICommunicationClient>(traceId);
+            Assert.True(System.Threading.ExecutionContext.IsFlowSuppressed());
         }
 
         [Fact]
