@@ -58,6 +58,7 @@ public abstract class CommunicationClientCacheEntryTest
         public void InitializesProperties()
         {
             Assert.Null(sut.Endpoint);
+            Assert.Null(sut.ListenerName);
             Assert.Null(sut.Rsp);
             Assert.Null(sut.Client);
             Assert.True(sut.IsInCache);
