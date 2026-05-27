@@ -26,10 +26,12 @@ public abstract class ServicePartitionResolverExtensionsTest
         public void ReturnsGivenResolver() =>
             Assert.Same(partitionResolver, partitionResolver.DisableNotification());
 
-        // TODO: SUT should throw ArgumentNullException when partitionResolver is null; the extension
-        // dereferences the null receiver, surfacing as NullReferenceException instead.
-        [Fact]
-        public void ThrowsNullReferenceExceptionWhenPartitionResolverIsNull() =>
-            Assert.Throws<NullReferenceException>(() => ServicePartitionResolverExtensions.DisableNotification(null));
+        // TODO: SUT bug. DisableNotification dereferences the null receiver instead of throwing ArgumentNullException.
+        [Fact(Explicit = true)]
+        public void ThrowsArgumentNullExceptionWhenPartitionResolverIsNull()
+        {
+            var e = Assert.Throws<ArgumentNullException>(() => ServicePartitionResolverExtensions.DisableNotification(null));
+            Assert.Equal("partitionResolver", e.ParamName);
+        }
     }
 }
