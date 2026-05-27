@@ -11,20 +11,20 @@ namespace Microsoft.ServiceFabric.Services.Client;
 
 public abstract class ServicePartitionResolverExtensionsTest
 {
-    readonly ServicePartitionResolver sut = new(Mock.Of<CreateFabricClientDelegate>());
-
     public sealed class DisableNotification : ServicePartitionResolverExtensionsTest
     {
+        readonly ServicePartitionResolver partitionResolver = new(Mock.Of<CreateFabricClientDelegate>());
+
         [Fact]
         public void SetsUseNotificationToFalse()
         {
-            sut.DisableNotification();
-            Assert.False(sut.UseNotification);
+            partitionResolver.DisableNotification();
+            Assert.False(partitionResolver.UseNotification);
         }
 
         [Fact]
         public void ReturnsGivenResolver() =>
-            Assert.Same(sut, sut.DisableNotification());
+            Assert.Same(partitionResolver, partitionResolver.DisableNotification());
 
         // TODO: SUT should throw ArgumentNullException when partitionResolver is null; the extension
         // dereferences the null receiver, surfacing as NullReferenceException instead.
