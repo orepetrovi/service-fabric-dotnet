@@ -165,6 +165,18 @@ public abstract class KestrelCommunicationListenerTest
         public GetListenerUrl() =>
             sut = new KestrelCommunicationListener(context, endpointName, build);
 
+        [Fact]
+        public void ReturnsDefaultHttpUrlOnPortZeroWhenEndpointNameIsNull()
+        {
+            // The 2-arg overload chains to the 3-arg ctor with endpointName: null, exercising the same
+            // SUT branch as an explicit null argument; no separate test is needed for the explicit-null path.
+            var sut = (AspNetCoreCommunicationListener)new KestrelCommunicationListener(context, build);
+
+            string actual = sut.GetListenerUrl();
+
+            Assert.Equal("http://+:0", actual);
+        }
+
         [Theory]
         [InlineData(EndpointProtocol.Tcp, "tcp")]
         [InlineData(EndpointProtocol.Http, "http")]
@@ -238,38 +250,6 @@ public abstract class KestrelCommunicationListenerTest
         {
             var exception = Assert.Throws<InvalidOperationException>(() => sut.GetListenerUrl());
             Assert.Equal(string.Format(CultureInfo.InvariantCulture, AspNetCoreSR.EndpointNameNotFoundExceptionMessage, endpointName), exception.Message);
-        }
-    }
-
-    public sealed class GetListenerUrl_WithoutEndpointName : KestrelCommunicationListenerTest
-    {
-        readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
-        new readonly AspNetCoreCommunicationListener sut;
-
-        public GetListenerUrl_WithoutEndpointName() =>
-            sut = new KestrelCommunicationListener(context, build);
-
-        [Fact]
-        public void ReturnsDefaultHttpUrlOnPortZero()
-        {
-            string actual = sut.GetListenerUrl();
-            Assert.Equal("http://+:0", actual);
-        }
-    }
-
-    public sealed class GetListenerUrl_WithNullEndpointName : KestrelCommunicationListenerTest
-    {
-        readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
-        new readonly AspNetCoreCommunicationListener sut;
-
-        public GetListenerUrl_WithNullEndpointName() =>
-            sut = new KestrelCommunicationListener(context, null, build);
-
-        [Fact]
-        public void ReturnsDefaultHttpUrlOnPortZero()
-        {
-            string actual = sut.GetListenerUrl();
-            Assert.Equal("http://+:0", actual);
         }
     }
 }
