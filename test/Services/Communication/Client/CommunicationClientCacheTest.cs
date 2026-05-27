@@ -253,7 +253,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
         {
             sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
 
-            Assert.False(sut.TryGetClientCacheEntry(partitionId, MakeEndpoint(), listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
+            Assert.False(sut.TryGetClientCacheEntry(partitionId, MakeEndpoint(endpoint.Address + fuzzy.String(), endpoint.Role), listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
             Assert.Null(cacheEntry);
         }
 
