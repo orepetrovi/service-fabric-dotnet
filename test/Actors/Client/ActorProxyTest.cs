@@ -47,7 +47,7 @@ public abstract class ActorProxyTest
         {
             // ActorProxy.Initialize stores client without validation. The defect surfaces later as a
             // NullReferenceException from the ActorId getter, which dereferences servicePartitionClientV2.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.Initialize(null, serviceRemotingMessageBodyFactory));
+            var exception = Assert.Throws<ArgumentNullException>(() => new TestProxy().Initialize(null, serviceRemotingMessageBodyFactory));
             Assert.Equal(nameof(client), exception.ParamName);
         }
 
@@ -56,7 +56,7 @@ public abstract class ActorProxyTest
         {
             // ActorProxy.Initialize forwards a null factory to InitializeV2 without validation. The defect
             // surfaces later as a NullReferenceException from ProxyBase.CreateRequestMessageBodyV2.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.Initialize(client, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => new TestProxy().Initialize(client, null));
             Assert.Equal(nameof(serviceRemotingMessageBodyFactory), exception.ParamName);
         }
     }
