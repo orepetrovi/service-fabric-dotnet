@@ -36,23 +36,31 @@ public abstract class ServiceFabricConfigurationProviderTest
         activationContext.Raise(_ => _.ConfigurationPackageAddedEvent += null,
             new PackageAddedEventArgs<ConfigurationPackage> { Package = package });
 
-    public sealed class ConfigurationPackageAddedEvent : ServiceFabricConfigurationProviderTest
+    public sealed class Constructor : ServiceFabricConfigurationProviderTest
     {
         readonly Mock<Action<ConfigurationPackage, IDictionary<string, string>>> configAction = new();
         readonly ConfigurationPackage matchingPackage =
             MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), "Config");
 
-        public ConfigurationPackageAddedEvent() => options.ConfigAction = configAction.Object;
+        public Constructor() => options.ConfigAction = configAction.Object;
 
         [Fact]
-        public void InvokesConfigActionWhenPackageNameMatches()
+        public void ThrowsArgumentNullExceptionWhenOptionsIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => new ServiceFabricConfigurationProvider(activationContext.Object, null));
+            Assert.Equal(nameof(options), exception.ParamName);
+        }
+
+        [Fact]
+        public void InvokesConfigActionWhenAddedPackageNameMatches()
         {
             RaiseAdded(matchingPackage);
             configAction.Verify(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()));
         }
 
         [Fact]
-        public void SignalsReloadTokenWhenPackageNameMatches()
+        public void SignalsReloadTokenWhenAddedPackageNameMatches()
         {
             IChangeToken token = sut.GetReloadToken();
             RaiseAdded(matchingPackage);
@@ -60,7 +68,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
-        public void ClearsPreviouslyLoadedDataWhenPackageNameMatches()
+        public void ClearsPreviouslyLoadedDataWhenAddedPackageNameMatches()
         {
             string staleKey = fuzzy.String().LettersOrDigits();
             sut.Set(staleKey, fuzzy.String().LettersOrDigits());
@@ -71,7 +79,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
-        public void IgnoresPackageWhenNameDoesNotMatch()
+        public void IgnoresAddedPackageWhenNameDoesNotMatch()
         {
             ConfigurationPackage otherPackage =
                 MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), "Other");
@@ -86,32 +94,23 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
-        public void ThrowsArgumentNullExceptionWhenPackageDescriptionIsNull()
+        public void ThrowsArgumentNullExceptionWhenAddedPackageDescriptionIsNull()
         {
             var package = TestHelper.CreateInstanced<ConfigurationPackage>();
 
             var exception = Assert.Throws<ArgumentNullException>(() => RaiseAdded(package));
             Assert.Equal("package.Description", exception.ParamName);
         }
-    }
-
-    public sealed class ConfigurationPackageModifiedEvent : ServiceFabricConfigurationProviderTest
-    {
-        readonly Mock<Action<ConfigurationPackage, IDictionary<string, string>>> configAction = new();
-        readonly ConfigurationPackage matchingPackage =
-            MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), "Config");
-
-        public ConfigurationPackageModifiedEvent() => options.ConfigAction = configAction.Object;
 
         [Fact]
-        public void InvokesConfigActionWhenPackageNameMatches()
+        public void InvokesConfigActionWhenModifiedPackageNameMatches()
         {
             RaiseModified(null, matchingPackage);
             configAction.Verify(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()));
         }
 
         [Fact]
-        public void SignalsReloadTokenWhenPackageNameMatches()
+        public void SignalsReloadTokenWhenModifiedPackageNameMatches()
         {
             IChangeToken token = sut.GetReloadToken();
             RaiseModified(null, matchingPackage);
@@ -119,7 +118,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
-        public void ClearsPreviouslyLoadedDataWhenPackageNameMatches()
+        public void ClearsPreviouslyLoadedDataWhenModifiedPackageNameMatches()
         {
             string staleKey = fuzzy.String().LettersOrDigits();
             sut.Set(staleKey, fuzzy.String().LettersOrDigits());
@@ -130,7 +129,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
-        public void IgnoresPackageWhenNameDoesNotMatch()
+        public void IgnoresModifiedPackageWhenNameDoesNotMatch()
         {
             ConfigurationPackage otherPackage =
                 MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), "Other");
@@ -145,23 +144,12 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
-        public void ThrowsArgumentNullExceptionWhenPackageDescriptionIsNull()
+        public void ThrowsArgumentNullExceptionWhenModifiedPackageDescriptionIsNull()
         {
             var package = TestHelper.CreateInstanced<ConfigurationPackage>();
 
             var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(null, package));
             Assert.Equal("package.Description", exception.ParamName);
-        }
-    }
-
-    public sealed class Constructor : ServiceFabricConfigurationProviderTest
-    {
-        [Fact]
-        public void ThrowsArgumentNullExceptionWhenOptionsIsNull()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(
-                () => new ServiceFabricConfigurationProvider(activationContext.Object, null));
-            Assert.Equal(nameof(options), exception.ParamName);
         }
     }
 
