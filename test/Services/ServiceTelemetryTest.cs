@@ -14,9 +14,9 @@ namespace Microsoft.ServiceFabric.Services;
 
 public abstract class ServiceTelemetryTest : IDisposable
 {
-    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-
     readonly EventSourceTest<ServiceEventSource> test = new();
+
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
     ServiceTelemetryTest() =>
         typeof(ServiceEventSource).Property<ServiceEventSource>().Set(test.Instance);
