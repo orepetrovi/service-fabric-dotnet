@@ -58,5 +58,23 @@ public abstract class ActorProxyTest
             sut.Initialize(client, messageBodyFactory);
             Assert.Same(messageBodyFactory, sut.ServiceRemotingMessageBodyFactory);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Initialize doesn't validate client.
+        public void ThrowsArgumentNullExceptionWhenClientIsNull()
+        {
+            // ActorProxy.Initialize stores client without validation. The defect surfaces later as a
+            // NullReferenceException from the ActorId getter, which dereferences servicePartitionClientV2.
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.Initialize(null, messageBodyFactory));
+            Assert.Equal(nameof(client), exception.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Initialize doesn't validate serviceRemotingMessageBodyFactory.
+        public void ThrowsArgumentNullExceptionWhenServiceRemotingMessageBodyFactoryIsNull()
+        {
+            // ActorProxy.Initialize forwards a null factory to InitializeV2 without validation. The defect
+            // surfaces later as a NullReferenceException from ProxyBase.CreateRequestMessageBodyV2.
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.Initialize(client, null));
+            Assert.Equal("serviceRemotingMessageBodyFactory", exception.ParamName);
+        }
     }
 }
