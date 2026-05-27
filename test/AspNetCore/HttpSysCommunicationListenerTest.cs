@@ -84,6 +84,14 @@ public abstract class HttpSysCommunicationListenerTest
         [InlineData(EndpointProtocol.Udp, "udp")]
         public void ReturnsUrlWithProtocolLowercaseAndPortFromEndpoint(EndpointProtocol protocol, string expectedScheme)
         {
+            var other = new EndpointResourceDescription
+            {
+                Name = fuzzy.String(),
+                Protocol = protocol == EndpointProtocol.Http ? EndpointProtocol.Https : EndpointProtocol.Http,
+            };
+            typeof(EndpointResourceDescription).GetProperty(nameof(EndpointResourceDescription.Port)).SetValue(other, fuzzy.Int32());
+            context.CodePackageActivationContext.GetEndpoints().Add(other);
+
             var endpoint = new EndpointResourceDescription
             {
                 Name = endpointName,
