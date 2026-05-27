@@ -37,9 +37,13 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
     public sealed class Constructor_Boolean_IServicePartitionResolver_IEnumerableOfIExceptionHandler_String : CommunicationClientFactoryBaseTest
     {
-        [Fact]
-        public void InitializesProperties()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void InitializesProperties(bool fireConnectEvents)
         {
+            using var sut = new TestFactory(fireConnectEvents, servicePartitionResolver, exceptionHandlers, traceId);
+            Assert.Equal(fireConnectEvents, sut.Field<bool>().Value);
             Assert.Same(servicePartitionResolver, sut.ServiceResolver);
             Assert.Equal(exceptionHandlers, sut.ExceptionHandlers);
             Assert.Equal(traceId, sut.TraceIdValue);
