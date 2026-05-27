@@ -8,10 +8,10 @@ using System.Collections.Generic;
 using System.Fabric;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.ServiceFabric.AspNetCore.Configuration;
+using Microsoft.ServiceFabric.AspNetCore.Tests;
 using Xunit;
 
-namespace Microsoft.ServiceFabric.AspNetCore.Tests
+namespace Microsoft.ServiceFabric.AspNetCore.Configuration
 {
     /// <summary>
     /// Test for ServiceFabricConfigurationProvider.
