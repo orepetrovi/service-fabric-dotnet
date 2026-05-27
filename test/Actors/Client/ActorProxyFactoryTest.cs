@@ -29,15 +29,6 @@ public interface IFactoryTestActor : IActor
     Task TestMethod();
 }
 
-/// <summary>
-/// Public actor service interface used to exercise <see cref="ActorProxyFactory"/>. The dynamic assembly produced
-/// by <c>ActorCodeBuilder</c> cannot access <c>internal</c> interfaces defined in this test assembly,
-/// so the interface must be <c>public</c>.
-/// </summary>
-public interface IFactoryTestActorService : IActorService
-{
-}
-
 public abstract class ActorProxyFactoryTest
 {
     readonly ActorProxyFactory sut;
@@ -192,7 +183,7 @@ public abstract class ActorProxyFactoryTest
         [Fact]
         public void ReturnsProxyWithPartitionKeyDerivedFromActorId()
         {
-            var proxy = (IServiceProxy)sut.CreateActorServiceProxy<IFactoryTestActorService>(serviceUri, actorId, listenerName);
+            var proxy = (IServiceProxy)sut.CreateActorServiceProxy<IActorService>(serviceUri, actorId, listenerName);
 
             Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
             Assert.Equal(listenerName, proxy.ServicePartitionClient2.ListenerName);
@@ -210,7 +201,7 @@ public abstract class ActorProxyFactoryTest
         [Fact]
         public void ReturnsProxyWithGivenServiceUriListenerNameAndPartitionKey()
         {
-            var proxy = (IServiceProxy)sut.CreateActorServiceProxy<IFactoryTestActorService>(serviceUri, partitionKey, listenerName);
+            var proxy = (IServiceProxy)sut.CreateActorServiceProxy<IActorService>(serviceUri, partitionKey, listenerName);
 
             Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
             Assert.Equal(listenerName, proxy.ServicePartitionClient2.ListenerName);
