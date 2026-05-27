@@ -110,16 +110,16 @@ public abstract class HttpSysCommunicationListenerTest
         [Fact]
         public void ThrowsInvalidOperationExceptionWhenEndpointIsNotInManifest() =>
             _ = Assert.Throws<InvalidOperationException>(() => listener.GetListenerUrl());
-    }
 
-    sealed class TestListener : HttpSysCommunicationListener
-    {
-        internal TestListener(ServiceContext serviceContext, string endpointName, Func<string, AspNetCoreCommunicationListener, IWebHost> build)
-            : base(serviceContext, endpointName, build)
+        sealed class TestListener : HttpSysCommunicationListener
         {
-        }
+            internal TestListener(ServiceContext serviceContext, string endpointName, Func<string, AspNetCoreCommunicationListener, IWebHost> build)
+                : base(serviceContext, endpointName, build)
+            {
+            }
 
-        internal new string GetListenerUrl() =>
-            base.GetListenerUrl();
+            internal new string GetListenerUrl() =>
+                base.GetListenerUrl();
+        }
     }
 }
