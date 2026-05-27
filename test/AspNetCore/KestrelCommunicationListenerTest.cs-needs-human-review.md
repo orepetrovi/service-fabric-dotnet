@@ -130,3 +130,16 @@ Per test.instructions.md (*"Each test method should verify a single logical aspe
 2. Keeping a single forwarding test per overload.
 
 **Iterator note (oscillation):** An earlier round (round 4 of this iteration) explicitly demanded these tests under the heading "⚠️ Missing Argument Validation — No tests for null `serviceContext` or `build`," with rationale from `test.instructions.md`: *"Create explicit tests for missing argument validation that can cause NullReferenceException, etc. in consuming members."* We complied and added them across all four constructor overloads. This round flips the position, arguing the tests are testing the base class. Both arguments cite the same instructions file. Human judgment requested.
+---
+
+## ⚠️ Should Fix — Replace `ctor.Parameter<T>().Name` with `nameof(...)`
+
+**Reported by:** opus. **Cross-check:** gpt Agree, gemini Agree. Elevated from 💡 to ⚠️ because two models independently support it.
+
+The four `Constructor_*` classes capture `static readonly ConstructorInfo ctor` solely to read parameter names for `ArgumentNullException.ParamName` assertions, e.g. [test/AspNetCore/KestrelCommunicationListenerTest.cs#L52-L53](test/AspNetCore/KestrelCommunicationListenerTest.cs#L52-L53) and [test/AspNetCore/KestrelCommunicationListenerTest.cs#L58-L59](test/AspNetCore/KestrelCommunicationListenerTest.cs#L58-L59). The base-class fields `serviceContext`, `endpointName`, and `build` already match the SUT parameter names per `test.instructions.md` ("Use the exact SUT parameter names for fields"). `Assert.Equal(nameof(serviceContext), exception.ParamName)` is shorter, removes the `ctor` field, and matches `csharp.instructions.md` ("Use `nameof(...)` instead of hardcoding type or member names as string literals").
+
+gpt adds: the test instructions' own `ArgumentNullException.ParamName` examples assert against `nameof(...)`; this pattern is established.
+
+gemini adds: the current dynamic lookup is also weaker as a regression guard — if a SUT parameter is renamed, `ctor.Parameter<T>().Name` adapts silently. `nameof(serviceContext)` pins the expected name so a SUT rename breaks the test (and forces a deliberate fixture-field rename), which is the desired behavior.
+
+**Iterator note (oscillation):** An earlier round (round ~6) explicitly demanded the opposite: switch FROM `nameof(testField)` TO `ctor.Parameter<T>().Name` (the Inspector pattern), with rationale: "nameof(serviceContext) resolves to the local test field. The base AspNetCoreCommunicationListener throws with hard-coded strings, not nameof, so the SUT parameter name and the thrown ParamName are decoupled — the test passes today only by naming coincidence." We complied and aligned both Kestrel and HttpSys peer files. This round flips that position. Human judgment requested. If reverted to `nameof`, apply equivalently to `HttpSysCommunicationListenerTest.cs` and remove the new `InspectorWorkarounds` helper if it has no remaining callers.
