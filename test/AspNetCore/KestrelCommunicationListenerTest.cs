@@ -238,7 +238,7 @@ public abstract class KestrelCommunicationListenerTest
 
             string actual = sut.GetListenerUrl();
 
-            string expected = $"{expectedScheme}://+:{port}";
+            string expected = FormattableString.Invariant($"{expectedScheme}://+:{port}");
             Assert.Equal(expected, actual);
         }
 
@@ -281,7 +281,7 @@ public abstract class KestrelCommunicationListenerTest
 
             string actual = sut.GetListenerUrl();
 
-            string expected = $"http://+:{port}";
+            string expected = FormattableString.Invariant($"http://+:{port}");
             Assert.Equal(expected, actual);
         }
 
