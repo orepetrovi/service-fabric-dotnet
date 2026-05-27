@@ -448,6 +448,12 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             handler.Verify(
                 _ => _.TryHandleException(exceptionInformation, retrySettings, out It.Ref<ExceptionHandlingResult>.IsAny),
                 Times.Once);
+            handler.Verify(
+                _ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Once);
+            handler2.Verify(
+                _ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Once);
         }
 
         [Fact]
@@ -461,7 +467,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
                 client, exceptionInformation, retrySettings, cancellationToken);
 
             handler.Verify(
-                _ => _.TryHandleException(exceptionInformation, retrySettings, out It.Ref<ExceptionHandlingResult>.IsAny),
+                _ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny),
                 Times.Once);
             handler2.Verify(
                 _ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny),
