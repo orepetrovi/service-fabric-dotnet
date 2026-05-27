@@ -92,9 +92,11 @@ public abstract class CommunicationClientCacheEntryTest
         {
             string first = fuzzy.String().LettersOrDigits();
             string second = first + fuzzy.String().LettersOrDigits();
+            string firstListener = fuzzy.String().LettersOrDigits();
+            string secondListener = firstListener + fuzzy.String().LettersOrDigits();
             sut.Endpoint = MakeEndpoint(EndpointsJson(
-                (fuzzy.String().LettersOrDigits(), first),
-                (fuzzy.String().LettersOrDigits(), second)));
+                (firstListener, first),
+                (secondListener, second)));
 
             Assert.Equal(first, sut.GetEndpoint());
         }
