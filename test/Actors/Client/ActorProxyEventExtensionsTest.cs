@@ -82,9 +82,7 @@ public abstract class ActorProxyEventExtensionsTest
         public async Task ThrowsArgumentExceptionWhenActorProxyIsNotActorProxy()
         {
             IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
-
             var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.UnsubscribeAsync(subscriber));
-
             Assert.Equal("actorProxy", exception.ParamName);
         }
 
@@ -92,9 +90,7 @@ public abstract class ActorProxyEventExtensionsTest
         public async Task ThrowsArgumentExceptionWhenTEventDoesNotImplementIActorEvents()
         {
             string subscriber = fuzzy.String();
-
             var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.UnsubscribeAsync(subscriber));
-
             Assert.Null(exception.ParamName);
         }
     }
