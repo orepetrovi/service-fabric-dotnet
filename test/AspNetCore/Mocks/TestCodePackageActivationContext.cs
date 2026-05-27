@@ -181,6 +181,15 @@ namespace Microsoft.ServiceFabric.AspNetCore.Tests
         }
 
         /// <summary>
+        /// Raises the <see cref="ConfigurationPackageAddedEvent"/> with the supplied package.
+        /// </summary>
+        /// <param name="package">The package to deliver via the event.</param>
+        public void RaiseConfigurationPackageAddedEvent(ConfigurationPackage package)
+        {
+            this.ConfigurationPackageAddedEvent(this, new PackageAddedEventArgs<ConfigurationPackage>() { Package = package });
+        }
+
+        /// <summary>
         /// Retrieves the principals defined in the application manifest.
         /// </summary>
         /// <returns>
