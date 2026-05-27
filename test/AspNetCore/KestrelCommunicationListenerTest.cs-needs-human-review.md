@@ -48,3 +48,21 @@ Declining to make this change as part of the task "test `KestrelCommunicationLis
    - Separately addresses the `KestrelCommunicationListener` type duplication between `AspNetCore` and `AspNetCore.Kestrel`, which is the actual source of the extern-alias requirement.
 
 Human reviewer: please confirm scope before this is acted on.
+
+---
+
+### ⚠️ Should Fix — Inspector workaround TODO references an unfiled issue
+Reported by: `gemini`, `opus`.
+
+[test/AspNetCore/KestrelCommunicationListenerTest.cs#L42-L44](test/AspNetCore/KestrelCommunicationListenerTest.cs#L42-L44) and [test/AspNetCore/HttpSysCommunicationListenerTest.cs#L39-L41](test/AspNetCore/HttpSysCommunicationListenerTest.cs#L39-L41) both contain:
+
+> // TODO: Inspector v0.9.0 sut.Constructor<TSig>() binds multiple overloads when delegate-typed parameters
+> // only differ in generic arguments (relaxed signature matching). Track via olegsych/inspector once filed.
+
+[.github/instructions/inspector.instructions.md](.github/instructions/inspector.instructions.md) requires workaround TODOs to link to a filed GitHub issue, and instructs the agent to ask the user to submit one to `olegsych/inspector`. The agent cannot file the upstream issue itself.
+
+**Action required:**
+1. File an issue on https://github.com/olegsych/inspector describing the behavior: in Inspector v0.9.0, `sut.Constructor<TSig>()` binds multiple overloads when delegate-typed parameters only differ in generic arguments (relaxed signature matching).
+2. Replace `once filed` in both TODO comments with the actual issue URL.
+3. Delete this section.
+
