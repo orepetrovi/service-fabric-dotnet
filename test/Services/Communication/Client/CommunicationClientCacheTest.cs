@@ -135,6 +135,17 @@ public abstract class CommunicationClientCacheTest : IDisposable
             Assert.Same(first, second);
         }
 
+        [Fact]
+        public void ReturnsSameEntryWhenCalledAgainWithNullListenerName()
+        {
+            CommunicationClientCacheEntry<ICommunicationClient> first =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, null, rsp);
+            CommunicationClientCacheEntry<ICommunicationClient> second =
+                sut.GetOrAddClientCacheEntry(partitionId, endpoint, null, rsp);
+
+            Assert.Same(first, second);
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug. PartitionClientCacheKey.GetHashCode is case-sensitive while Equals is case-insensitive.
         public void ReturnsSameEntryWhenListenerNameDiffersOnlyInCase()
         {
