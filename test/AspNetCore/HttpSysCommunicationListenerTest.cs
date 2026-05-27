@@ -98,14 +98,6 @@ public abstract class HttpSysCommunicationListenerTest
         [InlineData(EndpointProtocol.Udp, "udp")]
         public void ReturnsUrlWithProtocolLowercaseAndPortFromEndpoint(EndpointProtocol protocol, string expectedScheme)
         {
-            var other = new EndpointResourceDescription
-            {
-                Name = endpointName + fuzzy.String(),
-                Protocol = protocol == EndpointProtocol.Http ? EndpointProtocol.Https : EndpointProtocol.Http,
-            };
-            other.Property<int>().Set(fuzzy.UInt16());
-            context.CodePackageActivationContext.GetEndpoints().Add(other);
-
             var endpoint = new EndpointResourceDescription
             {
                 Name = endpointName,
@@ -118,6 +110,32 @@ public abstract class HttpSysCommunicationListenerTest
             string actual = getListenerUrl();
 
             string expected = string.Format(CultureInfo.InvariantCulture, "{0}://+:{1}", expectedScheme, port);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void ReturnsUrlForEndpointMatchingNameWhenMultipleEndpointsExist()
+        {
+            var other = new EndpointResourceDescription
+            {
+                Name = endpointName + fuzzy.String(),
+                Protocol = EndpointProtocol.Https,
+            };
+            other.Property<int>().Set(fuzzy.UInt16());
+            context.CodePackageActivationContext.GetEndpoints().Add(other);
+
+            var endpoint = new EndpointResourceDescription
+            {
+                Name = endpointName,
+                Protocol = EndpointProtocol.Http,
+            };
+            int port = fuzzy.UInt16();
+            endpoint.Property<int>().Set(port);
+            context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
+
+            string actual = getListenerUrl();
+
+            string expected = string.Format(CultureInfo.InvariantCulture, "http://+:{0}", port);
             Assert.Equal(expected, actual);
         }
 
