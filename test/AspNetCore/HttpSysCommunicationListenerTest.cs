@@ -109,7 +109,7 @@ public abstract class HttpSysCommunicationListenerTest
 
             string actual = getListenerUrl();
 
-            string expected = string.Format(CultureInfo.InvariantCulture, "{0}://+:{1}", expectedScheme, port);
+            string expected = $"{expectedScheme}://+:{port}";
             Assert.Equal(expected, actual);
         }
 
@@ -135,7 +135,7 @@ public abstract class HttpSysCommunicationListenerTest
 
             string actual = getListenerUrl();
 
-            string expected = string.Format(CultureInfo.InvariantCulture, "http://+:{0}", port);
+            string expected = $"http://+:{port}";
             Assert.Equal(expected, actual);
         }
 
