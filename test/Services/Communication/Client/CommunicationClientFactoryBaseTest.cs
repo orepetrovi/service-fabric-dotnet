@@ -141,6 +141,19 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         }
     }
 
+    public sealed class GetClientAsync_ResolvedServicePartition_TargetReplicaSelector_String_OperationRetrySettings_CancellationToken : CommunicationClientFactoryBaseTest
+    {
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Endpoint selection depends on sealed System.Fabric types that cannot be populated.
+        public void CreatesClientFromPreviousResolvedServicePartition()
+        {
+            // The overload delegates to CreateClientWithRetriesAsync, which walks ResolvedServicePartition.Endpoints /
+            // GetEndpoint(). ResolvedServicePartition and ResolvedServiceEndpoint are sealed types from System.Fabric
+            // whose Endpoints collection cannot be populated without modifying the SUT to take a seam for endpoint
+            // selection. Documented here so the uncovered public API surface is discoverable from the test class.
+            throw new NotImplementedException();
+        }
+    }
+
     public sealed class GetClientAsync_Uri_ServicePartitionKey_TargetReplicaSelector_String_OperationRetrySettings_CancellationToken : CommunicationClientFactoryBaseTest
     {
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Endpoint selection depends on sealed System.Fabric types that cannot be populated.
@@ -151,19 +164,6 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             // ResolvedServiceEndpoint are sealed types from System.Fabric whose Endpoints collection cannot be populated
             // without modifying the SUT to take a seam for endpoint selection. Documented here so the uncovered public
             // API surface is discoverable from the test class.
-            throw new NotImplementedException();
-        }
-    }
-
-    public sealed class GetClientAsync_ResolvedServicePartition_TargetReplicaSelector_String_OperationRetrySettings_CancellationToken : CommunicationClientFactoryBaseTest
-    {
-        [Fact(Explicit = true)] // TODO: SUT testability limitation. Endpoint selection depends on sealed System.Fabric types that cannot be populated.
-        public void CreatesClientFromPreviousResolvedServicePartition()
-        {
-            // The overload delegates to CreateClientWithRetriesAsync, which walks ResolvedServicePartition.Endpoints /
-            // GetEndpoint(). ResolvedServicePartition and ResolvedServiceEndpoint are sealed types from System.Fabric
-            // whose Endpoints collection cannot be populated without modifying the SUT to take a seam for endpoint
-            // selection. Documented here so the uncovered public API surface is discoverable from the test class.
             throw new NotImplementedException();
         }
     }
