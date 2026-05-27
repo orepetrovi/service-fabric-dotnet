@@ -58,6 +58,16 @@ public abstract class KestrelCommunicationListenerTest
             var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(serviceContext, (Func<string, AspNetCoreCommunicationListener, IHost>)null));
             Assert.Equal(ctor.Parameter<Func<string, AspNetCoreCommunicationListener, IHost>>().Name, exception.ParamName);
         }
+
+        [Fact]
+        public void GetListenerUrlReturnsDefaultHttpUrlOnPortZero()
+        {
+            // The 2-arg overload chains to the 3-arg ctor with endpointName: null. This test pins the
+            // null-endpoint default-URL path to the duplicated `endpointName?.Length == 0 / this.endpointName = endpointName`
+            // block in this overload so a regression in just one of the two 3-arg ctors is caught here.
+            var sut = (AspNetCoreCommunicationListener)new KestrelCommunicationListener(serviceContext, build);
+            Assert.Equal("http://+:0", sut.GetListenerUrl());
+        }
     }
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
@@ -76,6 +86,16 @@ public abstract class KestrelCommunicationListenerTest
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(serviceContext, (Func<string, AspNetCoreCommunicationListener, IWebHost>)null));
             Assert.Equal(ctor.Parameter<Func<string, AspNetCoreCommunicationListener, IWebHost>>().Name, exception.ParamName);
+        }
+
+        [Fact]
+        public void GetListenerUrlReturnsDefaultHttpUrlOnPortZero()
+        {
+            // The 2-arg overload chains to the 3-arg ctor with endpointName: null. This test pins the
+            // null-endpoint default-URL path to the duplicated `endpointName?.Length == 0 / this.endpointName = endpointName`
+            // block in this overload so a regression in just one of the two 3-arg ctors is caught here.
+            var sut = (AspNetCoreCommunicationListener)new KestrelCommunicationListener(serviceContext, build);
+            Assert.Equal("http://+:0", sut.GetListenerUrl());
         }
     }
 
@@ -116,6 +136,16 @@ public abstract class KestrelCommunicationListenerTest
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
             Assert.Equal(ctor.Parameter<string>().Name, exception.ParamName);
         }
+
+        [Fact]
+        public void GetListenerUrlReturnsDefaultHttpUrlWhenEndpointNameIsNull()
+        {
+            // Pins the null-endpoint default-URL path to this overload's copy of the
+            // `endpointName?.Length == 0 / this.endpointName = endpointName` block so a regression
+            // affecting only this ctor is caught here.
+            var sut = (AspNetCoreCommunicationListener)new KestrelCommunicationListener(serviceContext, null, build);
+            Assert.Equal("http://+:0", sut.GetListenerUrl());
+        }
     }
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
@@ -153,6 +183,16 @@ public abstract class KestrelCommunicationListenerTest
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
             Assert.Equal(ctor.Parameter<string>().Name, exception.ParamName);
         }
+
+        [Fact]
+        public void GetListenerUrlReturnsDefaultHttpUrlWhenEndpointNameIsNull()
+        {
+            // Pins the null-endpoint default-URL path to this overload's copy of the
+            // `endpointName?.Length == 0 / this.endpointName = endpointName` block so a regression
+            // affecting only this ctor is caught here.
+            var sut = (AspNetCoreCommunicationListener)new KestrelCommunicationListener(serviceContext, null, build);
+            Assert.Equal("http://+:0", sut.GetListenerUrl());
+        }
     }
 
     public sealed class GetListenerUrl : KestrelCommunicationListenerTest
@@ -165,17 +205,8 @@ public abstract class KestrelCommunicationListenerTest
         public GetListenerUrl() =>
             sut = new KestrelCommunicationListener(context, endpointName, build);
 
-        [Fact]
-        public void ReturnsDefaultHttpUrlOnPortZeroWhenEndpointNameIsNull()
-        {
-            // The 2-arg overload chains to the 3-arg ctor with endpointName: null, exercising the same
-            // SUT branch as an explicit null argument; no separate test is needed for the explicit-null path.
-            var sut = (AspNetCoreCommunicationListener)new KestrelCommunicationListener(context, build);
-
-            string actual = sut.GetListenerUrl();
-
-            Assert.Equal("http://+:0", actual);
-        }
+        // The null-endpoint default-URL path is covered per-overload in the four `Constructor_*` classes,
+        // co-located with the duplicated SUT code that stores `this.endpointName`.
 
         [Theory]
         [InlineData(EndpointProtocol.Tcp, "tcp")]
