@@ -165,7 +165,7 @@ public abstract class ServicePartitionResolverTest
         public void CreatesNewDefaultWhenNoneIsSet()
         {
             ServicePartitionResolver.SetDefault(null);
-            Assert.NotNull(ServicePartitionResolver.GetDefault());
+            Assert.NotSame(original, ServicePartitionResolver.GetDefault());
         }
     }
 
