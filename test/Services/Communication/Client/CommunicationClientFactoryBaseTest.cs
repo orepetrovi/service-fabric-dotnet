@@ -312,6 +312,39 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
             Assert.True(actual.ShouldRetry);
         }
+
+        [Fact]
+        public async Task InvokesSubsequentHandlerWhenPreviousHandlerDoesNotMatch()
+        {
+            var handler2 = Mock.Get(exceptionHandlers.Last());
+            var retry = new ExceptionHandlingRetryResult(
+                reportedException, true, fuzzy.TimeSpan(), fuzzy.Int32().Minimum(1));
+            ExceptionHandlingResult result = retry;
+            _ = handler2.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
+
+            OperationRetryControl actual = await sut.ReportOperationExceptionAsync(
+                client, exceptionInformation, retrySettings, cancellationToken);
+
+            Assert.True(actual.ShouldRetry);
+            handler.Verify(
+                _ => _.TryHandleException(exceptionInformation, retrySettings, out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task DoesNotInvokeSubsequentHandlerWhenPreviousHandlerMatches()
+        {
+            ExceptionHandlingResult result = new ExceptionHandlingThrowResult();
+            _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
+            var handler2 = Mock.Get(exceptionHandlers.Last());
+
+            _ = await sut.ReportOperationExceptionAsync(
+                client, exceptionInformation, retrySettings, cancellationToken);
+
+            handler2.Verify(
+                _ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Never);
+        }
     }
 
     static ResolvedServiceEndpoint MakeEndpoint(string address)
