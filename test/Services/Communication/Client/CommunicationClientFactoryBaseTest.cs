@@ -222,12 +222,20 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         [Fact]
         public async Task ReturnsShouldRetryFalseAndOriginalExceptionWhenNoHandlerMatches()
         {
+            var handler2 = Mock.Get(exceptionHandlers.Last());
+
             OperationRetryControl actual = await sut.ReportOperationExceptionAsync(
                 client, exceptionInformation, retrySettings, cancellationToken);
 
             Assert.False(actual.ShouldRetry);
             Assert.Same(reportedException, actual.Exception);
             Assert.Equal(Timeout.InfiniteTimeSpan, actual.RetryDelay);
+            handler.Verify(
+                _ => _.TryHandleException(exceptionInformation, retrySettings, out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Once);
+            handler2.Verify(
+                _ => _.TryHandleException(exceptionInformation, retrySettings, out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Once);
         }
 
         [Fact]
