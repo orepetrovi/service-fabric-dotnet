@@ -77,7 +77,7 @@ public abstract class HttpSysCommunicationListenerTest
         readonly Func<string> getListenerUrl;
 
         protected GetListenerUrl(Func<ServiceContext, string, HttpSysCommunicationListener> create) =>
-            getListenerUrl = create(context, endpointName).Protected().Method<Func<string>>();
+            getListenerUrl = ((AspNetCoreCommunicationListener)create(context, endpointName)).GetListenerUrl;
 
         public sealed class WithIWebHost : GetListenerUrl
         {
