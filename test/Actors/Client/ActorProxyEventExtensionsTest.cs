@@ -20,14 +20,6 @@ public abstract class ActorProxyEventExtensionsTest
         readonly IActorEventPublisher actorProxy = new TestProxy();
         readonly IActorEvents subscriber = Mock.Of<IActorEvents>();
 
-        [Fact]
-        public async Task ThrowsArgumentExceptionWhenActorProxyIsNotActorProxy()
-        {
-            IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.SubscribeAsync(subscriber));
-            Assert.Equal("actorProxy", exception.ParamName);
-        }
-
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Delegates to internal, non-virtual ActorProxy.SubscribeAsync requiring Fabric runtime state.
         public Task SubscribesWhenActorProxyIsActorProxyAndTEventImplementsIActorEvents()
         {
@@ -36,6 +28,14 @@ public abstract class ActorProxyEventExtensionsTest
             // resubscription loop. It cannot be observed through Moq or Inspector without out-of-scope SUT testability
             // improvements.
             throw new NotImplementedException();
+        }
+
+        [Fact]
+        public async Task ThrowsArgumentExceptionWhenActorProxyIsNotActorProxy()
+        {
+            IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.SubscribeAsync(subscriber));
+            Assert.Equal("actorProxy", exception.ParamName);
         }
     }
 
@@ -45,14 +45,6 @@ public abstract class ActorProxyEventExtensionsTest
         readonly IActorEvents subscriber = Mock.Of<IActorEvents>();
         readonly TimeSpan resubscriptionInterval = fuzzy.TimeSpan();
 
-        [Fact]
-        public async Task ThrowsArgumentExceptionWhenActorProxyIsNotActorProxy()
-        {
-            IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.SubscribeAsync(subscriber, resubscriptionInterval));
-            Assert.Equal("actorProxy", exception.ParamName);
-        }
-
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Delegates to internal, non-virtual ActorProxy.SubscribeAsync requiring Fabric runtime state.
         public Task SubscribesWhenActorProxyIsActorProxyAndTEventImplementsIActorEvents()
         {
@@ -62,12 +54,29 @@ public abstract class ActorProxyEventExtensionsTest
             // improvements.
             throw new NotImplementedException();
         }
+
+        [Fact]
+        public async Task ThrowsArgumentExceptionWhenActorProxyIsNotActorProxy()
+        {
+            IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.SubscribeAsync(subscriber, resubscriptionInterval));
+            Assert.Equal("actorProxy", exception.ParamName);
+        }
     }
 
     public sealed class UnsubscribeAsync : ActorProxyEventExtensionsTest
     {
         readonly IActorEventPublisher actorProxy = new TestProxy();
         readonly IActorEvents subscriber = Mock.Of<IActorEvents>();
+
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Delegates to internal, non-virtual ActorProxy.UnsubscribeAsync requiring Fabric runtime state.
+        public Task UnsubscribesWhenActorProxyIsActorProxyAndTEventImplementsIActorEvents()
+        {
+            // The success path forwards to ActorProxy.UnsubscribeAsync(Type, object), which is internal and non-virtual
+            // and depends on servicePartitionClientV2 and ActorEventSubscriberManager. It cannot be observed through
+            // Moq or Inspector without out-of-scope SUT testability improvements.
+            throw new NotImplementedException();
+        }
 
         [Fact]
         public async Task ThrowsArgumentExceptionWhenActorProxyIsNotActorProxy()
@@ -87,15 +96,6 @@ public abstract class ActorProxyEventExtensionsTest
             var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.UnsubscribeAsync(subscriber));
 
             Assert.Null(exception.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT testability limitation. Delegates to internal, non-virtual ActorProxy.UnsubscribeAsync requiring Fabric runtime state.
-        public Task UnsubscribesWhenActorProxyIsActorProxyAndTEventImplementsIActorEvents()
-        {
-            // The success path forwards to ActorProxy.UnsubscribeAsync(Type, object), which is internal and non-virtual
-            // and depends on servicePartitionClientV2 and ActorEventSubscriberManager. It cannot be observed through
-            // Moq or Inspector without out-of-scope SUT testability improvements.
-            throw new NotImplementedException();
         }
     }
 
