@@ -269,5 +269,13 @@ public abstract class ServiceFabricConfigurationProviderTest
             Assert.True(sut.TryGet(existingKey, out string actual));
             Assert.Same(existingValue, actual);
         }
+
+        [Fact]
+        public void DoesNotSignalReloadToken()
+        {
+            IChangeToken token = sut.GetReloadToken();
+            sut.Load();
+            Assert.False(token.HasChanged);
+        }
     }
 }
