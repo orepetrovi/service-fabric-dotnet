@@ -6,6 +6,7 @@
 extern alias KestrelAssembly;
 
 using System;
+using System.Collections.ObjectModel;
 using System.Fabric;
 using System.Fabric.Description;
 using System.Globalization;
@@ -258,7 +259,7 @@ public abstract class KestrelCommunicationListenerTest
             };
             other.Property<int>().Set(fuzzy.UInt16());
 
-            var endpoints = context.CodePackageActivationContext.GetEndpoints();
+            KeyedCollection<string, EndpointResourceDescription> endpoints = context.CodePackageActivationContext.GetEndpoints();
             if (matchingFirst)
             {
                 endpoints.Add(endpoint);
