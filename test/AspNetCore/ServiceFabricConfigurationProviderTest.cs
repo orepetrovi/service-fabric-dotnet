@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Fabric;
 using Fuzzy;
+using Inspector;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using Microsoft.ServiceFabric.AspNetCore.Tests;
@@ -112,7 +113,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void ThrowsArgumentNullExceptionWhenAddedPackageDescriptionIsNull()
         {
-            var package = TestHelper.CreateInstanced<ConfigurationPackage>();
+            var package = Type<ConfigurationPackage>.Uninitialized();
 
             var exception = Assert.Throws<ArgumentNullException>(() => RaiseAdded(package));
             Assert.Equal("package.Description", exception.ParamName);
@@ -177,7 +178,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void ThrowsArgumentNullExceptionWhenModifiedPackageDescriptionIsNull()
         {
-            var package = TestHelper.CreateInstanced<ConfigurationPackage>();
+            var package = Type<ConfigurationPackage>.Uninitialized();
 
             var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(null, package));
             Assert.Equal("package.Description", exception.ParamName);
