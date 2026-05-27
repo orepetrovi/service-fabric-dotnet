@@ -238,11 +238,8 @@ public abstract class ServicePartitionResolverTest
         [Fact]
         public void UpdatesValueReturnedByGetDefault()
         {
-            var defaultServiceResolver = new ServicePartitionResolver(createFabricClient);
-
-            ServicePartitionResolver.SetDefault(defaultServiceResolver);
-
-            Assert.Same(defaultServiceResolver, ServicePartitionResolver.GetDefault());
+            ServicePartitionResolver.SetDefault(sut);
+            Assert.Same(sut, ServicePartitionResolver.GetDefault());
         }
     }
 
