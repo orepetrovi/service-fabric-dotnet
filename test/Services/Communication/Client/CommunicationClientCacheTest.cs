@@ -103,7 +103,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
         readonly Guid partitionId = fuzzy.Guid();
         readonly ResolvedServiceEndpoint endpoint = MakeEndpoint();
         readonly string listenerName = fuzzy.String();
-        readonly ResolvedServicePartition rsp = null;
+        readonly ResolvedServicePartition rsp = Type<ResolvedServicePartition>.Uninitialized();
 
         [Fact]
         public void ReturnsNewEntryInitializedWithGivenArguments()
