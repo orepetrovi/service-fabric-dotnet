@@ -386,6 +386,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             OperationRetryControl actual = await sut.ReportOperationExceptionAsync(client, info, retrySettings, cancellationToken);
 
             Assert.True(actual.ShouldRetry);
+            handler.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Once);
         }
 
         [Fact]
@@ -415,6 +416,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
                         retrySettings,
                         out It.Ref<ExceptionHandlingResult>.IsAny),
                     Times.Once);
+                h.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Exactly(2));
             }
         }
 
@@ -455,6 +457,8 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
                     retrySettings,
                     out It.Ref<ExceptionHandlingResult>.IsAny),
                 Times.Never);
+            handler.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Exactly(2));
+            handler2.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Once);
         }
 
         [Fact]
