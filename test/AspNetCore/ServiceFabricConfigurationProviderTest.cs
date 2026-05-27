@@ -25,7 +25,7 @@ public abstract class ServiceFabricConfigurationProviderTest
     readonly ServiceFabricConfigurationOptions options;
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-    readonly string packageName = fuzzy.String().LettersOrDigits();
+    readonly string packageName = fuzzy.String();
 
     ServiceFabricConfigurationProviderTest()
     {
@@ -82,8 +82,8 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void ClearsPreviouslyLoadedDataWhenAddedPackageNameMatches()
         {
-            string staleKey = fuzzy.String().LettersOrDigits();
-            sut.Set(staleKey, fuzzy.String().LettersOrDigits());
+            string staleKey = fuzzy.String();
+            sut.Set(staleKey, fuzzy.String());
 
             RaiseAdded(matchingPackage);
 
@@ -93,8 +93,8 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void PopulatesDataWithEntriesAddedByConfigActionWhenAddedPackageNameMatches()
         {
-            string key = fuzzy.String().LettersOrDigits();
-            string value = fuzzy.String().LettersOrDigits();
+            string key = fuzzy.String();
+            string value = fuzzy.String();
             _ = configAction.Setup(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()))
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
 
@@ -108,9 +108,9 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void IgnoresAddedPackageWhenNameDoesNotMatch()
         {
             ConfigurationPackage otherPackage =
-                MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName + fuzzy.String().LettersOrDigits());
-            string existingKey = fuzzy.String().LettersOrDigits();
-            string existingValue = fuzzy.String().LettersOrDigits();
+                MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName + fuzzy.String());
+            string existingKey = fuzzy.String();
+            string existingValue = fuzzy.String();
             sut.Set(existingKey, existingValue);
             IChangeToken token = sut.GetReloadToken();
 
@@ -161,8 +161,8 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void ClearsPreviouslyLoadedDataWhenModifiedPackageNameMatches()
         {
-            string staleKey = fuzzy.String().LettersOrDigits();
-            sut.Set(staleKey, fuzzy.String().LettersOrDigits());
+            string staleKey = fuzzy.String();
+            sut.Set(staleKey, fuzzy.String());
 
             RaiseModified(null, matchingPackage);
 
@@ -172,8 +172,8 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void PopulatesDataWithEntriesAddedByConfigActionWhenModifiedPackageNameMatches()
         {
-            string key = fuzzy.String().LettersOrDigits();
-            string value = fuzzy.String().LettersOrDigits();
+            string key = fuzzy.String();
+            string value = fuzzy.String();
             _ = configAction.Setup(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()))
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
 
@@ -187,9 +187,9 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void IgnoresModifiedPackageWhenNameDoesNotMatch()
         {
             ConfigurationPackage otherPackage =
-                MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName + fuzzy.String().LettersOrDigits());
-            string existingKey = fuzzy.String().LettersOrDigits();
-            string existingValue = fuzzy.String().LettersOrDigits();
+                MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName + fuzzy.String());
+            string existingKey = fuzzy.String();
+            string existingValue = fuzzy.String();
             sut.Set(existingKey, existingValue);
             IChangeToken token = sut.GetReloadToken();
 
@@ -245,8 +245,8 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void PopulatesDataWithEntriesAddedByConfigAction()
         {
-            string key = fuzzy.String().LettersOrDigits();
-            string value = fuzzy.String().LettersOrDigits();
+            string key = fuzzy.String();
+            string value = fuzzy.String();
             _ = configAction.Setup(_ => _(package, It.IsAny<IDictionary<string, string>>()))
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
 
@@ -259,8 +259,8 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void PreservesPreviouslyLoadedData()
         {
-            string existingKey = fuzzy.String().LettersOrDigits();
-            string existingValue = fuzzy.String().LettersOrDigits();
+            string existingKey = fuzzy.String();
+            string existingValue = fuzzy.String();
             sut.Set(existingKey, existingValue);
 
             sut.Load();
