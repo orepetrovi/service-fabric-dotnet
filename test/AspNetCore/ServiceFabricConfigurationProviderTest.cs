@@ -95,6 +95,9 @@ namespace Microsoft.ServiceFabric.AspNetCore.Tests
             Assert.Equal("6", config["Config:Section1:Age"]);
             Assert.Equal("M", config["Config:Section1:Gender"]);
 
+            var reloadToken = config.GetReloadToken();
+            Assert.False(reloadToken.HasChanged);
+
             // trigger config update
             context.TriggerConfigurationPackageModifiedEvent(
                 new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
@@ -105,6 +108,7 @@ namespace Microsoft.ServiceFabric.AspNetCore.Tests
             }).Build(),
                 "Config");
 
+            Assert.True(reloadToken.HasChanged, "Expected configuration reload token to fire after package update.");
             Assert.Equal("Lele", config["Config:Section1:Name"]);
             Assert.Equal("3", config["Config:Section1:Age"]);
             Assert.Equal("M", config["Config:Section1:Gender"]);
