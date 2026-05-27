@@ -27,6 +27,16 @@ namespace Microsoft.ServiceFabric.Actors.Client
                 var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.SubscribeAsync(subscriber));
                 Assert.Equal("actorProxy", exception.ParamName);
             }
+
+            [Fact(Explicit = true)] // TODO: SUT testability limitation. Delegates to internal, non-virtual ActorProxy.SubscribeAsync requiring Fabric runtime state.
+            public Task SubscribesWhenActorProxyIsActorProxyAndTEventImplementsIActorEvents()
+            {
+                // The success path forwards to ActorProxy.SubscribeAsync(Type, object, TimeSpan), which is internal and
+                // non-virtual and depends on servicePartitionClientV2, ActorEventSubscriberManager, and a background
+                // resubscription loop. It cannot be observed through Moq or Inspector without out-of-scope SUT testability
+                // improvements.
+                throw new NotImplementedException();
+            }
         }
 
         public sealed class SubscribeAsync_IActorEventPublisher_TEvent_TimeSpan : ActorProxyEventExtensionsTest
@@ -41,6 +51,16 @@ namespace Microsoft.ServiceFabric.Actors.Client
             {
                 var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.SubscribeAsync(subscriber, resubscriptionInterval));
                 Assert.Equal("actorProxy", exception.ParamName);
+            }
+
+            [Fact(Explicit = true)] // TODO: SUT testability limitation. Delegates to internal, non-virtual ActorProxy.SubscribeAsync requiring Fabric runtime state.
+            public Task SubscribesWhenActorProxyIsActorProxyAndTEventImplementsIActorEvents()
+            {
+                // The success path forwards to ActorProxy.SubscribeAsync(Type, object, TimeSpan), which is internal and
+                // non-virtual and depends on servicePartitionClientV2, ActorEventSubscriberManager, and a background
+                // resubscription loop. It cannot be observed through Moq or Inspector without out-of-scope SUT testability
+                // improvements.
+                throw new NotImplementedException();
             }
         }
 
@@ -66,6 +86,15 @@ namespace Microsoft.ServiceFabric.Actors.Client
                 var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.UnsubscribeAsync(subscriber));
 
                 Assert.Null(exception.ParamName);
+            }
+
+            [Fact(Explicit = true)] // TODO: SUT testability limitation. Delegates to internal, non-virtual ActorProxy.UnsubscribeAsync requiring Fabric runtime state.
+            public Task UnsubscribesWhenActorProxyIsActorProxyAndTEventImplementsIActorEvents()
+            {
+                // The success path forwards to ActorProxy.UnsubscribeAsync(Type, object), which is internal and non-virtual
+                // and depends on servicePartitionClientV2 and ActorEventSubscriberManager. It cannot be observed through
+                // Moq or Inspector without out-of-scope SUT testability improvements.
+                throw new NotImplementedException();
             }
         }
 
