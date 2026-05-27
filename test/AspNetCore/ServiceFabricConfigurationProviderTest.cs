@@ -52,7 +52,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             // instead of an ArgumentNullException naming the offending parameter.
             var exception = Assert.Throws<ArgumentNullException>(
                 () => new ServiceFabricConfigurationProvider(null, options));
-            Assert.Equal("activationContext", exception.ParamName);
+            Assert.Equal(nameof(activationContext), exception.ParamName);
         }
 
         [Fact]
