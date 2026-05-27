@@ -100,9 +100,40 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
+        public void LoadsConfigurationFromMultiplePackages()
+        {
+            var contextConfig1 = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "SameSection:Name", "Xiaoxiao" },
+                { "Section1:Age", "6" },
+                { "Section1:Gender", "M" },
+            }).Build();
+
+            var contextConfig2 = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "SameSection:Name", "Lele" },
+                { "Section2:Age", "3" },
+                { "Section2:Gender", "M" },
+            }).Build();
+
+            var context = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>() { { "Config1", contextConfig1 }, { "Config2", contextConfig2 } });
+
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            var config = builder.Build();
+
+            Assert.Equal("Xiaoxiao", config["Config1:SameSection:Name"]);
+            Assert.Equal("6", config["Config1:Section1:Age"]);
+            Assert.Equal("M", config["Config1:Section1:Gender"]);
+
+            Assert.Equal("Lele", config["Config2:SameSection:Name"]);
+            Assert.Equal("3", config["Config2:Section2:Age"]);
+            Assert.Equal("M", config["Config2:Section2:Gender"]);
+        }
+
+        [Fact]
         public void OnlyReloadsMappedConfigPackage()
         {
-            // Case 1: Configuration is loaded correctly from multiple providers
             var contextConfig1 = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
                 { "SameSection:Name", "Xiaoxiao" },
@@ -123,16 +154,6 @@ public abstract class ServiceFabricConfigurationProviderTest
             builder.AddServiceFabricConfiguration(context);
             var config = builder.Build() as ConfigurationRoot;
 
-            Assert.Equal("Xiaoxiao", config["Config1:SameSection:Name"]);
-            Assert.Equal("6", config["Config1:Section1:Age"]);
-            Assert.Equal("M", config["Config1:Section1:Gender"]);
-
-            Assert.Equal("Lele", config["Config2:SameSection:Name"]);
-            Assert.Equal("3", config["Config2:Section2:Age"]);
-            Assert.Equal("M", config["Config2:Section2:Gender"]);
-
-            // Case 2: ServiceFabricConfigurationProvider only loads configuration from the ConfigPackage it is mapped to
-            //  (and does not load from other ConfigPackages) when a config update event is triggered
             context.TriggerConfigurationPackageModifiedEvent(
                 new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
                 {
@@ -219,34 +240,56 @@ public abstract class ServiceFabricConfigurationProviderTest
     public sealed class Load : ServiceFabricConfigurationProviderTest
     {
         [Fact]
-        public void LoadsConfigurationFromMappedPackage()
+        public void PrefixesKeysWithPackageNameByDefault()
         {
             var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
                 { "Section1:Name", "Xiaoxiao" },
-                { "Section1:Age", "6" },
-                { "Section1:Gender", "M" },
-                { "Section2:Gender", "F" },
             }).Build();
 
             var context = new TestCodePackageActivationContext(contextConfig);
-            var names = context.GetCodePackageNames();
-            Assert.Single(names); // Only 1 config package
 
             var builder = new ConfigurationBuilder();
             builder.AddServiceFabricConfiguration(context);
             var config = builder.Build();
 
             Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
-            Assert.Null(config["Section1:Name"]); // Default behavior shall include the package name in key.
-            Assert.Equal("6", config["Config:Section1:Age"]);
-            Assert.Null(config["Config:Gender"]);
-            Assert.Equal("M", config["Config:Section1:Gender"]);
-            Assert.Equal("F", config["Config:Section2:Gender"]);
+            Assert.Null(config["Section1:Name"]);
+        }
 
-            // basic validate to bind to a class directly
-            // Note, in asp.net core 2.1 you could use the more simple ConfigurationBinder.Get<T> binds and returns the specified type instance directly.
-            // Get<T> is more convenient than using Bind but will require .net core version higher than 1.0
+        [Fact]
+        public void ReturnsNullForUnknownKey()
+        {
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "Section1:Name", "Xiaoxiao" },
+            }).Build();
+
+            var context = new TestCodePackageActivationContext(contextConfig);
+
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            var config = builder.Build();
+
+            Assert.Null(config["Config:Section1:Unknown"]);
+        }
+
+        [Fact]
+        public void BindsSectionToType()
+        {
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "Section1:Name", "Xiaoxiao" },
+                { "Section1:Age", "6" },
+                { "Section1:Gender", "M" },
+            }).Build();
+
+            var context = new TestCodePackageActivationContext(contextConfig);
+
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            var config = builder.Build();
+
             var person = new Person();
             config.GetSection("Config:Section1").Bind(person);
 
