@@ -298,6 +298,43 @@ namespace Microsoft.ServiceFabric.AspNetCore.Tests
             Assert.Equal("package.Description", exception.ParamName);
         }
 
+        /// <summary>
+        /// Verifies that a configuration package whose name does not match the provider's
+        /// <see cref="ServiceFabricConfigurationOptions.PackageName"/> is ignored: existing data is preserved
+        /// and the reload token is not triggered.
+        /// </summary>
+        [Fact]
+        public void TestConfigUpdateIgnoredWhenPackageNameDoesNotMatch()
+        {
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "Section1:Name", "Xiaoxiao" },
+            }).Build();
+
+            var context = new TestCodePackageActivationContext(contextConfig);
+
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            var config = builder.Build();
+
+            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
+
+            var reloaded = false;
+            config.GetReloadToken().RegisterChangeCallback(_ => reloaded = true, null);
+
+            var otherPackage = MockConfigurationPackage.CreateDefaultPackage(
+                new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    { "Section1:Name", "Lele" },
+                }).Build(),
+                "OtherPackage");
+
+            context.RaiseConfigurationPackageModifiedEvent(otherPackage);
+
+            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
+            Assert.False(reloaded);
+        }
+
         internal class Person
         {
             public string Name { get; set; }
