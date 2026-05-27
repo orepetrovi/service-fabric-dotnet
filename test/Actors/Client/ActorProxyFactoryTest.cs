@@ -107,6 +107,28 @@ public abstract class ActorProxyFactoryTest
             Assert.Equal(expectedUri, proxy.ActorServicePartitionClientV2.ServiceUri);
             Assert.Equal(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
         }
+
+        [Fact]
+        public void LazilyCreatesV2ProxyFactoryFromDefaultProviderAndForwardsRetrySettings()
+        {
+            // Exercises the lazy-init branch in GetOrSetProxyFactory reachable only when ActorProxyFactory is
+            // constructed without a Func. proxyFactoryV2 is assigned before the V2 factory invokes the default
+            // provider's CreateServiceRemotingClientFactory delegate, which requires the Service Fabric runtime
+            // and is expected to fail in this unit test environment.
+            var sut = new ActorProxyFactory(retrySettings);
+
+            try
+            {
+                sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName);
+            }
+            catch
+            {
+            }
+
+            var v2 = sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value;
+            Assert.NotNull(v2);
+            Assert.Same(retrySettings, v2.Field<OperationRetrySettings>().Value);
+        }
     }
 
     public sealed class CreateActorProxy_Uri_ActorId_String : ActorProxyFactoryTest
