@@ -27,8 +27,10 @@ public abstract class ServiceEndpointCollectionTest
     public sealed class AddEndpoint : ServiceEndpointCollectionTest
     {
         // Method parameters
-        new readonly string listenerName = fuzzy.String();
+        new readonly string listenerName;
         new readonly string endpointAddress = fuzzy.String();
+
+        public AddEndpoint() => listenerName = base.listenerName + fuzzy.String();
 
         [Fact]
         public void AddsEndpointToCollection()
@@ -61,8 +63,10 @@ public abstract class ServiceEndpointCollectionTest
         // Method parameters
         readonly ServiceEndpointCollection newEndpoints = new();
 
-        readonly string newListenerName = fuzzy.String();
+        readonly string newListenerName;
         readonly string newEndpointAddress = fuzzy.String();
+
+        public AddEndpoints() => newListenerName = listenerName + fuzzy.String();
 
         [Fact]
         public void AddsAllEndpointsFromGivenCollection()
