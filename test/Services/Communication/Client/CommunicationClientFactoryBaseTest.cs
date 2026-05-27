@@ -41,7 +41,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
     void IDisposable.Dispose() =>
         sut.Dispose();
 
-    public sealed class Constructor : CommunicationClientFactoryBaseTest
+    public sealed class Constructor_Boolean_IServicePartitionResolver_IEnumerableOfIExceptionHandler_String : CommunicationClientFactoryBaseTest
     {
         [Fact]
         public void InitializesProperties()
@@ -79,6 +79,43 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             using var other = new TestFactory(fireConnectEvents, servicePartitionResolver, handlers, traceId);
             handlers.Add(Mock.Of<IExceptionHandler>());
             Assert.Single(other.ExceptionHandlers);
+        }
+    }
+
+    public sealed class Constructor_IServicePartitionResolver_IEnumerableOfIExceptionHandler_String : CommunicationClientFactoryBaseTest
+    {
+        readonly CancellationToken cancellationToken = default;
+
+        [Fact]
+        public async Task DefaultsFireConnectEventsToFalse()
+        {
+            using var other = new TestFactory(servicePartitionResolver, exceptionHandlers, traceId);
+            var cache = other.Field<CommunicationClientCache<ICommunicationClient>>().Value;
+            ResolvedServicePartition rsp = MakeRsp();
+            ResolvedServiceEndpoint endpoint = MakeEndpoint(fuzzy.String());
+            string listenerName = fuzzy.String();
+            var client = Mock.Of<ICommunicationClient>(c =>
+                c.ResolvedServicePartition == rsp &&
+                c.Endpoint == endpoint &&
+                c.ListenerName == listenerName);
+            CommunicationClientCacheEntry<ICommunicationClient> entry =
+                cache.GetOrAddClientCacheEntry(rsp.Info.Id, endpoint, listenerName, rsp);
+            entry.Client = client;
+
+            var disconnected = new List<ICommunicationClient>();
+            other.ClientDisconnected += (_, e) => disconnected.Add(e.Client);
+
+            var handler = Mock.Get(exceptionHandlers.First());
+            var reported = new InvalidOperationException(fuzzy.String());
+            ExceptionHandlingResult result = new ExceptionHandlingRetryResult(
+                reported, false, fuzzy.TimeSpan(), fuzzy.Int32());
+            _ = handler.Setup(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out result)).Returns(true);
+
+            _ = await other.ReportOperationExceptionAsync(
+                client, new ExceptionInformation(reported), new OperationRetrySettings(), cancellationToken);
+
+            Assert.Same(client, other.AbortedClient);
+            Assert.Empty(disconnected);
         }
     }
 
@@ -421,6 +458,14 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             IEnumerable<IExceptionHandler> exceptionHandlers,
             string traceId)
             : base(fireConnectEvents, servicePartitionResolver, exceptionHandlers, traceId)
+        {
+        }
+
+        internal TestFactory(
+            IServicePartitionResolver servicePartitionResolver,
+            IEnumerable<IExceptionHandler> exceptionHandlers,
+            string traceId)
+            : base(servicePartitionResolver, exceptionHandlers, traceId)
         {
         }
 
