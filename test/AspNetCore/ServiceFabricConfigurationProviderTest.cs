@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Fabric;
 using Fuzzy;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.ServiceFabric.AspNetCore.Tests;
 using Xunit;
 
@@ -26,6 +25,80 @@ public abstract class ServiceFabricConfigurationProviderTest
 
     ServiceFabricConfigurationProviderTest() =>
         sut = new ServiceFabricConfigurationProvider(activationContext, options);
+
+    public sealed class ConfigAction : ServiceFabricConfigurationProviderTest
+    {
+        readonly string section = fuzzy.String().LettersOrDigits();
+        readonly string key1 = fuzzy.String().LettersOrDigits();
+        readonly string key2;
+        readonly string val1 = fuzzy.String().LettersOrDigits();
+        readonly string val2 = fuzzy.String().LettersOrDigits();
+
+        readonly TestCodePackageActivationContext context;
+        readonly IConfiguration config;
+        readonly List<(int Sections, int Values)> invocations = new();
+
+        public ConfigAction()
+        {
+            key2 = key1 + fuzzy.String().LettersOrDigits();
+
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { $"{section}:{key1}", val1 },
+                { $"{section}:{key2}", val2 },
+            }).Build();
+
+            context = new TestCodePackageActivationContext(contextConfig);
+
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context, options =>
+            {
+                options.ConfigAction = (package, configData) =>
+                {
+                    int sections = 0;
+                    int values = 0;
+                    foreach (var section in package.Settings.Sections)
+                    {
+                        sections++;
+                        foreach (var param in section.Parameters)
+                        {
+                            configData[options.ExtractKeyFunc(section, param)] = options.ExtractValueFunc(section, param);
+                            values++;
+                        }
+                    }
+                    invocations.Add((sections, values));
+                };
+                options.IncludePackageName = false;
+            });
+
+            config = builder.Build();
+        }
+
+        [Fact]
+        public void IsInvokedOnInitialLoad()
+        {
+            Assert.Equal((1, 2), Assert.Single(invocations));
+            Assert.Equal(val1, config[$"{section}:{key1}"]);
+            Assert.Equal(val2, config[$"{section}:{key2}"]);
+        }
+
+        [Fact]
+        public void IsInvokedOnConfigurationPackageModifiedEvent()
+        {
+            string val1Updated = val1 + fuzzy.String().LettersOrDigits();
+
+            context.TriggerConfigurationPackageModifiedEvent(
+                new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    { $"{section}:{key1}", val1Updated },
+                }).Build(),
+                "Config");
+
+            Assert.Equal((1, 1), invocations[^1]);
+            Assert.Equal(val1Updated, config[$"{section}:{key1}"]);
+            Assert.Null(config[$"{section}:{key2}"]);
+        }
+    }
 
     public sealed class ConfigurationPackageAddedEvent : ServiceFabricConfigurationProviderTest
     {
@@ -349,74 +422,6 @@ public abstract class ServiceFabricConfigurationProviderTest
             var config = builder.Build();
 
             Assert.Empty(config.GetChildren());
-        }
-
-        [Fact]
-        public void InvokesCustomConfigAction()
-        {
-            string section = fuzzy.String().LettersOrDigits();
-            string key1 = fuzzy.String().LettersOrDigits();
-            string key2 = key1 + fuzzy.String().LettersOrDigits();
-            string val1a = fuzzy.String().LettersOrDigits();
-            string val2 = fuzzy.String().LettersOrDigits();
-            string val1b = val1a + fuzzy.String().LettersOrDigits();
-
-            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
-            {
-                { $"{section}:{key1}", val1a },
-                { $"{section}:{key2}", val2 },
-            }).Build();
-
-            // initial load
-            var context = new TestCodePackageActivationContext(contextConfig);
-            int valueCount = 0;
-            int sectionCount = 0;
-            var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context, (options) =>
-            {
-                options.ConfigAction = (package, configData) =>
-                {
-                    using ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
-                    ILogger logger = loggerFactory.CreateLogger("test");
-                    logger.LogInformation($"Config Update for package {package.Path} started");
-
-                    foreach (var section in package.Settings.Sections)
-                    {
-                        sectionCount++;
-
-                        foreach (var param in section.Parameters)
-                        {
-                            configData[options.ExtractKeyFunc(section, param)] = options.ExtractValueFunc(section, param);
-                            valueCount++;
-                        }
-                    }
-
-                    logger.LogInformation($"Config Update for package {package.Path} finished");
-                };
-
-                options.IncludePackageName = false;
-            });
-
-            var config = builder.Build();
-            Assert.Equal(val1a, config[$"{section}:{key1}"]);
-            Assert.Equal(val2, config[$"{section}:{key2}"]);
-            Assert.Equal(1, sectionCount);
-            Assert.Equal(2, valueCount);
-
-            valueCount = 0;
-            sectionCount = 0;
-
-            // trigger config update
-            context.TriggerConfigurationPackageModifiedEvent(
-                new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
-                {
-                    { $"{section}:{key1}", val1b },
-                }).Build(), "Config");
-
-            Assert.Equal(val1b, config[$"{section}:{key1}"]);
-            Assert.Null(config[$"{section}:{key2}"]);
-            Assert.Equal(1, sectionCount);
-            Assert.Equal(1, valueCount);
         }
     }
 
