@@ -31,28 +31,20 @@ public abstract class ActorProxyTest
         {
             Mock<IServiceRemotingClientFactory> factory = new() { DefaultValue = DefaultValue.Mock };
             client = new ActorServicePartitionClient(factory.Object, fuzzy.Uri(), fuzzy.ActorId());
+            sut.Initialize(client, messageBodyFactory);
         }
 
         [Fact]
-        public void StoresServicePartitionClientAccessibleViaActorServicePartitionClientV2()
-        {
-            sut.Initialize(client, messageBodyFactory);
+        public void StoresServicePartitionClientAccessibleViaActorServicePartitionClientV2() =>
             Assert.Same(client, sut.ActorServicePartitionClientV2);
-        }
 
         [Fact]
-        public void StoresServicePartitionClientAccessibleViaActorId()
-        {
-            sut.Initialize(client, messageBodyFactory);
+        public void StoresServicePartitionClientAccessibleViaActorId() =>
             Assert.Same(client.ActorId, sut.ActorId);
-        }
 
         [Fact]
-        public void StoresMessageBodyFactoryAccessibleViaServiceRemotingMessageBodyFactory()
-        {
-            sut.Initialize(client, messageBodyFactory);
+        public void StoresMessageBodyFactoryAccessibleViaServiceRemotingMessageBodyFactory() =>
             Assert.Same(messageBodyFactory, sut.ServiceRemotingMessageBodyFactory);
-        }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Initialize doesn't validate client.
         public void ThrowsArgumentNullExceptionWhenClientIsNull()
