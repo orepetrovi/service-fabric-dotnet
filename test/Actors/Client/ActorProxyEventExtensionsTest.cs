@@ -35,7 +35,7 @@ public abstract class ActorProxyEventExtensionsTest
         {
             IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
             var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.SubscribeAsync(subscriber));
-            Assert.Equal("actorProxy", exception.ParamName);
+            Assert.Equal(nameof(actorProxy), exception.ParamName);
         }
     }
 
@@ -60,7 +60,7 @@ public abstract class ActorProxyEventExtensionsTest
         {
             IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
             var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.SubscribeAsync(subscriber, resubscriptionInterval));
-            Assert.Equal("actorProxy", exception.ParamName);
+            Assert.Equal(nameof(actorProxy), exception.ParamName);
         }
     }
 
@@ -83,7 +83,7 @@ public abstract class ActorProxyEventExtensionsTest
         {
             IActorEventPublisher actorProxy = Mock.Of<IActorEventPublisher>();
             var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.UnsubscribeAsync(subscriber));
-            Assert.Equal("actorProxy", exception.ParamName);
+            Assert.Equal(nameof(actorProxy), exception.ParamName);
         }
 
         [Fact]
