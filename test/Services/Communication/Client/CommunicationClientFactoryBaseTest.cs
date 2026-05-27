@@ -201,7 +201,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         {
             var replacement = new ApplicationException();
             ExceptionHandlingResult result = new ExceptionHandlingThrowResult { ExceptionToThrow = replacement };
-            _ = handler.Setup(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), retrySettings, out result)).Returns(true);
+            _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
 
             OperationRetryControl actual = await sut.ReportOperationExceptionAsync(
                 client, exceptionInformation, retrySettings, cancellationToken);
@@ -214,7 +214,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         public async Task ReturnsOriginalExceptionWhenHandlerReturnsThrowResultWithoutReplacement()
         {
             ExceptionHandlingResult result = new ExceptionHandlingThrowResult();
-            _ = handler.Setup(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), retrySettings, out result)).Returns(true);
+            _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
 
             OperationRetryControl actual = await sut.ReportOperationExceptionAsync(
                 client, exceptionInformation, retrySettings, cancellationToken);
@@ -229,7 +229,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             var retry = new ExceptionHandlingRetryResult(
                 reportedException, true, fuzzy.TimeSpan(), fuzzy.Int32().Minimum(1));
             ExceptionHandlingResult result = retry;
-            _ = handler.Setup(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), retrySettings, out result)).Returns(true);
+            _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
 
             OperationRetryControl actual = await sut.ReportOperationExceptionAsync(
                 client, exceptionInformation, retrySettings, cancellationToken);
@@ -251,7 +251,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             var retry = new ExceptionHandlingRetryResult(
                 reportedException, false, fuzzy.TimeSpan(), fuzzy.Int32().Minimum(1));
             ExceptionHandlingResult result = retry;
-            _ = handler.Setup(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), retrySettings, out result)).Returns(true);
+            _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
 
             OperationRetryControl actual = await sut.ReportOperationExceptionAsync(
                 client, exceptionInformation, retrySettings, cancellationToken);
@@ -284,7 +284,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             var retry = new ExceptionHandlingRetryResult(
                 reportedException, false, fuzzy.TimeSpan(), fuzzy.Int32().Minimum(1));
             ExceptionHandlingResult result = retry;
-            _ = handler.Setup(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), retrySettings, out result)).Returns(true);
+            _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
 
             _ = await sut.ReportOperationExceptionAsync(client, exceptionInformation, retrySettings, cancellationToken);
 
@@ -300,27 +300,18 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             var inner = new InvalidOperationException(fuzzy.String());
             var info = new ExceptionInformation(new AggregateException(inner));
 
-            Exception observed = null;
             ExceptionHandlingResult result = new ExceptionHandlingRetryResult(inner, true, fuzzy.TimeSpan(), 1);
             _ = handler
-                .Setup(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), retrySettings, out result))
-                .Callback(new TryHandleExceptionCallback((ExceptionInformation ei, OperationRetrySettings _, out ExceptionHandlingResult r) =>
-                {
-                    observed = ei.Exception;
-                    r = result;
-                }))
+                .Setup(_ => _.TryHandleException(
+                    It.Is<ExceptionInformation>(ei => ei.Exception == inner && ei.TargetReplica == info.TargetReplica),
+                    retrySettings,
+                    out result))
                 .Returns(true);
 
             OperationRetryControl actual = await sut.ReportOperationExceptionAsync(client, info, retrySettings, cancellationToken);
 
-            Assert.Same(inner, observed);
             Assert.True(actual.ShouldRetry);
         }
-
-        delegate void TryHandleExceptionCallback(
-            ExceptionInformation exceptionInformation,
-            OperationRetrySettings retrySettings,
-            out ExceptionHandlingResult result);
     }
 
     static ResolvedServiceEndpoint MakeEndpoint(string address)
