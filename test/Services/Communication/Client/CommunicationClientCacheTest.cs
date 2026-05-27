@@ -61,14 +61,12 @@ public abstract class CommunicationClientCacheTest : IDisposable
         }
 
         [Fact]
-        public void SchedulesCleanupTimerWithoutCapturingExecutionContext()
+        public void DoesNotRestoreExecutionContextFlowWhenAlreadySuppressed()
         {
-            // The cleanup timer initial due time is between 120 and 150 seconds, so we can't observe a callback
-            // deterministically in tests without modifying the production code. Verify only that construction
-            // succeeds when the ambient ExecutionContext is flow-suppressed (covers the suppressed branch).
             using (System.Threading.ExecutionContext.SuppressFlow())
             {
                 using var other = new CommunicationClientCache<ICommunicationClient>(traceId);
+                Assert.True(System.Threading.ExecutionContext.IsFlowSuppressed());
             }
         }
     }
