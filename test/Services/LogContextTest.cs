@@ -119,18 +119,22 @@ public abstract class LogContextTest : IDisposable
         {
             LogContext a = new() { RequestId = fuzzy.Guid() };
             LogContext b = new() { RequestId = fuzzy.Guid() };
+            TaskCompletionSource<bool> readyA = new();
+            TaskCompletionSource<bool> readyB = new();
             TaskCompletionSource<bool> released = new();
 
-            async Task<LogContext> SetAndRead(LogContext value)
+            async Task<LogContext> SetAndRead(LogContext value, TaskCompletionSource<bool> ready)
             {
                 LogContext.Set(value);
+                ready.SetResult(true);
                 await released.Task;
                 LogContext.TryGet(out LogContext actual);
                 return actual;
             }
 
-            Task<LogContext> ta = Task.Run(() => SetAndRead(a));
-            Task<LogContext> tb = Task.Run(() => SetAndRead(b));
+            Task<LogContext> ta = Task.Run(() => SetAndRead(a, readyA));
+            Task<LogContext> tb = Task.Run(() => SetAndRead(b, readyB));
+            await Task.WhenAll(readyA.Task, readyB.Task);
             released.SetResult(true);
 
             Assert.Same(a, await ta);
