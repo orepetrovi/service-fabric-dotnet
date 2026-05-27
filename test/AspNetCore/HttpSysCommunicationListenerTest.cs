@@ -7,6 +7,7 @@ using System;
 using System.Fabric;
 using System.Fabric.Description;
 using System.Globalization;
+using System.Reflection;
 using Fuzzy;
 using Inspector;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,10 @@ public abstract class HttpSysCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : HttpSysCommunicationListenerTest
     {
+        // TODO: Inspector v0.9.0 sut.Constructor<TSig>() binds multiple overloads when delegate-typed parameters
+        // only differ in generic arguments (relaxed signature matching). Track via olegsych/inspector once filed.
+        static readonly ConstructorInfo ctor = typeof(HttpSysCommunicationListener).GetConstructor(new[] { typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IHost>) })!;
+
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
         [Fact]
@@ -59,12 +64,14 @@ public abstract class HttpSysCommunicationListenerTest
             // indication which argument was invalid. This test asserts the correct ParamName and will fail until the
             // SUT is fixed. Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, null, build));
-            Assert.Equal(nameof(endpointName), exception.ParamName);
+            Assert.Equal(ctor.Parameter<string>().Name, exception.ParamName);
         }
     }
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : HttpSysCommunicationListenerTest
     {
+        static readonly ConstructorInfo ctor = typeof(HttpSysCommunicationListener).GetConstructor(new[] { typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>) })!;
+
         [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsNull()
         {
@@ -87,7 +94,7 @@ public abstract class HttpSysCommunicationListenerTest
             // indication which argument was invalid. This test asserts the correct ParamName and will fail until the
             // SUT is fixed. Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, null, build));
-            Assert.Equal(nameof(endpointName), exception.ParamName);
+            Assert.Equal(ctor.Parameter<string>().Name, exception.ParamName);
         }
     }
 
