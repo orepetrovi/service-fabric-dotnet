@@ -196,10 +196,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void LoadsPackageFromActivationContextAndPopulatesData()
         {
-            string existingKey = fuzzy.String();
-            string existingValue = fuzzy.String();
-            sut.Set(existingKey, existingValue);
-            string key = existingKey + fuzzy.String();
+            string key = fuzzy.String();
             string value = fuzzy.String();
             _ = configAction.Setup(_ => _(package, It.IsAny<IDictionary<string, string>>()))
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
@@ -210,11 +207,22 @@ public abstract class ServiceFabricConfigurationProviderTest
             activationContext.Verify(_ => _.GetConfigurationPackageObject(It.IsAny<string>()), Times.Once);
             configAction.Verify(_ => _(package, It.IsAny<IDictionary<string, string>>()), Times.Once);
             configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
-            Assert.True(sut.TryGet(existingKey, out string preserved));
-            Assert.Same(existingValue, preserved);
             Assert.True(sut.TryGet(key, out string actual));
             Assert.Same(value, actual);
             Assert.False(token.HasChanged);
+        }
+
+        [Fact]
+        public void PreservesExistingDataBecauseItDoesNotReload()
+        {
+            string existingKey = fuzzy.String();
+            string existingValue = fuzzy.String();
+            sut.Set(existingKey, existingValue);
+
+            sut.Load();
+
+            Assert.True(sut.TryGet(existingKey, out string preserved));
+            Assert.Same(existingValue, preserved);
         }
     }
 
