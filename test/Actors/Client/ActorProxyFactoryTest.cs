@@ -51,7 +51,7 @@ public abstract class ActorProxyFactoryTest
         sut = new ActorProxyFactory(createServiceRemotingClientFactory, retrySettings);
     }
 
-    public sealed class Constructor : ActorProxyFactoryTest
+    public sealed class Constructor_OperationRetrySettings : ActorProxyFactoryTest
     {
         [Fact]
         public void StoresRetrySettingsAndLeavesProxyFactoryNull()
@@ -72,7 +72,7 @@ public abstract class ActorProxyFactoryTest
         }
     }
 
-    public sealed class Constructor_Func : ActorProxyFactoryTest
+    public sealed class Constructor_FuncOfIServiceRemotingCallbackMessageHandler_IServiceRemotingClientFactory_OperationRetrySettings : ActorProxyFactoryTest
     {
         [Fact]
         public void CreatesProxyFactoryWithGivenFuncAndRetrySettings()
