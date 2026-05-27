@@ -16,6 +16,7 @@ public abstract class ServiceEventSourceTest : IDisposable
     readonly ServiceEventSource sut;
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+    const EventKeywords Default = (EventKeywords)0x0001;
 
     ServiceEventSourceTest() =>
         sut = test.Instance;
@@ -57,7 +58,7 @@ public abstract class ServiceEventSourceTest : IDisposable
             Assert.NotNull(test.Event);
             Assert.Equal(6, test.Event.EventId);
             Assert.Equal(EventLevel.Informational, test.Event.Level);
-            test.EventKeywords(ServiceEventSource.Keywords.Default);
+            test.EventKeywords(Default);
             Assert.Equal("CommunicationListenerUsageEvent", test.Event.EventName);
             test.EventPayload(0, "type", type);
             test.EventPayload(1, "clusterOsType", clusterOsType);
@@ -143,7 +144,7 @@ public abstract class ServiceEventSourceTest : IDisposable
             Assert.NotNull(test.Event);
             Assert.Equal(5, test.Event.EventId);
             Assert.Equal(EventLevel.Informational, test.Event.Level);
-            test.EventKeywords(ServiceEventSource.Keywords.Default);
+            test.EventKeywords(Default);
             Assert.Equal("ServiceLifecycleEvent", test.Event.EventName);
             test.EventPayload(0, "type", type);
             test.EventPayload(1, "clusterOsType", clusterOsType);
@@ -198,7 +199,7 @@ public abstract class ServiceEventSourceTest : IDisposable
             Assert.NotNull(test.Event);
             Assert.Equal(7, test.Event.EventId);
             Assert.Equal(EventLevel.Informational, test.Event.Level);
-            test.EventKeywords(ServiceEventSource.Keywords.Default);
+            test.EventKeywords(Default);
             Assert.Equal("ServiceRemotingUsageEvent", test.Event.EventName);
             test.EventPayload(0, "type", type);
             test.EventPayload(1, "clusterOsType", clusterOsType);
