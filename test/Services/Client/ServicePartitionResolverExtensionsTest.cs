@@ -31,7 +31,7 @@ public abstract class ServicePartitionResolverExtensionsTest
         public void ThrowsArgumentNullExceptionWhenPartitionResolverIsNull()
         {
             var e = Assert.Throws<ArgumentNullException>(() => ServicePartitionResolverExtensions.DisableNotification(null));
-            Assert.Equal("partitionResolver", e.ParamName);
+            Assert.Equal(nameof(partitionResolver), e.ParamName);
         }
     }
 }
