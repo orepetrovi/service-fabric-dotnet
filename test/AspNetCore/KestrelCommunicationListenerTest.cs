@@ -248,5 +248,33 @@ public abstract class KestrelCommunicationListenerTest
                 Assert.Equal("http://+:0", actual);
             }
         }
+
+        public abstract class WithNullEndpointName : KestrelCommunicationListenerTest
+        {
+            readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
+            new readonly AspNetCoreCommunicationListener sut;
+
+            WithNullEndpointName(Func<ServiceContext, AspNetCoreCommunicationListener> create) =>
+                sut = create(context);
+
+            public sealed class WithIHost : WithNullEndpointName
+            {
+                public WithIHost()
+                    : base(c => new KestrelCommunicationListener(c, null, (_, _) => Mock.Of<IHost>())) { }
+            }
+
+            public sealed class WithIWebHost : WithNullEndpointName
+            {
+                public WithIWebHost()
+                    : base(c => new KestrelCommunicationListener(c, null, (_, _) => Mock.Of<IWebHost>())) { }
+            }
+
+            [Fact]
+            public void ReturnsDefaultHttpUrlOnPortZero()
+            {
+                string actual = sut.GetListenerUrl();
+                Assert.Equal("http://+:0", actual);
+            }
+        }
     }
 }
