@@ -459,6 +459,18 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         }
     }
 
+    public sealed class OpenClient : CommunicationClientFactoryBaseTest
+    {
+        [Fact]
+        public async Task ReturnsCompletedTaskWithoutThrowing()
+        {
+            Task actual = sut.TestOpenClient(Mock.Of<ICommunicationClient>(), CancellationToken.None);
+
+            Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
+            await actual;
+        }
+    }
+
     static ResolvedServiceEndpoint MakeEndpoint(string address)
     {
         var endpoint = new ResolvedServiceEndpoint();
@@ -505,5 +517,8 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
         protected override void AbortClient(ICommunicationClient client) =>
             AbortedClient = client;
+
+        internal Task TestOpenClient(ICommunicationClient client, CancellationToken cancellationToken) =>
+            base.OpenClient(client, cancellationToken);
     }
 }
