@@ -63,7 +63,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         {
             string staleKey = fuzzy.String();
             sut.Set(staleKey, fuzzy.String());
-            string key = fuzzy.String();
+            string key = staleKey + fuzzy.String();
             string value = fuzzy.String();
             _ = configAction.Setup(_ => _(matching, It.IsAny<IDictionary<string, string>>()))
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
@@ -121,7 +121,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         {
             string staleKey = fuzzy.String();
             sut.Set(staleKey, fuzzy.String());
-            string key = fuzzy.String();
+            string key = staleKey + fuzzy.String();
             string value = fuzzy.String();
             _ = configAction.Setup(_ => _(matching, It.IsAny<IDictionary<string, string>>()))
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
@@ -199,7 +199,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             string existingKey = fuzzy.String();
             string existingValue = fuzzy.String();
             sut.Set(existingKey, existingValue);
-            string key = fuzzy.String();
+            string key = existingKey + fuzzy.String();
             string value = fuzzy.String();
             _ = configAction.Setup(_ => _(package, It.IsAny<IDictionary<string, string>>()))
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
