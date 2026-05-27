@@ -266,7 +266,7 @@ public abstract class CommunicationClientCacheEntryTest
             sut.Endpoint = MakeEndpoint(updated);
             sut.Rsp = MakeRsp(); // Should invalidate the cached address.
 
-            Assert.Equal(updated, sut.GetEndpoint());
+            Assert.Same(updated, sut.GetEndpoint());
         }
     }
 
