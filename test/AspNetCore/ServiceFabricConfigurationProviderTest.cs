@@ -13,226 +13,303 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.AspNetCore.Configuration;
 
-/// <summary>
-/// Test for ServiceFabricConfigurationProvider.
-/// </summary>
-public class ServiceFabricConfigurationProviderTest
+public abstract class ServiceFabricConfigurationProviderTest
 {
-    private int valueCount = 0;
-    private int sectionCount = 0;
+    readonly ServiceFabricConfigurationProvider sut;
 
-    /// <summary>
-    /// Verifies that the constructor throws when options is null.
-    /// </summary>
-    [Fact]
-    public void TestConstructorThrowsArgumentNullExceptionWhenOptionsIsNull()
+    // Constructor parameters
+    readonly TestCodePackageActivationContext activationContext = new(new ConfigurationBuilder().Build());
+    readonly ServiceFabricConfigurationOptions options = new("Config");
+
+    ServiceFabricConfigurationProviderTest() =>
+        sut = new ServiceFabricConfigurationProvider(activationContext, options);
+
+    public sealed class ConfigurationPackageAddedEvent : ServiceFabricConfigurationProviderTest
     {
-        var context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
-        var exception = Assert.Throws<ArgumentNullException>(() => new ServiceFabricConfigurationProvider(context, null));
-        Assert.Equal("options", exception.ParamName);
+        [Fact]
+        public void ReloadsConfigurationWhenPackageNameMatches()
+        {
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "Section1:Name", "Xiaoxiao" },
+            }).Build();
+
+            var context = new TestCodePackageActivationContext(contextConfig);
+
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            var config = builder.Build();
+
+            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
+
+            var reloaded = false;
+            config.GetReloadToken().RegisterChangeCallback(_ => reloaded = true, null);
+
+            var addedPackage = MockConfigurationPackage.CreateDefaultPackage(
+                new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    { "Section1:Name", "Lele" },
+                }).Build(),
+                "Config");
+
+            context.RaiseConfigurationPackageAddedEvent(addedPackage);
+
+            Assert.Equal("Lele", config["Config:Section1:Name"]);
+            Assert.True(reloaded);
+        }
     }
 
-    /// <summary>
-    /// Verify that the basic types could be loaded.
-    /// </summary>
-    [Fact]
-    public void TestHappyCase()
+    public sealed class ConfigurationPackageModifiedEvent : ServiceFabricConfigurationProviderTest
     {
-        var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+        [Fact]
+        public void ReloadsConfigurationWhenPackageNameMatches()
         {
-            { "Section1:Name", "Xiaoxiao" },
-            { "Section1:Age", "6" },
-            { "Section1:Gender", "M" },
-            { "Section2:Gender", "F" },
-        }).Build();
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "Section1:Name", "Xiaoxiao" },
+                { "Section1:Age", "6" },
+                { "Section1:Gender", "M" },
+            }).Build();
 
-        var context = new TestCodePackageActivationContext(contextConfig);
-        var names = context.GetCodePackageNames();
-        Assert.Single(names); // Only 1 config package
+            var context = new TestCodePackageActivationContext(contextConfig);
 
-        var builder = new ConfigurationBuilder();
-        builder.AddServiceFabricConfiguration(context);
-        var config = builder.Build();
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            var config = builder.Build();
 
-        Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
-        Assert.Null(config["Section1:Name"]); // Default behavior shall include the package name in key.
-        Assert.Equal("6", config["Config:Section1:Age"]);
-        Assert.Null(config["Config:Gender"]);
-        Assert.Equal("M", config["Config:Section1:Gender"]);
-        Assert.Equal("F", config["Config:Section2:Gender"]);
+            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
+            Assert.Equal("6", config["Config:Section1:Age"]);
+            Assert.Equal("M", config["Config:Section1:Gender"]);
 
-        // basic validate to bind to a class directly
-        // Note, in asp.net core 2.1 you could use the more simple ConfigurationBinder.Get<T> binds and returns the specified type instance directly.
-        // Get<T> is more convenient than using Bind but will require .net core version higher than 1.0
-        var person = new Person();
-        config.GetSection("Config:Section1").Bind(person);
+            var reloadToken = config.GetReloadToken();
+            Assert.False(reloadToken.HasChanged);
 
-        Assert.Equal("Xiaoxiao", person.Name);
-        Assert.Equal(6, person.Age);
-        Assert.Equal("M", person.Gender);
+            context.TriggerConfigurationPackageModifiedEvent(
+                new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    { "Section1:Name", "Lele" },
+                    { "Section1:Age", "3" },
+                    { "Section1:Gender", "M" },
+                }).Build(),
+                "Config");
+
+            Assert.True(reloadToken.HasChanged, "Expected configuration reload token to fire after package update.");
+            Assert.Equal("Lele", config["Config:Section1:Name"]);
+            Assert.Equal("3", config["Config:Section1:Age"]);
+            Assert.Equal("M", config["Config:Section1:Gender"]);
+        }
+
+        [Fact]
+        public void OnlyReloadsMappedConfigPackage()
+        {
+            // Case 1: Configuration is loaded correctly from multiple providers
+            var contextConfig1 = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "SameSection:Name", "Xiaoxiao" },
+                { "Section1:Age", "6" },
+                { "Section1:Gender", "M" },
+            }).Build();
+
+            var contextConfig2 = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "SameSection:Name", "Lele" },
+                { "Section2:Age", "3" },
+                { "Section2:Gender", "M" },
+            }).Build();
+
+            var context = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>() { { "Config1", contextConfig1 }, { "Config2", contextConfig2 } });
+
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            var config = builder.Build() as ConfigurationRoot;
+
+            Assert.Equal("Xiaoxiao", config["Config1:SameSection:Name"]);
+            Assert.Equal("6", config["Config1:Section1:Age"]);
+            Assert.Equal("M", config["Config1:Section1:Gender"]);
+
+            Assert.Equal("Lele", config["Config2:SameSection:Name"]);
+            Assert.Equal("3", config["Config2:Section2:Age"]);
+            Assert.Equal("M", config["Config2:Section2:Gender"]);
+
+            // Case 2: ServiceFabricConfigurationProvider only loads configuration from the ConfigPackage it is mapped to
+            //  (and does not load from other ConfigPackages) when a config update event is triggered
+            context.TriggerConfigurationPackageModifiedEvent(
+                new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    { "SameSection:Name", "Jill" },
+                    { "Section1:Age", "30" },
+                    { "Section1:Gender", "F" },
+                }).Build(),
+                "Config1");
+
+            Assert.Equal("Jill", config["Config1:SameSection:Name"]);
+            Assert.Equal("30", config["Config1:Section1:Age"]);
+            Assert.Equal("F", config["Config1:Section1:Gender"]);
+
+            Assert.Equal("Lele", config["Config2:SameSection:Name"]);
+            Assert.Equal("3", config["Config2:Section2:Age"]);
+            Assert.Equal("M", config["Config2:Section2:Gender"]);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenPackageDescriptionIsNull()
+        {
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "Section1:Name", "Xiaoxiao" },
+            }).Build();
+
+            var context = new TestCodePackageActivationContext(contextConfig);
+
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            builder.Build();
+
+            var packageWithoutDescription = TestHelper.CreateInstanced<ConfigurationPackage>();
+
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => context.RaiseConfigurationPackageModifiedEvent(packageWithoutDescription));
+            Assert.Equal("package.Description", exception.ParamName);
+        }
+
+        [Fact]
+        public void IgnoresPackageWhenNameDoesNotMatch()
+        {
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "Section1:Name", "Xiaoxiao" },
+            }).Build();
+
+            var context = new TestCodePackageActivationContext(contextConfig);
+
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            var config = builder.Build();
+
+            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
+
+            var reloaded = false;
+            config.GetReloadToken().RegisterChangeCallback(_ => reloaded = true, null);
+
+            var otherPackage = MockConfigurationPackage.CreateDefaultPackage(
+                new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    { "Section1:Name", "Lele" },
+                }).Build(),
+                "OtherPackage");
+
+            context.RaiseConfigurationPackageModifiedEvent(otherPackage);
+
+            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
+            Assert.False(reloaded);
+        }
     }
 
-    /// <summary>
-    /// Verify the configuration updates.
-    /// </summary>
-    [Fact]
-    public void TestConfigUpdate()
+    public sealed class Constructor : ServiceFabricConfigurationProviderTest
     {
-        var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenOptionsIsNull()
         {
-            { "Section1:Name", "Xiaoxiao" },
-            { "Section1:Age", "6" },
-            { "Section1:Gender", "M" },
-        }).Build();
-
-        var context = new TestCodePackageActivationContext(contextConfig);
-
-        var builder = new ConfigurationBuilder();
-        builder.AddServiceFabricConfiguration(context);
-        var config = builder.Build();
-
-        Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
-        Assert.Equal("6", config["Config:Section1:Age"]);
-        Assert.Equal("M", config["Config:Section1:Gender"]);
-
-        var reloadToken = config.GetReloadToken();
-        Assert.False(reloadToken.HasChanged);
-
-        // trigger config update
-        context.TriggerConfigurationPackageModifiedEvent(
-            new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
-        {
-            { "Section1:Name", "Lele" },
-            { "Section1:Age", "3" },
-            { "Section1:Gender", "M" },
-        }).Build(),
-            "Config");
-
-        Assert.True(reloadToken.HasChanged, "Expected configuration reload token to fire after package update.");
-        Assert.Equal("Lele", config["Config:Section1:Name"]);
-        Assert.Equal("3", config["Config:Section1:Age"]);
-        Assert.Equal("M", config["Config:Section1:Gender"]);
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => new ServiceFabricConfigurationProvider(activationContext, null));
+            Assert.Equal(nameof(options), exception.ParamName);
+        }
     }
 
-    /// <summary>
-    /// Tests the empty configuration.
-    /// </summary>
-    [Fact]
-    public void TestEmptyConfig()
+    public sealed class Load : ServiceFabricConfigurationProviderTest
     {
-        var contextConfig = new ConfigurationBuilder().Build();
-        var context = new TestCodePackageActivationContext(contextConfig);
-
-        var builder = new ConfigurationBuilder();
-        builder.AddServiceFabricConfiguration(context);
-        var config = builder.Build();
-
-        Assert.Empty(config.GetChildren());
-    }
-
-    /// <summary>
-    /// Tests the multi configs.
-    /// </summary>
-    [Fact]
-    public void TestMultiConfigsWithUpdate()
-    {
-        // Case 1: Configuration is loaded correctly from multiple providers
-        var contextConfig1 = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+        [Fact]
+        public void LoadsConfigurationFromMappedPackage()
         {
-            { "SameSection:Name", "Xiaoxiao" },
-            { "Section1:Age", "6" },
-            { "Section1:Gender", "M" },
-        }).Build();
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "Section1:Name", "Xiaoxiao" },
+                { "Section1:Age", "6" },
+                { "Section1:Gender", "M" },
+                { "Section2:Gender", "F" },
+            }).Build();
 
-        var contextConfig2 = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            var context = new TestCodePackageActivationContext(contextConfig);
+            var names = context.GetCodePackageNames();
+            Assert.Single(names); // Only 1 config package
+
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            var config = builder.Build();
+
+            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
+            Assert.Null(config["Section1:Name"]); // Default behavior shall include the package name in key.
+            Assert.Equal("6", config["Config:Section1:Age"]);
+            Assert.Null(config["Config:Gender"]);
+            Assert.Equal("M", config["Config:Section1:Gender"]);
+            Assert.Equal("F", config["Config:Section2:Gender"]);
+
+            // basic validate to bind to a class directly
+            // Note, in asp.net core 2.1 you could use the more simple ConfigurationBinder.Get<T> binds and returns the specified type instance directly.
+            // Get<T> is more convenient than using Bind but will require .net core version higher than 1.0
+            var person = new Person();
+            config.GetSection("Config:Section1").Bind(person);
+
+            Assert.Equal("Xiaoxiao", person.Name);
+            Assert.Equal(6, person.Age);
+            Assert.Equal("M", person.Gender);
+        }
+
+        [Fact]
+        public void LoadsEmptyConfiguration()
         {
-            { "SameSection:Name", "Lele" },
-            { "Section2:Age", "3" },
-            { "Section2:Gender", "M" },
-        }).Build();
+            var contextConfig = new ConfigurationBuilder().Build();
+            var context = new TestCodePackageActivationContext(contextConfig);
 
-        var context = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>() { { "Config1", contextConfig1 }, { "Config2", contextConfig2 } });
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            var config = builder.Build();
 
-        var builder = new ConfigurationBuilder();
-        builder.AddServiceFabricConfiguration(context);
-        var config = builder.Build() as ConfigurationRoot;
+            Assert.Empty(config.GetChildren());
+        }
 
-        Assert.Equal("Xiaoxiao", config["Config1:SameSection:Name"]);
-        Assert.Equal("6", config["Config1:Section1:Age"]);
-        Assert.Equal("M", config["Config1:Section1:Gender"]);
-
-        Assert.Equal("Lele", config["Config2:SameSection:Name"]);
-        Assert.Equal("3", config["Config2:Section2:Age"]);
-        Assert.Equal("M", config["Config2:Section2:Gender"]);
-
-        // Case 2: ServiceFabricConfigurationProvider only loads configuration from the ConfigPackage it is mapped to
-        //  (and does not load from other ConfigPackages) when a config update event is triggered
-        context.TriggerConfigurationPackageModifiedEvent(
-            new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+        [Fact]
+        public void LoadsEncryptedConfiguration()
         {
-            { "SameSection:Name", "Jill" },
-            { "Section1:Age", "30" },
-            { "Section1:Gender", "F" },
-        }).Build(),
-            "Config1");
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                // in the MockConfigurationProperties this section is special handled to turn IsEncrypted to true as follow
+                // parameter.Set(nameof(ConfigurationProperty.IsEncrypted), item.Key.Contains("Security") || item.Value.Contains("Security"));
+                { "SecuritySection:SecuritySSN", "EncryptedValue" },
+            }).Build();
 
-        Assert.Equal("Jill", config["Config1:SameSection:Name"]);
-        Assert.Equal("30", config["Config1:Section1:Age"]);
-        Assert.Equal("F", config["Config1:Section1:Gender"]);
+            var context = new TestCodePackageActivationContext(contextConfig);
 
-        Assert.Equal("Lele", config["Config2:SameSection:Name"]);
-        Assert.Equal("3", config["Config2:Section2:Age"]);
-        Assert.Equal("M", config["Config2:Section2:Gender"]);
-    }
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            var config = builder.Build();
 
-    /// <summary>
-    /// Tests the security configuration.
-    /// </summary>
-    [Fact]
-    public void TestEncryptedConfig()
-    {
-        var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            Assert.Equal("EncryptedValue", config["Config:SecuritySection:SecuritySSN"]);
+
+            var builder2 = new ConfigurationBuilder();
+
+            // set flag to decrypt the value
+            builder2.AddServiceFabricConfiguration(context, (options) => options.DecryptValue = true);
+
+            Action config2 = () => builder2.Build();
+            Assert.ThrowsAny<Exception>(config2); // Exception expected here because DecryptValue will fail here with invalid values.
+        }
+
+        [Fact]
+        public void InvokesCustomConfigAction()
         {
-            // in the MockConfigurationProperties this section is special handled to turn IsEncrypted to true as follow
-            // parameter.Set(nameof(ConfigurationProperty.IsEncrypted), item.Key.Contains("Security") || item.Value.Contains("Security"));
-            { "SecuritySection:SecuritySSN", "EncryptedValue" },
-        }).Build();
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "Section1:Name", "Xiaoxiao" },
+                { "Section1:Age", "6" },
+            }).Build();
 
-        var context = new TestCodePackageActivationContext(contextConfig);
-
-        var builder = new ConfigurationBuilder();
-        builder.AddServiceFabricConfiguration(context);
-        var config = builder.Build();
-
-        Assert.Equal("EncryptedValue", config["Config:SecuritySection:SecuritySSN"]);
-
-        var builder2 = new ConfigurationBuilder();
-
-        // set flag to decrypt the value
-        builder2.AddServiceFabricConfiguration(context, (options) => options.DecryptValue = true);
-
-        Action config2 = () => builder2.Build();
-        Assert.ThrowsAny<Exception>(config2); // Exception expected here because DecryptValue will fail here with invalid values.
-    }
-
-    /// <summary>
-    /// Tests the configuration action.
-    /// </summary>
-    [Fact]
-    public void TestConfigAction()
-    {
-        var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
-        {
-            { "Section1:Name", "Xiaoxiao" },
-            { "Section1:Age", "6" },
-        }).Build();
-
-        // initial load
-        var context = new TestCodePackageActivationContext(contextConfig);
-        this.valueCount = 0;
-        this.sectionCount = 0;
-        var builder = new ConfigurationBuilder();
-        builder.AddServiceFabricConfiguration(context, (options) =>
+            // initial load
+            var context = new TestCodePackageActivationContext(contextConfig);
+            int valueCount = 0;
+            int sectionCount = 0;
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context, (options) =>
             {
                 options.ConfigAction = (package, configData) =>
                 {
@@ -242,12 +319,12 @@ public class ServiceFabricConfigurationProviderTest
 
                     foreach (var section in package.Settings.Sections)
                     {
-                        this.sectionCount++;
+                        sectionCount++;
 
                         foreach (var param in section.Parameters)
                         {
                             configData[options.ExtractKeyFunc(section, param)] = options.ExtractValueFunc(section, param);
-                            this.valueCount++;
+                            valueCount++;
                         }
                     }
 
@@ -257,123 +334,27 @@ public class ServiceFabricConfigurationProviderTest
                 options.IncludePackageName = false;
             });
 
-        var config = builder.Build();
-        Assert.Equal("Xiaoxiao", config["Section1:Name"]);
-        Assert.Equal("6", config["Section1:Age"]);
-        Assert.Equal(1, this.sectionCount);
-        Assert.Equal(2, this.valueCount);
+            var config = builder.Build();
+            Assert.Equal("Xiaoxiao", config["Section1:Name"]);
+            Assert.Equal("6", config["Section1:Age"]);
+            Assert.Equal(1, sectionCount);
+            Assert.Equal(2, valueCount);
 
-        this.valueCount = 0;
-        this.sectionCount = 0;
+            valueCount = 0;
+            sectionCount = 0;
 
-        // trigger config update
-        context.TriggerConfigurationPackageModifiedEvent(
-            new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
-        {
-            { "Section1:Name", "Lele" },
-        }).Build(), "Config");
+            // trigger config update
+            context.TriggerConfigurationPackageModifiedEvent(
+                new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    { "Section1:Name", "Lele" },
+                }).Build(), "Config");
 
-        Assert.Equal("Lele", config["Section1:Name"]);
-        Assert.Null(config["Section1:Age"]);
-        Assert.Equal(1, this.sectionCount);
-        Assert.Equal(1, this.valueCount);
-    }
-
-    /// <summary>
-    /// Verifies that a configuration package raised through the modified event without a Description triggers ArgumentNullException.
-    /// </summary>
-    [Fact]
-    public void TestConfigUpdateThrowsWhenPackageDescriptionIsNull()
-    {
-        var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
-        {
-            { "Section1:Name", "Xiaoxiao" },
-        }).Build();
-
-        var context = new TestCodePackageActivationContext(contextConfig);
-
-        var builder = new ConfigurationBuilder();
-        builder.AddServiceFabricConfiguration(context);
-        builder.Build();
-
-        var packageWithoutDescription = TestHelper.CreateInstanced<ConfigurationPackage>();
-
-        var exception = Assert.Throws<ArgumentNullException>(
-            () => context.RaiseConfigurationPackageModifiedEvent(packageWithoutDescription));
-        Assert.Equal("package.Description", exception.ParamName);
-    }
-
-    /// <summary>
-    /// Verifies that a configuration package whose name does not match the provider's
-    /// <see cref="ServiceFabricConfigurationOptions.PackageName"/> is ignored: existing data is preserved
-    /// and the reload token is not triggered.
-    /// </summary>
-    [Fact]
-    public void TestConfigUpdateIgnoredWhenPackageNameDoesNotMatch()
-    {
-        var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
-        {
-            { "Section1:Name", "Xiaoxiao" },
-        }).Build();
-
-        var context = new TestCodePackageActivationContext(contextConfig);
-
-        var builder = new ConfigurationBuilder();
-        builder.AddServiceFabricConfiguration(context);
-        var config = builder.Build();
-
-        Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
-
-        var reloaded = false;
-        config.GetReloadToken().RegisterChangeCallback(_ => reloaded = true, null);
-
-        var otherPackage = MockConfigurationPackage.CreateDefaultPackage(
-            new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
-            {
-                { "Section1:Name", "Lele" },
-            }).Build(),
-            "OtherPackage");
-
-        context.RaiseConfigurationPackageModifiedEvent(otherPackage);
-
-        Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
-        Assert.False(reloaded);
-    }
-
-    /// <summary>
-    /// Verifies that a configuration package raised through the added event whose name matches the provider's
-    /// <see cref="ServiceFabricConfigurationOptions.PackageName"/> is loaded and the reload token is triggered.
-    /// </summary>
-    [Fact]
-    public void TestConfigAddedReloadsMatchingPackage()
-    {
-        var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
-        {
-            { "Section1:Name", "Xiaoxiao" },
-        }).Build();
-
-        var context = new TestCodePackageActivationContext(contextConfig);
-
-        var builder = new ConfigurationBuilder();
-        builder.AddServiceFabricConfiguration(context);
-        var config = builder.Build();
-
-        Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
-
-        var reloaded = false;
-        config.GetReloadToken().RegisterChangeCallback(_ => reloaded = true, null);
-
-        var addedPackage = MockConfigurationPackage.CreateDefaultPackage(
-            new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
-            {
-                { "Section1:Name", "Lele" },
-            }).Build(),
-            "Config");
-
-        context.RaiseConfigurationPackageAddedEvent(addedPackage);
-
-        Assert.Equal("Lele", config["Config:Section1:Name"]);
-        Assert.True(reloaded);
+            Assert.Equal("Lele", config["Section1:Name"]);
+            Assert.Null(config["Section1:Age"]);
+            Assert.Equal(1, sectionCount);
+            Assert.Equal(1, valueCount);
+        }
     }
 
     internal class Person
