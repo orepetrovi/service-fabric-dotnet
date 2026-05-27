@@ -222,8 +222,9 @@ public abstract class ServiceEndpointCollectionTest
             bool result = ServiceEndpointCollection.TryParseEndpointsString(endpointsString, out ServiceEndpointCollection actual);
 
             Assert.True(result);
-            Assert.True(actual.TryGetEndpointAddress(listenerName, out string actualAddress));
-            Assert.Equal(endpointAddress, actualAddress);
+            IReadOnlyDictionary<string, string> dictionary = actual.ToReadOnlyDictionary();
+            Assert.Equal(endpointAddress, dictionary[listenerName]);
+            Assert.Single(dictionary);
         }
 
         [Fact]
