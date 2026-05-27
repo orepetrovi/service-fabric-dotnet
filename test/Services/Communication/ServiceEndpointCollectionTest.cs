@@ -269,7 +269,7 @@ public abstract class ServiceEndpointCollectionTest
         [Fact]
         public void ReturnsFalseAndOutputsNullWhenEndpointsStringIsInvalidJson()
         {
-            bool result = ServiceEndpointCollection.TryParseEndpointsString(fuzzy.String(), out ServiceEndpointCollection actual);
+            bool result = ServiceEndpointCollection.TryParseEndpointsString("{", out ServiceEndpointCollection actual);
 
             Assert.False(result);
             Assert.Null(actual);
