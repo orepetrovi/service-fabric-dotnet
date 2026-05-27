@@ -21,12 +21,16 @@ public abstract class ServiceFabricConfigurationProviderTest
 
     // Constructor parameters
     readonly ICodePackageActivationContext activationContext = Mock.Of<ICodePackageActivationContext>();
-    readonly ServiceFabricConfigurationOptions options = new("Config");
+    readonly ServiceFabricConfigurationOptions options;
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+    readonly string packageName = fuzzy.String().LettersOrDigits();
 
-    ServiceFabricConfigurationProviderTest() =>
+    ServiceFabricConfigurationProviderTest()
+    {
+        options = new(packageName);
         sut = new ServiceFabricConfigurationProvider(activationContext, options);
+    }
 
     void RaiseModified(ConfigurationPackage oldPackage, ConfigurationPackage newPackage) =>
         Mock.Get(activationContext).Raise(_ => _.ConfigurationPackageModifiedEvent += null,
@@ -39,10 +43,13 @@ public abstract class ServiceFabricConfigurationProviderTest
     public sealed class Constructor : ServiceFabricConfigurationProviderTest
     {
         readonly Mock<Action<ConfigurationPackage, IDictionary<string, string>>> configAction = new();
-        readonly ConfigurationPackage matchingPackage =
-            MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), "Config");
+        readonly ConfigurationPackage matchingPackage;
 
-        public Constructor() => options.ConfigAction = configAction.Object;
+        public Constructor()
+        {
+            matchingPackage = MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName);
+            options.ConfigAction = configAction.Object;
+        }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Constructor doesn't validate activationContext.
         public void ThrowsArgumentNullExceptionWhenActivationContextIsNull()
@@ -94,7 +101,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void IgnoresAddedPackageWhenNameDoesNotMatch()
         {
             ConfigurationPackage otherPackage =
-                MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), "Other");
+                MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName + fuzzy.String().LettersOrDigits());
             string existingKey = fuzzy.String().LettersOrDigits();
             string existingValue = fuzzy.String().LettersOrDigits();
             sut.Set(existingKey, existingValue);
@@ -159,7 +166,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void IgnoresModifiedPackageWhenNameDoesNotMatch()
         {
             ConfigurationPackage otherPackage =
-                MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), "Other");
+                MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName + fuzzy.String().LettersOrDigits());
             string existingKey = fuzzy.String().LettersOrDigits();
             string existingValue = fuzzy.String().LettersOrDigits();
             sut.Set(existingKey, existingValue);
@@ -197,13 +204,13 @@ public abstract class ServiceFabricConfigurationProviderTest
     public sealed class Load : ServiceFabricConfigurationProviderTest
     {
         readonly Mock<Action<ConfigurationPackage, IDictionary<string, string>>> configAction = new();
-        readonly ConfigurationPackage package =
-            MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), "Config");
+        readonly ConfigurationPackage package;
 
         public Load()
         {
+            package = MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName);
             options.ConfigAction = configAction.Object;
-            _ = Mock.Get(activationContext).Setup(_ => _.GetConfigurationPackageObject("Config")).Returns(package);
+            _ = Mock.Get(activationContext).Setup(_ => _.GetConfigurationPackageObject(packageName)).Returns(package);
         }
 
         [Fact]
