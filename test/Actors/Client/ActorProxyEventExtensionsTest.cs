@@ -17,7 +17,6 @@ public abstract class ActorProxyEventExtensionsTest
 
     public sealed class SubscribeAsync_IActorEventPublisher_TEvent : ActorProxyEventExtensionsTest
     {
-        // Method parameters
         readonly IActorEventPublisher actorProxy = new TestProxy();
         readonly IActorEvents subscriber = Mock.Of<IActorEvents>();
 
@@ -42,7 +41,6 @@ public abstract class ActorProxyEventExtensionsTest
 
     public sealed class SubscribeAsync_IActorEventPublisher_TEvent_TimeSpan : ActorProxyEventExtensionsTest
     {
-        // Method parameters
         readonly IActorEventPublisher actorProxy = new TestProxy();
         readonly IActorEvents subscriber = Mock.Of<IActorEvents>();
         readonly TimeSpan resubscriptionInterval = fuzzy.TimeSpan();
@@ -68,7 +66,6 @@ public abstract class ActorProxyEventExtensionsTest
 
     public sealed class UnsubscribeAsync : ActorProxyEventExtensionsTest
     {
-        // Method parameters
         readonly IActorEventPublisher actorProxy = new TestProxy();
         readonly IActorEvents subscriber = Mock.Of<IActorEvents>();
 
