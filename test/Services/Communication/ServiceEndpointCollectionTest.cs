@@ -40,18 +40,18 @@ public abstract class ServiceEndpointCollectionTest
             Assert.Same(endpointAddress, sut.ToReadOnlyDictionary()[listenerName]);
         }
 
-        [Fact(Explicit = true)]
+        [Fact(Explicit = true)] // TODO: SUT bug. AddEndpoint does not validate listenerName.
         public void ThrowsArgumentNullExceptionWhenListenerNameIsNull()
         {
-            // TODO: SUT bug. AddEndpoint does not validate listenerName; Dictionary throws with ParamName "key".
+            // The underlying Dictionary throws ArgumentNullException with ParamName "key" instead of "listenerName".
             var exception = Assert.Throws<ArgumentNullException>(() => sut.AddEndpoint(null, endpointAddress));
             Assert.Equal(nameof(listenerName), exception.ParamName);
         }
 
-        [Fact(Explicit = true)]
+        [Fact(Explicit = true)] // TODO: SUT bug. AddEndpoint does not validate endpointAddress.
         public void ThrowsArgumentNullExceptionWhenEndpointAddressIsNull()
         {
-            // TODO: SUT bug. AddEndpoint does not validate endpointAddress and stores null in the dictionary.
+            // AddEndpoint stores null in the dictionary instead of throwing ArgumentNullException.
             var exception = Assert.Throws<ArgumentNullException>(() => sut.AddEndpoint(listenerName, null));
             Assert.Equal(nameof(endpointAddress), exception.ParamName);
         }
@@ -106,10 +106,10 @@ public abstract class ServiceEndpointCollectionTest
             _ = Assert.Throws<FabricElementAlreadyExistsException>(() => sut.AddEndpoints(newEndpoints));
         }
 
-        [Fact(Explicit = true)]
+        [Fact(Explicit = true)] // TODO: SUT bug. AddEndpoints does not validate newEndpoints.
         public void ThrowsArgumentNullExceptionWhenNewEndpointsIsNull()
         {
-            // TODO: SUT bug. AddEndpoints dereferences newEndpoints without validation, causing NullReferenceException.
+            // AddEndpoints dereferences newEndpoints without validation, causing NullReferenceException.
             var exception = Assert.Throws<ArgumentNullException>(() => sut.AddEndpoints(null));
             Assert.Equal(nameof(newEndpoints), exception.ParamName);
         }
@@ -177,10 +177,10 @@ public abstract class ServiceEndpointCollectionTest
             Assert.Null(actual);
         }
 
-        [Fact(Explicit = true)]
+        [Fact(Explicit = true)] // TODO: SUT bug. TryGetEndpointAddress does not validate listenerName.
         public void ThrowsArgumentNullExceptionWhenListenerNameIsNull()
         {
-            // TODO: SUT bug. TryGetEndpointAddress does not validate listenerName; Dictionary throws with ParamName "key".
+            // The underlying Dictionary throws ArgumentNullException with ParamName "key" instead of "listenerName".
             var exception = Assert.Throws<ArgumentNullException>(() => sut.TryGetEndpointAddress(null, out _));
             Assert.Equal(nameof(listenerName), exception.ParamName);
         }
