@@ -380,7 +380,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         public async Task UnwrapsAggregateExceptionAndForwardsInnerExceptionsToHandler()
         {
             var inner = new InvalidOperationException(fuzzy.String());
-            var info = new ExceptionInformation(new AggregateException(inner));
+            var info = new ExceptionInformation(new AggregateException(inner), TargetReplicaSelector.RandomReplica);
 
             ExceptionHandlingResult result = new ExceptionHandlingRetryResult(inner, true, fuzzy.TimeSpan(), 1);
             _ = handler
