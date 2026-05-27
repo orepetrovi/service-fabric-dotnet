@@ -7,8 +7,8 @@ using System;
 using System.Fabric;
 using System.Fabric.Description;
 using System.Globalization;
-using System.Reflection;
 using Fuzzy;
+using Inspector;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.ServiceFabric.AspNetCore.Tests;
@@ -89,7 +89,7 @@ public abstract class HttpSysCommunicationListenerTest
                 Name = fuzzy.String(),
                 Protocol = protocol == EndpointProtocol.Http ? EndpointProtocol.Https : EndpointProtocol.Http,
             };
-            typeof(EndpointResourceDescription).GetProperty(nameof(EndpointResourceDescription.Port)).SetValue(other, fuzzy.Int32());
+            other.Property<int>(nameof(EndpointResourceDescription.Port)).Set(fuzzy.Int32());
             context.CodePackageActivationContext.GetEndpoints().Add(other);
 
             var endpoint = new EndpointResourceDescription
@@ -98,7 +98,7 @@ public abstract class HttpSysCommunicationListenerTest
                 Protocol = protocol,
             };
             int port = fuzzy.Int32();
-            typeof(EndpointResourceDescription).GetProperty(nameof(EndpointResourceDescription.Port)).SetValue(endpoint, port);
+            endpoint.Property<int>(nameof(EndpointResourceDescription.Port)).Set(port);
             context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
             string actual = listener.GetListenerUrl();
