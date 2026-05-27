@@ -193,10 +193,14 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
     public sealed class OpenClient : CommunicationClientFactoryBaseTest
     {
+        // Method parameters
+        readonly ICommunicationClient client = Mock.Of<ICommunicationClient>();
+        readonly CancellationToken cancellationToken = default;
+
         [Fact]
         public async Task ReturnsCompletedTaskWithoutThrowing()
         {
-            Task actual = sut.TestOpenClient(Mock.Of<ICommunicationClient>(), CancellationToken.None);
+            Task actual = sut.TestOpenClient(client, cancellationToken);
 
             Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
             await actual;
