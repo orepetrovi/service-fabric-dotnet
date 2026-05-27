@@ -81,3 +81,23 @@ Reported by **gpt**; cross-check **gemini Agree**, **opus Disagree** (Release bu
 **opus evidence (still on record):** Sibling files like [test/AspNetCore/HttpSysCommunicationListenerTest.cs#L1](test/AspNetCore/HttpSysCommunicationListenerTest.cs#L1) and [test/AspNetCore/GenericHostCommunicationListenerTest.cs#L1](test/AspNetCore/GenericHostCommunicationListenerTest.cs#L1) use the same header style without triggering IDE0073 in build; the suppressions are required by the BCL's `ConstructorInfo?` return type.
 
 **Why human review:** The diagnostics are real under `dotnet format style`, but they don't fail the build, and several reflect repo-wide convention vs. `.editorconfig` drift rather than file-specific issues. Decide which to clean up (likely IDE0300/IDE0200) vs. intentionally suppress (IDE0052 for `sut`) vs. defer as a repo-wide concern (IDE0073).
+
+---
+
+### ❓ Needs Human Review — `GetListenerUrl*` tests placed inside `Constructor_*` classes
+
+Reported by `gemini` (⚠️ Should Fix) and `opus` (❓ Needs Human Review).
+
+Four `GetListenerUrlReturnsDefaultHttpUrl*` tests live inside the four `Constructor_*` nested classes rather than under the nested `GetListenerUrl` class:
+- [test/AspNetCore/KestrelCommunicationListenerTest.cs](test/AspNetCore/KestrelCommunicationListenerTest.cs#L66-L73)
+- [test/AspNetCore/KestrelCommunicationListenerTest.cs](test/AspNetCore/KestrelCommunicationListenerTest.cs#L95-L102)
+- [test/AspNetCore/KestrelCommunicationListenerTest.cs](test/AspNetCore/KestrelCommunicationListenerTest.cs#L143-L151)
+- [test/AspNetCore/KestrelCommunicationListenerTest.cs](test/AspNetCore/KestrelCommunicationListenerTest.cs#L192-L200)
+
+**gemini:** Per `test.instructions.md` — *"Don't create a test class for the SUT constructor when it would duplicate tests for other members"*. The four duplicated tests should be removed and replaced with a single `GetListenerUrl.ReturnsDefaultHttpUrlWhenEndpointNameIsNull` test.
+
+**opus:** Defensible — mirrors the SUT's duplicated `endpointName?.Length == 0 / this.endpointName = endpointName` block across the four constructor overloads ([src/AspNetCore.Kestrel/KestrelCommunicationListener.cs](src/AspNetCore.Kestrel/KestrelCommunicationListener.cs#L58-L86)) and pins per-overload regressions. But it conflicts with the rule that nested test classes are named after the target member, and a reader scanning `GetListenerUrl` for null-endpoint coverage would miss it. Alternative: parameterize a single `GetListenerUrl.ReturnsDefaultHttpUrlWhenEndpointNameIsNull` test via `[Theory]`/`[MemberData]` with a `Func<ServiceContext, AspNetCoreCommunicationListener>` factory for each overload — keeps per-overload coverage while placing the test under its target member.
+
+**Decision needed:** keep the per-overload pinning as-is, or refactor into a parameterized test under `GetListenerUrl`.
+
+**Iterator note:** This is part of a multi-round oscillation across reviewers on where null-endpoint `GetListenerUrl` coverage should live. Previous rounds pulled this coverage out of `GetListenerUrl`, into separate sibling classes, then collapsed it back into a single `GetListenerUrl` test, then required per-overload coverage (the current placement). Human judgment is requested to break the cycle.
