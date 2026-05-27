@@ -324,6 +324,46 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         }
 
         [Fact]
+        public async Task ReturnsShouldRetryFalseAndOriginalAggregateWhenNoInnerExceptionIsHandled()
+        {
+            var aggregate = new AggregateException(
+                new InvalidOperationException(fuzzy.String()),
+                new ApplicationException(fuzzy.String()));
+            var info = new ExceptionInformation(aggregate);
+
+            OperationRetryControl actual = await sut.ReportOperationExceptionAsync(client, info, retrySettings, cancellationToken);
+
+            Assert.False(actual.ShouldRetry);
+            Assert.Same(aggregate, actual.Exception);
+        }
+
+        [Fact]
+        public async Task InvokesLaterInnerExceptionWhenEarlierInnerExceptionIsNotHandled()
+        {
+            var unhandled = new InvalidOperationException(fuzzy.String());
+            var handled = new ApplicationException(fuzzy.String());
+            var info = new ExceptionInformation(new AggregateException(unhandled, handled));
+
+            ExceptionHandlingResult result = new ExceptionHandlingRetryResult(handled, true, fuzzy.TimeSpan(), 1);
+            _ = handler
+                .Setup(_ => _.TryHandleException(
+                    It.Is<ExceptionInformation>(ei => ei.Exception == handled),
+                    retrySettings,
+                    out result))
+                .Returns(true);
+
+            OperationRetryControl actual = await sut.ReportOperationExceptionAsync(client, info, retrySettings, cancellationToken);
+
+            Assert.True(actual.ShouldRetry);
+            handler.Verify(
+                _ => _.TryHandleException(
+                    It.Is<ExceptionInformation>(ei => ei.Exception == unhandled),
+                    retrySettings,
+                    out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Once);
+        }
+
+        [Fact]
         public async Task InvokesSubsequentHandlerWhenPreviousHandlerDoesNotMatch()
         {
             var handler2 = Mock.Get(exceptionHandlers.Last());
