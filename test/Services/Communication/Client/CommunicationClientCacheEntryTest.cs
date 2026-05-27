@@ -259,7 +259,7 @@ public abstract class CommunicationClientCacheEntryTest
 
     static ResolvedServicePartition MakeRsp()
     {
-        ResolvedServicePartition rsp = Type<ResolvedServicePartition>.Uninitialized();
+        var rsp = Type<ResolvedServicePartition>.Uninitialized();
         rsp.Property<ServicePartitionInformation>().Set(Type<SingletonPartitionInformation>.Uninitialized());
         return rsp;
     }
