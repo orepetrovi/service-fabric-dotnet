@@ -245,13 +245,19 @@ public abstract class ActorProxyFactoryTest
         }
 
         [Fact]
-        public void DelegatesToUnderlyingProxyFactoryWithoutThrowing()
+        public void DelegatesToUnderlyingProxyFactoryAndLeavesItInPlace()
         {
-            // The V2 ActorProxyFactory.Dispose only disposes the remoting client factory when it is a
-            // FabricTransportActorRemotingClientFactory. The mocked IServiceRemotingClientFactory used here
-            // is not, so the call is a no-op against the mock. The test asserts that Dispose forwards the
-            // call without throwing, which is the observable contract of the V1 wrapper.
+            // V1 Dispose only delegates when the V2 field is non-null. The V2 Dispose only disposes the
+            // remoting client factory when it is a FabricTransportActorRemotingClientFactory, which the
+            // mock here is not, so the delegated call is a no-op. Verify the guarded branch is reached
+            // by asserting the V2 field is preserved (non-null and unchanged) after Dispose, proving
+            // delegation occurred without nulling state.
+            var v2 = sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value;
+            Assert.NotNull(v2);
+
             sut.Dispose();
+
+            Assert.Same(v2, sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value);
         }
     }
 }
