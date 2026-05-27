@@ -14,7 +14,7 @@ public abstract class LogContextTest : IDisposable
 {
     readonly LogContext sut = new();
 
-    static readonly IFuzz fuzzy = new RandomFuzz();
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
     LogContextTest() =>
         LogContext.Clear();
