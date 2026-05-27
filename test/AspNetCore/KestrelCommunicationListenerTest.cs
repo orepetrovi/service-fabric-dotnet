@@ -156,54 +156,39 @@ public abstract class KestrelCommunicationListenerTest
             var exception = Assert.Throws<InvalidOperationException>(() => sut.GetListenerUrl());
             Assert.Equal(string.Format(CultureInfo.InvariantCulture, AspNetCoreSR.EndpointNameNotFoundExceptionMessage, endpointName), exception.Message);
         }
+    }
 
-        public sealed class ImplicitNullEndpointNameWithIHost : KestrelCommunicationListenerTest
+    public abstract class GetListenerUrl_WithoutEndpointName : KestrelCommunicationListenerTest
+    {
+        readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
+        new readonly AspNetCoreCommunicationListener sut;
+
+        GetListenerUrl_WithoutEndpointName(Func<ServiceContext, AspNetCoreCommunicationListener> create) =>
+            sut = create(context);
+
+        public sealed class WithIHost : GetListenerUrl_WithoutEndpointName
         {
-            readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
-            new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
-            new readonly AspNetCoreCommunicationListener sut;
-
-            public ImplicitNullEndpointNameWithIHost() =>
-                sut = new KestrelCommunicationListener(context, build);
-
-            [Fact]
-            public void ReturnsDefaultHttpUrlOnPortZero()
-            {
-                string actual = sut.GetListenerUrl();
-                Assert.Equal("http://+:0", actual);
-            }
+            public WithIHost()
+                : base(c => new KestrelCommunicationListener(c, (_, _) => Mock.Of<IHost>())) { }
         }
 
-        public sealed class ImplicitNullEndpointNameWithIWebHost : KestrelCommunicationListenerTest
+        public sealed class WithIWebHost : GetListenerUrl_WithoutEndpointName
         {
-            readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
-            new readonly AspNetCoreCommunicationListener sut;
-
-            public ImplicitNullEndpointNameWithIWebHost() =>
-                sut = new KestrelCommunicationListener(context, build);
-
-            [Fact]
-            public void ReturnsDefaultHttpUrlOnPortZero()
-            {
-                string actual = sut.GetListenerUrl();
-                Assert.Equal("http://+:0", actual);
-            }
+            public WithIWebHost()
+                : base(c => new KestrelCommunicationListener(c, (_, _) => Mock.Of<IWebHost>())) { }
         }
 
-        public sealed class NullEndpointName : KestrelCommunicationListenerTest
+        public sealed class WithNullEndpointName : GetListenerUrl_WithoutEndpointName
         {
-            readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
-            new readonly AspNetCoreCommunicationListener sut;
+            public WithNullEndpointName()
+                : base(c => new KestrelCommunicationListener(c, null, (_, _) => Mock.Of<IWebHost>())) { }
+        }
 
-            public NullEndpointName() =>
-                sut = new KestrelCommunicationListener(context, null, build);
-
-            [Fact]
-            public void ReturnsDefaultHttpUrlOnPortZero()
-            {
-                string actual = sut.GetListenerUrl();
-                Assert.Equal("http://+:0", actual);
-            }
+        [Fact]
+        public void ReturnsDefaultHttpUrlOnPortZero()
+        {
+            string actual = sut.GetListenerUrl();
+            Assert.Equal("http://+:0", actual);
         }
     }
 }
