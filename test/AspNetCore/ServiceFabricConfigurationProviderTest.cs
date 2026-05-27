@@ -104,7 +104,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             var package = Type<ConfigurationPackage>.Uninitialized();
 
             var exception = Assert.Throws<ArgumentNullException>(() => RaiseAdded(package));
-            Assert.Equal($"{nameof(package)}.{nameof(ConfigurationPackage.Description)}", exception.ParamName);
+            Assert.Equal($"package.{nameof(ConfigurationPackage.Description)}", exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. HandleNewPackage dereferences package without a null check.
@@ -162,7 +162,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             var package = Type<ConfigurationPackage>.Uninitialized();
 
             var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(package));
-            Assert.Equal($"{nameof(package)}.{nameof(ConfigurationPackage.Description)}", exception.ParamName);
+            Assert.Equal($"package.{nameof(ConfigurationPackage.Description)}", exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. HandleNewPackage dereferences package without a null check.
