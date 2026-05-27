@@ -71,6 +71,8 @@ public abstract class ServiceTelemetryTest : IDisposable
 
             Assert.NotNull(test.Event);
             Assert.Equal(5, test.Event.EventId);
+            Assert.Equal(EventLevel.Informational, test.Event.Level);
+            test.EventKeywords(Default);
             Assert.Equal("ServiceLifecycleEvent", test.Event.EventName);
             Assert.Equal(11, test.Event.Payload.Count);
             test.EventPayload(0, "type", TelemetryConstants.ServiceLifecycleEventName);
@@ -100,6 +102,8 @@ public abstract class ServiceTelemetryTest : IDisposable
 
             Assert.NotNull(test.Event);
             Assert.Equal(5, test.Event.EventId);
+            Assert.Equal(EventLevel.Informational, test.Event.Level);
+            test.EventKeywords(Default);
             Assert.Equal("ServiceLifecycleEvent", test.Event.EventName);
             Assert.Equal(11, test.Event.Payload.Count);
             test.EventPayload(0, "type", TelemetryConstants.ServiceLifecycleEventName);
@@ -129,6 +133,8 @@ public abstract class ServiceTelemetryTest : IDisposable
 
             Assert.NotNull(test.Event);
             Assert.Equal(5, test.Event.EventId);
+            Assert.Equal(EventLevel.Informational, test.Event.Level);
+            test.EventKeywords(Default);
             Assert.Equal("ServiceLifecycleEvent", test.Event.EventName);
             Assert.Equal(11, test.Event.Payload.Count);
             test.EventPayload(0, "type", TelemetryConstants.ServiceLifecycleEventName);
