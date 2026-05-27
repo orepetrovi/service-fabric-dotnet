@@ -46,7 +46,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             Assert.Equal(fireConnectEvents, other.Field<bool>().Value);
             Assert.Same(servicePartitionResolver, other.ServiceResolver);
             Assert.Equal(exceptionHandlers, other.ExceptionHandlers);
-            Assert.Equal(traceId, other.TraceIdValue);
+            Assert.Same(traceId, other.TraceIdValue);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             using var other = new TestFactory(servicePartitionResolver, exceptionHandlers, traceId);
             Assert.Same(servicePartitionResolver, other.ServiceResolver);
             Assert.Equal(exceptionHandlers, other.ExceptionHandlers);
-            Assert.Equal(traceId, other.TraceIdValue);
+            Assert.Same(traceId, other.TraceIdValue);
         }
 
         [Fact]
