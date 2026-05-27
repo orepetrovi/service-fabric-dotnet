@@ -22,7 +22,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
     readonly TestFactory sut;
 
     // Constructor parameters
-    readonly bool fireConnectEvents = false;
+    readonly bool fireConnectEvents = fuzzy.Boolean();
     readonly IServicePartitionResolver servicePartitionResolver = Mock.Of<IServicePartitionResolver>();
     readonly IEnumerable<IExceptionHandler> exceptionHandlers = new[] { Mock.Of<IExceptionHandler>(), Mock.Of<IExceptionHandler>() };
     readonly string traceId = fuzzy.String();
