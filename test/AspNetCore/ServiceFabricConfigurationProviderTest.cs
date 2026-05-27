@@ -21,6 +21,17 @@ namespace Microsoft.ServiceFabric.AspNetCore.Tests
         private int sectionCount = 0;
 
         /// <summary>
+        /// Verifies that the constructor throws when options is null.
+        /// </summary>
+        [Fact]
+        public void TestConstructorThrowsArgumentNullExceptionWhenOptionsIsNull()
+        {
+            var context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
+            var exception = Assert.Throws<ArgumentNullException>(() => new ServiceFabricConfigurationProvider(context, null));
+            Assert.Equal("options", exception.ParamName);
+        }
+
+        /// <summary>
         /// Verify that the basic types could be loaded.
         /// </summary>
         [Fact]
