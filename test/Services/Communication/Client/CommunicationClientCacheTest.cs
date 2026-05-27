@@ -289,7 +289,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
     }
 
     static ResolvedServiceEndpoint MakeEndpoint() =>
-        MakeEndpoint(fuzzy.String(), ServiceEndpointRole.Stateless);
+        MakeEndpoint(fuzzy.String(), fuzzy.Enum<ServiceEndpointRole>());
 
     static ResolvedServiceEndpoint MakeEndpoint(string address, ServiceEndpointRole role)
     {
