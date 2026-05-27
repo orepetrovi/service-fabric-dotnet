@@ -42,16 +42,10 @@ public abstract class ServiceFabricConfigurationSourceTest
         readonly IConfigurationBuilder builder = Mock.Of<IConfigurationBuilder>();
 
         [Fact]
-        public void ReturnsServiceFabricConfigurationProviderUsingActivationContextFromSource()
+        public void ReturnsServiceFabricConfigurationProviderInitializedFromSource()
         {
             var provider = (ServiceFabricConfigurationProvider)sut.Build(builder);
             Assert.Same(activationContext, provider.Field<ICodePackageActivationContext>().Value);
-        }
-
-        [Fact]
-        public void ReturnsServiceFabricConfigurationProviderUsingOptionsFromSource()
-        {
-            var provider = (ServiceFabricConfigurationProvider)sut.Build(builder);
             Assert.Same(options, provider.Field<ServiceFabricConfigurationOptions>().Value);
         }
     }
