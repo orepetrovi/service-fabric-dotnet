@@ -80,7 +80,6 @@ public abstract class LogContextTest : IDisposable
 
     public sealed class Set : LogContextTest
     {
-        // Method parameters
         readonly LogContext logContext = new() { RequestId = fuzzy.Guid() };
 
         [Fact]
