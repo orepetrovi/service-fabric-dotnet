@@ -117,6 +117,43 @@ public abstract class CommunicationClientCacheTest : IDisposable
         }
     }
 
+    public sealed class Dispose_Boolean : CommunicationClientCacheTest
+    {
+        sealed class TestableCache : CommunicationClientCache<ICommunicationClient>
+        {
+            public TestableCache(string traceId)
+                : base(traceId) { }
+
+            public void InvokeDispose(bool disposing) => Dispose(disposing);
+        }
+
+        readonly TestableCache cache;
+
+        public Dispose_Boolean() => cache = new TestableCache(traceId);
+
+        [Fact]
+        public void DoesNotRemoveCachedEntriesWhenDisposingIsFalse()
+        {
+            Guid partitionId = fuzzy.Guid();
+            ResolvedServiceEndpoint endpoint = MakeEndpoint();
+            string listenerName = fuzzy.String();
+            cache.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
+
+            cache.InvokeDispose(false);
+
+            Assert.True(cache.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out CommunicationClientCacheEntry<ICommunicationClient> cacheEntry));
+            Assert.NotNull(cacheEntry);
+            cache.Dispose();
+        }
+
+        [Fact]
+        public void IsIdempotentWhenDisposingIsTrue()
+        {
+            cache.InvokeDispose(true);
+            cache.InvokeDispose(true);
+        }
+    }
+
     public sealed class GetOrAddClientCacheEntry : CommunicationClientCacheTest
     {
         // Method parameters
