@@ -69,6 +69,14 @@ public abstract class CommunicationClientCacheTest : IDisposable
                 Assert.True(System.Threading.ExecutionContext.IsFlowSuppressed());
             }
         }
+
+        [Fact]
+        public void RestoresExecutionContextFlowAfterSuppressingIt()
+        {
+            Assert.False(System.Threading.ExecutionContext.IsFlowSuppressed());
+            using var other = new CommunicationClientCache<ICommunicationClient>(traceId);
+            Assert.False(System.Threading.ExecutionContext.IsFlowSuppressed());
+        }
     }
 
     public sealed class Dispose : CommunicationClientCacheTest
