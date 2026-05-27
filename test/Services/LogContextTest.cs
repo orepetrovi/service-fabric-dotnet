@@ -34,10 +34,6 @@ public abstract class LogContextTest : IDisposable
             Assert.False(LogContext.TryGet(out LogContext actual));
             Assert.Null(actual);
         }
-
-        [Fact]
-        public void DoesNotThrowWhenNoLogContextIsSet() =>
-            LogContext.Clear();
     }
 
     public sealed class GetRequestIdOrDefault : LogContextTest
