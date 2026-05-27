@@ -189,6 +189,9 @@ public abstract class KestrelCommunicationListenerTest
                 Name = endpointName,
                 Protocol = protocol,
             };
+            // Minimum(1) avoids port 0: for the Http row, port 0 would make `expected` byte-identical
+            // to the literal returned by KestrelCommunicationListener.GetListenerUrl's no-endpoint
+            // default path ("http://+:0"), defeating this test's discrimination of the endpoint branch.
             int port = fuzzy.UInt16().Minimum(1);
             endpoint.Property<int>().Set(port);
             context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
