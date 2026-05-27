@@ -40,13 +40,9 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
     {
-        // TODO: Inspector v0.9.0 sut.Constructor<TSig>() binds multiple overloads when delegate-typed parameters
-        // only differ in generic arguments (relaxed signature matching). Track via olegsych/inspector once filed.
-        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener).GetConstructor(new[]
-        {
+        static readonly ConstructorInfo ctor = InspectorWorkarounds.Constructor<KestrelCommunicationListener>(
             typeof(ServiceContext),
-            typeof(Func<string, AspNetCoreCommunicationListener, IHost>),
-        })!;
+            typeof(Func<string, AspNetCoreCommunicationListener, IHost>));
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
@@ -77,11 +73,9 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener).GetConstructor(new[]
-        {
+        static readonly ConstructorInfo ctor = InspectorWorkarounds.Constructor<KestrelCommunicationListener>(
             typeof(ServiceContext),
-            typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>),
-        })!;
+            typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>));
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
@@ -110,12 +104,10 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener).GetConstructor(new[]
-        {
+        static readonly ConstructorInfo ctor = InspectorWorkarounds.Constructor<KestrelCommunicationListener>(
             typeof(ServiceContext),
             typeof(string),
-            typeof(Func<string, AspNetCoreCommunicationListener, IHost>),
-        })!;
+            typeof(Func<string, AspNetCoreCommunicationListener, IHost>));
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
@@ -164,12 +156,10 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener).GetConstructor(new[]
-        {
+        static readonly ConstructorInfo ctor = InspectorWorkarounds.Constructor<KestrelCommunicationListener>(
             typeof(ServiceContext),
             typeof(string),
-            typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>),
-        })!;
+            typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>));
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
