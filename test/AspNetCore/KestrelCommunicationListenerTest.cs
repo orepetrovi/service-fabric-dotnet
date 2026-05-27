@@ -3,11 +3,12 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
+extern alias KestrelAssembly;
+
 using System;
 using System.Fabric;
 using System.Fabric.Description;
 using System.Globalization;
-using System.Resources;
 using Fuzzy;
 using Inspector;
 using Microsoft.AspNetCore.Hosting;
@@ -15,7 +16,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.ServiceFabric.AspNetCore.Tests;
 using Moq;
 using Xunit;
+using KestrelAssembly::Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 using AspNetCoreSR = Microsoft.ServiceFabric.Services.Communication.AspNetCore.SR;
+using KestrelSR = KestrelAssembly::Microsoft.ServiceFabric.Services.Communication.AspNetCore.SR;
 
 namespace Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 
@@ -29,12 +32,6 @@ public abstract class KestrelCommunicationListenerTest
     readonly Func<string, AspNetCoreCommunicationListener, IWebHost> build = (_, _) => Mock.Of<IWebHost>();
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-
-    // The Kestrel SR class is internal to the Microsoft.ServiceFabric.AspNetCore.Kestrel assembly and is not
-    // visible to this test assembly, so the message is loaded directly from the assembly's resources.
-    static readonly string EndpointNameEmptyExceptionMessage = new ResourceManager(
-        "Microsoft.ServiceFabric.Services.Communication.AspNetCore.SR",
-        typeof(KestrelCommunicationListener).Assembly).GetString("EndpointNameEmptyExceptionMessage");
 
     KestrelCommunicationListenerTest() =>
         sut = new KestrelCommunicationListener(serviceContext, endpointName, build);
@@ -71,7 +68,7 @@ public abstract class KestrelCommunicationListenerTest
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
-            Assert.StartsWith(EndpointNameEmptyExceptionMessage, exception.Message);
+            Assert.StartsWith(KestrelSR.EndpointNameEmptyExceptionMessage, exception.Message);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing paramName argument to ArgumentException.
@@ -100,7 +97,7 @@ public abstract class KestrelCommunicationListenerTest
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
-            Assert.StartsWith(EndpointNameEmptyExceptionMessage, exception.Message);
+            Assert.StartsWith(KestrelSR.EndpointNameEmptyExceptionMessage, exception.Message);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing paramName argument to ArgumentException.
