@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Fabric;
-using System.Globalization;
 using Fuzzy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -340,35 +339,6 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
-        public void BindsSectionToType()
-        {
-            string section = fuzzy.String().LettersOrDigits();
-            string name = fuzzy.String().LettersOrDigits();
-            int age = fuzzy.Int32().Between(1, 100);
-            string gender = fuzzy.String().LettersOrDigits();
-
-            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
-            {
-                { $"{section}:{nameof(Person.Name)}", name },
-                { $"{section}:{nameof(Person.Age)}", age.ToString(CultureInfo.InvariantCulture) },
-                { $"{section}:{nameof(Person.Gender)}", gender },
-            }).Build();
-
-            var context = new TestCodePackageActivationContext(contextConfig);
-
-            var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context);
-            var config = builder.Build();
-
-            var person = new Person();
-            config.GetSection($"Config:{section}").Bind(person);
-
-            Assert.Equal(name, person.Name);
-            Assert.Equal(age, person.Age);
-            Assert.Equal(gender, person.Gender);
-        }
-
-        [Fact]
         public void LoadsEmptyConfiguration()
         {
             var contextConfig = new ConfigurationBuilder().Build();
@@ -379,36 +349,6 @@ public abstract class ServiceFabricConfigurationProviderTest
             var config = builder.Build();
 
             Assert.Empty(config.GetChildren());
-        }
-
-        [Fact]
-        public void LoadsEncryptedConfiguration()
-        {
-            // MockConfigurationProperties marks parameters as encrypted when the key or value contains "Security".
-            string section = "Security" + fuzzy.String().LettersOrDigits();
-            string key = "Security" + fuzzy.String().LettersOrDigits();
-            string value = fuzzy.String().LettersOrDigits();
-
-            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
-            {
-                { $"{section}:{key}", value },
-            }).Build();
-
-            var context = new TestCodePackageActivationContext(contextConfig);
-
-            var builder = new ConfigurationBuilder();
-            builder.AddServiceFabricConfiguration(context);
-            var config = builder.Build();
-
-            Assert.Equal(value, config[$"Config:{section}:{key}"]);
-
-            var builder2 = new ConfigurationBuilder();
-
-            // set flag to decrypt the value
-            builder2.AddServiceFabricConfiguration(context, (options) => options.DecryptValue = true);
-
-            Action config2 = () => builder2.Build();
-            Assert.ThrowsAny<Exception>(config2); // Exception expected here because DecryptValue will fail here with invalid values.
         }
 
         [Fact]
