@@ -99,7 +99,7 @@ public abstract class HttpSysCommunicationListenerTest
         {
             var other = new EndpointResourceDescription
             {
-                Name = fuzzy.String(),
+                Name = endpointName + fuzzy.String(),
                 Protocol = protocol == EndpointProtocol.Http ? EndpointProtocol.Https : EndpointProtocol.Http,
             };
             other.Property<int>().Set(fuzzy.UInt16());
