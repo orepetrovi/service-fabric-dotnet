@@ -13,8 +13,12 @@ namespace Microsoft.ServiceFabric.Services;
 public abstract class ServiceEventSourceTest : IDisposable
 {
     readonly EventSourceTest<ServiceEventSource> test = new();
+    readonly ServiceEventSource sut;
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+    ServiceEventSourceTest() =>
+        sut = test.Instance;
 
     void IDisposable.Dispose() =>
         test.Dispose();
@@ -38,7 +42,7 @@ public abstract class ServiceEventSourceTest : IDisposable
         {
             test.EnableEvents(EventLevel.LogAlways);
 
-            test.Instance.CommunicationListenerUsageEventWrapper(
+            sut.CommunicationListenerUsageEventWrapper(
                 type,
                 clusterOsType,
                 runtimePlatform,
@@ -79,7 +83,7 @@ public abstract class ServiceEventSourceTest : IDisposable
     {
         [Fact]
         public void RemainsUnchangedForBackwardCompatibilityWithCollectionTools() =>
-            Assert.Equal(new System.Guid("27b7a543-7280-5c2a-b053-f2f798e2cbb7"), test.Instance.Guid);
+            Assert.Equal(new System.Guid("27b7a543-7280-5c2a-b053-f2f798e2cbb7"), sut.Guid);
     }
 
     public sealed class InfoText : ServiceEventSourceTest
@@ -123,7 +127,7 @@ public abstract class ServiceEventSourceTest : IDisposable
         {
             test.EnableEvents(EventLevel.LogAlways);
 
-            test.Instance.ServiceLifecycleEventWrapper(
+            sut.ServiceLifecycleEventWrapper(
                 type,
                 clusterOsType,
                 runtimePlatform,
@@ -177,7 +181,7 @@ public abstract class ServiceEventSourceTest : IDisposable
         {
             test.EnableEvents(EventLevel.LogAlways);
 
-            test.Instance.ServiceRemotingUsageEventWrapper(
+            sut.ServiceRemotingUsageEventWrapper(
                 type,
                 clusterOsType,
                 runtimePlatform,
