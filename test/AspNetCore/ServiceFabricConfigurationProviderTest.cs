@@ -231,7 +231,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         var desc = Type<ConfigurationPackageDescription>.Uninitialized();
         desc.Property<string>(nameof(ConfigurationPackageDescription.Name)).Set(name);
         var pkg = Type<ConfigurationPackage>.Uninitialized();
-        pkg.Property<ConfigurationPackageDescription>(nameof(ConfigurationPackage.Description)).Set(desc);
+        pkg.Property<ConfigurationPackageDescription>().Set(desc);
         return pkg;
     }
 }
