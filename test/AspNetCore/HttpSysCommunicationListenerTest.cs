@@ -67,15 +67,27 @@ public abstract class HttpSysCommunicationListenerTest
         }
     }
 
-    public sealed class GetListenerUrl : HttpSysCommunicationListenerTest
+    public abstract class GetListenerUrl : HttpSysCommunicationListenerTest
     {
         // TestMocksRepository wires an endpoint collection into the mocked ICodePackageActivationContext
         // that these tests mutate; fuzzy.StatelessServiceContext() does not provide that plumbing.
         readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
         readonly Func<string> getListenerUrl;
 
-        public GetListenerUrl() =>
-            getListenerUrl = new HttpSysCommunicationListener(context, endpointName, build).Protected().Method<Func<string>>();
+        protected GetListenerUrl(Func<ServiceContext, string, HttpSysCommunicationListener> create) =>
+            getListenerUrl = create(context, endpointName).Protected().Method<Func<string>>();
+
+        public sealed class WithIWebHost : GetListenerUrl
+        {
+            public WithIWebHost()
+                : base((c, n) => new HttpSysCommunicationListener(c, n, (_, _) => Mock.Of<IWebHost>())) { }
+        }
+
+        public sealed class WithIHost : GetListenerUrl
+        {
+            public WithIHost()
+                : base((c, n) => new HttpSysCommunicationListener(c, n, (_, _) => Mock.Of<IHost>())) { }
+        }
 
         [Theory]
         [InlineData(EndpointProtocol.Tcp, "tcp")]
