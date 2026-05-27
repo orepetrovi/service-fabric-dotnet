@@ -129,7 +129,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
             Guid partitionId = fuzzy.Guid();
             ResolvedServiceEndpoint endpoint = MakeEndpoint();
             string listenerName = fuzzy.String();
-            sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
+            _ = sut.GetOrAddClientCacheEntry(partitionId, endpoint, listenerName, null);
 
             dispose(false);
 
