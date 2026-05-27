@@ -127,7 +127,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for endpoint.
         public void ThrowsNullReferenceExceptionWhenEndpointIsNull() =>
-            Assert.Throws<NullReferenceException>(() =>
+            _ = Assert.Throws<NullReferenceException>(() =>
                 sut.GetOrAddClientCacheEntry(partitionId, null, listenerName, rsp));
 
         [Fact]
@@ -254,7 +254,7 @@ public abstract class CommunicationClientCacheTest : IDisposable
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for endpoint.
         public void ThrowsNullReferenceExceptionWhenEndpointIsNull() =>
-            Assert.Throws<NullReferenceException>(() =>
+            _ = Assert.Throws<NullReferenceException>(() =>
                 sut.TryGetClientCacheEntry(partitionId, null, listenerName, out _));
 
         [Fact]
