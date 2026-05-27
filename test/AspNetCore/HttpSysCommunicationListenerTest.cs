@@ -79,16 +79,16 @@ public abstract class HttpSysCommunicationListenerTest
         protected GetListenerUrl(Func<ServiceContext, string, HttpSysCommunicationListener> create) =>
             getListenerUrl = ((AspNetCoreCommunicationListener)create(context, endpointName)).GetListenerUrl;
 
-        public sealed class WithIWebHost : GetListenerUrl
-        {
-            public WithIWebHost()
-                : base((c, n) => new HttpSysCommunicationListener(c, n, (_, _) => Mock.Of<IWebHost>())) { }
-        }
-
         public sealed class WithIHost : GetListenerUrl
         {
             public WithIHost()
                 : base((c, n) => new HttpSysCommunicationListener(c, n, (_, _) => Mock.Of<IHost>())) { }
+        }
+
+        public sealed class WithIWebHost : GetListenerUrl
+        {
+            public WithIWebHost()
+                : base((c, n) => new HttpSysCommunicationListener(c, n, (_, _) => Mock.Of<IWebHost>())) { }
         }
 
         [Theory]
