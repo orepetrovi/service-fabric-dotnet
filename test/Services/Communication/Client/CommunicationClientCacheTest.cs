@@ -27,6 +27,21 @@ public abstract class CommunicationClientCacheTest : IDisposable
     void IDisposable.Dispose() =>
         sut.Dispose();
 
+    public sealed class CacheCleanupTimerCallback : CommunicationClientCacheTest
+    {
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Cleanup is driven by a private Timer with a non-configurable interval.
+        public void RemovesEntriesWhoseClientFailedValidation()
+        {
+            // The cleanup pipeline (CacheCleanupTimerCallback -> CleanupCacheEntries) flips IsInCache,
+            // removes invalid entries, and prunes empty partition caches. It is wired to a private Timer
+            // constructed in the SUT with a non-configurable interval and cannot be triggered through any
+            // public API. Exercising this behavior would require either exposing the callback for testing
+            // or injecting the Timer, both of which are SUT testability changes out of scope for the
+            // initial test suite. Documented here so the limitation is discoverable from the test class.
+            throw new NotImplementedException();
+        }
+    }
+
     public sealed class ClearClientCacheEntries : CommunicationClientCacheTest
     {
         // Method parameters
