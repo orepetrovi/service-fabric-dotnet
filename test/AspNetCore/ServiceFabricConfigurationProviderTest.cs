@@ -20,7 +20,7 @@ public abstract class ServiceFabricConfigurationProviderTest
     readonly ServiceFabricConfigurationProvider sut;
 
     // Constructor parameters
-    readonly ICodePackageActivationContext activationContext = Mock.Of<ICodePackageActivationContext>();
+    readonly Mock<ICodePackageActivationContext> activationContext = new();
     readonly ServiceFabricConfigurationOptions options;
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
@@ -29,7 +29,7 @@ public abstract class ServiceFabricConfigurationProviderTest
     ServiceFabricConfigurationProviderTest()
     {
         options = new(packageName);
-        sut = new ServiceFabricConfigurationProvider(activationContext, options);
+        sut = new ServiceFabricConfigurationProvider(activationContext.Object, options);
     }
 
     public sealed class Constructor : ServiceFabricConfigurationProviderTest
@@ -58,7 +58,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void ThrowsArgumentNullExceptionWhenOptionsIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(
-                () => new ServiceFabricConfigurationProvider(activationContext, null));
+                () => new ServiceFabricConfigurationProvider(activationContext.Object, null));
             Assert.Equal(nameof(options), exception.ParamName);
         }
 
@@ -202,7 +202,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         {
             package = MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName);
             options.ConfigAction = configAction.Object;
-            _ = Mock.Get(activationContext).Setup(_ => _.GetConfigurationPackageObject(packageName)).Returns(package);
+            _ = activationContext.Setup(_ => _.GetConfigurationPackageObject(packageName)).Returns(package);
         }
 
         [Fact]
@@ -242,10 +242,10 @@ public abstract class ServiceFabricConfigurationProviderTest
     }
 
     void RaiseModified(ConfigurationPackage oldPackage, ConfigurationPackage newPackage) =>
-        Mock.Get(activationContext).Raise(_ => _.ConfigurationPackageModifiedEvent += null,
+        activationContext.Raise(_ => _.ConfigurationPackageModifiedEvent += null,
             new PackageModifiedEventArgs<ConfigurationPackage> { OldPackage = oldPackage, NewPackage = newPackage });
 
     void RaiseAdded(ConfigurationPackage package) =>
-        Mock.Get(activationContext).Raise(_ => _.ConfigurationPackageAddedEvent += null,
+        activationContext.Raise(_ => _.ConfigurationPackageAddedEvent += null,
             new PackageAddedEventArgs<ConfigurationPackage> { Package = package });
 }
