@@ -36,14 +36,10 @@ public abstract class HttpSysCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : HttpSysCommunicationListenerTest
     {
-        // TODO: Inspector v0.9.0 sut.Constructor<TSig>() binds multiple overloads when delegate-typed parameters
-        // only differ in generic arguments (relaxed signature matching). Track via olegsych/inspector once filed.
-        static readonly ConstructorInfo ctor = typeof(HttpSysCommunicationListener).GetConstructor(new[]
-        {
+        static readonly ConstructorInfo ctor = InspectorWorkarounds.Constructor<HttpSysCommunicationListener>(
             typeof(ServiceContext),
             typeof(string),
-            typeof(Func<string, AspNetCoreCommunicationListener, IHost>),
-        })!;
+            typeof(Func<string, AspNetCoreCommunicationListener, IHost>));
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
@@ -75,12 +71,10 @@ public abstract class HttpSysCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : HttpSysCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = typeof(HttpSysCommunicationListener).GetConstructor(new[]
-        {
+        static readonly ConstructorInfo ctor = InspectorWorkarounds.Constructor<HttpSysCommunicationListener>(
             typeof(ServiceContext),
             typeof(string),
-            typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>),
-        })!;
+            typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>));
 
         [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsNull()
