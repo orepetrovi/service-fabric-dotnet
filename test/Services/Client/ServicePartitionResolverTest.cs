@@ -199,11 +199,13 @@ public abstract class ServicePartitionResolverTest
         }
 
         [Fact]
-        public async Task TreatsNullPartitionKeyAsSingleton()
+        public async Task AcceptsNullPartitionKey()
         {
-            // If null partitionKey were not replaced with Singleton, the switch's default branch would
-            // throw ArgumentOutOfRangeException. Instead, the cancelled token causes OperationCanceledException
-            // to propagate from the Singleton branch's ResolveHelperAsync.
+            // Null partitionKey is replaced with one of the valid kinds before dispatch, so it reaches
+            // ResolveHelperAsync instead of the switch's default ArgumentOutOfRangeException branch.
+            // A cancelled token is used to short-circuit ResolveHelperAsync without contacting Service Fabric.
+            // This test does not verify which kind null maps to; observing that requires intercepting
+            // the per-kind delegate, which ServicePartitionResolver does not currently expose.
             using var cts = new CancellationTokenSource();
             cts.Cancel();
 
