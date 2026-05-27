@@ -26,7 +26,6 @@ public abstract class ServiceEventSourceTest : IDisposable
 
     public sealed class CommunicationListenerUsageEventWrapper : ServiceEventSourceTest
     {
-        // Method parameters
         readonly string type = fuzzy.String();
         readonly string clusterOsType = fuzzy.String();
         readonly string runtimePlatform = fuzzy.String();
@@ -111,7 +110,6 @@ public abstract class ServiceEventSourceTest : IDisposable
 
     public sealed class ServiceLifecycleEventWrapper : ServiceEventSourceTest
     {
-        // Method parameters
         readonly string type = fuzzy.String();
         readonly string clusterOsType = fuzzy.String();
         readonly string runtimePlatform = fuzzy.String();
@@ -164,7 +162,6 @@ public abstract class ServiceEventSourceTest : IDisposable
 
     public sealed class ServiceRemotingUsageEventWrapper : ServiceEventSourceTest
     {
-        // Method parameters
         readonly string type = fuzzy.String();
         readonly string clusterOsType = fuzzy.String();
         readonly string runtimePlatform = fuzzy.String();
