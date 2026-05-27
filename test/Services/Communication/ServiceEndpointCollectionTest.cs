@@ -175,7 +175,7 @@ public abstract class ServiceEndpointCollectionTest
         {
             string endpointsString = $"{{\"Endpoints\":{{\"{listenerName}\":\"{endpointAddress}\"}}}}";
 
-            bool result = ServiceEndpointCollection.TryParseEndpointsString(endpointsString, out var actual);
+            bool result = ServiceEndpointCollection.TryParseEndpointsString(endpointsString, out ServiceEndpointCollection actual);
 
             Assert.True(result);
             Assert.True(actual.TryGetEndpointAddress(listenerName, out string actualAddress));
@@ -185,7 +185,7 @@ public abstract class ServiceEndpointCollectionTest
         [Fact]
         public void ReturnsTrueAndOutputsEmptyCollectionWhenEndpointsStringIsEmpty()
         {
-            bool result = ServiceEndpointCollection.TryParseEndpointsString(string.Empty, out var actual);
+            bool result = ServiceEndpointCollection.TryParseEndpointsString(string.Empty, out ServiceEndpointCollection actual);
 
             Assert.True(result);
             Assert.Empty(actual.ToReadOnlyDictionary());
@@ -194,7 +194,7 @@ public abstract class ServiceEndpointCollectionTest
         [Fact]
         public void ReturnsFalseAndOutputsNullWhenEndpointsStringIsInvalidJson()
         {
-            bool result = ServiceEndpointCollection.TryParseEndpointsString(fuzzy.String(), out var actual);
+            bool result = ServiceEndpointCollection.TryParseEndpointsString(fuzzy.String(), out ServiceEndpointCollection actual);
 
             Assert.False(result);
             Assert.Null(actual);
