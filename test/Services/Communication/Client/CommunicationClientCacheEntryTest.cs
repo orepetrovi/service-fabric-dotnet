@@ -91,7 +91,7 @@ public abstract class CommunicationClientCacheEntryTest
         public void ReturnsFirstParsedEndpointAddressWhenAddressIsJsonAndListenerNameIsNull()
         {
             string first = fuzzy.String().LettersOrDigits();
-            string second = fuzzy.String().LettersOrDigits();
+            string second = first + fuzzy.String().LettersOrDigits();
             sut.Endpoint = MakeEndpoint(EndpointsJson(
                 (fuzzy.String().LettersOrDigits(), first),
                 (fuzzy.String().LettersOrDigits(), second)));
@@ -104,8 +104,10 @@ public abstract class CommunicationClientCacheEntryTest
         {
             string listener = fuzzy.String().LettersOrDigits();
             string expected = fuzzy.String().LettersOrDigits();
+            string otherListener = listener + fuzzy.String().LettersOrDigits();
+            string otherAddress = expected + fuzzy.String().LettersOrDigits();
             sut.Endpoint = MakeEndpoint(EndpointsJson(
-                (fuzzy.String().LettersOrDigits(), fuzzy.String().LettersOrDigits()),
+                (otherListener, otherAddress),
                 (listener, expected)));
             sut.ListenerName = listener;
 
