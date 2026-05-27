@@ -276,6 +276,9 @@ public abstract class ServiceEndpointCollectionTest
 
             Assert.True(result);
             Assert.Empty(actual.ToReadOnlyDictionary());
+            // Exercises endpointsLock re-initialized by [OnDeserialized] (bypassed by DataContractJsonSerializer).
+            Assert.False(actual.TryGetFirstEndpointAddress(out string firstAddress));
+            Assert.Null(firstAddress);
         }
 
         [Fact]
