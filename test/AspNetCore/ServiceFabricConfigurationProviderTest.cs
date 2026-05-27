@@ -36,11 +36,11 @@ public abstract class ServiceFabricConfigurationProviderTest
 
     public sealed class Constructor : ServiceFabricConfigurationProviderTest
     {
-        readonly ConfigurationPackage matchingPackage;
+        readonly ConfigurationPackage matching;
 
         public Constructor()
         {
-            matchingPackage = MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName);
+            matching = MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Constructor doesn't validate activationContext.
@@ -65,8 +65,8 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void InvokesConfigActionWhenAddedPackageNameMatches()
         {
-            RaiseAdded(matchingPackage);
-            configAction.Verify(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()), Times.Once);
+            RaiseAdded(matching);
+            configAction.Verify(_ => _(matching, It.IsAny<IDictionary<string, string>>()), Times.Once);
             configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
         }
 
@@ -74,7 +74,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void SignalsReloadTokenWhenAddedPackageNameMatches()
         {
             IChangeToken token = sut.GetReloadToken();
-            RaiseAdded(matchingPackage);
+            RaiseAdded(matching);
             Assert.True(token.HasChanged);
         }
 
@@ -84,7 +84,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             string staleKey = fuzzy.String();
             sut.Set(staleKey, fuzzy.String());
 
-            RaiseAdded(matchingPackage);
+            RaiseAdded(matching);
 
             Assert.False(sut.TryGet(staleKey, out _));
         }
@@ -94,10 +94,10 @@ public abstract class ServiceFabricConfigurationProviderTest
         {
             string key = fuzzy.String();
             string value = fuzzy.String();
-            _ = configAction.Setup(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()))
+            _ = configAction.Setup(_ => _(matching, It.IsAny<IDictionary<string, string>>()))
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
 
-            RaiseAdded(matchingPackage);
+            RaiseAdded(matching);
 
             Assert.True(sut.TryGet(key, out string actual));
             Assert.Same(value, actual);
@@ -106,14 +106,14 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void IgnoresAddedPackageWhenNameDoesNotMatch()
         {
-            ConfigurationPackage otherPackage =
+            ConfigurationPackage other =
                 MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName + fuzzy.String());
             string existingKey = fuzzy.String();
             string existingValue = fuzzy.String();
             sut.Set(existingKey, existingValue);
             IChangeToken token = sut.GetReloadToken();
 
-            RaiseAdded(otherPackage);
+            RaiseAdded(other);
 
             configAction.Verify(
                 _ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()),
@@ -144,8 +144,8 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void InvokesConfigActionWhenModifiedPackageNameMatches()
         {
-            RaiseModified(null, matchingPackage);
-            configAction.Verify(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()), Times.Once);
+            RaiseModified(null, matching);
+            configAction.Verify(_ => _(matching, It.IsAny<IDictionary<string, string>>()), Times.Once);
             configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
         }
 
@@ -153,7 +153,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void SignalsReloadTokenWhenModifiedPackageNameMatches()
         {
             IChangeToken token = sut.GetReloadToken();
-            RaiseModified(null, matchingPackage);
+            RaiseModified(null, matching);
             Assert.True(token.HasChanged);
         }
 
@@ -163,7 +163,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             string staleKey = fuzzy.String();
             sut.Set(staleKey, fuzzy.String());
 
-            RaiseModified(null, matchingPackage);
+            RaiseModified(null, matching);
 
             Assert.False(sut.TryGet(staleKey, out _));
         }
@@ -173,10 +173,10 @@ public abstract class ServiceFabricConfigurationProviderTest
         {
             string key = fuzzy.String();
             string value = fuzzy.String();
-            _ = configAction.Setup(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()))
+            _ = configAction.Setup(_ => _(matching, It.IsAny<IDictionary<string, string>>()))
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
 
-            RaiseModified(null, matchingPackage);
+            RaiseModified(null, matching);
 
             Assert.True(sut.TryGet(key, out string actual));
             Assert.Same(value, actual);
@@ -185,14 +185,14 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void IgnoresModifiedPackageWhenNameDoesNotMatch()
         {
-            ConfigurationPackage otherPackage =
+            ConfigurationPackage other =
                 MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName + fuzzy.String());
             string existingKey = fuzzy.String();
             string existingValue = fuzzy.String();
             sut.Set(existingKey, existingValue);
             IChangeToken token = sut.GetReloadToken();
 
-            RaiseModified(null, otherPackage);
+            RaiseModified(null, other);
 
             configAction.Verify(
                 _ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()),
