@@ -163,7 +163,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             // instead of an ArgumentNullException naming the offending parameter.
             var exception = Assert.Throws<ArgumentNullException>(
                 () => new ServiceFabricConfigurationProvider(null, options));
-            Assert.Equal(nameof(activationContext), exception.ParamName);
+            Assert.Equal(sut.Constructor().Parameter<ICodePackageActivationContext>().Name, exception.ParamName);
         }
 
         [Fact]
@@ -171,7 +171,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         {
             var exception = Assert.Throws<ArgumentNullException>(
                 () => new ServiceFabricConfigurationProvider(activationContext.Object, null));
-            Assert.Equal(nameof(options), exception.ParamName);
+            Assert.Equal(sut.Constructor().Parameter<ServiceFabricConfigurationOptions>().Name, exception.ParamName);
         }
 
         void RaiseModified(ConfigurationPackage newPackage) =>
