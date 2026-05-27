@@ -37,6 +37,23 @@ public abstract class ActorProxyFactoryTest
         sut = new ActorProxyFactory(createServiceRemotingClientFactory, retrySettings);
     }
 
+    public sealed class Constructor_FuncOfIServiceRemotingCallbackMessageHandler_IServiceRemotingClientFactory_OperationRetrySettings : ActorProxyFactoryTest
+    {
+        [Fact]
+        public void CreatesProxyFactoryWithGivenFuncAndRetrySettings()
+        {
+            // The V2 ActorProxyFactory is internal, so inspect its private state to verify the V1 constructor
+            // forwarded both parameters into it. The Func behavior is further exercised indirectly by the
+            // CreateActorProxy tests, which require the Func to return a usable IServiceRemotingClientFactory.
+            var v2 = sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value;
+            Assert.NotNull(v2);
+            Assert.Same(
+                createServiceRemotingClientFactory,
+                v2.Field<Func<IServiceRemotingCallbackMessageHandler, IServiceRemotingClientFactory>>().Value);
+            Assert.Same(retrySettings, v2.Field<OperationRetrySettings>().Value);
+        }
+    }
+
     public sealed class Constructor_OperationRetrySettings : ActorProxyFactoryTest
     {
         [Fact]
@@ -55,23 +72,6 @@ public abstract class ActorProxyFactoryTest
 
             Assert.Null(sut.Field<OperationRetrySettings>().Value);
             Assert.Null(sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value);
-        }
-    }
-
-    public sealed class Constructor_FuncOfIServiceRemotingCallbackMessageHandler_IServiceRemotingClientFactory_OperationRetrySettings : ActorProxyFactoryTest
-    {
-        [Fact]
-        public void CreatesProxyFactoryWithGivenFuncAndRetrySettings()
-        {
-            // The V2 ActorProxyFactory is internal, so inspect its private state to verify the V1 constructor
-            // forwarded both parameters into it. The Func behavior is further exercised indirectly by the
-            // CreateActorProxy tests, which require the Func to return a usable IServiceRemotingClientFactory.
-            var v2 = sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value;
-            Assert.NotNull(v2);
-            Assert.Same(
-                createServiceRemotingClientFactory,
-                v2.Field<Func<IServiceRemotingCallbackMessageHandler, IServiceRemotingClientFactory>>().Value);
-            Assert.Same(retrySettings, v2.Field<OperationRetrySettings>().Value);
         }
     }
 
@@ -145,6 +145,25 @@ public abstract class ActorProxyFactoryTest
         }
     }
 
+    public sealed class CreateActorProxy_Type_Uri_ActorId_String : ActorProxyFactoryTest
+    {
+        // Method parameters
+        readonly Type actorInterfaceType = typeof(IFactoryTestActor);
+        readonly Uri serviceUri = fuzzy.Uri();
+        readonly ActorId actorId = fuzzy.ActorId();
+        readonly string listenerName = fuzzy.String();
+
+        [Fact]
+        public void ReturnsProxyWithGivenServiceUriActorIdAndListenerName()
+        {
+            var proxy = (IActorProxy)sut.CreateActorProxy(actorInterfaceType, serviceUri, actorId, listenerName);
+
+            Assert.Same(actorId, proxy.ActorId);
+            Assert.Same(serviceUri, proxy.ActorServicePartitionClientV2.ServiceUri);
+            Assert.Equal(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
+        }
+    }
+
     public sealed class CreateActorProxy_Uri_ActorId_String : ActorProxyFactoryTest
     {
         // Method parameters
@@ -197,25 +216,6 @@ public abstract class ActorProxyFactoryTest
             Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
             Assert.Equal(listenerName, proxy.ServicePartitionClient2.ListenerName);
             Assert.Equal(partitionKey, proxy.ServicePartitionClient2.PartitionKey.Value);
-        }
-    }
-
-    public sealed class CreateActorProxy_Type_Uri_ActorId_String : ActorProxyFactoryTest
-    {
-        // Method parameters
-        readonly Type actorInterfaceType = typeof(IFactoryTestActor);
-        readonly Uri serviceUri = fuzzy.Uri();
-        readonly ActorId actorId = fuzzy.ActorId();
-        readonly string listenerName = fuzzy.String();
-
-        [Fact]
-        public void ReturnsProxyWithGivenServiceUriActorIdAndListenerName()
-        {
-            var proxy = (IActorProxy)sut.CreateActorProxy(actorInterfaceType, serviceUri, actorId, listenerName);
-
-            Assert.Same(actorId, proxy.ActorId);
-            Assert.Same(serviceUri, proxy.ActorServicePartitionClientV2.ServiceUri);
-            Assert.Equal(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
         }
     }
 
