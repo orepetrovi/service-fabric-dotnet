@@ -26,10 +26,6 @@ public abstract class ServiceExceptionTest
     public sealed class ActualExceptionData : ServiceExceptionTest
     {
         [Fact]
-        public void IsNullByDefault() =>
-            Assert.Null(sut.ActualExceptionData);
-
-        [Fact]
         public void StoresAssignedValue()
         {
             var value = new Dictionary<string, string> { [fuzzy.String()] = fuzzy.String() };
@@ -40,10 +36,6 @@ public abstract class ServiceExceptionTest
 
     public sealed class ActualExceptionStackTrace : ServiceExceptionTest
     {
-        [Fact]
-        public void IsNullByDefault() =>
-            Assert.Null(sut.ActualExceptionStackTrace);
-
         [Fact]
         public void StoresAssignedValue()
         {
@@ -56,10 +48,6 @@ public abstract class ServiceExceptionTest
     public sealed class ActualInnerExceptions : ServiceExceptionTest
     {
         [Fact]
-        public void IsNullByDefault() =>
-            Assert.Null(sut.ActualInnerExceptions);
-
-        [Fact]
         public void StoresAssignedValue()
         {
             var value = new List<ServiceException> { new() };
@@ -71,10 +59,13 @@ public abstract class ServiceExceptionTest
     public sealed class Constructor : ServiceExceptionTest
     {
         [Fact]
-        public void LeavesActualExceptionTypeNull()
+        public void InitializesPropertiesToNull()
         {
             var sut = new ServiceException();
             Assert.Null(sut.ActualExceptionType);
+            Assert.Null(sut.ActualExceptionData);
+            Assert.Null(sut.ActualExceptionStackTrace);
+            Assert.Null(sut.ActualInnerExceptions);
         }
     }
 
@@ -87,5 +78,17 @@ public abstract class ServiceExceptionTest
         [Fact]
         public void PassesMessageToBaseException() =>
             Assert.Same(message, sut.Message);
+
+        [Fact]
+        public void LeavesActualExceptionDataNull() =>
+            Assert.Null(sut.ActualExceptionData);
+
+        [Fact]
+        public void LeavesActualExceptionStackTraceNull() =>
+            Assert.Null(sut.ActualExceptionStackTrace);
+
+        [Fact]
+        public void LeavesActualInnerExceptionsNull() =>
+            Assert.Null(sut.ActualInnerExceptions);
     }
 }
