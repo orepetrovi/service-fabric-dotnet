@@ -77,13 +77,17 @@ public abstract class HttpSysCommunicationListenerTest
         public GetListenerUrl() =>
             listener = new TestListener(context, endpointName, build);
 
-        [Fact]
-        public void ReturnsUrlWithProtocolLowercaseAndPortFromEndpoint()
+        [Theory]
+        [InlineData(EndpointProtocol.Tcp, "tcp")]
+        [InlineData(EndpointProtocol.Http, "http")]
+        [InlineData(EndpointProtocol.Https, "https")]
+        [InlineData(EndpointProtocol.Udp, "udp")]
+        public void ReturnsUrlWithProtocolLowercaseAndPortFromEndpoint(EndpointProtocol protocol, string expectedScheme)
         {
             var endpoint = new EndpointResourceDescription
             {
                 Name = endpointName,
-                Protocol = fuzzy.Enum<EndpointProtocol>(),
+                Protocol = protocol,
             };
             int port = fuzzy.Int32();
             typeof(EndpointResourceDescription).GetProperty(nameof(EndpointResourceDescription.Port)).SetValue(endpoint, port);
@@ -91,7 +95,7 @@ public abstract class HttpSysCommunicationListenerTest
 
             string actual = listener.GetListenerUrl();
 
-            string expected = string.Format(CultureInfo.InvariantCulture, "{0}://+:{1}", endpoint.Protocol.ToString().ToLowerInvariant(), port);
+            string expected = string.Format(CultureInfo.InvariantCulture, "{0}://+:{1}", expectedScheme, port);
             Assert.Equal(expected, actual);
         }
 
