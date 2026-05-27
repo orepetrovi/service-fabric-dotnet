@@ -60,6 +60,7 @@ public abstract class ServiceEventSourceTest : IDisposable
             Assert.Equal(EventLevel.Informational, test.Event.Level);
             test.EventKeywords(Default);
             Assert.Equal("CommunicationListenerUsageEvent", test.Event.EventName);
+            Assert.Equal(10, test.Event.Payload.Count);
             test.EventPayload(0, "type", type);
             test.EventPayload(1, "clusterOsType", clusterOsType);
             test.EventPayload(2, "runtimePlatform", runtimePlatform);
@@ -146,6 +147,7 @@ public abstract class ServiceEventSourceTest : IDisposable
             Assert.Equal(EventLevel.Informational, test.Event.Level);
             test.EventKeywords(Default);
             Assert.Equal("ServiceLifecycleEvent", test.Event.EventName);
+            Assert.Equal(11, test.Event.Payload.Count);
             test.EventPayload(0, "type", type);
             test.EventPayload(1, "clusterOsType", clusterOsType);
             test.EventPayload(2, "runtimePlatform", runtimePlatform);
@@ -201,6 +203,7 @@ public abstract class ServiceEventSourceTest : IDisposable
             Assert.Equal(EventLevel.Informational, test.Event.Level);
             test.EventKeywords(Default);
             Assert.Equal("ServiceRemotingUsageEvent", test.Event.EventName);
+            Assert.Equal(12, test.Event.Payload.Count);
             test.EventPayload(0, "type", type);
             test.EventPayload(1, "clusterOsType", clusterOsType);
             test.EventPayload(2, "runtimePlatform", runtimePlatform);
