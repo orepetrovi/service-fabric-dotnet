@@ -13,51 +13,50 @@ using Microsoft.ServiceFabric.Services.Remoting.V2.Client;
 using Moq;
 using Xunit;
 
-namespace Microsoft.ServiceFabric.Actors.Client
+namespace Microsoft.ServiceFabric.Actors.Client;
+
+public abstract class ActorProxyTest
 {
-    public abstract class ActorProxyTest
+    readonly ActorProxy sut = new TestProxy();
+
+    // Initialize parameters
+    readonly ActorServicePartitionClient client;
+    readonly IServiceRemotingMessageBodyFactory messageBodyFactory = Mock.Of<IServiceRemotingMessageBodyFactory>();
+
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+    ActorProxyTest()
     {
-        readonly ActorProxy sut = new TestProxy();
+        Mock<IServiceRemotingClientFactory> factory = new() { DefaultValue = DefaultValue.Mock };
+        client = new ActorServicePartitionClient(factory.Object, fuzzy.Uri(), fuzzy.ActorId());
+    }
 
-        // Initialize parameters
-        readonly ActorServicePartitionClient client;
-        readonly IServiceRemotingMessageBodyFactory messageBodyFactory = Mock.Of<IServiceRemotingMessageBodyFactory>();
+    sealed class TestProxy : ActorProxy
+    {
+        protected override object GetReturnValue(int interfaceId, int methodId, object responseBody) => null;
+    }
 
-        static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-
-        ActorProxyTest()
+    public sealed class Initialize : ActorProxyTest
+    {
+        [Fact]
+        public void StoresServicePartitionClientAccessibleViaActorServicePartitionClientV2()
         {
-            Mock<IServiceRemotingClientFactory> factory = new() { DefaultValue = DefaultValue.Mock };
-            client = new ActorServicePartitionClient(factory.Object, fuzzy.Uri(), fuzzy.ActorId());
+            sut.Initialize(client, messageBodyFactory);
+            Assert.Same(client, sut.ActorServicePartitionClientV2);
         }
 
-        sealed class TestProxy : ActorProxy
+        [Fact]
+        public void StoresServicePartitionClientAccessibleViaActorId()
         {
-            protected override object GetReturnValue(int interfaceId, int methodId, object responseBody) => null;
+            sut.Initialize(client, messageBodyFactory);
+            Assert.Same(client.ActorId, sut.ActorId);
         }
 
-        public sealed class Initialize : ActorProxyTest
+        [Fact]
+        public void StoresMessageBodyFactoryAccessibleViaServiceRemotingMessageBodyFactory()
         {
-            [Fact]
-            public void StoresServicePartitionClientAccessibleViaActorServicePartitionClientV2()
-            {
-                sut.Initialize(client, messageBodyFactory);
-                Assert.Same(client, sut.ActorServicePartitionClientV2);
-            }
-
-            [Fact]
-            public void StoresServicePartitionClientAccessibleViaActorId()
-            {
-                sut.Initialize(client, messageBodyFactory);
-                Assert.Same(client.ActorId, sut.ActorId);
-            }
-
-            [Fact]
-            public void StoresMessageBodyFactoryAccessibleViaServiceRemotingMessageBodyFactory()
-            {
-                sut.Initialize(client, messageBodyFactory);
-                Assert.Same(messageBodyFactory, sut.ServiceRemotingMessageBodyFactory);
-            }
+            sut.Initialize(client, messageBodyFactory);
+            Assert.Same(messageBodyFactory, sut.ServiceRemotingMessageBodyFactory);
         }
     }
 }
