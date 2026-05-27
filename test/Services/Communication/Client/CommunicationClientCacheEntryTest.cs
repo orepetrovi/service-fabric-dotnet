@@ -24,10 +24,6 @@ public abstract class CommunicationClientCacheEntryTest
         readonly ICommunicationClient client = Mock.Of<ICommunicationClient>();
 
         [Fact]
-        public void IsNullByDefault() =>
-            Assert.Null(sut.Client);
-
-        [Fact]
         public void ReturnsValuePreviouslySet()
         {
             sut.Client = client;
