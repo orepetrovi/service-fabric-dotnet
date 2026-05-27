@@ -32,12 +32,15 @@ public abstract class ServiceFabricConfigurationProviderTest
         sut = new ServiceFabricConfigurationProvider(activationContext.Object, options);
     }
 
+    static ConfigurationPackage Package(string name) =>
+        MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), name);
+
     public sealed class Constructor : ServiceFabricConfigurationProviderTest
     {
         readonly ConfigurationPackage matching;
 
         public Constructor() =>
-            matching = MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName);
+            matching = Package(packageName);
 
         [Fact(Explicit = true)] // TODO: SUT bug. Constructor doesn't validate activationContext.
         public void ThrowsArgumentNullExceptionWhenActivationContextIsNull()
@@ -103,8 +106,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void IgnoresAddedPackageWhenNameDoesNotMatch()
         {
-            ConfigurationPackage other =
-                MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName + fuzzy.String());
+            ConfigurationPackage other = Package(packageName + fuzzy.String());
             string existingKey = fuzzy.String();
             string existingValue = fuzzy.String();
             sut.Set(existingKey, existingValue);
@@ -183,8 +185,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void IgnoresModifiedPackageWhenNameDoesNotMatch()
         {
-            ConfigurationPackage other =
-                MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName + fuzzy.String());
+            ConfigurationPackage other = Package(packageName + fuzzy.String());
             string existingKey = fuzzy.String();
             string existingValue = fuzzy.String();
             sut.Set(existingKey, existingValue);
@@ -233,7 +234,7 @@ public abstract class ServiceFabricConfigurationProviderTest
 
         public Load()
         {
-            package = MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), packageName);
+            package = Package(packageName);
             _ = activationContext.Setup(_ => _.GetConfigurationPackageObject(packageName)).Returns(package);
         }
 
