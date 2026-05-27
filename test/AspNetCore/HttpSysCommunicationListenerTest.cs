@@ -100,10 +100,10 @@ public abstract class HttpSysCommunicationListenerTest
         // TestMocksRepository wires an endpoint collection into the mocked ICodePackageActivationContext
         // that these tests mutate; fuzzy.StatelessServiceContext() does not provide that plumbing.
         readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
-        readonly Func<string> getListenerUrl;
+        protected new readonly AspNetCoreCommunicationListener sut;
 
         protected GetListenerUrl(Func<ServiceContext, string, HttpSysCommunicationListener> create) =>
-            getListenerUrl = ((AspNetCoreCommunicationListener)create(context, endpointName)).GetListenerUrl;
+            sut = create(context, endpointName);
 
         public sealed class WithIHost : GetListenerUrl
         {
@@ -133,7 +133,7 @@ public abstract class HttpSysCommunicationListenerTest
             endpoint.Property<int>().Set(port);
             context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
-            string actual = getListenerUrl();
+            string actual = sut.GetListenerUrl();
 
             string expected = $"{expectedScheme}://+:{port}";
             Assert.Equal(expected, actual);
@@ -159,7 +159,7 @@ public abstract class HttpSysCommunicationListenerTest
             endpoint.Property<int>().Set(port);
             context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
-            string actual = getListenerUrl();
+            string actual = sut.GetListenerUrl();
 
             string expected = $"http://+:{port}";
             Assert.Equal(expected, actual);
@@ -168,7 +168,7 @@ public abstract class HttpSysCommunicationListenerTest
         [Fact]
         public void ThrowsInvalidOperationExceptionWhenEndpointIsNotInManifest()
         {
-            var exception = Assert.Throws<InvalidOperationException>(() => getListenerUrl());
+            var exception = Assert.Throws<InvalidOperationException>(() => sut.GetListenerUrl());
             Assert.Equal(string.Format(CultureInfo.InvariantCulture, AspNetCoreSR.EndpointNameNotFoundExceptionMessage, endpointName), exception.Message);
         }
     }
