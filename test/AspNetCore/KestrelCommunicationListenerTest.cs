@@ -205,14 +205,6 @@ public abstract class KestrelCommunicationListenerTest
         [Fact]
         public void ReturnsUrlForEndpointMatchingNameWhenMultipleEndpointsExist()
         {
-            var other = new EndpointResourceDescription
-            {
-                Name = endpointName + fuzzy.String(),
-                Protocol = EndpointProtocol.Https,
-            };
-            other.Property<int>().Set(fuzzy.UInt16());
-            context.CodePackageActivationContext.GetEndpoints().Add(other);
-
             var endpoint = new EndpointResourceDescription
             {
                 Name = endpointName,
@@ -221,6 +213,14 @@ public abstract class KestrelCommunicationListenerTest
             int port = fuzzy.UInt16();
             endpoint.Property<int>().Set(port);
             context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
+
+            var other = new EndpointResourceDescription
+            {
+                Name = endpointName + fuzzy.String(),
+                Protocol = EndpointProtocol.Https,
+            };
+            other.Property<int>().Set(fuzzy.UInt16());
+            context.CodePackageActivationContext.GetEndpoints().Add(other);
 
             string actual = sut.GetListenerUrl();
 
