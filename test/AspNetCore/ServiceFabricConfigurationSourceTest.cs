@@ -38,7 +38,6 @@ public abstract class ServiceFabricConfigurationSourceTest
 
     public sealed class Build : ServiceFabricConfigurationSourceTest
     {
-        // Method parameters
         readonly IConfigurationBuilder builder = Mock.Of<IConfigurationBuilder>();
 
         [Fact]
