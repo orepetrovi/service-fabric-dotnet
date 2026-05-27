@@ -192,6 +192,16 @@ public abstract class CommunicationClientCacheEntryTest
 
             Assert.False(sut.IsCommunicationClientValid());
         }
+
+        [Fact]
+        public void ReturnsFalseAfterWeakReferenceTargetWasCollected()
+        {
+            sut.Client = client;
+            _ = sut.IsCommunicationClientValid(); // Clears the strong reference.
+            sut.Field<WeakReference>().Set(new WeakReference(null)); // Simulates GC collecting the target.
+
+            Assert.False(sut.IsCommunicationClientValid());
+        }
     }
 
     public sealed class Rsp : CommunicationClientCacheEntryTest
