@@ -42,11 +42,11 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         [InlineData(false)]
         public void InitializesProperties(bool fireConnectEvents)
         {
-            using var sut = new TestFactory(fireConnectEvents, servicePartitionResolver, exceptionHandlers, traceId);
-            Assert.Equal(fireConnectEvents, sut.Field<bool>().Value);
-            Assert.Same(servicePartitionResolver, sut.ServiceResolver);
-            Assert.Equal(exceptionHandlers, sut.ExceptionHandlers);
-            Assert.Equal(traceId, sut.TraceIdValue);
+            using var other = new TestFactory(fireConnectEvents, servicePartitionResolver, exceptionHandlers, traceId);
+            Assert.Equal(fireConnectEvents, other.Field<bool>().Value);
+            Assert.Same(servicePartitionResolver, other.ServiceResolver);
+            Assert.Equal(exceptionHandlers, other.ExceptionHandlers);
+            Assert.Equal(traceId, other.TraceIdValue);
         }
 
         [Fact]
