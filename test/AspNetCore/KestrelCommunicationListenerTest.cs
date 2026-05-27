@@ -241,12 +241,6 @@ public abstract class KestrelCommunicationListenerTest
                     : base(c => new KestrelCommunicationListener(c, (_, _) => Mock.Of<IWebHost>())) { }
             }
 
-            public sealed class WithNullEndpointName : WithoutEndpointName
-            {
-                public WithNullEndpointName()
-                    : base(c => new KestrelCommunicationListener(c, null, (_, _) => Mock.Of<IWebHost>())) { }
-            }
-
             [Fact]
             public void ReturnsDefaultHttpUrlOnPortZero()
             {
