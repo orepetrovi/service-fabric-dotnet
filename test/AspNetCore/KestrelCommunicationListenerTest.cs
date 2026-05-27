@@ -80,16 +80,27 @@ public abstract class KestrelCommunicationListenerTest
         }
     }
 
-    public sealed class GetListenerUrl : KestrelCommunicationListenerTest
+    public abstract class GetListenerUrl : KestrelCommunicationListenerTest
     {
         // TestMocksRepository wires an endpoint collection into the mocked ICodePackageActivationContext
         // that these tests mutate; fuzzy.StatelessServiceContext() does not provide that plumbing.
         readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
         new readonly AspNetCoreCommunicationListener sut;
 
-        // GetListenerUrl does not branch on host kind; the per-overload constructor tests cover that distinction.
-        public GetListenerUrl() =>
-            sut = new KestrelCommunicationListener(context, endpointName, build);
+        GetListenerUrl(Func<ServiceContext, string, KestrelCommunicationListener> create) =>
+            sut = create(context, endpointName);
+
+        public sealed class WithIHost : GetListenerUrl
+        {
+            public WithIHost()
+                : base((c, n) => new KestrelCommunicationListener(c, n, (_, _) => Mock.Of<IHost>())) { }
+        }
+
+        public sealed class WithIWebHost : GetListenerUrl
+        {
+            public WithIWebHost()
+                : base((c, n) => new KestrelCommunicationListener(c, n, (_, _) => Mock.Of<IWebHost>())) { }
+        }
 
         [Theory]
         [InlineData(EndpointProtocol.Tcp, "tcp")]
