@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Fuzzy;
 using Xunit;
 
@@ -57,6 +58,44 @@ public abstract class ClientRequestTrackerTest : IDisposable
 
             Assert.True(ClientRequestTracker.TryGet(out string actual));
             Assert.Same(replacement, actual);
+        }
+
+        [Fact]
+        public async Task FlowsToAsyncContinuation()
+        {
+            ClientRequestTracker.Set(callContextValue);
+
+            await Task.Yield();
+
+            Assert.True(ClientRequestTracker.TryGet(out string actual));
+            Assert.Same(callContextValue, actual);
+        }
+
+        [Fact]
+        public async Task IsolatesValuesAcrossConcurrentAsyncFlows()
+        {
+            string a = fuzzy.String();
+            string b = fuzzy.String();
+            TaskCompletionSource<bool> readyA = new();
+            TaskCompletionSource<bool> readyB = new();
+            TaskCompletionSource<bool> released = new();
+
+            async Task<string> SetAndRead(string value, TaskCompletionSource<bool> ready)
+            {
+                ClientRequestTracker.Set(value);
+                ready.SetResult(true);
+                await released.Task;
+                ClientRequestTracker.TryGet(out string actual);
+                return actual;
+            }
+
+            Task<string> ta = Task.Run(() => SetAndRead(a, readyA));
+            Task<string> tb = Task.Run(() => SetAndRead(b, readyB));
+            await Task.WhenAll(readyA.Task, readyB.Task);
+            released.SetResult(true);
+
+            Assert.Same(a, await ta);
+            Assert.Same(b, await tb);
         }
     }
 
