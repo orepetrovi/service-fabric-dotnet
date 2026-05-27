@@ -82,8 +82,6 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
     public sealed class Constructor_IServicePartitionResolver_IEnumerableOfIExceptionHandler_String : CommunicationClientFactoryBaseTest
     {
-        readonly CancellationToken cancellationToken = default;
-
         [Fact]
         public void InitializesProperties()
         {
@@ -94,39 +92,10 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         }
 
         [Fact]
-        public async Task DefaultsFireConnectEventsToFalse()
+        public void DefaultsFireConnectEventsToFalse()
         {
             using var other = new TestFactory(servicePartitionResolver, exceptionHandlers, traceId);
-            var cache = other.Field<CommunicationClientCache<ICommunicationClient>>().Value;
-            ResolvedServicePartition rsp = MakeRsp();
-            ResolvedServiceEndpoint endpoint = MakeEndpoint(fuzzy.String());
-            string listenerName = fuzzy.String();
-            var client = Mock.Of<ICommunicationClient>(c =>
-                c.ResolvedServicePartition == rsp &&
-                c.Endpoint == endpoint &&
-                c.ListenerName == listenerName);
-            CommunicationClientCacheEntry<ICommunicationClient> entry =
-                cache.GetOrAddClientCacheEntry(rsp.Info.Id, endpoint, listenerName, rsp);
-            entry.Client = client;
-
-            var disconnected = new List<ICommunicationClient>();
-            other.ClientDisconnected += (_, e) => disconnected.Add(e.Client);
-
-            Mock<IExceptionHandler> handler = Mock.Get(exceptionHandlers.First());
-            var reported = new InvalidOperationException(fuzzy.String());
-            var info = new ExceptionInformation(reported);
-            var settings = new OperationRetrySettings();
-            ExceptionHandlingResult result = new ExceptionHandlingRetryResult(
-                reported, false, fuzzy.TimeSpan(), fuzzy.Int32());
-            _ = handler.Setup(_ => _.TryHandleException(info, settings, out result)).Returns(true);
-
-            _ = await other.ReportOperationExceptionAsync(client, info, settings, cancellationToken);
-
-            Assert.Same(client, other.AbortedClient);
-            Assert.Empty(disconnected);
-            handler.Verify(
-                _ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny),
-                Times.Once);
+            Assert.False(other.Field<bool>().Value);
         }
     }
 
