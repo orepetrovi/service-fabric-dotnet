@@ -6,6 +6,8 @@
 using System;
 using System.Collections.Generic;
 using System.Fabric;
+using System.Globalization;
+using Fuzzy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.ServiceFabric.AspNetCore.Tests;
@@ -21,6 +23,8 @@ public abstract class ServiceFabricConfigurationProviderTest
     readonly TestCodePackageActivationContext activationContext = new(new ConfigurationBuilder().Build());
     readonly ServiceFabricConfigurationOptions options = new("Config");
 
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
     ServiceFabricConfigurationProviderTest() =>
         sut = new ServiceFabricConfigurationProvider(activationContext, options);
 
@@ -29,9 +33,14 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void ReloadsConfigurationWhenPackageNameMatches()
         {
+            string section = fuzzy.String().LettersOrDigits();
+            string key = fuzzy.String().LettersOrDigits();
+            string initial = fuzzy.String().LettersOrDigits();
+            string updated = initial + fuzzy.String().LettersOrDigits();
+
             var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "Section1:Name", "Xiaoxiao" },
+                { $"{section}:{key}", initial },
             }).Build();
 
             var context = new TestCodePackageActivationContext(contextConfig);
@@ -40,7 +49,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             builder.AddServiceFabricConfiguration(context);
             var config = builder.Build();
 
-            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
+            Assert.Equal(initial, config[$"Config:{section}:{key}"]);
 
             var reloaded = false;
             config.GetReloadToken().RegisterChangeCallback(_ => reloaded = true, null);
@@ -48,13 +57,13 @@ public abstract class ServiceFabricConfigurationProviderTest
             var addedPackage = MockConfigurationPackage.CreateDefaultPackage(
                 new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
                 {
-                    { "Section1:Name", "Lele" },
+                    { $"{section}:{key}", updated },
                 }).Build(),
                 "Config");
 
             context.RaiseConfigurationPackageAddedEvent(addedPackage);
 
-            Assert.Equal("Lele", config["Config:Section1:Name"]);
+            Assert.Equal(updated, config[$"Config:{section}:{key}"]);
             Assert.True(reloaded);
         }
     }
@@ -64,11 +73,21 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void ReloadsConfigurationWhenPackageNameMatches()
         {
+            string section = fuzzy.String().LettersOrDigits();
+            string key1 = fuzzy.String().LettersOrDigits();
+            string key2 = key1 + fuzzy.String().LettersOrDigits();
+            string key3 = key2 + fuzzy.String().LettersOrDigits();
+            string val1a = fuzzy.String().LettersOrDigits();
+            string val2a = fuzzy.String().LettersOrDigits();
+            string val3 = fuzzy.String().LettersOrDigits();
+            string val1b = val1a + fuzzy.String().LettersOrDigits();
+            string val2b = val2a + fuzzy.String().LettersOrDigits();
+
             var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "Section1:Name", "Xiaoxiao" },
-                { "Section1:Age", "6" },
-                { "Section1:Gender", "M" },
+                { $"{section}:{key1}", val1a },
+                { $"{section}:{key2}", val2a },
+                { $"{section}:{key3}", val3 },
             }).Build();
 
             var context = new TestCodePackageActivationContext(contextConfig);
@@ -77,9 +96,9 @@ public abstract class ServiceFabricConfigurationProviderTest
             builder.AddServiceFabricConfiguration(context);
             var config = builder.Build();
 
-            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
-            Assert.Equal("6", config["Config:Section1:Age"]);
-            Assert.Equal("M", config["Config:Section1:Gender"]);
+            Assert.Equal(val1a, config[$"Config:{section}:{key1}"]);
+            Assert.Equal(val2a, config[$"Config:{section}:{key2}"]);
+            Assert.Equal(val3, config[$"Config:{section}:{key3}"]);
 
             var reloadToken = config.GetReloadToken();
             Assert.False(reloadToken.HasChanged);
@@ -87,33 +106,48 @@ public abstract class ServiceFabricConfigurationProviderTest
             context.TriggerConfigurationPackageModifiedEvent(
                 new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
                 {
-                    { "Section1:Name", "Lele" },
-                    { "Section1:Age", "3" },
-                    { "Section1:Gender", "M" },
+                    { $"{section}:{key1}", val1b },
+                    { $"{section}:{key2}", val2b },
+                    { $"{section}:{key3}", val3 },
                 }).Build(),
                 "Config");
 
             Assert.True(reloadToken.HasChanged, "Expected configuration reload token to fire after package update.");
-            Assert.Equal("Lele", config["Config:Section1:Name"]);
-            Assert.Equal("3", config["Config:Section1:Age"]);
-            Assert.Equal("M", config["Config:Section1:Gender"]);
+            Assert.Equal(val1b, config[$"Config:{section}:{key1}"]);
+            Assert.Equal(val2b, config[$"Config:{section}:{key2}"]);
+            Assert.Equal(val3, config[$"Config:{section}:{key3}"]);
         }
 
         [Fact]
         public void LoadsConfigurationFromMultiplePackages()
         {
+            string sharedSection = fuzzy.String().LettersOrDigits();
+            string section1 = fuzzy.String().LettersOrDigits();
+            string section2 = section1 + fuzzy.String().LettersOrDigits();
+            string sharedKey = fuzzy.String().LettersOrDigits();
+            string key1a = fuzzy.String().LettersOrDigits();
+            string key1b = key1a + fuzzy.String().LettersOrDigits();
+            string key2a = fuzzy.String().LettersOrDigits();
+            string key2b = key2a + fuzzy.String().LettersOrDigits();
+            string shared1 = fuzzy.String().LettersOrDigits();
+            string val1a = fuzzy.String().LettersOrDigits();
+            string val1b = fuzzy.String().LettersOrDigits();
+            string shared2 = shared1 + fuzzy.String().LettersOrDigits();
+            string val2a = fuzzy.String().LettersOrDigits();
+            string val2b = fuzzy.String().LettersOrDigits();
+
             var contextConfig1 = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "SameSection:Name", "Xiaoxiao" },
-                { "Section1:Age", "6" },
-                { "Section1:Gender", "M" },
+                { $"{sharedSection}:{sharedKey}", shared1 },
+                { $"{section1}:{key1a}", val1a },
+                { $"{section1}:{key1b}", val1b },
             }).Build();
 
             var contextConfig2 = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "SameSection:Name", "Lele" },
-                { "Section2:Age", "3" },
-                { "Section2:Gender", "M" },
+                { $"{sharedSection}:{sharedKey}", shared2 },
+                { $"{section2}:{key2a}", val2a },
+                { $"{section2}:{key2b}", val2b },
             }).Build();
 
             var context = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>() { { "Config1", contextConfig1 }, { "Config2", contextConfig2 } });
@@ -122,30 +156,48 @@ public abstract class ServiceFabricConfigurationProviderTest
             builder.AddServiceFabricConfiguration(context);
             var config = builder.Build();
 
-            Assert.Equal("Xiaoxiao", config["Config1:SameSection:Name"]);
-            Assert.Equal("6", config["Config1:Section1:Age"]);
-            Assert.Equal("M", config["Config1:Section1:Gender"]);
+            Assert.Equal(shared1, config[$"Config1:{sharedSection}:{sharedKey}"]);
+            Assert.Equal(val1a, config[$"Config1:{section1}:{key1a}"]);
+            Assert.Equal(val1b, config[$"Config1:{section1}:{key1b}"]);
 
-            Assert.Equal("Lele", config["Config2:SameSection:Name"]);
-            Assert.Equal("3", config["Config2:Section2:Age"]);
-            Assert.Equal("M", config["Config2:Section2:Gender"]);
+            Assert.Equal(shared2, config[$"Config2:{sharedSection}:{sharedKey}"]);
+            Assert.Equal(val2a, config[$"Config2:{section2}:{key2a}"]);
+            Assert.Equal(val2b, config[$"Config2:{section2}:{key2b}"]);
         }
 
         [Fact]
         public void OnlyReloadsMappedConfigPackage()
         {
+            string sharedSection = fuzzy.String().LettersOrDigits();
+            string section1 = fuzzy.String().LettersOrDigits();
+            string section2 = section1 + fuzzy.String().LettersOrDigits();
+            string sharedKey = fuzzy.String().LettersOrDigits();
+            string key1a = fuzzy.String().LettersOrDigits();
+            string key1b = key1a + fuzzy.String().LettersOrDigits();
+            string key2a = fuzzy.String().LettersOrDigits();
+            string key2b = key2a + fuzzy.String().LettersOrDigits();
+            string shared1 = fuzzy.String().LettersOrDigits();
+            string val1a = fuzzy.String().LettersOrDigits();
+            string val1b = fuzzy.String().LettersOrDigits();
+            string shared2 = shared1 + fuzzy.String().LettersOrDigits();
+            string val2a = fuzzy.String().LettersOrDigits();
+            string val2b = fuzzy.String().LettersOrDigits();
+            string sharedReloaded = shared2 + fuzzy.String().LettersOrDigits();
+            string val1aReloaded = val1a + fuzzy.String().LettersOrDigits();
+            string val1bReloaded = val1b + fuzzy.String().LettersOrDigits();
+
             var contextConfig1 = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "SameSection:Name", "Xiaoxiao" },
-                { "Section1:Age", "6" },
-                { "Section1:Gender", "M" },
+                { $"{sharedSection}:{sharedKey}", shared1 },
+                { $"{section1}:{key1a}", val1a },
+                { $"{section1}:{key1b}", val1b },
             }).Build();
 
             var contextConfig2 = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "SameSection:Name", "Lele" },
-                { "Section2:Age", "3" },
-                { "Section2:Gender", "M" },
+                { $"{sharedSection}:{sharedKey}", shared2 },
+                { $"{section2}:{key2a}", val2a },
+                { $"{section2}:{key2b}", val2b },
             }).Build();
 
             var context = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>() { { "Config1", contextConfig1 }, { "Config2", contextConfig2 } });
@@ -157,19 +209,19 @@ public abstract class ServiceFabricConfigurationProviderTest
             context.TriggerConfigurationPackageModifiedEvent(
                 new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
                 {
-                    { "SameSection:Name", "Jill" },
-                    { "Section1:Age", "30" },
-                    { "Section1:Gender", "F" },
+                    { $"{sharedSection}:{sharedKey}", sharedReloaded },
+                    { $"{section1}:{key1a}", val1aReloaded },
+                    { $"{section1}:{key1b}", val1bReloaded },
                 }).Build(),
                 "Config1");
 
-            Assert.Equal("Jill", config["Config1:SameSection:Name"]);
-            Assert.Equal("30", config["Config1:Section1:Age"]);
-            Assert.Equal("F", config["Config1:Section1:Gender"]);
+            Assert.Equal(sharedReloaded, config[$"Config1:{sharedSection}:{sharedKey}"]);
+            Assert.Equal(val1aReloaded, config[$"Config1:{section1}:{key1a}"]);
+            Assert.Equal(val1bReloaded, config[$"Config1:{section1}:{key1b}"]);
 
-            Assert.Equal("Lele", config["Config2:SameSection:Name"]);
-            Assert.Equal("3", config["Config2:Section2:Age"]);
-            Assert.Equal("M", config["Config2:Section2:Gender"]);
+            Assert.Equal(shared2, config[$"Config2:{sharedSection}:{sharedKey}"]);
+            Assert.Equal(val2a, config[$"Config2:{section2}:{key2a}"]);
+            Assert.Equal(val2b, config[$"Config2:{section2}:{key2b}"]);
         }
 
         [Fact]
@@ -177,7 +229,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         {
             var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "Section1:Name", "Xiaoxiao" },
+                { $"{fuzzy.String().LettersOrDigits()}:{fuzzy.String().LettersOrDigits()}", fuzzy.String().LettersOrDigits() },
             }).Build();
 
             var context = new TestCodePackageActivationContext(contextConfig);
@@ -196,9 +248,14 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void IgnoresPackageWhenNameDoesNotMatch()
         {
+            string section = fuzzy.String().LettersOrDigits();
+            string key = fuzzy.String().LettersOrDigits();
+            string initial = fuzzy.String().LettersOrDigits();
+            string ignored = initial + fuzzy.String().LettersOrDigits();
+
             var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "Section1:Name", "Xiaoxiao" },
+                { $"{section}:{key}", initial },
             }).Build();
 
             var context = new TestCodePackageActivationContext(contextConfig);
@@ -207,7 +264,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             builder.AddServiceFabricConfiguration(context);
             var config = builder.Build();
 
-            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
+            Assert.Equal(initial, config[$"Config:{section}:{key}"]);
 
             var reloaded = false;
             config.GetReloadToken().RegisterChangeCallback(_ => reloaded = true, null);
@@ -215,13 +272,13 @@ public abstract class ServiceFabricConfigurationProviderTest
             var otherPackage = MockConfigurationPackage.CreateDefaultPackage(
                 new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
                 {
-                    { "Section1:Name", "Lele" },
+                    { $"{section}:{key}", ignored },
                 }).Build(),
                 "OtherPackage");
 
             context.RaiseConfigurationPackageModifiedEvent(otherPackage);
 
-            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
+            Assert.Equal(initial, config[$"Config:{section}:{key}"]);
             Assert.False(reloaded);
         }
     }
@@ -242,9 +299,13 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void PrefixesKeysWithPackageNameByDefault()
         {
+            string section = fuzzy.String().LettersOrDigits();
+            string key = fuzzy.String().LettersOrDigits();
+            string value = fuzzy.String().LettersOrDigits();
+
             var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "Section1:Name", "Xiaoxiao" },
+                { $"{section}:{key}", value },
             }).Build();
 
             var context = new TestCodePackageActivationContext(contextConfig);
@@ -253,16 +314,20 @@ public abstract class ServiceFabricConfigurationProviderTest
             builder.AddServiceFabricConfiguration(context);
             var config = builder.Build();
 
-            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
-            Assert.Null(config["Section1:Name"]);
+            Assert.Equal(value, config[$"Config:{section}:{key}"]);
+            Assert.Null(config[$"{section}:{key}"]);
         }
 
         [Fact]
         public void ReturnsNullForUnknownKey()
         {
+            string section = fuzzy.String().LettersOrDigits();
+            string knownKey = fuzzy.String().LettersOrDigits();
+            string unknownKey = knownKey + fuzzy.String().LettersOrDigits();
+
             var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "Section1:Name", "Xiaoxiao" },
+                { $"{section}:{knownKey}", fuzzy.String().LettersOrDigits() },
             }).Build();
 
             var context = new TestCodePackageActivationContext(contextConfig);
@@ -271,17 +336,22 @@ public abstract class ServiceFabricConfigurationProviderTest
             builder.AddServiceFabricConfiguration(context);
             var config = builder.Build();
 
-            Assert.Null(config["Config:Section1:Unknown"]);
+            Assert.Null(config[$"Config:{section}:{unknownKey}"]);
         }
 
         [Fact]
         public void BindsSectionToType()
         {
+            string section = fuzzy.String().LettersOrDigits();
+            string name = fuzzy.String().LettersOrDigits();
+            int age = fuzzy.Int32().Between(1, 100);
+            string gender = fuzzy.String().LettersOrDigits();
+
             var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "Section1:Name", "Xiaoxiao" },
-                { "Section1:Age", "6" },
-                { "Section1:Gender", "M" },
+                { $"{section}:{nameof(Person.Name)}", name },
+                { $"{section}:{nameof(Person.Age)}", age.ToString(CultureInfo.InvariantCulture) },
+                { $"{section}:{nameof(Person.Gender)}", gender },
             }).Build();
 
             var context = new TestCodePackageActivationContext(contextConfig);
@@ -291,11 +361,11 @@ public abstract class ServiceFabricConfigurationProviderTest
             var config = builder.Build();
 
             var person = new Person();
-            config.GetSection("Config:Section1").Bind(person);
+            config.GetSection($"Config:{section}").Bind(person);
 
-            Assert.Equal("Xiaoxiao", person.Name);
-            Assert.Equal(6, person.Age);
-            Assert.Equal("M", person.Gender);
+            Assert.Equal(name, person.Name);
+            Assert.Equal(age, person.Age);
+            Assert.Equal(gender, person.Gender);
         }
 
         [Fact]
@@ -314,11 +384,14 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void LoadsEncryptedConfiguration()
         {
+            // MockConfigurationProperties marks parameters as encrypted when the key or value contains "Security".
+            string section = "Security" + fuzzy.String().LettersOrDigits();
+            string key = "Security" + fuzzy.String().LettersOrDigits();
+            string value = fuzzy.String().LettersOrDigits();
+
             var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                // in the MockConfigurationProperties this section is special handled to turn IsEncrypted to true as follow
-                // parameter.Set(nameof(ConfigurationProperty.IsEncrypted), item.Key.Contains("Security") || item.Value.Contains("Security"));
-                { "SecuritySection:SecuritySSN", "EncryptedValue" },
+                { $"{section}:{key}", value },
             }).Build();
 
             var context = new TestCodePackageActivationContext(contextConfig);
@@ -327,7 +400,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             builder.AddServiceFabricConfiguration(context);
             var config = builder.Build();
 
-            Assert.Equal("EncryptedValue", config["Config:SecuritySection:SecuritySSN"]);
+            Assert.Equal(value, config[$"Config:{section}:{key}"]);
 
             var builder2 = new ConfigurationBuilder();
 
@@ -341,10 +414,17 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void InvokesCustomConfigAction()
         {
+            string section = fuzzy.String().LettersOrDigits();
+            string key1 = fuzzy.String().LettersOrDigits();
+            string key2 = key1 + fuzzy.String().LettersOrDigits();
+            string val1a = fuzzy.String().LettersOrDigits();
+            string val2 = fuzzy.String().LettersOrDigits();
+            string val1b = val1a + fuzzy.String().LettersOrDigits();
+
             var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "Section1:Name", "Xiaoxiao" },
-                { "Section1:Age", "6" },
+                { $"{section}:{key1}", val1a },
+                { $"{section}:{key2}", val2 },
             }).Build();
 
             // initial load
@@ -378,8 +458,8 @@ public abstract class ServiceFabricConfigurationProviderTest
             });
 
             var config = builder.Build();
-            Assert.Equal("Xiaoxiao", config["Section1:Name"]);
-            Assert.Equal("6", config["Section1:Age"]);
+            Assert.Equal(val1a, config[$"{section}:{key1}"]);
+            Assert.Equal(val2, config[$"{section}:{key2}"]);
             Assert.Equal(1, sectionCount);
             Assert.Equal(2, valueCount);
 
@@ -390,11 +470,11 @@ public abstract class ServiceFabricConfigurationProviderTest
             context.TriggerConfigurationPackageModifiedEvent(
                 new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
                 {
-                    { "Section1:Name", "Lele" },
+                    { $"{section}:{key1}", val1b },
                 }).Build(), "Config");
 
-            Assert.Equal("Lele", config["Section1:Name"]);
-            Assert.Null(config["Section1:Age"]);
+            Assert.Equal(val1b, config[$"{section}:{key1}"]);
+            Assert.Null(config[$"{section}:{key2}"]);
             Assert.Equal(1, sectionCount);
             Assert.Equal(1, valueCount);
         }
