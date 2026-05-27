@@ -335,6 +335,42 @@ namespace Microsoft.ServiceFabric.AspNetCore.Tests
             Assert.False(reloaded);
         }
 
+        /// <summary>
+        /// Verifies that a configuration package raised through the added event whose name matches the provider's
+        /// <see cref="ServiceFabricConfigurationOptions.PackageName"/> is loaded and the reload token is triggered.
+        /// </summary>
+        [Fact]
+        public void TestConfigAddedReloadsMatchingPackage()
+        {
+            var contextConfig = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "Section1:Name", "Xiaoxiao" },
+            }).Build();
+
+            var context = new TestCodePackageActivationContext(contextConfig);
+
+            var builder = new ConfigurationBuilder();
+            builder.AddServiceFabricConfiguration(context);
+            var config = builder.Build();
+
+            Assert.Equal("Xiaoxiao", config["Config:Section1:Name"]);
+
+            var reloaded = false;
+            config.GetReloadToken().RegisterChangeCallback(_ => reloaded = true, null);
+
+            var addedPackage = MockConfigurationPackage.CreateDefaultPackage(
+                new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    { "Section1:Name", "Lele" },
+                }).Build(),
+                "Config");
+
+            context.RaiseConfigurationPackageAddedEvent(addedPackage);
+
+            Assert.Equal("Lele", config["Config:Section1:Name"]);
+            Assert.True(reloaded);
+        }
+
         internal class Person
         {
             public string Name { get; set; }
