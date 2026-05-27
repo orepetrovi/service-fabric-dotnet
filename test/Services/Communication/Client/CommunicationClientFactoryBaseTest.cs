@@ -242,6 +242,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
             Assert.False(actual.ShouldRetry);
             Assert.Same(replacement, actual.Exception);
+            Assert.Equal(Timeout.InfiniteTimeSpan, actual.RetryDelay);
             handler.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Once);
         }
 
@@ -256,6 +257,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
             Assert.False(actual.ShouldRetry);
             Assert.Same(reportedException, actual.Exception);
+            Assert.Equal(Timeout.InfiniteTimeSpan, actual.RetryDelay);
             handler.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Once);
         }
 
@@ -275,8 +277,8 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             Assert.Equal(retry.RetryDelay, actual.RetryDelay);
             Assert.Equal(retry.ExceptionId, actual.ExceptionId);
             Assert.Equal(retry.MaxRetryCount, actual.MaxRetryCount);
-            Assert.NotNull(actual.GetRetryDelay);
-            Assert.Equal(retry.GetRetryDelay(0), actual.GetRetryDelay(0));
+            Func<int, TimeSpan> expectedGetRetryDelay = retry.GetRetryDelay;
+            Assert.Equal(expectedGetRetryDelay, actual.GetRetryDelay);
             Assert.Null(actual.Exception);
             Assert.Null(sut.AbortedClient);
             handler.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Once);
