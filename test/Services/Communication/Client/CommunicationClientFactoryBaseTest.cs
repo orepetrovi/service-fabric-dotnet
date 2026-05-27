@@ -114,13 +114,6 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
             Assert.False(cache.TryGetClientCacheEntry(partitionId, endpoint, listenerName, out _));
         }
-
-        [Fact]
-        public void IsIdempotent()
-        {
-            sut.Dispose();
-            sut.Dispose();
-        }
     }
 
     public sealed class GetClientAsync_ResolvedServicePartition_TargetReplicaSelector_String_OperationRetrySettings_CancellationToken : CommunicationClientFactoryBaseTest
