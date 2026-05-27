@@ -45,7 +45,7 @@ public abstract class LogContextTest : IDisposable
         [Fact]
         public void ReturnsRequestIdOfCurrentLogContext()
         {
-            sut.RequestId = Guid.NewGuid();
+            sut.RequestId = fuzzy.Guid();
             LogContext.Set(sut);
 
             Assert.Equal(sut.RequestId, LogContext.GetRequestIdOrDefault());
@@ -75,7 +75,7 @@ public abstract class LogContextTest : IDisposable
         [Fact]
         public void IsSetToGivenValue()
         {
-            Guid expected = Guid.NewGuid();
+            Guid expected = fuzzy.Guid();
             sut.RequestId = expected;
             Assert.Equal(expected, sut.RequestId);
         }
@@ -84,7 +84,7 @@ public abstract class LogContextTest : IDisposable
     public sealed class Set : LogContextTest
     {
         // Method parameters
-        readonly LogContext logContext = new() { RequestId = Guid.NewGuid() };
+        readonly LogContext logContext = new() { RequestId = fuzzy.Guid() };
 
         [Fact]
         public void StoresGivenLogContextRetrievableViaTryGet()
