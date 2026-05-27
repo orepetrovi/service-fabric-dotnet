@@ -205,6 +205,7 @@ public abstract class KestrelCommunicationListenerTest
         [Fact]
         public void ReturnsUrlForEndpointMatchingNameWhenMultipleEndpointsExist()
         {
+            // Arrange
             var endpoint = new EndpointResourceDescription
             {
                 Name = endpointName,
@@ -222,8 +223,10 @@ public abstract class KestrelCommunicationListenerTest
             other.Property<int>().Set(fuzzy.UInt16());
             context.CodePackageActivationContext.GetEndpoints().Add(other);
 
+            // Act
             string actual = sut.GetListenerUrl();
 
+            // Assert
             string expected = $"http://+:{port}";
             Assert.Equal(expected, actual);
         }
