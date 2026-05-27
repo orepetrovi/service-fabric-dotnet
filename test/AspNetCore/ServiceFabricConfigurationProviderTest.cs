@@ -44,6 +44,17 @@ public abstract class ServiceFabricConfigurationProviderTest
 
         public Constructor() => options.ConfigAction = configAction.Object;
 
+        [Fact(Explicit = true)] // TODO: SUT bug. Constructor doesn't validate activationContext.
+        public void ThrowsArgumentNullExceptionWhenActivationContextIsNull()
+        {
+            // The constructor stores activationContext without a null check and then dereferences it
+            // when subscribing to ConfigurationPackageModifiedEvent, causing NullReferenceException
+            // instead of an ArgumentNullException naming the offending parameter.
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => new ServiceFabricConfigurationProvider(null, options));
+            Assert.Equal("activationContext", exception.ParamName);
+        }
+
         [Fact]
         public void ThrowsArgumentNullExceptionWhenOptionsIsNull()
         {
