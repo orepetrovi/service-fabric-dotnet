@@ -19,17 +19,7 @@ public abstract class ActorProxyTest
 {
     readonly ActorProxy sut = new TestProxy();
 
-    // Initialize parameters
-    readonly ActorServicePartitionClient client;
-    readonly IServiceRemotingMessageBodyFactory messageBodyFactory = Mock.Of<IServiceRemotingMessageBodyFactory>();
-
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-
-    ActorProxyTest()
-    {
-        Mock<IServiceRemotingClientFactory> factory = new() { DefaultValue = DefaultValue.Mock };
-        client = new ActorServicePartitionClient(factory.Object, fuzzy.Uri(), fuzzy.ActorId());
-    }
 
     sealed class TestProxy : ActorProxy
     {
@@ -38,6 +28,16 @@ public abstract class ActorProxyTest
 
     public sealed class Initialize : ActorProxyTest
     {
+        // Method parameters
+        readonly ActorServicePartitionClient client;
+        readonly IServiceRemotingMessageBodyFactory messageBodyFactory = Mock.Of<IServiceRemotingMessageBodyFactory>();
+
+        public Initialize()
+        {
+            Mock<IServiceRemotingClientFactory> factory = new() { DefaultValue = DefaultValue.Mock };
+            client = new ActorServicePartitionClient(factory.Object, fuzzy.Uri(), fuzzy.ActorId());
+        }
+
         [Fact]
         public void StoresServicePartitionClientAccessibleViaActorServicePartitionClientV2()
         {
