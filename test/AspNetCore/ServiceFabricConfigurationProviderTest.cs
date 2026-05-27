@@ -32,9 +32,6 @@ public abstract class ServiceFabricConfigurationProviderTest
         sut = new ServiceFabricConfigurationProvider(activationContext.Object, options);
     }
 
-    static ConfigurationPackage Package(string name) =>
-        MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), name);
-
     public sealed class Constructor : ServiceFabricConfigurationProviderTest
     {
         readonly ConfigurationPackage matching;
@@ -283,4 +280,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             Assert.False(token.HasChanged);
         }
     }
+
+    static ConfigurationPackage Package(string name) =>
+        MockConfigurationPackage.CreateDefaultPackage(new ConfigurationBuilder().Build(), name);
 }
