@@ -238,6 +238,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
             Assert.False(actual.ShouldRetry);
             Assert.Same(replacement, actual.Exception);
+            handler.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Once);
         }
 
         [Fact]
@@ -251,6 +252,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
             Assert.False(actual.ShouldRetry);
             Assert.Same(reportedException, actual.Exception);
+            handler.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Once);
         }
 
         [Fact]
@@ -273,6 +275,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             Assert.Equal(retry.GetRetryDelay(0), actual.GetRetryDelay(0));
             Assert.Null(actual.Exception);
             Assert.Null(sut.AbortedClient);
+            handler.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Once);
         }
 
         [Fact]
@@ -289,6 +292,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             Assert.True(actual.ShouldRetry);
             Assert.False(actual.IsTransient);
             Assert.Null(sut.AbortedClient);
+            handler.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Once);
         }
 
         [Fact]
@@ -312,6 +316,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             Assert.False(actual.IsTransient);
             Assert.Null(sut.AbortedClient);
             Assert.Same(cachedClient, entry.Client);
+            handler.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Once);
         }
 
         [Theory]
@@ -339,6 +344,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             Assert.Null(entry.Client);
             Assert.Null(entry.Rsp);
             Assert.Equal(fireConnectEvents ? new[] { client } : Array.Empty<ICommunicationClient>(), disconnected);
+            handler.Verify(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny), Times.Once);
         }
 
         [Fact]
