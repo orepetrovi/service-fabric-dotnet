@@ -227,7 +227,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         public async Task ReturnsRetryControlPopulatedFromTransientRetryResult()
         {
             var retry = new ExceptionHandlingRetryResult(
-                reportedException, true, fuzzy.TimeSpan(), fuzzy.Int32().Minimum(1));
+                reportedException, true, fuzzy.TimeSpan(), fuzzy.Int32());
             ExceptionHandlingResult result = retry;
             _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
 
@@ -249,7 +249,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
         public async Task DoesNotAbortClientWhenNonTransientRetryAndCacheEntryHasNoClient()
         {
             var retry = new ExceptionHandlingRetryResult(
-                reportedException, false, fuzzy.TimeSpan(), fuzzy.Int32().Minimum(1));
+                reportedException, false, fuzzy.TimeSpan(), fuzzy.Int32());
             ExceptionHandlingResult result = retry;
             _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
 
@@ -271,7 +271,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             entry.Client = cachedClient;
 
             var retry = new ExceptionHandlingRetryResult(
-                reportedException, false, fuzzy.TimeSpan(), fuzzy.Int32().Minimum(1));
+                reportedException, false, fuzzy.TimeSpan(), fuzzy.Int32());
             ExceptionHandlingResult result = retry;
             _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
 
@@ -305,7 +305,7 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             sut.ClientDisconnected += (_, e) => disconnected.Add(e.Client);
 
             var retry = new ExceptionHandlingRetryResult(
-                reportedException, false, fuzzy.TimeSpan(), fuzzy.Int32().Minimum(1));
+                reportedException, false, fuzzy.TimeSpan(), fuzzy.Int32());
             ExceptionHandlingResult result = retry;
             _ = handler.Setup(_ => _.TryHandleException(exceptionInformation, retrySettings, out result)).Returns(true);
 
