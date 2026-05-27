@@ -23,7 +23,7 @@ public abstract class ServicePartitionResolverExtensionsTest
         }
 
         [Fact]
-        public void ReturnsGivenResolver() =>
+        public void ReturnsGivenPartitionResolver() =>
             Assert.Same(partitionResolver, partitionResolver.DisableNotification());
 
         // TODO: SUT bug. DisableNotification dereferences the null receiver instead of throwing ArgumentNullException.
