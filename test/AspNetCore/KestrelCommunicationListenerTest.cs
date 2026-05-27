@@ -288,6 +288,16 @@ public abstract class KestrelCommunicationListenerTest
         [Fact]
         public void ThrowsInvalidOperationExceptionWhenEndpointIsNotInManifest()
         {
+            // Add a non-matching endpoint so the SUT must iterate and fail due to name mismatch
+            // rather than an empty collection. This proves name-based discrimination on the failure path.
+            var other = new EndpointResourceDescription
+            {
+                Name = endpointName + fuzzy.String(),
+                Protocol = EndpointProtocol.Http,
+            };
+            other.Property<int>().Set(fuzzy.UInt16());
+            context.CodePackageActivationContext.GetEndpoints().Add(other);
+
             var exception = Assert.Throws<InvalidOperationException>(() => sut.GetListenerUrl());
             Assert.Equal(string.Format(CultureInfo.InvariantCulture, AspNetCoreSR.EndpointNameNotFoundExceptionMessage, endpointName), exception.Message);
         }
