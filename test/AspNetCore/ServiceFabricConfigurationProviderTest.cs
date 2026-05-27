@@ -91,6 +91,20 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
+        public void PopulatesDataWithEntriesAddedByConfigActionWhenAddedPackageNameMatches()
+        {
+            string key = fuzzy.String().LettersOrDigits();
+            string value = fuzzy.String().LettersOrDigits();
+            _ = configAction.Setup(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()))
+                .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
+
+            RaiseAdded(matchingPackage);
+
+            Assert.True(sut.TryGet(key, out string actual));
+            Assert.Same(value, actual);
+        }
+
+        [Fact]
         public void IgnoresAddedPackageWhenNameDoesNotMatch()
         {
             ConfigurationPackage otherPackage =
@@ -153,6 +167,20 @@ public abstract class ServiceFabricConfigurationProviderTest
             RaiseModified(null, matchingPackage);
 
             Assert.False(sut.TryGet(staleKey, out _));
+        }
+
+        [Fact]
+        public void PopulatesDataWithEntriesAddedByConfigActionWhenModifiedPackageNameMatches()
+        {
+            string key = fuzzy.String().LettersOrDigits();
+            string value = fuzzy.String().LettersOrDigits();
+            _ = configAction.Setup(_ => _(matchingPackage, It.IsAny<IDictionary<string, string>>()))
+                .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
+
+            RaiseModified(null, matchingPackage);
+
+            Assert.True(sut.TryGet(key, out string actual));
+            Assert.Same(value, actual);
         }
 
         [Fact]
