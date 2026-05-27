@@ -294,6 +294,8 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             Assert.Equal(retry.ExceptionId, actual.ExceptionId);
             Assert.Equal(retry.MaxRetryCount, actual.MaxRetryCount);
             Func<int, TimeSpan> expectedGetRetryDelay = retry.GetRetryDelay;
+            // Assert.Equal, not Assert.Same: ExceptionHandlingRetryResult.GetRetryDelay is a method,
+            // so each access creates a new delegate via method-group conversion.
             Assert.Equal(expectedGetRetryDelay, actual.GetRetryDelay);
             Assert.Null(actual.Exception);
             Assert.Null(sut.AbortedClient);
