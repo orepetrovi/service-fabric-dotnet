@@ -107,15 +107,19 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
 
             var handler = Mock.Get(exceptionHandlers.First());
             var reported = new InvalidOperationException(fuzzy.String());
+            var info = new ExceptionInformation(reported);
+            var settings = new OperationRetrySettings();
             ExceptionHandlingResult result = new ExceptionHandlingRetryResult(
                 reported, false, fuzzy.TimeSpan(), fuzzy.Int32());
-            _ = handler.Setup(_ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out result)).Returns(true);
+            _ = handler.Setup(_ => _.TryHandleException(info, settings, out result)).Returns(true);
 
-            _ = await other.ReportOperationExceptionAsync(
-                client, new ExceptionInformation(reported), new OperationRetrySettings(), cancellationToken);
+            _ = await other.ReportOperationExceptionAsync(client, info, settings, cancellationToken);
 
             Assert.Same(client, other.AbortedClient);
             Assert.Empty(disconnected);
+            handler.Verify(
+                _ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Once);
         }
     }
 
@@ -434,6 +438,9 @@ public abstract class CommunicationClientFactoryBaseTest : IDisposable
             _ = await sut.ReportOperationExceptionAsync(
                 client, exceptionInformation, retrySettings, cancellationToken);
 
+            handler.Verify(
+                _ => _.TryHandleException(exceptionInformation, retrySettings, out It.Ref<ExceptionHandlingResult>.IsAny),
+                Times.Once);
             handler2.Verify(
                 _ => _.TryHandleException(It.IsAny<ExceptionInformation>(), It.IsAny<OperationRetrySettings>(), out It.Ref<ExceptionHandlingResult>.IsAny),
                 Times.Never);
