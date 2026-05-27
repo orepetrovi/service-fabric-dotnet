@@ -151,8 +151,8 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
     public sealed class ExtractKeyFunc : ServiceFabricConfigurationOptionsTest
     {
-        readonly ConfigurationSection section = Section(fuzzy.String());
-        readonly ConfigurationProperty property = Property(name: fuzzy.String());
+        readonly ConfigurationSection section = Section();
+        readonly ConfigurationProperty property = Property();
 
         [Fact]
         public void IncludesPackageNameWhenIncludePackageNameIsTrue()
@@ -199,8 +199,8 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
     public sealed class ExtractValueFunc : ServiceFabricConfigurationOptionsTest
     {
-        readonly ConfigurationSection section = Section(fuzzy.String());
-        readonly ConfigurationProperty property = Property(value: fuzzy.String());
+        readonly ConfigurationSection section = Section();
+        readonly ConfigurationProperty property = Property();
 
         [Fact]
         public void ReturnsPropertyValueWhenPropertyIsNotEncrypted()
@@ -248,10 +248,10 @@ public abstract class ServiceFabricConfigurationOptionsTest
         }
     }
 
-    static ConfigurationSection Section(string name)
+    static ConfigurationSection Section(string name = null)
     {
         var section = Type<ConfigurationSection>.Uninitialized();
-        section.Property<string>().Set(name);
+        section.Property<string>().Set(name ?? fuzzy.String());
         return section;
     }
 
