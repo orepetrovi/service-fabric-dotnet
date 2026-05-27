@@ -263,6 +263,17 @@ public abstract class CommunicationClientCacheTest : IDisposable
         }
 
         [Fact]
+        public void ReturnsFalseAndNullWhenEndpointRoleNotFoundInExistingPartition()
+        {
+            ResolvedServiceEndpoint stateless = MakeEndpoint(endpoint.Address, ServiceEndpointRole.Stateless);
+            ResolvedServiceEndpoint primary = MakeEndpoint(endpoint.Address, ServiceEndpointRole.StatefulPrimary);
+            sut.GetOrAddClientCacheEntry(partitionId, stateless, listenerName, null);
+
+            Assert.False(sut.TryGetClientCacheEntry(partitionId, primary, listenerName, out var cacheEntry));
+            Assert.Null(cacheEntry);
+        }
+
+        [Fact]
         public void ReturnsTrueAndPreviouslyAddedEntry()
         {
             CommunicationClientCacheEntry<ICommunicationClient> added =
