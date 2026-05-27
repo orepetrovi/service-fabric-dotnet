@@ -41,6 +41,20 @@ public abstract class KestrelCommunicationListenerTest
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
         [Fact]
+        public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(null, endpointName, build));
+            Assert.Equal(nameof(serviceContext), exception.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenBuildIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(serviceContext, endpointName, (Func<string, AspNetCoreCommunicationListener, IHost>)null));
+            Assert.Equal(nameof(build), exception.ParamName);
+        }
+
+        [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
@@ -62,6 +76,20 @@ public abstract class KestrelCommunicationListenerTest
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
     {
         [Fact]
+        public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(null, endpointName, build));
+            Assert.Equal(nameof(serviceContext), exception.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenBuildIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(serviceContext, endpointName, (Func<string, AspNetCoreCommunicationListener, IWebHost>)null));
+            Assert.Equal(nameof(build), exception.ParamName);
+        }
+
+        [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
@@ -77,6 +105,42 @@ public abstract class KestrelCommunicationListenerTest
             // SUT is fixed. Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
             Assert.Equal(nameof(endpointName), exception.ParamName);
+        }
+    }
+
+    public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
+    {
+        new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(null, build));
+            Assert.Equal(nameof(serviceContext), exception.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenBuildIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(serviceContext, (Func<string, AspNetCoreCommunicationListener, IHost>)null));
+            Assert.Equal(nameof(build), exception.ParamName);
+        }
+    }
+
+    public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
+    {
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(null, build));
+            Assert.Equal(nameof(serviceContext), exception.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenBuildIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new KestrelCommunicationListener(serviceContext, (Func<string, AspNetCoreCommunicationListener, IWebHost>)null));
+            Assert.Equal(nameof(build), exception.ParamName);
         }
     }
 
