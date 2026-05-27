@@ -144,7 +144,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         [Fact]
         public void InvokesConfigActionWhenModifiedPackageNameMatches()
         {
-            RaiseModified(null, matching);
+            RaiseModified(matching);
             configAction.Verify(_ => _(matching, It.IsAny<IDictionary<string, string>>()), Times.Once);
             configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
         }
@@ -153,7 +153,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         public void SignalsReloadTokenWhenModifiedPackageNameMatches()
         {
             IChangeToken token = sut.GetReloadToken();
-            RaiseModified(null, matching);
+            RaiseModified(matching);
             Assert.True(token.HasChanged);
         }
 
@@ -163,7 +163,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             string staleKey = fuzzy.String();
             sut.Set(staleKey, fuzzy.String());
 
-            RaiseModified(null, matching);
+            RaiseModified(matching);
 
             Assert.False(sut.TryGet(staleKey, out _));
         }
@@ -176,7 +176,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             _ = configAction.Setup(_ => _(matching, It.IsAny<IDictionary<string, string>>()))
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
 
-            RaiseModified(null, matching);
+            RaiseModified(matching);
 
             Assert.True(sut.TryGet(key, out string actual));
             Assert.Same(value, actual);
@@ -192,7 +192,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             sut.Set(existingKey, existingValue);
             IChangeToken token = sut.GetReloadToken();
 
-            RaiseModified(null, other);
+            RaiseModified(other);
 
             configAction.Verify(
                 _ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()),
@@ -207,7 +207,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         {
             var package = Type<ConfigurationPackage>.Uninitialized();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(null, package));
+            var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(package));
             Assert.Equal($"{nameof(package)}.{nameof(ConfigurationPackage.Description)}", exception.ParamName);
         }
 
@@ -216,7 +216,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         {
             // HandleNewPackage accesses package.Description immediately, throwing NullReferenceException
             // instead of an ArgumentNullException naming the offending parameter.
-            var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(null, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(null));
             Assert.Equal("package", exception.ParamName);
         }
     }
@@ -267,9 +267,9 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
     }
 
-    void RaiseModified(ConfigurationPackage oldPackage, ConfigurationPackage newPackage) =>
+    void RaiseModified(ConfigurationPackage newPackage) =>
         activationContext.Raise(_ => _.ConfigurationPackageModifiedEvent += null,
-            new PackageModifiedEventArgs<ConfigurationPackage> { OldPackage = oldPackage, NewPackage = newPackage });
+            new PackageModifiedEventArgs<ConfigurationPackage> { NewPackage = newPackage });
 
     void RaiseAdded(ConfigurationPackage package) =>
         activationContext.Raise(_ => _.ConfigurationPackageAddedEvent += null,
