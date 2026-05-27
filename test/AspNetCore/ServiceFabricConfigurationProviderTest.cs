@@ -59,45 +59,24 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
-        public void InvokesConfigActionWhenAddedPackageNameMatches()
-        {
-            RaiseAdded(matching);
-
-            configAction.Verify(_ => _(matching, It.IsAny<IDictionary<string, string>>()), Times.Once);
-            configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
-        }
-
-        [Fact]
-        public void SignalsReloadTokenWhenAddedPackageNameMatches()
-        {
-            IChangeToken token = sut.GetReloadToken();
-            RaiseAdded(matching);
-            Assert.True(token.HasChanged);
-        }
-
-        [Fact]
-        public void ClearsPreviouslyLoadedDataWhenAddedPackageNameMatches()
+        public void LoadsPackageAndNotifiesChangeWhenAddedPackageNameMatches()
         {
             string staleKey = fuzzy.String();
             sut.Set(staleKey, fuzzy.String());
-
-            RaiseAdded(matching);
-
-            Assert.False(sut.TryGet(staleKey, out _));
-        }
-
-        [Fact]
-        public void PopulatesDataWithEntriesAddedByConfigActionWhenAddedPackageNameMatches()
-        {
             string key = fuzzy.String();
             string value = fuzzy.String();
             _ = configAction.Setup(_ => _(matching, It.IsAny<IDictionary<string, string>>()))
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
+            IChangeToken token = sut.GetReloadToken();
 
             RaiseAdded(matching);
 
+            configAction.Verify(_ => _(matching, It.IsAny<IDictionary<string, string>>()), Times.Once);
+            configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
+            Assert.False(sut.TryGet(staleKey, out _));
             Assert.True(sut.TryGet(key, out string actual));
             Assert.Same(value, actual);
+            Assert.True(token.HasChanged);
         }
 
         [Fact]
@@ -138,45 +117,24 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
-        public void InvokesConfigActionWhenModifiedPackageNameMatches()
-        {
-            RaiseModified(matching);
-
-            configAction.Verify(_ => _(matching, It.IsAny<IDictionary<string, string>>()), Times.Once);
-            configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
-        }
-
-        [Fact]
-        public void SignalsReloadTokenWhenModifiedPackageNameMatches()
-        {
-            IChangeToken token = sut.GetReloadToken();
-            RaiseModified(matching);
-            Assert.True(token.HasChanged);
-        }
-
-        [Fact]
-        public void ClearsPreviouslyLoadedDataWhenModifiedPackageNameMatches()
+        public void LoadsPackageAndNotifiesChangeWhenModifiedPackageNameMatches()
         {
             string staleKey = fuzzy.String();
             sut.Set(staleKey, fuzzy.String());
-
-            RaiseModified(matching);
-
-            Assert.False(sut.TryGet(staleKey, out _));
-        }
-
-        [Fact]
-        public void PopulatesDataWithEntriesAddedByConfigActionWhenModifiedPackageNameMatches()
-        {
             string key = fuzzy.String();
             string value = fuzzy.String();
             _ = configAction.Setup(_ => _(matching, It.IsAny<IDictionary<string, string>>()))
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
+            IChangeToken token = sut.GetReloadToken();
 
             RaiseModified(matching);
 
+            configAction.Verify(_ => _(matching, It.IsAny<IDictionary<string, string>>()), Times.Once);
+            configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
+            Assert.False(sut.TryGet(staleKey, out _));
             Assert.True(sut.TryGet(key, out string actual));
             Assert.Same(value, actual);
+            Assert.True(token.HasChanged);
         }
 
         [Fact]
@@ -236,47 +194,26 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
-        public void InvokesConfigActionWithPackageFromActivationContext()
-        {
-            sut.Load();
-
-            configAction.Verify(_ => _(package, It.IsAny<IDictionary<string, string>>()), Times.Once);
-            configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
-            activationContext.Verify(_ => _.GetConfigurationPackageObject(It.IsAny<string>()), Times.Once);
-        }
-
-        [Fact]
-        public void PopulatesDataWithEntriesAddedByConfigAction()
-        {
-            string key = fuzzy.String();
-            string value = fuzzy.String();
-            _ = configAction.Setup(_ => _(package, It.IsAny<IDictionary<string, string>>()))
-                .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
-
-            sut.Load();
-
-            Assert.True(sut.TryGet(key, out string actual));
-            Assert.Same(value, actual);
-        }
-
-        [Fact]
-        public void PreservesPreviouslyLoadedData()
+        public void LoadsPackageFromActivationContextAndPopulatesData()
         {
             string existingKey = fuzzy.String();
             string existingValue = fuzzy.String();
             sut.Set(existingKey, existingValue);
-
-            sut.Load();
-
-            Assert.True(sut.TryGet(existingKey, out string actual));
-            Assert.Same(existingValue, actual);
-        }
-
-        [Fact]
-        public void DoesNotSignalReloadToken()
-        {
+            string key = fuzzy.String();
+            string value = fuzzy.String();
+            _ = configAction.Setup(_ => _(package, It.IsAny<IDictionary<string, string>>()))
+                .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
             IChangeToken token = sut.GetReloadToken();
+
             sut.Load();
+
+            activationContext.Verify(_ => _.GetConfigurationPackageObject(It.IsAny<string>()), Times.Once);
+            configAction.Verify(_ => _(package, It.IsAny<IDictionary<string, string>>()), Times.Once);
+            configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
+            Assert.True(sut.TryGet(existingKey, out string preserved));
+            Assert.Same(existingValue, preserved);
+            Assert.True(sut.TryGet(key, out string actual));
+            Assert.Same(value, actual);
             Assert.False(token.HasChanged);
         }
     }
