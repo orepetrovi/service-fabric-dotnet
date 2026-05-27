@@ -44,7 +44,7 @@ public abstract class ClientRequestTrackerTest : IDisposable
             ClientRequestTracker.Set(callContextValue);
 
             Assert.True(ClientRequestTracker.TryGet(out string actual));
-            Assert.Equal(callContextValue, actual);
+            Assert.Same(callContextValue, actual);
         }
 
         [Fact]
@@ -56,7 +56,7 @@ public abstract class ClientRequestTrackerTest : IDisposable
             ClientRequestTracker.Set(replacement);
 
             Assert.True(ClientRequestTracker.TryGet(out string actual));
-            Assert.Equal(replacement, actual);
+            Assert.Same(replacement, actual);
         }
     }
 
@@ -71,7 +71,7 @@ public abstract class ClientRequestTrackerTest : IDisposable
             bool result = ClientRequestTracker.TryGet(out string actual);
 
             Assert.True(result);
-            Assert.Equal(expected, actual);
+            Assert.Same(expected, actual);
         }
 
         [Fact]
