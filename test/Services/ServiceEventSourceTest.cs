@@ -30,7 +30,6 @@ namespace Microsoft.ServiceFabric.Services
         readonly string lifecycleEvent = fuzzy.String();
         readonly string serviceKind = fuzzy.String();
         readonly string communicationListenerType = fuzzy.String();
-        readonly bool isSecure = fuzzy.Boolean();
         readonly string remotingVersion = fuzzy.String();
 
         public void Dispose() =>
@@ -130,8 +129,10 @@ namespace Microsoft.ServiceFabric.Services
             test.EventPayload(9, "communicationListenerType", communicationListenerType);
         }
 
-        [Fact]
-        public void ServiceRemotingUsageEventWrapperPublishesExpectedEvent()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ServiceRemotingUsageEventWrapperPublishesExpectedEvent(bool isSecure)
         {
             test.EnableEvents(EventLevel.LogAlways);
 
