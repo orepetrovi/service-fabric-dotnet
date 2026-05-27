@@ -100,9 +100,9 @@ public abstract class HttpSysCommunicationListenerTest
         // TestMocksRepository wires an endpoint collection into the mocked ICodePackageActivationContext
         // that these tests mutate; fuzzy.StatelessServiceContext() does not provide that plumbing.
         readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
-        protected new readonly AspNetCoreCommunicationListener sut;
+        new readonly AspNetCoreCommunicationListener sut;
 
-        protected GetListenerUrl(Func<ServiceContext, string, HttpSysCommunicationListener> create) =>
+        GetListenerUrl(Func<ServiceContext, string, HttpSysCommunicationListener> create) =>
             sut = create(context, endpointName);
 
         public sealed class WithIHost : GetListenerUrl
