@@ -46,7 +46,7 @@ public abstract class CommunicationClientCacheEntryTest
         public void ReturnsValueViaWeakReferenceAfterStrongReferenceCleared()
         {
             sut.Client = client;
-            _ = sut.IsCommunicationClientValid(); // Clears the strong reference
+            sut.Field<ICommunicationClient>().Set(null);
 
             Assert.Same(client, sut.Client);
         }
