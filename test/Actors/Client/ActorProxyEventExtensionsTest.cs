@@ -89,8 +89,8 @@ public abstract class ActorProxyEventExtensionsTest
         [Fact]
         public async Task ThrowsArgumentExceptionWhenTEventDoesNotImplementIActorEvents()
         {
-            string subscriber = fuzzy.String();
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.UnsubscribeAsync(subscriber));
+            string notAnEvent = fuzzy.String();
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => actorProxy.UnsubscribeAsync(notAnEvent));
             Assert.Null(exception.ParamName);
         }
     }
