@@ -190,10 +190,13 @@ public abstract class KestrelCommunicationListenerTest
             Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        public void ReturnsUrlForEndpointMatchingNameWhenMultipleEndpointsExist()
+        [Theory]
+        // Exercise both insertion orders so the test fails for any positional selection
+        // (e.g. .First() or .Last()) and only passes for true name-based selection.
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ReturnsUrlForEndpointMatchingNameWhenMultipleEndpointsExist(bool matchingFirst)
         {
-            // Arrange
             var endpoint = new EndpointResourceDescription
             {
                 Name = endpointName,
@@ -201,7 +204,6 @@ public abstract class KestrelCommunicationListenerTest
             };
             int port = fuzzy.UInt16();
             endpoint.Property<int>().Set(port);
-            context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
             var other = new EndpointResourceDescription
             {
@@ -209,12 +211,21 @@ public abstract class KestrelCommunicationListenerTest
                 Protocol = EndpointProtocol.Https,
             };
             other.Property<int>().Set(fuzzy.UInt16());
-            context.CodePackageActivationContext.GetEndpoints().Add(other);
 
-            // Act
+            var endpoints = context.CodePackageActivationContext.GetEndpoints();
+            if (matchingFirst)
+            {
+                endpoints.Add(endpoint);
+                endpoints.Add(other);
+            }
+            else
+            {
+                endpoints.Add(other);
+                endpoints.Add(endpoint);
+            }
+
             string actual = sut.GetListenerUrl();
 
-            // Assert
             string expected = $"http://+:{port}";
             Assert.Equal(expected, actual);
         }
