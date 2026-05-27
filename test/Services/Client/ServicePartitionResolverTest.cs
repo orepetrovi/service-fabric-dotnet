@@ -37,6 +37,12 @@ public abstract class ServicePartitionResolverTest
             Assert.Same(createFabricClient, sut.Field<CreateFabricClientDelegate>("createFabricClient").Value);
             Assert.Same(createFabricClient, sut.Field<CreateFabricClientDelegate>("recreateFabricClient").Value);
         }
+
+        // TODO: SUT should throw ArgumentNullException when createFabricClient is null; null delegate is stored and
+        // later dereferenced by GetClient, surfacing as a deferred NullReferenceException.
+        [Fact]
+        public void DoesNotValidateCreateFabricClient() =>
+            new ServicePartitionResolver((CreateFabricClientDelegate)null);
     }
 
     public sealed class Constructor_CreateFabricClientDelegate_CreateFabricClientDelegate : ServicePartitionResolverTest
@@ -57,6 +63,12 @@ public abstract class ServicePartitionResolverTest
             Assert.Same(createFabricClient, sut.Field<CreateFabricClientDelegate>("recreateFabricClient").Value);
         }
 
+        // TODO: SUT should throw ArgumentNullException when createFabricClient is null; null delegate is stored and
+        // later dereferenced by GetClient, surfacing as a deferred NullReferenceException.
+        [Fact]
+        public void DoesNotValidateCreateFabricClient() =>
+            new ServicePartitionResolver(null, recreateFabricClient);
+
         [Fact]
         public void SetsUseNotificationToTrue() =>
             Assert.True(sut.UseNotification);
@@ -70,6 +82,11 @@ public abstract class ServicePartitionResolverTest
         [Fact]
         public void SetsBothDelegatesToSameNonNullDelegate() =>
             AssertCreateAndRecreateAreSameNonNullDelegate(new ServicePartitionResolver(settings, connectionEndpoints));
+
+        // connectionEndpoints is captured into a lambda invoked later by FabricClient, which owns validation.
+        [Fact]
+        public void DoesNotValidateConnectionEndpoints() =>
+            new ServicePartitionResolver(settings, (string[])null);
     }
 
     public sealed class Constructor_SecurityCredentials_FabricClientSettings_StringArray : ServicePartitionResolverTest
@@ -81,6 +98,11 @@ public abstract class ServicePartitionResolverTest
         [Fact]
         public void SetsBothDelegatesToSameNonNullDelegate() =>
             AssertCreateAndRecreateAreSameNonNullDelegate(new ServicePartitionResolver(credential, settings, connectionEndpoints));
+
+        // connectionEndpoints is captured into a lambda invoked later by FabricClient, which owns validation.
+        [Fact]
+        public void DoesNotValidateConnectionEndpoints() =>
+            new ServicePartitionResolver(credential, settings, (string[])null);
     }
 
     public sealed class Constructor_SecurityCredentials_StringArray : ServicePartitionResolverTest
@@ -91,6 +113,11 @@ public abstract class ServicePartitionResolverTest
         [Fact]
         public void SetsBothDelegatesToSameNonNullDelegate() =>
             AssertCreateAndRecreateAreSameNonNullDelegate(new ServicePartitionResolver(credential, connectionEndpoints));
+
+        // connectionEndpoints is captured into a lambda invoked later by FabricClient, which owns validation.
+        [Fact]
+        public void DoesNotValidateConnectionEndpoints() =>
+            new ServicePartitionResolver(credential, (string[])null);
     }
 
     public sealed class Constructor_StringArray : ServicePartitionResolverTest
@@ -100,6 +127,11 @@ public abstract class ServicePartitionResolverTest
         [Fact]
         public void SetsBothDelegatesToSameNonNullDelegate() =>
             AssertCreateAndRecreateAreSameNonNullDelegate(new ServicePartitionResolver(connectionEndpoints));
+
+        // connectionEndpoints is captured into a lambda invoked later by FabricClient, which owns validation.
+        [Fact]
+        public void DoesNotValidateConnectionEndpoints() =>
+            new ServicePartitionResolver((string[])null);
     }
 
     public sealed class DefaultMaxRetryBackoffInterval : ServicePartitionResolverTest
