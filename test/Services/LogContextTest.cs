@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Fuzzy;
 using Xunit;
 
@@ -100,6 +101,40 @@ public abstract class LogContextTest : IDisposable
 
             Assert.True(LogContext.TryGet(out LogContext actual));
             Assert.Same(logContext, actual);
+        }
+
+        [Fact]
+        public async Task FlowsToAsyncContinuation()
+        {
+            LogContext.Set(logContext);
+
+            await Task.Yield();
+
+            Assert.True(LogContext.TryGet(out LogContext actual));
+            Assert.Same(logContext, actual);
+        }
+
+        [Fact]
+        public async Task IsolatesValuesAcrossConcurrentAsyncFlows()
+        {
+            LogContext a = new() { RequestId = fuzzy.Guid() };
+            LogContext b = new() { RequestId = fuzzy.Guid() };
+            TaskCompletionSource<bool> released = new();
+
+            async Task<LogContext> SetAndRead(LogContext value)
+            {
+                LogContext.Set(value);
+                await released.Task;
+                LogContext.TryGet(out LogContext actual);
+                return actual;
+            }
+
+            Task<LogContext> ta = Task.Run(() => SetAndRead(a));
+            Task<LogContext> tb = Task.Run(() => SetAndRead(b));
+            released.SetResult(true);
+
+            Assert.Same(a, await ta);
+            Assert.Same(b, await tb);
         }
     }
 
