@@ -213,7 +213,7 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
-        public void PreservesExistingDataBecauseItDoesNotReload()
+        public void PreservesExistingData()
         {
             string existingKey = fuzzy.String();
             string existingValue = fuzzy.String();
