@@ -127,7 +127,7 @@ public abstract class ActorLogicalCallContextTest : IDisposable
             string expected = fuzzy.String();
             ActorLogicalCallContext.Set(expected);
 
-            await Task.Run(() => ActorLogicalCallContext.Set(fuzzy.String()), TestContext.Current.CancellationToken);
+            await Task.Run(() => ActorLogicalCallContext.Set(expected + fuzzy.String()), TestContext.Current.CancellationToken);
 
             ActorLogicalCallContext.TryGet(out string actual);
             Assert.Same(expected, actual);
