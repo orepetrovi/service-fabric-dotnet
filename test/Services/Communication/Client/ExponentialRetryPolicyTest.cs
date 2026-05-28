@@ -159,7 +159,7 @@ public abstract class ExponentialRetryPolicyTest
         {
             var retryDelayParameters = new RetryDelayParameters(retryAttempt, fuzzy.Boolean());
 
-            long expectedBaseMs = (long)((int)baseRetryDelay.TotalMilliseconds << delayMultiplier);
+            var expectedBaseMs = (long)((int)baseRetryDelay.TotalMilliseconds << delayMultiplier);
             var expectedMin = TimeSpan.FromMilliseconds(expectedBaseMs);
             var expectedMax = TimeSpan.FromMilliseconds(expectedBaseMs + maxRetryJitter.TotalMilliseconds);
 
