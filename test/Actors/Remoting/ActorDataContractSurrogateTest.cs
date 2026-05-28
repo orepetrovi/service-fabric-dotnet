@@ -50,7 +50,7 @@ public abstract class ActorDataContractSurrogateTest
             _ = Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(clrType, dataContractType));
     }
 
-    public sealed class GetDataContractType_Type : ActorDataContractSurrogateTest
+    public sealed class GetDataContractType : ActorDataContractSurrogateTest
     {
         [Fact]
         public void ReturnsActorReferenceWhenTypeImplementsIActor() =>
@@ -62,7 +62,7 @@ public abstract class ActorDataContractSurrogateTest
     }
 #endif
 
-    public sealed class GetDeserializedObject_Object_Type : ActorDataContractSurrogateTest
+    public sealed class GetDeserializedObject : ActorDataContractSurrogateTest
     {
         [Fact]
         public void ReturnsNullWhenObjIsNull() =>
@@ -105,14 +105,14 @@ public abstract class ActorDataContractSurrogateTest
     }
 
 #if NETFRAMEWORK
-    public sealed class GetKnownCustomDataTypes_Collection : ActorDataContractSurrogateTest
+    public sealed class GetKnownCustomDataTypes : ActorDataContractSurrogateTest
     {
         // Method parameters
         readonly Collection<Type> customDataTypes;
 
         readonly Type expected = fuzzy.Type();
 
-        public GetKnownCustomDataTypes_Collection() =>
+        public GetKnownCustomDataTypes() =>
             customDataTypes = new Collection<Type> { expected };
 
         [Fact]
@@ -124,7 +124,7 @@ public abstract class ActorDataContractSurrogateTest
     }
 #endif
 
-    public sealed class GetObjectToSerialize_Object_Type : ActorDataContractSurrogateTest
+    public sealed class GetObjectToSerialize : ActorDataContractSurrogateTest
     {
         [Fact]
         public void ReturnsNullWhenObjIsNull() =>
@@ -161,7 +161,7 @@ public abstract class ActorDataContractSurrogateTest
     }
 
 #if NETFRAMEWORK
-    public sealed class GetReferencedTypeOnImport_String_String_Object : ActorDataContractSurrogateTest
+    public sealed class GetReferencedTypeOnImport : ActorDataContractSurrogateTest
     {
         readonly string typeName = fuzzy.String();
         readonly string typeNamespace = fuzzy.String();
@@ -174,7 +174,7 @@ public abstract class ActorDataContractSurrogateTest
 #endif
 
 #if NET
-    public sealed class GetSurrogateType_Type : ActorDataContractSurrogateTest
+    public sealed class GetSurrogateType : ActorDataContractSurrogateTest
     {
         [Fact]
         public void ReturnsActorReferenceWhenTypeImplementsIActor() =>
@@ -194,7 +194,7 @@ public abstract class ActorDataContractSurrogateTest
     }
 
 #if NETFRAMEWORK
-    public sealed class ProcessImportedType_CodeTypeDeclaration_CodeCompileUnit : ActorDataContractSurrogateTest
+    public sealed class ProcessImportedType : ActorDataContractSurrogateTest
     {
         readonly CodeTypeDeclaration typeDeclaration = new();
         readonly CodeCompileUnit compileUnit = new();
