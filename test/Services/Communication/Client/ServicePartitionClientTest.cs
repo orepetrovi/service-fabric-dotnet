@@ -591,7 +591,7 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public async Task InvokesFuncAndCompletes()
+        public async Task PassesResolvedClientToFunc()
         {
             ICommunicationClient actual = null;
 
