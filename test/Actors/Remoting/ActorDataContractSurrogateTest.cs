@@ -150,7 +150,7 @@ public abstract class ActorDataContractSurrogateTest
     {
         [Fact]
         public void ThrowsNotImplementedException() =>
-            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(typeof(object).GetMembers()[0], typeof(object)));
+            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(typeof(object).GetMethod(nameof(object.ToString)), typeof(object)));
     }
 
     public sealed class GetKnownCustomDataTypes_Collection : ActorDataContractSurrogateTest
