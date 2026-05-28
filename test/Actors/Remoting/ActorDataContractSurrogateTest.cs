@@ -21,13 +21,13 @@ namespace Microsoft.ServiceFabric.Actors.Remoting;
 
 public abstract class ActorDataContractSurrogateTest
 {
-    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-
 #if NET
     readonly ISerializationSurrogateProvider sut = new ActorDataContractSurrogate();
 #else
     readonly IDataContractSurrogate sut = new ActorDataContractSurrogate();
 #endif
+
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
 #if NETFRAMEWORK
     public sealed class GetCustomDataToExport_MemberInfo_Type : ActorDataContractSurrogateTest
