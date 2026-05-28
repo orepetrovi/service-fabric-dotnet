@@ -126,7 +126,7 @@ public abstract class ServicePartitionClientTest
 
         protected InvokeWithRetryAsyncBase()
         {
-            clientMock.SetupGet(_ => _.ResolvedServicePartition).Returns(() => rsp);
+            clientMock.SetupGet(_ => _.ResolvedServicePartition).Returns(rsp);
             _ = communicationClientFactory
                 .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(client);
