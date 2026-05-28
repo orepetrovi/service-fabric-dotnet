@@ -30,7 +30,7 @@ public abstract class SubscriberTest
         [Fact]
         public void InitializesProperties()
         {
-            Assert.Equal(actorId, sut.ActorId);
+            Assert.Same(actorId, sut.ActorId);
             Assert.Equal(eventId, sut.EventId);
             Assert.Same(instance, sut.Instance);
         }
