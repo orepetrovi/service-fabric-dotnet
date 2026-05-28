@@ -64,18 +64,18 @@ public abstract class ActorDataContractSurrogateTest
         [Fact]
         public void ReturnsActorReferenceWhenObjImplementsIActor()
         {
-            var actorId = fuzzy.ActorId();
+            ActorId actorId = fuzzy.ActorId();
             var serviceUri = new Uri($"fabric:/{fuzzy.String().LettersOrDigits()}/{fuzzy.String().LettersOrDigits()}");
-            var listenerName = fuzzy.String().LettersOrDigits();
+            string listenerName = fuzzy.String().LettersOrDigits();
             var partitionClient = new Mock<IActorServicePartitionClient>();
             partitionClient.SetupGet(p => p.ServiceUri).Returns(serviceUri);
             partitionClient.SetupGet(p => p.ListenerName).Returns(listenerName);
             var actorProxy = new Mock<IActorProxy>();
             actorProxy.SetupGet(a => a.ActorId).Returns(actorId);
             actorProxy.SetupGet(a => a.ActorServicePartitionClientV2).Returns(partitionClient.Object);
-            var actor = actorProxy.As<IFactoryTestActor>().Object;
+            IFactoryTestActor actor = actorProxy.As<IFactoryTestActor>().Object;
 
-            var result = sut.GetObjectToSerialize(actor, typeof(IFactoryTestActor));
+            object result = sut.GetObjectToSerialize(actor, typeof(IFactoryTestActor));
 
             var reference = Assert.IsType<ActorReference>(result);
             Assert.Same(actorId, reference.ActorId);
@@ -104,7 +104,7 @@ public abstract class ActorDataContractSurrogateTest
             var reference = new Mock<IActorReference>();
             reference.Setup(r => r.Bind(typeof(IFactoryTestActor))).Returns(bound);
 
-            var result = sut.GetDeserializedObject(reference.Object, typeof(IFactoryTestActor));
+            object result = sut.GetDeserializedObject(reference.Object, typeof(IFactoryTestActor));
 
             Assert.Same(bound, result);
         }
@@ -112,14 +112,14 @@ public abstract class ActorDataContractSurrogateTest
         [Fact]
         public void ReturnsObjWhenTargetTypeImplementsIActorReference()
         {
-            var reference = new Mock<IActorReference>().Object;
+            IActorReference reference = new Mock<IActorReference>().Object;
             Assert.Same(reference, sut.GetDeserializedObject(reference, typeof(IActorReference)));
         }
 
         [Fact]
         public void ReturnsObjWhenTargetTypeDoesNotImplementIActor()
         {
-            var reference = new Mock<IActorReference>().Object;
+            IActorReference reference = new Mock<IActorReference>().Object;
             Assert.Same(reference, sut.GetDeserializedObject(reference, typeof(object)));
         }
 
