@@ -15,7 +15,7 @@ public abstract class ExceptionHandlingRetryResultTest
     readonly ExceptionHandlingRetryResult sut;
 
     // Constructor parameters
-    readonly Exception exception = new InvalidOperationException(fuzzy.String());
+    readonly Exception exception = new InvalidOperationException();
     readonly bool isTransient = fuzzy.Boolean();
     readonly TimeSpan retryDelay = fuzzy.TimeSpan();
     readonly int maxRetryCount = fuzzy.Int32();
