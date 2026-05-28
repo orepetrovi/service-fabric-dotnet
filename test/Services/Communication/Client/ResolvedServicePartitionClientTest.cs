@@ -56,6 +56,9 @@ public abstract class ResolvedServicePartitionClientTest
         [Fact(Explicit = true)] // TODO: SUT bug. Copy constructor should throw ArgumentNullException when other is null
         public void ThrowsArgumentNullExceptionWhenOtherIsNull()
         {
+            // The copy constructor dereferences `other` without validating it, so passing null currently throws
+            // NullReferenceException. The desired behavior is to throw ArgumentNullException with ParamName "other",
+            // matching the public API contract for null arguments. Enable this test once the SUT is fixed.
             var thrown = Assert.Throws<ArgumentNullException>(() => new ResolvedServicePartitionClient(null));
             Assert.Equal("other", thrown.ParamName);
         }
