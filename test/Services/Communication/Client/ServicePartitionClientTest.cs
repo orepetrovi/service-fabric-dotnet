@@ -467,6 +467,13 @@ public abstract class ServicePartitionClientTest
 
             _ = await Assert.ThrowsAnyAsync<OperationCanceledException>(
                 () => sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()), cts.Token));
+
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Never);
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Never);
         }
 
         [Fact]
