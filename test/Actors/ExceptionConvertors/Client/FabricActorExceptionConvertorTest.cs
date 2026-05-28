@@ -42,9 +42,9 @@ public abstract class FabricActorExceptionConvertorTest
         [Fact]
         public void ReturnsFalseWhenActualExceptionTypeIsUnknown()
         {
-            var serviceException = new ServiceException(fuzzy.String(), message);
+            var unknownServiceException = new ServiceException(fuzzy.String(), message);
 
-            bool result = sut.TryConvertFromServiceException(serviceException, out Exception actual);
+            bool result = sut.TryConvertFromServiceException(unknownServiceException, out Exception actual);
 
             Assert.False(result);
             Assert.Null(actual);
@@ -83,9 +83,9 @@ public abstract class FabricActorExceptionConvertorTest
         [Fact]
         public void ReturnsFalseWhenActualExceptionTypeIsUnknown()
         {
-            var serviceException = new ServiceException(fuzzy.String(), message);
+            var unknownServiceException = new ServiceException(fuzzy.String(), message);
 
-            bool result = sut.TryConvertFromServiceException(serviceException, innerException, out Exception actual);
+            bool result = sut.TryConvertFromServiceException(unknownServiceException, innerException, out Exception actual);
 
             Assert.False(result);
             Assert.Null(actual);
