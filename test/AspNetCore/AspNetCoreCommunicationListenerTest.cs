@@ -1,7 +1,5 @@
-// ------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
-// ------------------------------------------------------------
 
 using System;
 using System.Fabric;
@@ -240,7 +238,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             string prefix = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}/", context.PartitionId, context.ReplicaOrInstanceId);
             Assert.StartsWith(prefix, listener.UrlSuffix);
-            Guid trailing = Guid.Parse(listener.UrlSuffix.Substring(prefix.Length));
+            var trailing = Guid.Parse(listener.UrlSuffix.Substring(prefix.Length));
             Assert.NotEqual(Guid.Empty, trailing);
         }
 
@@ -467,7 +465,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             Assert.False(openTask.IsCompleted);
             tcs.SetResult(null);
-            await openTask;
+            _ = await openTask;
         }
 
         [Fact]
@@ -481,7 +479,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             Assert.False(openTask.IsCompleted);
             tcs.SetResult(null);
-            await openTask;
+            _ = await openTask;
         }
     }
 
