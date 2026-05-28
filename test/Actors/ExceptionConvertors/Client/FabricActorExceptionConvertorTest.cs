@@ -38,6 +38,17 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.Equal(message, actual.Message);
             Assert.Null(actual.InnerException);
         }
+
+        [Fact]
+        public void ReturnsFalseWhenActualExceptionTypeIsUnknown()
+        {
+            var serviceException = new ServiceException(fuzzy.String(), message);
+
+            bool result = sut.TryConvertFromServiceException(serviceException, out Exception actual);
+
+            Assert.False(result);
+            Assert.Null(actual);
+        }
     }
 
     public sealed class TryConvertFromServiceException_ServiceException_Exception : FabricActorExceptionConvertorTest
@@ -58,6 +69,17 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.IsType<DuplicateMessageException>(actual);
             Assert.Equal(message, actual.Message);
             Assert.Same(innerException, actual.InnerException);
+        }
+
+        [Fact]
+        public void ReturnsFalseWhenActualExceptionTypeIsUnknown()
+        {
+            var serviceException = new ServiceException(fuzzy.String(), message);
+
+            bool result = sut.TryConvertFromServiceException(serviceException, innerException, out Exception actual);
+
+            Assert.False(result);
+            Assert.Null(actual);
         }
     }
 
