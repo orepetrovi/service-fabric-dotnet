@@ -53,7 +53,7 @@ public abstract class ActorLogicalCallContextTest : IDisposable
             bool result = ActorLogicalCallContext.TryGet(out string value);
 
             Assert.True(result);
-            Assert.Equal(expected, value);
+            Assert.Same(expected, value);
         }
     }
 
@@ -67,19 +67,20 @@ public abstract class ActorLogicalCallContextTest : IDisposable
             ActorLogicalCallContext.Set(expected);
 
             ActorLogicalCallContext.TryGet(out string actual);
-            Assert.Equal(expected, actual);
+            Assert.Same(expected, actual);
         }
 
         [Fact]
         public void OverwritesPreviousValue()
         {
-            ActorLogicalCallContext.Set(fuzzy.String());
-            string expected = fuzzy.String();
+            string previous = fuzzy.String();
+            ActorLogicalCallContext.Set(previous);
+            string expected = previous + fuzzy.String();
 
             ActorLogicalCallContext.Set(expected);
 
             ActorLogicalCallContext.TryGet(out string actual);
-            Assert.Equal(expected, actual);
+            Assert.Same(expected, actual);
         }
 
         [Fact]
@@ -94,7 +95,7 @@ public abstract class ActorLogicalCallContextTest : IDisposable
                 return value;
             }, TestContext.Current.CancellationToken);
 
-            Assert.Equal(expected, actual);
+            Assert.Same(expected, actual);
         }
 
         [Fact]
@@ -106,7 +107,7 @@ public abstract class ActorLogicalCallContextTest : IDisposable
             await Task.Yield();
 
             ActorLogicalCallContext.TryGet(out string actual);
-            Assert.Equal(expected, actual);
+            Assert.Same(expected, actual);
         }
 
         [Fact]
@@ -118,7 +119,7 @@ public abstract class ActorLogicalCallContextTest : IDisposable
             await Task.Run(() => ActorLogicalCallContext.Set(fuzzy.String()), TestContext.Current.CancellationToken);
 
             ActorLogicalCallContext.TryGet(out string actual);
-            Assert.Equal(expected, actual);
+            Assert.Same(expected, actual);
         }
     }
 
@@ -152,7 +153,7 @@ public abstract class ActorLogicalCallContextTest : IDisposable
             await Task.Run(() => ActorLogicalCallContext.Clear(), TestContext.Current.CancellationToken);
 
             ActorLogicalCallContext.TryGet(out string actual);
-            Assert.Equal(expected, actual);
+            Assert.Same(expected, actual);
         }
     }
 }
