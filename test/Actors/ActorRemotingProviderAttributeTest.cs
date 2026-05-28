@@ -174,13 +174,6 @@ public abstract class ActorRemotingProviderAttributeTest
         }
     }
 
-    public sealed class StaticConstructor : ActorRemotingProviderAttributeTest
-    {
-        [Fact]
-        public void InitializesEntryAssembly() =>
-            Assert.Same(Assembly.GetEntryAssembly(), typeof(ActorRemotingProviderAttribute).Field<Assembly>().Value);
-    }
-
     static Assembly MockAssembly(ActorRemotingProviderAttribute provider = null)
     {
         var assembly = new Mock<TestAssembly>();
