@@ -69,7 +69,7 @@ public abstract class SubscriberTest
 
         [Fact]
         public void ReturnsFalseWhenEventIdIsDifferent() =>
-            Assert.False(sut.Equals(new Subscriber(actorId, eventId + fuzzy.Int32().Between(1, 5), instance)));
+            Assert.False(sut.Equals(new Subscriber(actorId, eventId + fuzzy.SByte().Between(1, 5), instance)));
 
         [Fact]
         public void ReturnsFalseWhenInstanceIsDifferentReference() =>
