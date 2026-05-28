@@ -201,7 +201,7 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public async Task UnwrapsAggregateExceptionAndRetriesWhenNoInnerExceptionInDoNotRetryExceptionTypes()
+        public async Task RetriesAfterAggregateExceptionWhenNoInnerExceptionIsInDoNotRetryExceptionTypes()
         {
             var aggregate = new AggregateException(clientException);
             SetupReportOperationException(TransientRetry(), aggregate);
