@@ -135,7 +135,7 @@ public abstract class ActorRemotingProviderAttributeTest
     {
         var assembly = new Mock<TestAssembly>();
         Attribute[] attributes = provider == null ? new Attribute[0] : new[] { provider };
-        assembly.Setup(_ => _.GetCustomAttributes(typeof(ActorRemotingProviderAttribute), It.IsAny<bool>())).Returns(attributes);
+        assembly.Setup(_ => _.GetCustomAttributes(typeof(ActorRemotingProviderAttribute), true)).Returns(attributes);
         return assembly.Object;
     }
 
