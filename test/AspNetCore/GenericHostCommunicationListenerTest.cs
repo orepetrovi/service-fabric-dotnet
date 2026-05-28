@@ -226,8 +226,8 @@ public abstract class GenericHostCommunicationListenerTest
             // during IServer.StartAsync, so an early read would return stale/unbound addresses.
             bool started = false;
             bool resolvedBeforeStart = false;
-            var startTcs = new TaskCompletionSource<object>();
-            _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(startTcs.Task);
+            var start = new TaskCompletionSource<object>();
+            _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(start.Task);
 
             var features = new FeatureCollection();
             features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { $"http://+:{fuzzy.UInt16()}" }));
@@ -244,7 +244,7 @@ public abstract class GenericHostCommunicationListenerTest
 
             Assert.False(open.IsCompleted);
             started = true;
-            startTcs.SetResult(null);
+            start.SetResult(null);
             _ = await open;
 
             Assert.False(resolvedBeforeStart, $"{nameof(IServer)} resolved before host.{nameof(IHost.StartAsync)} completed");
