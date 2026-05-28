@@ -443,27 +443,25 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public async Task AppendsUrlSuffixToReturnedUrlOnGenericHost()
         {
-            StatelessServiceContext context = fuzzy.StatelessServiceContext();
-            ushort port = fuzzy.UInt16();
-            var fixture = new GenericHostFixture(context, "http://+:" + port + "/");
+            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16().Minimum(1);
+            var fixture = new GenericHostFixture(serviceContext, serverAddress: serverAddress);
             fixture.Sut.ConfigureToUseUniqueServiceUrl();
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
-            Assert.Equal($"http://{context.PublishAddress}:{port}{fixture.Sut.UrlSuffix}", actual);
+            Assert.Equal(serverAddress + fixture.Sut.UrlSuffix, actual);
         }
 
         [Fact]
         public async Task AppendsUrlSuffixToReturnedUrlOnWebHost()
         {
-            StatelessServiceContext context = fuzzy.StatelessServiceContext();
-            ushort port = fuzzy.UInt16();
-            var fixture = new WebHostFixture(context, "http://+:" + port + "/");
+            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16().Minimum(1);
+            var fixture = new WebHostFixture(serviceContext, serverAddress: serverAddress);
             fixture.Sut.ConfigureToUseUniqueServiceUrl();
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
-            Assert.Equal($"http://{context.PublishAddress}:{port}{fixture.Sut.UrlSuffix}", actual);
+            Assert.Equal(serverAddress + fixture.Sut.UrlSuffix, actual);
         }
 
         [Fact]
