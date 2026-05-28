@@ -20,12 +20,6 @@ public abstract class FabricActorExceptionConvertorTest
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    static ServiceException ServiceExceptionFor(Type knownType, string message) =>
-        new(knownType.FullName, message)
-        {
-            ActualExceptionData = new Dictionary<string, string> { { "HResult", fuzzy.Int32().ToString() } },
-        };
-
     public sealed class TryConvertFromServiceException_ServiceException : FabricActorExceptionConvertorTest
     {
         readonly string message = fuzzy.String();
@@ -98,4 +92,10 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.Null(actual);
         }
     }
+
+    static ServiceException ServiceExceptionFor(Type knownType, string message) =>
+        new(knownType.FullName, message)
+        {
+            ActualExceptionData = new Dictionary<string, string> { { "HResult", fuzzy.Int32().ToString() } },
+        };
 }
