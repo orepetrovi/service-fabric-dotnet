@@ -97,18 +97,6 @@ public abstract class FabricActorExceptionConvertorTest
         }
 
         [Fact]
-        public void ProducesExceptionWithoutInnerExceptionWhenArrayIsEmpty()
-        {
-            bool result = sut.TryConvertFromServiceException(serviceException, Array.Empty<Exception>(), out Exception actual);
-
-            Assert.True(result);
-            Assert.IsType<DuplicateMessageException>(actual);
-            Assert.Equal(message, actual.Message);
-            Assert.Null(actual.InnerException);
-            AssertRemoteMetadataCopied(serviceException, actual);
-        }
-
-        [Fact]
         public void PassesFirstInnerExceptionToProducedException()
         {
             var innerException = new InvalidOperationException(fuzzy.String());
@@ -120,6 +108,18 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.IsType<DuplicateMessageException>(actual);
             Assert.Equal(message, actual.Message);
             Assert.Same(innerException, actual.InnerException);
+            AssertRemoteMetadataCopied(serviceException, actual);
+        }
+
+        [Fact]
+        public void ProducesExceptionWithoutInnerExceptionWhenArrayIsEmpty()
+        {
+            bool result = sut.TryConvertFromServiceException(serviceException, Array.Empty<Exception>(), out Exception actual);
+
+            Assert.True(result);
+            Assert.IsType<DuplicateMessageException>(actual);
+            Assert.Equal(message, actual.Message);
+            Assert.Null(actual.InnerException);
             AssertRemoteMetadataCopied(serviceException, actual);
         }
 
