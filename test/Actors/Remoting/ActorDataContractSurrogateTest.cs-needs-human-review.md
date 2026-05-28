@@ -87,3 +87,26 @@ to:
 4. **Intuitiveness.** Explicit branch labels improve readability per the "informative and intuitive" guidance.
 
 **Why human review:** The rule's text in [.github/instructions/csharp.instructions.md](.github/instructions/csharp.instructions.md#L132) does not literally forbid `#else`; whether the spirit of the rule (plus the fail-fast / consistency principles) requires explicit `#elif NETFRAMEWORK` is a judgment call best made by the team.
+
+### ❓ Needs Human Review — `var` vs explicit type for `fuzzy.ActorId()` / `fuzzy.Uri()` / `fuzzy.String()` locals (contradicts prior addressed finding)
+
+A previous review round in this iteration (cross-confirmed by gemini and opus) cited [.github/instructions/csharp.instructions.md](.github/instructions/csharp.instructions.md) and required changing these locals from `var` to **explicit types**:
+
+```csharp
+ActorId actorId = fuzzy.ActorId();
+string listenerName = fuzzy.String();
+```
+
+The author addressed that finding. A subsequent review round (cross-confirmed by opus, gemini, and gpt) cites the same instruction and recommends the **opposite** — switching the same locals back to `var`:
+
+```csharp
+var actorId = fuzzy.ActorId();
+var serviceUri = fuzzy.Uri();
+var listenerName = fuzzy.String();
+```
+
+The justification cites the "prevent duplication of the variable type in the initialization expression" clause of [csharp.instructions.md](.github/instructions/csharp.instructions.md), arguing that `fuzzy.ActorId()` / `fuzzy.Uri()` / `fuzzy.String()` are factory-method names whose return types are evident from their identifiers (parallel to `var today = DateTime.Today;`).
+
+The opposing earlier interpretation held that the type was not duplicated in the initializer (no `new T(...)` or `T.Method()` syntax), so the rule's exception did not apply.
+
+Human reviewer should pick the binding interpretation for this codebase.
