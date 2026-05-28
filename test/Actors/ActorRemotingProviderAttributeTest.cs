@@ -121,7 +121,7 @@ public abstract class ActorRemotingProviderAttributeTest
 
             ActorRemotingProviderAttribute result = ActorRemotingProviderAttribute.GetProvider([type]);
 
-            Assert.IsType<FabricTransportActorRemotingProviderAttribute>(result);
+            Assert.Same(typeof(FabricTransportActorRemotingProviderAttribute), result.GetType());
         }
 
         [Fact]
@@ -132,7 +132,7 @@ public abstract class ActorRemotingProviderAttributeTest
 
             ActorRemotingProviderAttribute result = ActorRemotingProviderAttribute.GetProvider([type]);
 
-            Assert.IsType<FabricTransportActorRemotingProviderAttribute>(result);
+            Assert.Same(typeof(FabricTransportActorRemotingProviderAttribute), result.GetType());
         }
 
         [Fact]
@@ -142,7 +142,7 @@ public abstract class ActorRemotingProviderAttributeTest
 
             ActorRemotingProviderAttribute result = ActorRemotingProviderAttribute.GetProvider();
 
-            Assert.IsType<FabricTransportActorRemotingProviderAttribute>(result);
+            Assert.Same(typeof(FabricTransportActorRemotingProviderAttribute), result.GetType());
         }
     }
 
