@@ -80,7 +80,7 @@ public abstract class ActorDataContractSurrogateTest
             _ = actorProxy.SetupGet(a => a.ActorServicePartitionClientV2).Returns(partitionClient.Object);
             IFactoryTestActor actor = actorProxy.As<IFactoryTestActor>().Object;
 
-            object result = sut.GetObjectToSerialize(actor, typeof(IFactoryTestActor));
+            object result = sut.GetObjectToSerialize(actor, fuzzy.Type());
 
             var reference = Assert.IsType<ActorReference>(result);
             Assert.Same(actorId, reference.ActorId);
@@ -100,7 +100,7 @@ public abstract class ActorDataContractSurrogateTest
     {
         [Fact]
         public void ReturnsNullWhenObjIsNull() =>
-            Assert.Null(sut.GetDeserializedObject(null, typeof(IFactoryTestActor)));
+            Assert.Null(sut.GetDeserializedObject(null, fuzzy.Type()));
 
         [Fact]
         public void ReturnsBindResultWhenObjImplementsIActorReferenceAndTargetTypeImplementsIActor()
@@ -143,14 +143,14 @@ public abstract class ActorDataContractSurrogateTest
     {
         [Fact]
         public void ThrowsNotImplementedException() =>
-            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(typeof(object), typeof(object)));
+            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(fuzzy.Type(), fuzzy.Type()));
     }
 
     public sealed class GetCustomDataToExport_MemberInfo_Type : ActorDataContractSurrogateTest
     {
         [Fact]
         public void ThrowsNotImplementedException() =>
-            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(typeof(object).GetMethod(nameof(object.ToString)), typeof(object)));
+            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(typeof(object).GetMethod(nameof(object.ToString)), fuzzy.Type()));
     }
 
     public sealed class GetKnownCustomDataTypes_Collection : ActorDataContractSurrogateTest
