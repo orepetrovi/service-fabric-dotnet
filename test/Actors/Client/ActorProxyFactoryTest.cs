@@ -250,20 +250,16 @@ public abstract class ActorProxyFactoryTest
             Assert.Null(sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value);
         }
 
-        [Fact]
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. V2 Dispose only acts on FabricTransportActorRemotingClientFactory, which requires the runtime.
         public void DelegatesToUnderlyingProxyFactoryAndLeavesItInPlace()
         {
-            // V1 Dispose only delegates when the V2 field is non-null. The V2 Dispose only disposes the
-            // remoting client factory when it is a FabricTransportActorRemotingClientFactory, which the
-            // mock here is not, so the delegated call is a no-op. Verify the guarded branch is reached
-            // by asserting the V2 field is preserved (non-null and unchanged) after Dispose, proving
-            // delegation occurred without nulling state.
-            var v2 = sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value;
-            Assert.NotNull(v2);
-
-            sut.Dispose();
-
-            Assert.Same(v2, sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value);
+            // V1 Dispose delegates to V2 Dispose when the V2 field is non-null, but V2 Dispose only disposes
+            // the remoting client factory when it is a FabricTransportActorRemotingClientFactory. That type
+            // cannot be constructed without the Service Fabric runtime and its Dispose is non-virtual, so
+            // the delegated call has no observable effect on a mock IServiceRemotingClientFactory. Removing
+            // the entire body of V1 Dispose leaves any assertion on the V2 field unchanged, so this branch
+            // cannot be verified by a test that fails when the product code is sabotaged.
+            throw new NotImplementedException();
         }
     }
 }
