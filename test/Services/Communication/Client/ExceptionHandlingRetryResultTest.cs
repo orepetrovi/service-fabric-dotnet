@@ -32,17 +32,16 @@ public abstract class ExceptionHandlingRetryResultTest
         readonly int totalNumberOfRetries = fuzzy.Int32();
         readonly TimeSpan initialRetryDelay = fuzzy.TimeSpan();
 
-        public Constructor_Exception_Boolean_OperationRetrySettings()
-        {
-            _ = retryPolicy.SetupGet(_ => _.TotalNumberOfRetries).Returns(totalNumberOfRetries);
+        public Constructor_Exception_Boolean_OperationRetrySettings() =>
             retrySettings = new OperationRetrySettings(retryPolicy.Object);
-        }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
         public void InitializesProperties(bool isTransient)
         {
+            if (isTransient)
+                _ = retryPolicy.SetupGet(_ => _.TotalNumberOfRetries).Returns(totalNumberOfRetries);
             _ = retryPolicy
                 .Setup(_ => _.GetNextRetryDelay(It.Is<RetryDelayParameters>(
                     p => p.RetryAttempt == 0 && p.IsTransient == isTransient)))
