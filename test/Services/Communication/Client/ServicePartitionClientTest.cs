@@ -233,7 +233,7 @@ public abstract class ServicePartitionClientTest
                 () => sut.InvokeWithRetryAsync<object>(
                     _ => throw clientException,
                     cancellationToken,
-                    typeof(InvalidOperationException)));
+                    clientException.GetType()));
 
             Assert.Same(clientException, actual);
         }
@@ -267,7 +267,7 @@ public abstract class ServicePartitionClientTest
                 () => sut.InvokeWithRetryAsync<object>(
                     _ => throw aggregate,
                     cancellationToken,
-                    typeof(InvalidOperationException)));
+                    clientException.GetType()));
 
             Assert.Same(clientException, Assert.Single(actual.InnerExceptions));
         }
@@ -511,7 +511,7 @@ public abstract class ServicePartitionClientTest
         public async Task PassesDoNotRetryExceptionTypesToUnderlyingOverload()
         {
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
-                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, typeof(InvalidOperationException)));
+                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, clientException.GetType()));
 
             Assert.Same(clientException, actual);
         }
@@ -556,7 +556,7 @@ public abstract class ServicePartitionClientTest
                 () => sut.InvokeWithRetryAsync(
                     _ => throw clientException,
                     cancellationToken,
-                    typeof(InvalidOperationException)));
+                    clientException.GetType()));
 
             Assert.Same(clientException, actual);
         }
@@ -589,7 +589,7 @@ public abstract class ServicePartitionClientTest
         public async Task PassesDoNotRetryExceptionTypesToUnderlyingOverload()
         {
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
-                () => sut.InvokeWithRetryAsync(_ => throw clientException, typeof(InvalidOperationException)));
+                () => sut.InvokeWithRetryAsync(_ => throw clientException, clientException.GetType()));
 
             Assert.Same(clientException, actual);
         }
