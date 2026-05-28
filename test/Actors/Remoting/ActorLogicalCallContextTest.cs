@@ -85,7 +85,7 @@ public abstract class ActorLogicalCallContextTest : IDisposable
         [Fact]
         public void OverwritesPreviousValue()
         {
-            ActorLogicalCallContext.Set(fuzzy.String());
+            ActorLogicalCallContext.Set(callContextValue + fuzzy.String());
 
             ActorLogicalCallContext.Set(callContextValue);
 
