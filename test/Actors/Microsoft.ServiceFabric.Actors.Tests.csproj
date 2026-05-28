@@ -25,6 +25,8 @@
     <Compile Include="Client\ActorProxyTest.cs" />
     <Compile Include="Client\ActorServiceProxyTest.cs" />
     <Compile Include="Client\IFactoryTestActor.cs" />
+    <Compile Include="ExceptionConvertors\Client\FabricActorExceptionConvertorTest.cs" />
+    <Compile Include="ExceptionConvertors\Runtime\FabricActorExceptionConvertorTest.cs" />
     <Compile Include="IFuzzExtensions.cs" />
   </ItemGroup>
 </Project>
