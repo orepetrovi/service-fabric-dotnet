@@ -138,7 +138,7 @@ public abstract class ServicePartitionClientTest
         }
 
         protected void SetupReportOperationException(OperationRetryControl control, Exception expectedException = null) =>
-            communicationClientFactory
+            _ = communicationClientFactory
                 .Setup(_ => _.ReportOperationExceptionAsync(
                     client,
                     It.Is<ExceptionInformation>(i => i.Exception == (expectedException ?? clientException) && i.TargetReplica == targetReplicaSelector),
