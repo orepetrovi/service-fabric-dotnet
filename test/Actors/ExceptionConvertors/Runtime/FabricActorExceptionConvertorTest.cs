@@ -65,7 +65,6 @@ public abstract class FabricActorExceptionConvertorTest
             bool result = sut.TryConvertToServiceException(original, out ServiceException converted);
 
             Assert.True(result);
-            Assert.NotNull(converted);
             Assert.Equal(knownType.FullName, converted.ActualExceptionType);
             Assert.Equal(message, converted.Message);
         }
