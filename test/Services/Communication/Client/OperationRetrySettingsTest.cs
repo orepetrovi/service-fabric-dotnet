@@ -6,6 +6,7 @@
 using System;
 using System.Threading;
 using Fuzzy;
+using Inspector;
 using Moq;
 using Xunit;
 
@@ -55,14 +56,12 @@ public abstract class OperationRetrySettingsTest
 
     public sealed class Constructor_IRetryPolicy : OperationRetrySettingsTest
     {
-        readonly IRetryPolicy retryPolicy = Mock.Of<IRetryPolicy>();
-
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for retryPolicy.
         public void ThrowsArgumentNullExceptionWhenRetryPolicyIsNull()
         {
             var actual = Assert.Throws<ArgumentNullException>(
                 () => new OperationRetrySettings(null));
-            Assert.Equal(nameof(retryPolicy), actual.ParamName);
+            Assert.Equal(typeof(OperationRetrySettings).Constructor().Parameter<IRetryPolicy>().Name, actual.ParamName);
         }
     }
 
