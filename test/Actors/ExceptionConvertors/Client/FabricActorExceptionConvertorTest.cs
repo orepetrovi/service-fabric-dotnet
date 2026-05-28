@@ -96,6 +96,20 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.False(result);
             Assert.Null(actual);
         }
+
+        [Fact]
+        public void PassesFirstInnerExceptionToProducedException()
+        {
+            var innerException = new InvalidOperationException(fuzzy.String());
+            ServiceException serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
+
+            bool result = sut.TryConvertFromServiceException(serviceException, new[] { innerException }, out Exception actual);
+
+            Assert.True(result);
+            Assert.IsType<DuplicateMessageException>(actual);
+            Assert.Equal(message, actual.Message);
+            Assert.Same(innerException, actual.InnerException);
+        }
     }
 
     static ServiceException ServiceExceptionFor(Type knownType, string message) =>
