@@ -115,6 +115,6 @@ public abstract class FabricActorExceptionConvertorTest
     static ServiceException ServiceExceptionFor(Type knownType, string message) =>
         new(knownType.FullName, message)
         {
-            ActualExceptionData = new Dictionary<string, string> { { "HResult", fuzzy.Int32().ToString() } },
+            ActualExceptionData = new Dictionary<string, string> { { nameof(Exception.HResult), fuzzy.Int32().ToString() } },
         };
 }
