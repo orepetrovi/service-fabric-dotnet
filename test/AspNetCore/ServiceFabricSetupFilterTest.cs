@@ -34,7 +34,7 @@ public abstract class ServiceFabricSetupFilterTest
         readonly Mock<Action<IApplicationBuilder>> next = new();
 
         readonly Mock<IApplicationBuilder> app = new();
-        readonly List<Func<RequestDelegate, RequestDelegate>> factories = new();
+        readonly List<Func<RequestDelegate, RequestDelegate>> factories = [];
 
         public Configure()
         {
@@ -45,7 +45,7 @@ public abstract class ServiceFabricSetupFilterTest
         }
 
         IReadOnlyList<object> RegisteredMiddlewares() =>
-            factories.Select(f => f(_ => Task.CompletedTask).Target).ToList();
+            [.. factories.Select(f => f(_ => Task.CompletedTask).Target)];
 
         [Fact]
         public void ReturnsActionThatCallsNextWithApplicationBuilder()
@@ -106,7 +106,7 @@ public abstract class ServiceFabricSetupFilterTest
         {
             var sut = new ServiceFabricSetupFilter(null, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
             sut.Configure(next.Object)(app.Object);
-            Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
+            _ = Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
         [Fact]
@@ -114,7 +114,7 @@ public abstract class ServiceFabricSetupFilterTest
         {
             var sut = new ServiceFabricSetupFilter(string.Empty, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
             sut.Configure(next.Object)(app.Object);
-            Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
+            _ = Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
         [Theory, InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
@@ -123,7 +123,7 @@ public abstract class ServiceFabricSetupFilterTest
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, options);
             sut.Configure(next.Object)(app.Object);
-            Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
+            _ = Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
         [Theory, InlineData(ServiceFabricIntegrationOptions.None), InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
@@ -141,7 +141,7 @@ public abstract class ServiceFabricSetupFilterTest
             sut.Configure(next.Object)(app.Object);
 
             Type[] middlewareTypes = RegisteredMiddlewares().Select(_ => _.GetType()).ToArray();
-            Assert.Equal(new[] { typeof(ServiceFabricMiddleware), typeof(ServiceFabricReverseProxyIntegrationMiddleware) }, middlewareTypes);
+            Assert.Equal([typeof(ServiceFabricMiddleware), typeof(ServiceFabricReverseProxyIntegrationMiddleware)], middlewareTypes);
         }
 
         [Fact]
