@@ -13,12 +13,12 @@ namespace Microsoft.ServiceFabric.Services.Communication.Client;
 
 public abstract class ResolvedServicePartitionClientTest
 {
+    readonly ResolvedServicePartitionClient sut;
     readonly ResolvedServicePartitionClient other = new()
     {
         Rsp = Type<ResolvedServicePartition>.Uninitialized(),
         Client = Mock.Of<ICommunicationClient>(),
     };
-    readonly ResolvedServicePartitionClient sut;
 
     protected ResolvedServicePartitionClientTest() => sut = new(other);
 
