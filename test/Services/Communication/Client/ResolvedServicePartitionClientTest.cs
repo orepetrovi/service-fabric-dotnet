@@ -15,6 +15,55 @@ public abstract class ResolvedServicePartitionClientTest
 {
     readonly ResolvedServicePartitionClient sut = new();
 
+    public sealed class Constructor : ResolvedServicePartitionClientTest
+    {
+        [Fact]
+        public void InitializesProperties()
+        {
+            Assert.Null(sut.Rsp);
+            Assert.Null(sut.Client);
+        }
+    }
+
+    public sealed class Rsp : ResolvedServicePartitionClientTest
+    {
+        [Fact]
+        public void ReturnsValuePreviouslySet()
+        {
+            ResolvedServicePartition rsp = MakeRsp();
+            sut.Rsp = rsp;
+            Assert.Same(rsp, sut.Rsp);
+        }
+
+        [Fact]
+        public void IsNullAfterSettingToNull()
+        {
+            sut.Rsp = MakeRsp();
+            sut.Rsp = null;
+            Assert.Null(sut.Rsp);
+        }
+    }
+
+    public sealed class Client : ResolvedServicePartitionClientTest
+    {
+        readonly ICommunicationClient client = Mock.Of<ICommunicationClient>();
+
+        [Fact]
+        public void ReturnsValuePreviouslySet()
+        {
+            sut.Client = client;
+            Assert.Same(client, sut.Client);
+        }
+
+        [Fact]
+        public void IsNullAfterSettingToNull()
+        {
+            sut.Client = client;
+            sut.Client = null;
+            Assert.Null(sut.Client);
+        }
+    }
+
     public sealed class Constructor_ResolvedServicePartitionClient : ResolvedServicePartitionClientTest
     {
         readonly ResolvedServicePartitionClient other = new()
