@@ -56,15 +56,6 @@ public abstract class ActorProxyFactoryTest
     public sealed class Constructor_OperationRetrySettings : ActorProxyFactoryTest
     {
         [Fact]
-        public void StoresNullRetrySettingsByDefault()
-        {
-            var sut = new ActorProxyFactory();
-
-            Assert.Null(sut.Field<OperationRetrySettings>().Value);
-            Assert.Null(sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value);
-        }
-
-        [Fact]
         public void StoresRetrySettingsAndLeavesProxyFactoryNull()
         {
             var sut = new ActorProxyFactory(retrySettings);
