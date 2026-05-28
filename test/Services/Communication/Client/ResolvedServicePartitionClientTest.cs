@@ -15,7 +15,7 @@ public abstract class ResolvedServicePartitionClientTest
 {
     readonly ResolvedServicePartitionClient other = new()
     {
-        Rsp = MakeRsp(),
+        Rsp = Type<ResolvedServicePartition>.Uninitialized(),
         Client = Mock.Of<ICommunicationClient>(),
     };
     readonly ResolvedServicePartitionClient sut;
@@ -38,7 +38,7 @@ public abstract class ResolvedServicePartitionClientTest
         [Fact]
         public void ReturnsValuePreviouslySet()
         {
-            ResolvedServicePartition rsp = MakeRsp();
+            ResolvedServicePartition rsp = Type<ResolvedServicePartition>.Uninitialized();
             sut.Rsp = rsp;
             Assert.Same(rsp, sut.Rsp);
         }
@@ -46,7 +46,7 @@ public abstract class ResolvedServicePartitionClientTest
         [Fact]
         public void IsNullAfterSettingToNull()
         {
-            sut.Rsp = MakeRsp();
+            sut.Rsp = Type<ResolvedServicePartition>.Uninitialized();
             sut.Rsp = null;
             Assert.Null(sut.Rsp);
         }
@@ -88,6 +88,4 @@ public abstract class ResolvedServicePartitionClientTest
             Assert.Equal("other", thrown.ParamName);
         }
     }
-
-    static ResolvedServicePartition MakeRsp() => Type<ResolvedServicePartition>.Uninitialized();
 }
