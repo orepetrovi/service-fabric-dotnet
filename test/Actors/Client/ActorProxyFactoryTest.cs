@@ -36,6 +36,13 @@ public abstract class ActorProxyFactoryTest
         sut = new ActorProxyFactory(createServiceRemotingClientFactory, retrySettings);
     }
 
+    // TODO: Replace with sut.Method<Action<RemotingClientVersion>>() once Inspector handles open generic
+    // method definitions. Inspector 0.3.12 iterates all instance methods and calls Delegate.CreateDelegate
+    // on each, which throws ArgumentException for the generic CreateActorProxy<TActorInterface> overloads
+    // declared on this type. See https://github.com/olegsych/inspector/issues/5.
+    void OverrideDefaultListenerName(RemotingClientVersion version) =>
+        sut.Method("OverrideDefaultListenerName").Invoke(version);
+
     public sealed class Constructor_FuncOfIServiceRemotingCallbackMessageHandlerOfIServiceRemotingClientFactory_OperationRetrySettings : ActorProxyFactoryTest
     {
         [Fact]
@@ -140,11 +147,7 @@ public abstract class ActorProxyFactoryTest
             // override configured here. Reaching this branch via the lazy-init path would require an actor
             // interface from an assembly carrying an ActorRemotingProviderAttribute with V2_1, which would
             // change the provider seen by the other tests in this assembly.
-            // TODO: Replace with sut.Method<Action<RemotingClientVersion>>() once Inspector handles open generic
-            // method definitions. Inspector 0.3.12 iterates all instance methods and calls Delegate.CreateDelegate
-            // on each, which throws ArgumentException for the generic CreateActorProxy<TActorInterface> overloads
-            // declared on this type. See https://github.com/olegsych/inspector/issues/5.
-            sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2_1);
+            OverrideDefaultListenerName(RemotingClientVersion.V2_1);
             var proxy = (IActorProxy)sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName: null);
             Assert.Equal(ServiceRemotingProviderAttribute.DefaultWrappedMessageStackListenerName, proxy.ActorServicePartitionClientV2.ListenerName);
         }
@@ -154,7 +157,7 @@ public abstract class ActorProxyFactoryTest
         {
             // Exercises the guard branch in OverrideListenerNameIfConditionMet: when the override is enabled
             // but the caller supplies a non-empty listenerName, the caller-supplied value must be preserved.
-            sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2_1);
+            OverrideDefaultListenerName(RemotingClientVersion.V2_1);
 
             var proxy = (IActorProxy)sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName);
 
@@ -184,7 +187,7 @@ public abstract class ActorProxyFactoryTest
         public void SubstitutesDefaultListenerNameWhenOverrideDefaultIsSetAndCallerSuppliedNull()
         {
             // Exercises the override-on branch in OverrideListenerNameIfConditionMet for this overload.
-            sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2);
+            OverrideDefaultListenerName(RemotingClientVersion.V2);
 
             var proxy = (IActorProxy)sut.CreateActorProxy(actorInterfaceType, serviceUri, actorId, listenerName: null);
 
@@ -213,7 +216,7 @@ public abstract class ActorProxyFactoryTest
         public void SubstitutesDefaultListenerNameWhenOverrideDefaultIsSetAndCallerSuppliedNull()
         {
             // Exercises the override-on branch in OverrideListenerNameIfConditionMet for this overload.
-            sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2);
+            OverrideDefaultListenerName(RemotingClientVersion.V2);
 
             var proxy = (IActorProxy)sut.CreateActorProxy<IFactoryTestActor>(serviceUri, actorId, listenerName: null);
 
@@ -242,7 +245,7 @@ public abstract class ActorProxyFactoryTest
         public void SubstitutesDefaultListenerNameWhenOverrideDefaultIsSetAndCallerSuppliedNull()
         {
             // Exercises the override-on branch in OverrideListenerNameIfConditionMet for this overload.
-            sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2);
+            OverrideDefaultListenerName(RemotingClientVersion.V2);
 
             var proxy = (IServiceProxy)sut.CreateActorServiceProxy<IActorService>(serviceUri, actorId, listenerName: null);
 
@@ -271,7 +274,7 @@ public abstract class ActorProxyFactoryTest
         public void SubstitutesDefaultListenerNameWhenOverrideDefaultIsSetAndCallerSuppliedNull()
         {
             // Exercises the override-on branch in OverrideListenerNameIfConditionMet for this overload.
-            sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2);
+            OverrideDefaultListenerName(RemotingClientVersion.V2);
 
             var proxy = (IServiceProxy)sut.CreateActorServiceProxy<IActorService>(serviceUri, partitionKey, listenerName: null);
 
