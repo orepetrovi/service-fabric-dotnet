@@ -1,7 +1,5 @@
-// ------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
-// ------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -10,7 +8,6 @@ using System.Fabric.Description;
 using Fuzzy;
 using Inspector;
 using Microsoft.Extensions.Configuration;
-using Microsoft.ServiceFabric.AspNetCore.Tests;
 using Moq;
 using Xunit;
 using ConfigurationSection = System.Fabric.Description.ConfigurationSection;
@@ -227,14 +224,12 @@ public abstract class ServiceFabricConfigurationOptionsTest
         }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Decryption branch cannot be substituted.
-        public void ReturnsDecryptedValueWhenPropertyIsEncryptedAndDecryptValueIsTrue()
-        {
+        public void ReturnsDecryptedValueWhenPropertyIsEncryptedAndDecryptValueIsTrue() =>
             // The decryption branch of DefaultExtractValueFunc calls the non-virtual instance method
             // ConfigurationProperty.DecryptValue(), which cannot be substituted in unit tests. Exercising this branch
             // is not possible without refactoring the SUT to accept an injectable decryptor. Fixing the underlying
             // testability limitation is out of scope for the current change.
             throw new NotImplementedException();
-        }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing property argument validation.
         public void ThrowsArgumentNullExceptionWhenPropertyIsNull()
