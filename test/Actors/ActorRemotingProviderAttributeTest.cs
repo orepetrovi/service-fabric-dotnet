@@ -19,10 +19,10 @@ namespace Microsoft.ServiceFabric.Actors.Remoting;
 
 public abstract class ActorRemotingProviderAttributeTest
 {
+    protected readonly ActorRemotingProviderAttribute sut = new TestActorRemotingProviderAttribute();
+
     public sealed class Constructor : ActorRemotingProviderAttributeTest
     {
-        readonly ActorRemotingProviderAttribute sut = new TestActorRemotingProviderAttribute();
-
         [Fact]
         public void InitializesRemotingClientVersionToV2_1() =>
             Assert.Equal(RemotingClientVersion.V2_1, sut.RemotingClientVersion);
@@ -148,8 +148,6 @@ public abstract class ActorRemotingProviderAttributeTest
 
     public sealed class RemotingClientVersion_ : ActorRemotingProviderAttributeTest
     {
-        readonly ActorRemotingProviderAttribute sut = new TestActorRemotingProviderAttribute();
-
         [Theory]
         [InlineData(RemotingClientVersion.V2)]
         [InlineData(RemotingClientVersion.V2_1)]
@@ -162,8 +160,6 @@ public abstract class ActorRemotingProviderAttributeTest
 
     public sealed class RemotingListenerVersion_ : ActorRemotingProviderAttributeTest
     {
-        readonly ActorRemotingProviderAttribute sut = new TestActorRemotingProviderAttribute();
-
         [Theory]
         [InlineData(RemotingListenerVersion.V2)]
         [InlineData(RemotingListenerVersion.V2_1)]
