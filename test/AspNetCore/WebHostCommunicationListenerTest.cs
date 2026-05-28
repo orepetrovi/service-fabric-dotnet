@@ -20,16 +20,13 @@ public abstract class WebHostCommunicationListenerTest
     readonly ICommunicationListener sut;
 
     // Constructor parameters
-    readonly Func<string, AspNetCoreCommunicationListener, IWebHost> build;
+    readonly Mock<Func<string, AspNetCoreCommunicationListener, IWebHost>> build = new();
     readonly AspNetCoreCommunicationListener listener;
 
     readonly string listenerUrl = $"http://+:{fuzzy.UInt16()}";
     readonly StatelessServiceContext serviceContext = fuzzy.StatelessServiceContext();
     readonly Mock<IWebHost> host = new();
     IWebHost buildHost;
-    string buildUrl;
-    AspNetCoreCommunicationListener buildListener;
-    int buildCallCount;
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
@@ -38,16 +35,10 @@ public abstract class WebHostCommunicationListenerTest
         buildHost = host.Object;
         _ = host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         _ = host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        _ = build.Setup(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>())).Returns(() => buildHost);
 
-        build = (url, l) =>
-        {
-            buildCallCount++;
-            buildUrl = url;
-            buildListener = l;
-            return buildHost;
-        };
-        listener = new TestListener(serviceContext, build, listenerUrl);
-        sut = new WebHostCommunicationListener(build, listener);
+        listener = new TestListener(serviceContext, build.Object, listenerUrl);
+        sut = new WebHostCommunicationListener(build.Object, listener);
     }
 
     public sealed class Abort : WebHostCommunicationListenerTest
@@ -75,7 +66,7 @@ public abstract class WebHostCommunicationListenerTest
         {
             sut.Abort();
 
-            Assert.Equal(0, buildCallCount);
+            build.Verify(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()), Times.Never());
             host.Verify(_ => _.Dispose(), Times.Never());
         }
     }
@@ -133,7 +124,7 @@ public abstract class WebHostCommunicationListenerTest
         {
             await sut.CloseAsync(cancellation);
 
-            Assert.Equal(0, buildCallCount);
+            build.Verify(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()), Times.Never());
             host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
             host.Verify(_ => _.Dispose(), Times.Never());
         }
@@ -168,7 +159,7 @@ public abstract class WebHostCommunicationListenerTest
         {
             // SUT currently dereferences `listener.ServiceContext` without validation,
             // throwing NullReferenceException instead of ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => new WebHostCommunicationListener(build, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => new WebHostCommunicationListener(build.Object, null));
             Assert.Equal(nameof(listener), exception.ParamName);
         }
     }
@@ -184,9 +175,8 @@ public abstract class WebHostCommunicationListenerTest
         {
             _ = await sut.OpenAsync(cancellation);
 
-            Assert.Equal(1, buildCallCount);
-            Assert.Equal(listenerUrl, buildUrl);
-            Assert.Same(listener, buildListener);
+            build.Verify(_ => _(listenerUrl, listener), Times.Once());
+            build.Verify(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()), Times.Once());
         }
 
         [Fact]
@@ -335,20 +325,14 @@ public abstract class WebHostCommunicationListenerTest
             // so the suffix isn't known until after build returns.
             ushort port = fuzzy.UInt16();
             SetupServer($"http://+:{port}");
-            AspNetCoreCommunicationListener configuredListener = null;
-            Func<string, AspNetCoreCommunicationListener, IWebHost> buildThatConfiguresSuffix = (url, l) =>
-            {
-                l.ConfigureToUseUniqueServiceUrl();
-                configuredListener = l;
-                return buildHost;
-            };
-            var localListener = new TestListener(serviceContext, buildThatConfiguresSuffix, listenerUrl);
-            var localSut = new WebHostCommunicationListener(buildThatConfiguresSuffix, localListener);
+            _ = build.Setup(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()))
+                .Callback((string _, AspNetCoreCommunicationListener l) => l.ConfigureToUseUniqueServiceUrl())
+                .Returns(() => buildHost);
 
-            string actual = await localSut.OpenAsync(cancellation);
+            string actual = await sut.OpenAsync(cancellation);
 
-            Assert.Same(localListener, configuredListener);
-            Assert.Equal($"http://{serviceContext.PublishAddress}:{port}{localListener.UrlSuffix}", actual);
+            build.Verify(_ => _(listenerUrl, listener), Times.Once());
+            Assert.Equal($"http://{serviceContext.PublishAddress}:{port}{listener.UrlSuffix}", actual);
         }
 
         [Fact]
