@@ -130,7 +130,7 @@ public abstract class ServicePartitionClientTest
 
         protected InvokeWithRetryAsyncBase()
         {
-            communicationClient.SetupGet(_ => _.ResolvedServicePartition).Returns(rsp);
+            _ = communicationClient.SetupGet(_ => _.ResolvedServicePartition).Returns(rsp);
             _ = communicationClientFactory
                 .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(client);
@@ -408,7 +408,7 @@ public abstract class ServicePartitionClientTest
             // second client carries a distinct ResolvedServicePartition, and the SUT must adopt it as the new lastRsp.
             var newRsp = Type<ResolvedServicePartition>.Uninitialized();
             var newCommunicationClient = new Mock<ICommunicationClient>();
-            newCommunicationClient.SetupGet(_ => _.ResolvedServicePartition).Returns(newRsp);
+            _ = newCommunicationClient.SetupGet(_ => _.ResolvedServicePartition).Returns(newRsp);
             _ = communicationClientFactory
                 .Setup(_ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(newCommunicationClient.Object);
@@ -502,7 +502,7 @@ public abstract class ServicePartitionClientTest
         {
             var timeout = TimeSpan.FromMilliseconds(500);
             var policy = new Mock<IRetryPolicy>();
-            policy.SetupGet(_ => _.ClientRetryTimeout).Returns(timeout);
+            _ = policy.SetupGet(_ => _.ClientRetryTimeout).Returns(timeout);
             var retrySettings = new OperationRetrySettings(policy.Object);
             var sut = new ServicePartitionClient<ICommunicationClient>(
                 communicationClientFactory.Object,
@@ -542,7 +542,7 @@ public abstract class ServicePartitionClientTest
             var timeout = TimeSpan.FromMilliseconds(100);
             var retryDelay = TimeSpan.FromSeconds(30);
             var policy = new Mock<IRetryPolicy>();
-            policy.SetupGet(_ => _.ClientRetryTimeout).Returns(timeout);
+            _ = policy.SetupGet(_ => _.ClientRetryTimeout).Returns(timeout);
             var retrySettings = new OperationRetrySettings(policy.Object);
             var sut = new ServicePartitionClient<ICommunicationClient>(
                 communicationClientFactory.Object,
@@ -824,7 +824,7 @@ public abstract class ServicePartitionClientTest
             // Drive InvokeWithRetryAsync so the SUT assigns lastRsp from communicationClient.ResolvedServicePartition.
             var rsp = Type<ResolvedServicePartition>.Uninitialized();
             var communicationClient = new Mock<ICommunicationClient>();
-            communicationClient.SetupGet(_ => _.ResolvedServicePartition).Returns(rsp);
+            _ = communicationClient.SetupGet(_ => _.ResolvedServicePartition).Returns(rsp);
             _ = communicationClientFactory
                 .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(communicationClient.Object);
