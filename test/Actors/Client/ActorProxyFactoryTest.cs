@@ -76,7 +76,6 @@ public abstract class ActorProxyFactoryTest
 
     public sealed class CreateActorProxy_ActorId_String_String_String : ActorProxyFactoryTest
     {
-        // Method parameters
         readonly ActorId actorId = fuzzy.ActorId();
         readonly string applicationName = "fabric:/" + fuzzy.String().LettersOrDigits();
         readonly string serviceName = fuzzy.String().LettersOrDigits();
@@ -165,7 +164,6 @@ public abstract class ActorProxyFactoryTest
 
     public sealed class CreateActorProxy_Type_Uri_ActorId_String : ActorProxyFactoryTest
     {
-        // Method parameters
         readonly Type actorInterfaceType = typeof(IFactoryTestActor);
         readonly Uri serviceUri = fuzzy.Uri();
         readonly ActorId actorId = fuzzy.ActorId();
@@ -196,7 +194,6 @@ public abstract class ActorProxyFactoryTest
 
     public sealed class CreateActorProxy_Uri_ActorId_String : ActorProxyFactoryTest
     {
-        // Method parameters
         readonly Uri serviceUri = fuzzy.Uri();
         readonly ActorId actorId = fuzzy.ActorId();
         readonly string listenerName = fuzzy.String();
@@ -226,7 +223,6 @@ public abstract class ActorProxyFactoryTest
 
     public sealed class CreateActorServiceProxy_Uri_ActorId_String : ActorProxyFactoryTest
     {
-        // Method parameters
         readonly Uri serviceUri = fuzzy.Uri();
         readonly ActorId actorId = fuzzy.ActorId();
         readonly string listenerName = fuzzy.String();
@@ -256,7 +252,6 @@ public abstract class ActorProxyFactoryTest
 
     public sealed class CreateActorServiceProxy_Uri_Int64_String : ActorProxyFactoryTest
     {
-        // Method parameters
         readonly Uri serviceUri = fuzzy.Uri();
         readonly long partitionKey = fuzzy.Int64();
         readonly string listenerName = fuzzy.String();
