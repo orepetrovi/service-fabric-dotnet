@@ -14,6 +14,8 @@ using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.V2.Client;
 using Moq;
 using Xunit;
+using ClientVersion = Microsoft.ServiceFabric.Services.Remoting.RemotingClientVersion;
+using ListenerVersion = Microsoft.ServiceFabric.Services.Remoting.RemotingListenerVersion;
 
 namespace Microsoft.ServiceFabric.Actors.Remoting;
 
@@ -25,11 +27,11 @@ public abstract class ActorRemotingProviderAttributeTest
     {
         [Fact]
         public void InitializesRemotingClientVersionToV2_1() =>
-            Assert.Equal(RemotingClientVersion.V2_1, sut.RemotingClientVersion);
+            Assert.Equal(ClientVersion.V2_1, sut.RemotingClientVersion);
 
         [Fact]
         public void InitializesRemotingListenerVersionToV2_1() =>
-            Assert.Equal(RemotingListenerVersion.V2_1, sut.RemotingListenerVersion);
+            Assert.Equal(ListenerVersion.V2_1, sut.RemotingListenerVersion);
     }
 
     public sealed class GetProvider : ActorRemotingProviderAttributeTest, IDisposable
@@ -146,24 +148,24 @@ public abstract class ActorRemotingProviderAttributeTest
         }
     }
 
-    public sealed class RemotingClientVersion_ : ActorRemotingProviderAttributeTest
+    public sealed class RemotingClientVersion : ActorRemotingProviderAttributeTest
     {
         [Theory]
-        [InlineData(RemotingClientVersion.V2)]
-        [InlineData(RemotingClientVersion.V2_1)]
-        public void SetsValue(RemotingClientVersion value)
+        [InlineData(ClientVersion.V2)]
+        [InlineData(ClientVersion.V2_1)]
+        public void SetsValue(ClientVersion value)
         {
             sut.RemotingClientVersion = value;
             Assert.Equal(value, sut.RemotingClientVersion);
         }
     }
 
-    public sealed class RemotingListenerVersion_ : ActorRemotingProviderAttributeTest
+    public sealed class RemotingListenerVersion : ActorRemotingProviderAttributeTest
     {
         [Theory]
-        [InlineData(RemotingListenerVersion.V2)]
-        [InlineData(RemotingListenerVersion.V2_1)]
-        public void SetsValue(RemotingListenerVersion value)
+        [InlineData(ListenerVersion.V2)]
+        [InlineData(ListenerVersion.V2_1)]
+        public void SetsValue(ListenerVersion value)
         {
             sut.RemotingListenerVersion = value;
             Assert.Equal(value, sut.RemotingListenerVersion);
