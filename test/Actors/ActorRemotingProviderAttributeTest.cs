@@ -19,7 +19,7 @@ namespace Microsoft.ServiceFabric.Actors.Remoting;
 
 public abstract class ActorRemotingProviderAttributeTest
 {
-    protected readonly ActorRemotingProviderAttribute sut = new TestActorRemotingProviderAttribute();
+    readonly ActorRemotingProviderAttribute sut = new TestActorRemotingProviderAttribute();
 
     public sealed class Constructor : ActorRemotingProviderAttributeTest
     {
