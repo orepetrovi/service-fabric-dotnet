@@ -626,6 +626,26 @@ public abstract class ServicePartitionClientTest
 
             Assert.Same(clientException, actual);
         }
+
+        [Fact]
+        public async Task RetriesAfterTransientException()
+        {
+            // The no-token overload delegates to the core overload with CancellationToken.None. Verify the retry
+            // loop is reachable through this delegation, not just the success and do-not-retry branches.
+            SetupReportOperationException(TransientRetry());
+            int calls = 0;
+
+            object actual = await sut.InvokeWithRetryAsync<object>(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.FromResult<object>(calls);
+                });
+
+            Assert.Equal(2, calls);
+            Assert.Equal(2, actual);
+        }
     }
 
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTask_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
@@ -695,6 +715,85 @@ public abstract class ServicePartitionClientTest
 
             Assert.Same(clientException, actual);
         }
+
+        [Fact]
+        public async Task RetriesAfterTransientException()
+        {
+            // The Task-returning overload wraps func into a synthetic Func<Task<object>>. Verify the wrapper is
+            // re-invoked across retry iterations and observes both throw and success paths.
+            SetupReportOperationException(TransientRetry());
+            int calls = 0;
+
+            await sut.InvokeWithRetryAsync(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.CompletedTask;
+                },
+                cancellation);
+
+            Assert.Equal(2, calls);
+        }
+
+        [Fact]
+        public async Task RethrowsAggregateExceptionWhenInnerExceptionIsInDoNotRetryExceptionTypes()
+        {
+            // Verify the wrapper does not interfere with the callee's AggregateException unwrap branch.
+            var aggregate = new AggregateException(clientException);
+
+            AggregateException actual = await Assert.ThrowsAsync<AggregateException>(
+                () => sut.InvokeWithRetryAsync(
+                    _ => throw aggregate,
+                    cancellation,
+                    clientException.GetType()));
+
+            Assert.Same(clientException, Assert.Single(actual.InnerExceptions));
+        }
+
+        [Fact]
+        public async Task ResetsCommunicationClientWhenExceptionIsNotTransient()
+        {
+            // Non-transient retries clear the cached client and re-resolve via the rsp-based GetClientAsync overload.
+            // Verify the wrapper participates correctly across the reset and is re-invoked on the new client.
+            SetupReportOperationException(NonTransientRetry());
+            int calls = 0;
+
+            await sut.InvokeWithRetryAsync(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.CompletedTask;
+                },
+                cancellation);
+
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task CancelsWhenTokenIsSignaledMidRetry()
+        {
+            // Verify the wrapper does not suppress cancellation when the caller's token fires between retries.
+            SetupReportOperationException(TransientRetry());
+            using var cts = new CancellationTokenSource();
+            int calls = 0;
+            int retryCount = 3;
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => sut.InvokeWithRetryAsync(
+                    _ =>
+                    {
+                        calls++;
+                        if (calls == retryCount) cts.Cancel();
+                        throw clientException;
+                    },
+                    cts.Token));
+
+            Assert.Equal(retryCount, calls);
+        }
     }
 
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTask_TypeArray : InvokeWithRetryAsyncBase
@@ -755,6 +854,25 @@ public abstract class ServicePartitionClientTest
                 () => sut.InvokeWithRetryAsync(_ => Task.FromException(clientException), clientException.GetType()));
 
             Assert.Same(clientException, actual);
+        }
+
+        [Fact]
+        public async Task RetriesAfterTransientException()
+        {
+            // This overload composes the no-token delegation with the Func<Task> wrapping. Verify the retry loop
+            // re-invokes the wrapper across iterations when both transformations apply.
+            SetupReportOperationException(TransientRetry());
+            int calls = 0;
+
+            await sut.InvokeWithRetryAsync(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.CompletedTask;
+                });
+
+            Assert.Equal(2, calls);
         }
     }
 
