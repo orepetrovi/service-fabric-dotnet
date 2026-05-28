@@ -515,7 +515,7 @@ public abstract class ServicePartitionClientTest
             _ = communicationClientFactory
                 .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(client);
-            communicationClientFactory
+            _ = communicationClientFactory
                 .Setup(_ => _.ReportOperationExceptionAsync(
                     client,
                     It.Is<ExceptionInformation>(i => i.Exception == clientException && i.TargetReplica == targetReplicaSelector),
@@ -555,7 +555,7 @@ public abstract class ServicePartitionClientTest
             _ = communicationClientFactory
                 .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(client);
-            communicationClientFactory
+            _ = communicationClientFactory
                 .Setup(_ => _.ReportOperationExceptionAsync(
                     client,
                     It.Is<ExceptionInformation>(i => i.Exception == clientException && i.TargetReplica == targetReplicaSelector),
