@@ -1,8 +1,12 @@
+// ------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
+// ------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Inspector;
-using Microsoft.ServiceFabric.Actors.Remoting;
 using Microsoft.ServiceFabric.Actors.Remoting.FabricTransport;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting;
@@ -11,7 +15,7 @@ using Microsoft.ServiceFabric.Services.Remoting.V2.Client;
 using Moq;
 using Xunit;
 
-namespace Microsoft.ServiceFabric.Actors.Tests;
+namespace Microsoft.ServiceFabric.Actors.Remoting;
 
 public abstract class ActorRemotingProviderAttributeTest
 {
@@ -134,7 +138,7 @@ public abstract class ActorRemotingProviderAttributeTest
     static Assembly MockAssembly(ActorRemotingProviderAttribute provider = null)
     {
         var assembly = new Mock<TestAssembly>();
-        Attribute[] attributes = provider == null ? new Attribute[0] : new[] { provider };
+        Attribute[] attributes = provider == null ? [] : new[] { provider };
         assembly.Setup(_ => _.GetCustomAttributes(typeof(ActorRemotingProviderAttribute), true)).Returns(attributes);
         return assembly.Object;
     }
