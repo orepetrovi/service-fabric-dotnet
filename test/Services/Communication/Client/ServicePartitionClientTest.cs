@@ -112,35 +112,6 @@ public abstract class ServicePartitionClientTest
         }
     }
 
-    public sealed class TryGetLastResolvedServicePartition : ServicePartitionClientTest
-    {
-        [Fact]
-        public void ReturnsFalseAndNullWhenNoPartitionResolvedYet()
-        {
-            bool actual = sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition resolvedServicePartition);
-            Assert.False(actual);
-            Assert.Null(resolvedServicePartition);
-        }
-
-        [Fact]
-        public async Task ReturnsTrueAndLastRspWhenSet()
-        {
-            // Drive InvokeWithRetryAsync so the SUT assigns lastRsp from communicationClient.ResolvedServicePartition.
-            var rsp = Type<ResolvedServicePartition>.Uninitialized();
-            var clientMock = new Mock<ICommunicationClient>();
-            clientMock.SetupGet(_ => _.ResolvedServicePartition).Returns(rsp);
-            _ = communicationClientFactory
-                .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(clientMock.Object);
-            _ = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()), TestContext.Current.CancellationToken);
-
-            bool actual = sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition resolvedServicePartition);
-
-            Assert.True(actual);
-            Assert.Same(rsp, resolvedServicePartition);
-        }
-    }
-
     public abstract class InvokeWithRetryAsyncBase : ServicePartitionClientTest
     {
         protected readonly Mock<ICommunicationClient> clientMock = new();
@@ -573,6 +544,35 @@ public abstract class ServicePartitionClientTest
                 () => sut.InvokeWithRetryAsync(_ => throw clientException, typeof(InvalidOperationException)));
 
             Assert.Same(clientException, actual);
+        }
+    }
+
+    public sealed class TryGetLastResolvedServicePartition : ServicePartitionClientTest
+    {
+        [Fact]
+        public void ReturnsFalseAndNullWhenNoPartitionResolvedYet()
+        {
+            bool actual = sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition resolvedServicePartition);
+            Assert.False(actual);
+            Assert.Null(resolvedServicePartition);
+        }
+
+        [Fact]
+        public async Task ReturnsTrueAndLastRspWhenSet()
+        {
+            // Drive InvokeWithRetryAsync so the SUT assigns lastRsp from communicationClient.ResolvedServicePartition.
+            var rsp = Type<ResolvedServicePartition>.Uninitialized();
+            var clientMock = new Mock<ICommunicationClient>();
+            clientMock.SetupGet(_ => _.ResolvedServicePartition).Returns(rsp);
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(clientMock.Object);
+            _ = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()), TestContext.Current.CancellationToken);
+
+            bool actual = sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition resolvedServicePartition);
+
+            Assert.True(actual);
+            Assert.Same(rsp, resolvedServicePartition);
         }
     }
 
