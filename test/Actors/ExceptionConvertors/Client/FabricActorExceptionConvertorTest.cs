@@ -84,6 +84,7 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.True(result);
             Assert.IsType(knownType, actual);
             Assert.Equal(message, actual.Message);
+            Assert.Null(actual.InnerException);
         }
 
         [Fact]
