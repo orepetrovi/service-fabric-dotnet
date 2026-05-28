@@ -475,6 +475,9 @@ public abstract class ServicePartitionClientTest
             object actual = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(expected));
 
             Assert.Same(expected, actual);
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, CancellationToken.None),
+                Times.Once);
         }
 
         [Fact]
@@ -524,6 +527,9 @@ public abstract class ServicePartitionClientTest
             await sut.InvokeWithRetryAsync(c => { actual = c; return Task.CompletedTask; });
 
             Assert.Same(client, actual);
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, CancellationToken.None),
+                Times.Once);
         }
 
         [Fact]
