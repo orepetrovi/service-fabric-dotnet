@@ -145,7 +145,7 @@ public abstract class ExceptionHandlingRetryResultTest
         }
 
         [Fact]
-        public void AllowsNullExceptionId()
+        public void InitializesExceptionIdToNullWhenExceptionIdIsNull()
         {
             var sut = new ExceptionHandlingRetryResult((string)null, isTransient, retryDelay, maxRetryCount);
             Assert.Null(sut.ExceptionId);
