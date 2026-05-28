@@ -73,7 +73,7 @@ public abstract class ActorDataContractSurrogateTest
         {
             var bound = new object();
             var reference = new Mock<IActorReference>();
-            _ = reference.Setup(r => r.Bind(typeof(IFactoryTestActor))).Returns(bound);
+            _ = reference.Setup(_ => _.Bind(typeof(IFactoryTestActor))).Returns(bound);
 
             object result = sut.GetDeserializedObject(reference.Object, typeof(IFactoryTestActor));
 
@@ -137,11 +137,11 @@ public abstract class ActorDataContractSurrogateTest
             Uri serviceUri = fuzzy.Uri();
             string listenerName = fuzzy.String().LettersOrDigits();
             var partitionClient = new Mock<IActorServicePartitionClient>();
-            _ = partitionClient.SetupGet(p => p.ServiceUri).Returns(serviceUri);
-            _ = partitionClient.SetupGet(p => p.ListenerName).Returns(listenerName);
+            _ = partitionClient.SetupGet(_ => _.ServiceUri).Returns(serviceUri);
+            _ = partitionClient.SetupGet(_ => _.ListenerName).Returns(listenerName);
             var actorProxy = new Mock<IActorProxy>();
-            _ = actorProxy.SetupGet(a => a.ActorId).Returns(actorId);
-            _ = actorProxy.SetupGet(a => a.ActorServicePartitionClientV2).Returns(partitionClient.Object);
+            _ = actorProxy.SetupGet(_ => _.ActorId).Returns(actorId);
+            _ = actorProxy.SetupGet(_ => _.ActorServicePartitionClientV2).Returns(partitionClient.Object);
             IFactoryTestActor actor = actorProxy.As<IFactoryTestActor>().Object;
 
             object result = sut.GetObjectToSerialize(actor, fuzzy.Type());
