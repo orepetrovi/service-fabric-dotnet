@@ -380,6 +380,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             _ = await fixture.Sut.OpenAsync(cancellationToken);
 
+            Assert.Equal(1, fixture.BuildCallCount);
             Assert.Equal(listenerUrl, fixture.BuildUrl);
             Assert.Same(fixture.Sut, fixture.BuildListener);
         }
@@ -394,6 +395,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             _ = await fixture.Sut.OpenAsync(cancellationToken);
 
+            Assert.Equal(1, fixture.BuildCallCount);
             Assert.Equal(listenerUrl, fixture.BuildUrl);
             Assert.Same(fixture.Sut, fixture.BuildListener);
         }
@@ -499,6 +501,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         internal readonly TestListener Sut;
         internal string BuildUrl;
         internal AspNetCoreCommunicationListener BuildListener;
+        internal int BuildCallCount;
 
         internal WebHostFixture(ServiceContext context, string listenerUrl = "http://+:0", string serverAddress = null)
         {
@@ -506,6 +509,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
             Sut = new TestListener(context, (url, listener) =>
             {
+                BuildCallCount++;
                 BuildUrl = url;
                 BuildListener = listener;
                 var features = new FeatureCollection();
@@ -523,6 +527,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         internal readonly TestListener Sut;
         internal string BuildUrl;
         internal AspNetCoreCommunicationListener BuildListener;
+        internal int BuildCallCount;
 
         internal GenericHostFixture(ServiceContext context, string listenerUrl = "http://+:0", string serverAddress = null)
         {
@@ -530,6 +535,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
             Sut = new TestListener(context, (url, listener) =>
             {
+                BuildCallCount++;
                 BuildUrl = url;
                 BuildListener = listener;
                 var features = new FeatureCollection();
