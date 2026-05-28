@@ -83,14 +83,14 @@ public abstract class ActorDataContractSurrogateTest
         [Fact]
         public void ReturnsObjWhenTargetTypeImplementsIActorReference()
         {
-            IActorReference reference = Mock.Of<IActorReference>();
+            var reference = Mock.Of<IActorReference>();
             Assert.Same(reference, sut.GetDeserializedObject(reference, typeof(IActorAndReference)));
         }
 
         [Fact]
         public void ReturnsObjWhenTargetTypeDoesNotImplementIActor()
         {
-            IActorReference reference = Mock.Of<IActorReference>();
+            var reference = Mock.Of<IActorReference>();
             Assert.Same(reference, sut.GetDeserializedObject(reference, typeof(object)));
         }
 
