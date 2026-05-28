@@ -22,18 +22,6 @@ namespace Microsoft.ServiceFabric.AspNetCore.Tests
         private const string MockServiceUri = "fabric:/MockServiceName";
         private static Guid mockPartitionID = Guid.NewGuid();
 
-        internal static StatefulServiceContext GetMockStatefulServiceContext()
-        {
-            return new StatefulServiceContext(
-                GetNodeContext(),
-                GetCodePackageActivationContext(),
-                MockServiceTypeName,
-                new Uri(MockServiceUri),
-                null,
-                mockPartitionID,
-                MockReplicaOrInstanceID);
-        }
-
         internal static StatelessServiceContext GetMockStatelessServiceContext()
         {
             return new StatelessServiceContext(
@@ -58,7 +46,7 @@ namespace Microsoft.ServiceFabric.AspNetCore.Tests
 
         private static ICodePackageActivationContext GetCodePackageActivationContext()
         {
-            var endpointCollection = new KeyedCollectionImpl<string, EndpointResourceDescription>(x => x.Name);
+            var endpointCollection = new StubKeyedCollection<string, EndpointResourceDescription>(x => x.Name);
 
             // Create mock Context and setup required things needed by tests.
             var mockContext = new Mock<ICodePackageActivationContext>();
