@@ -168,7 +168,7 @@ public abstract class ExceptionHandlingRetryResultTest
         public void ReturnsDelayFromRetryPolicyWhenRetrySettingsIsNotNull(bool isTransient)
         {
             var retryPolicy = new Mock<IRetryPolicy>();
-            TimeSpan expected = fuzzy.TimeSpan();
+            var expected = fuzzy.TimeSpan();
             _ = retryPolicy
                 .Setup(_ => _.GetNextRetryDelay(It.Is<RetryDelayParameters>(
                     p => p.RetryAttempt == retryAttempt && p.IsTransient == isTransient)))
