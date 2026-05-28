@@ -29,5 +29,6 @@
     <Compile Include="ExceptionConvertors\Client\FabricActorExceptionConvertorTest.cs" />
     <Compile Include="ExceptionConvertors\Runtime\FabricActorExceptionConvertorTest.cs" />
     <Compile Include="IFuzzExtensions.cs" />
+    <Compile Include="Remoting\ActorDataContractSurrogateTest.cs" />
   </ItemGroup>
 </Project>
