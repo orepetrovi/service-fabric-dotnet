@@ -89,7 +89,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     public sealed class CloseAsync : AspNetCoreCommunicationListenerTest
     {
-        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken; // Matches SUT parameter name
 
         [Fact]
         public async Task PassesCancellationTokenToHostStopAsyncOnGenericHost()
@@ -97,9 +97,9 @@ public abstract class AspNetCoreCommunicationListenerTest
             var fixture = new GenericHostFixture(serviceContext);
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
 
-            await fixture.Sut.CloseAsync(cancellation);
+            await fixture.Sut.CloseAsync(cancellationToken);
 
-            fixture.Host.Verify(_ => _.StopAsync(cancellation), Times.Once());
+            fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once());
             fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Once());
         }
 
@@ -109,9 +109,9 @@ public abstract class AspNetCoreCommunicationListenerTest
             var fixture = new WebHostFixture(serviceContext);
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
 
-            await fixture.Sut.CloseAsync(cancellation);
+            await fixture.Sut.CloseAsync(cancellationToken);
 
-            fixture.Host.Verify(_ => _.StopAsync(cancellation), Times.Once());
+            fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once());
             fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Once());
         }
 
@@ -122,10 +122,10 @@ public abstract class AspNetCoreCommunicationListenerTest
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
             bool stopped = false;
             bool stoppedBeforeDispose = false;
-            _ = fixture.Host.Setup(_ => _.StopAsync(cancellation)).Callback(() => stopped = true).Returns(Task.CompletedTask);
+            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Callback(() => stopped = true).Returns(Task.CompletedTask);
             _ = fixture.Host.Setup(_ => _.Dispose()).Callback(() => stoppedBeforeDispose = stopped);
 
-            await fixture.Sut.CloseAsync(cancellation);
+            await fixture.Sut.CloseAsync(cancellationToken);
 
             Assert.True(stoppedBeforeDispose, "Dispose called before StopAsync");
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
@@ -138,10 +138,10 @@ public abstract class AspNetCoreCommunicationListenerTest
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
             bool stopped = false;
             bool stoppedBeforeDispose = false;
-            _ = fixture.Host.Setup(_ => _.StopAsync(cancellation)).Callback(() => stopped = true).Returns(Task.CompletedTask);
+            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Callback(() => stopped = true).Returns(Task.CompletedTask);
             _ = fixture.Host.Setup(_ => _.Dispose()).Callback(() => stoppedBeforeDispose = stopped);
 
-            await fixture.Sut.CloseAsync(cancellation);
+            await fixture.Sut.CloseAsync(cancellationToken);
 
             Assert.True(stoppedBeforeDispose, "Dispose called before StopAsync");
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
@@ -153,9 +153,9 @@ public abstract class AspNetCoreCommunicationListenerTest
             var fixture = new GenericHostFixture(serviceContext);
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
             var tcs = new TaskCompletionSource<object>();
-            _ = fixture.Host.Setup(_ => _.StopAsync(cancellation)).Returns(tcs.Task);
+            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Returns(tcs.Task);
 
-            Task closeTask = fixture.Sut.CloseAsync(cancellation);
+            Task closeTask = fixture.Sut.CloseAsync(cancellationToken);
 
             Assert.False(closeTask.IsCompleted);
             fixture.Host.Verify(_ => _.Dispose(), Times.Never());
@@ -170,9 +170,9 @@ public abstract class AspNetCoreCommunicationListenerTest
             var fixture = new WebHostFixture(serviceContext);
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
             var tcs = new TaskCompletionSource<object>();
-            _ = fixture.Host.Setup(_ => _.StopAsync(cancellation)).Returns(tcs.Task);
+            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Returns(tcs.Task);
 
-            Task closeTask = fixture.Sut.CloseAsync(cancellation);
+            Task closeTask = fixture.Sut.CloseAsync(cancellationToken);
 
             Assert.False(closeTask.IsCompleted);
             fixture.Host.Verify(_ => _.Dispose(), Times.Never());
@@ -186,7 +186,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         {
             var fixture = new GenericHostFixture(serviceContext);
 
-            await fixture.Sut.CloseAsync(cancellation);
+            await fixture.Sut.CloseAsync(cancellationToken);
 
             Assert.Null(fixture.BuildUrl);
             Assert.Null(fixture.BuildListener);
@@ -199,7 +199,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         {
             var fixture = new WebHostFixture(serviceContext);
 
-            await fixture.Sut.CloseAsync(cancellation);
+            await fixture.Sut.CloseAsync(cancellationToken);
 
             Assert.Null(fixture.BuildUrl);
             Assert.Null(fixture.BuildListener);
@@ -348,7 +348,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     public sealed class OpenAsync : AspNetCoreCommunicationListenerTest
     {
-        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken; // Matches SUT parameter name
 
         [Fact]
         public async Task InvokesBuildWithGetListenerUrlAndSelfOnGenericHost()
@@ -356,7 +356,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             string listenerUrl = "http://+:" + fuzzy.UInt16().Minimum(1);
             var fixture = new GenericHostFixture(serviceContext, listenerUrl);
 
-            _ = await fixture.Sut.OpenAsync(cancellation);
+            _ = await fixture.Sut.OpenAsync(cancellationToken);
 
             Assert.Equal(listenerUrl, fixture.BuildUrl);
             Assert.Same(fixture.Sut, fixture.BuildListener);
@@ -368,7 +368,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             string listenerUrl = "http://+:" + fuzzy.UInt16().Minimum(1);
             var fixture = new WebHostFixture(serviceContext, listenerUrl);
 
-            _ = await fixture.Sut.OpenAsync(cancellation);
+            _ = await fixture.Sut.OpenAsync(cancellationToken);
 
             Assert.Equal(listenerUrl, fixture.BuildUrl);
             Assert.Same(fixture.Sut, fixture.BuildListener);
@@ -379,9 +379,9 @@ public abstract class AspNetCoreCommunicationListenerTest
         {
             var fixture = new GenericHostFixture(serviceContext);
 
-            _ = await fixture.Sut.OpenAsync(cancellation);
+            _ = await fixture.Sut.OpenAsync(cancellationToken);
 
-            fixture.Host.Verify(_ => _.StartAsync(cancellation), Times.Once());
+            fixture.Host.Verify(_ => _.StartAsync(cancellationToken), Times.Once());
         }
 
         [Fact]
@@ -389,9 +389,9 @@ public abstract class AspNetCoreCommunicationListenerTest
         {
             var fixture = new WebHostFixture(serviceContext);
 
-            _ = await fixture.Sut.OpenAsync(cancellation);
+            _ = await fixture.Sut.OpenAsync(cancellationToken);
 
-            fixture.Host.Verify(_ => _.StartAsync(cancellation), Times.Once());
+            fixture.Host.Verify(_ => _.StartAsync(cancellationToken), Times.Once());
         }
 
         [Fact]
@@ -402,7 +402,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             ushort listenerPort = (ushort)(serverPort + fuzzy.SByte().Between(1, 5));
             var fixture = new GenericHostFixture(context, "http://+:" + listenerPort, "http://+:" + serverPort + "/");
 
-            string actual = await fixture.Sut.OpenAsync(cancellation);
+            string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
             Assert.Equal($"http://{context.PublishAddress}:{serverPort}", actual);
         }
@@ -415,7 +415,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             ushort listenerPort = (ushort)(serverPort + fuzzy.SByte().Between(1, 5));
             var fixture = new WebHostFixture(context, "http://+:" + listenerPort, "http://+:" + serverPort + "/");
 
-            string actual = await fixture.Sut.OpenAsync(cancellation);
+            string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
             Assert.Equal($"http://{context.PublishAddress}:{serverPort}", actual);
         }
@@ -428,7 +428,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             var fixture = new GenericHostFixture(context, "http://+:" + port + "/");
             fixture.Sut.ConfigureToUseUniqueServiceUrl();
 
-            string actual = await fixture.Sut.OpenAsync(cancellation);
+            string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
             string suffix = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}", context.PartitionId, context.ReplicaOrInstanceId);
             Assert.Equal($"http://{context.PublishAddress}:{port}{suffix}", actual);
@@ -442,7 +442,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             var fixture = new WebHostFixture(context, "http://+:" + port + "/");
             fixture.Sut.ConfigureToUseUniqueServiceUrl();
 
-            string actual = await fixture.Sut.OpenAsync(cancellation);
+            string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
             string suffix = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}", context.PartitionId, context.ReplicaOrInstanceId);
             Assert.Equal($"http://{context.PublishAddress}:{port}{suffix}", actual);
@@ -453,9 +453,9 @@ public abstract class AspNetCoreCommunicationListenerTest
         {
             var fixture = new GenericHostFixture(serviceContext);
             var tcs = new TaskCompletionSource<object>();
-            _ = fixture.Host.Setup(_ => _.StartAsync(cancellation)).Returns(tcs.Task);
+            _ = fixture.Host.Setup(_ => _.StartAsync(cancellationToken)).Returns(tcs.Task);
 
-            Task<string> openTask = fixture.Sut.OpenAsync(cancellation);
+            Task<string> openTask = fixture.Sut.OpenAsync(cancellationToken);
 
             Assert.False(openTask.IsCompleted);
             tcs.SetResult(null);
@@ -467,9 +467,9 @@ public abstract class AspNetCoreCommunicationListenerTest
         {
             var fixture = new WebHostFixture(serviceContext);
             var tcs = new TaskCompletionSource<object>();
-            _ = fixture.Host.Setup(_ => _.StartAsync(cancellation)).Returns(tcs.Task);
+            _ = fixture.Host.Setup(_ => _.StartAsync(cancellationToken)).Returns(tcs.Task);
 
-            Task<string> openTask = fixture.Sut.OpenAsync(cancellation);
+            Task<string> openTask = fixture.Sut.OpenAsync(cancellationToken);
 
             Assert.False(openTask.IsCompleted);
             tcs.SetResult(null);
