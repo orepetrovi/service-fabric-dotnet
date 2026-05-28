@@ -156,6 +156,10 @@ public abstract class ExponentialRetryPolicyTest
             AssertDelayWithinExpectedRange(retryAttempt, ExponentialRetryPolicy.MaxDelayMultiplier);
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for retryDelayParameters.
+        public void ThrowsArgumentNullExceptionWhenRetryDelayParametersIsNull() =>
+            _ = Assert.Throws<ArgumentNullException>(() => sut.GetNextRetryDelay(null));
+
         void AssertDelayWithinExpectedRange(int retryAttempt, int delayMultiplier)
         {
             retryDelayParameters = new RetryDelayParameters(retryAttempt, fuzzy.Boolean());
