@@ -91,7 +91,7 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.False(result);
             Assert.Null(converted);
         }
-    }
 
-    sealed class UnknownFabricException(string message) : FabricException(message);
+        sealed class UnknownFabricException(string message) : FabricException(message);
+    }
 }
