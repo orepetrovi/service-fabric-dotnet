@@ -14,7 +14,7 @@ public abstract class ActorLogicalCallContextTest : IDisposable
 {
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    protected ActorLogicalCallContextTest() =>
+    ActorLogicalCallContextTest() =>
         ActorLogicalCallContext.Clear();
 
     void IDisposable.Dispose() =>
