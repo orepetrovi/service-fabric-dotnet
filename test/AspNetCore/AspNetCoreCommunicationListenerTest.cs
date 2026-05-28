@@ -61,19 +61,29 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public void DoesNotThrowBeforeOpenAsyncOnGenericHost()
+        public void DoesNotInvokeHostBeforeOpenAsyncOnGenericHost()
         {
             var fixture = new GenericHostFixture(serviceContext);
 
             fixture.Sut.Abort();
+
+            Assert.Null(fixture.BuildUrl);
+            Assert.Null(fixture.BuildListener);
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
+            fixture.Host.Verify(_ => _.Dispose(), Times.Never());
         }
 
         [Fact]
-        public void DoesNotThrowBeforeOpenAsyncOnWebHost()
+        public void DoesNotInvokeHostBeforeOpenAsyncOnWebHost()
         {
             var fixture = new WebHostFixture(serviceContext);
 
             fixture.Sut.Abort();
+
+            Assert.Null(fixture.BuildUrl);
+            Assert.Null(fixture.BuildListener);
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
+            fixture.Host.Verify(_ => _.Dispose(), Times.Never());
         }
     }
 
@@ -176,19 +186,29 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public async Task DoesNotThrowBeforeOpenAsyncOnGenericHost()
+        public async Task DoesNotInvokeHostBeforeOpenAsyncOnGenericHost()
         {
             var fixture = new GenericHostFixture(serviceContext);
 
             await fixture.Sut.CloseAsync(cancellation);
+
+            Assert.Null(fixture.BuildUrl);
+            Assert.Null(fixture.BuildListener);
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
+            fixture.Host.Verify(_ => _.Dispose(), Times.Never());
         }
 
         [Fact]
-        public async Task DoesNotThrowBeforeOpenAsyncOnWebHost()
+        public async Task DoesNotInvokeHostBeforeOpenAsyncOnWebHost()
         {
             var fixture = new WebHostFixture(serviceContext);
 
             await fixture.Sut.CloseAsync(cancellation);
+
+            Assert.Null(fixture.BuildUrl);
+            Assert.Null(fixture.BuildListener);
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
+            fixture.Host.Verify(_ => _.Dispose(), Times.Never());
         }
     }
 
