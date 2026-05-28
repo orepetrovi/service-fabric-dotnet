@@ -226,7 +226,7 @@ public abstract class ExponentialRetryPolicyTest
             int original = ExponentialRetryPolicy.SameDelayRequestCounter;
             try
             {
-                int newCounter = fuzzy.Int32().Between(2, 10);
+                int newCounter = original + fuzzy.Int32().Between(1, 7);
                 ExponentialRetryPolicy.SameDelayRequestCounter = newCounter;
                 sut.BaseRetryDelay = TimeSpan.FromMilliseconds(1);
                 int delayMultiplier = fuzzy.Int32().Between(1, ExponentialRetryPolicy.MaxDelayMultiplier - 1);
