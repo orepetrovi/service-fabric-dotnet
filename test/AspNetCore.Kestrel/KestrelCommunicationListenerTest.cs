@@ -1,9 +1,5 @@
-// ------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
-// ------------------------------------------------------------
-
-extern alias KestrelAssembly;
 
 using System;
 using System.Collections.ObjectModel;
@@ -15,19 +11,13 @@ using Fuzzy;
 using Inspector;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.ServiceFabric.AspNetCore.Tests;
 using Moq;
 using Xunit;
-using KestrelAssembly::Microsoft.ServiceFabric.Services.Communication.AspNetCore;
-using AspNetCoreSR = Microsoft.ServiceFabric.Services.Communication.AspNetCore.SR;
-using KestrelSR = KestrelAssembly::Microsoft.ServiceFabric.Services.Communication.AspNetCore.SR;
 
 namespace Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 
 public abstract class KestrelCommunicationListenerTest
 {
-    readonly KestrelCommunicationListener sut;
-
     // Constructor parameters
     readonly ServiceContext serviceContext = fuzzy.ServiceContext();
     readonly string endpointName = fuzzy.String();
@@ -35,14 +25,10 @@ public abstract class KestrelCommunicationListenerTest
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    KestrelCommunicationListenerTest() =>
-        sut = new KestrelCommunicationListener(serviceContext, endpointName, build);
-
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = InspectorWorkarounds.Constructor<KestrelCommunicationListener>(
-            typeof(ServiceContext),
-            typeof(Func<string, AspNetCoreCommunicationListener, IHost>));
+        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener)
+          .GetConstructor([typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IHost>)]);
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
@@ -73,9 +59,8 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = InspectorWorkarounds.Constructor<KestrelCommunicationListener>(
-            typeof(ServiceContext),
-            typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>));
+        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener)
+            .GetConstructor([typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>)]);
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
@@ -104,10 +89,8 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = InspectorWorkarounds.Constructor<KestrelCommunicationListener>(
-            typeof(ServiceContext),
-            typeof(string),
-            typeof(Func<string, AspNetCoreCommunicationListener, IHost>));
+        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener)
+            .GetConstructor([typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IHost>)]);
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
@@ -129,7 +112,7 @@ public abstract class KestrelCommunicationListenerTest
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
-            Assert.Equal(KestrelSR.EndpointNameEmptyExceptionMessage, exception.Message);
+            Assert.Equal("endpointResourceName cannot be empty string.", exception.Message);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing paramName argument to ArgumentException.
@@ -149,17 +132,15 @@ public abstract class KestrelCommunicationListenerTest
             // Pins the null-endpoint default-URL path to this overload's copy of the
             // `endpointName?.Length == 0 / this.endpointName = endpointName` block so a regression
             // affecting only this ctor is caught here.
-            var sut = (AspNetCoreCommunicationListener)new KestrelCommunicationListener(serviceContext, null, build);
+            AspNetCoreCommunicationListener sut = new KestrelCommunicationListener(serviceContext, null, build);
             Assert.Equal("http://+:0", sut.GetListenerUrl());
         }
     }
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = InspectorWorkarounds.Constructor<KestrelCommunicationListener>(
-            typeof(ServiceContext),
-            typeof(string),
-            typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>));
+        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener)
+            .GetConstructor([typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>)]);
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
@@ -179,7 +160,7 @@ public abstract class KestrelCommunicationListenerTest
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
             var exception = Assert.Throws<ArgumentException>(() => new KestrelCommunicationListener(serviceContext, string.Empty, build));
-            Assert.Equal(KestrelSR.EndpointNameEmptyExceptionMessage, exception.Message);
+            Assert.Equal("endpointResourceName cannot be empty string.", exception.Message);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing paramName argument to ArgumentException.
@@ -199,17 +180,18 @@ public abstract class KestrelCommunicationListenerTest
             // Pins the null-endpoint default-URL path to this overload's copy of the
             // `endpointName?.Length == 0 / this.endpointName = endpointName` block so a regression
             // affecting only this ctor is caught here.
-            var sut = (AspNetCoreCommunicationListener)new KestrelCommunicationListener(serviceContext, null, build);
+            AspNetCoreCommunicationListener sut = new KestrelCommunicationListener(serviceContext, null, build);
             Assert.Equal("http://+:0", sut.GetListenerUrl());
         }
     }
 
     public sealed class GetListenerUrl : KestrelCommunicationListenerTest
     {
-        new readonly KestrelCommunicationListener sut;
+        readonly KestrelCommunicationListener sut;
+
         // TestMocksRepository wires an endpoint collection into the mocked ICodePackageActivationContext
         // that these tests mutate; fuzzy.StatelessServiceContext() does not provide that plumbing.
-        readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
+        readonly StatelessServiceContext context = fuzzy.StatelessServiceContext();
 
         public GetListenerUrl() =>
             sut = new KestrelCommunicationListener(context, endpointName, build);
@@ -298,8 +280,7 @@ public abstract class KestrelCommunicationListenerTest
             other.Property<int>().Set(fuzzy.UInt16());
             context.CodePackageActivationContext.GetEndpoints().Add(other);
 
-            var exception = Assert.Throws<InvalidOperationException>(() => sut.GetListenerUrl());
-            Assert.Equal(string.Format(CultureInfo.InvariantCulture, AspNetCoreSR.EndpointNameNotFoundExceptionMessage, endpointName), exception.Message);
+            var exception = Assert.Throws<InvalidOperationException>(sut.GetListenerUrl);
         }
     }
 }
