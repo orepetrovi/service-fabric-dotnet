@@ -330,14 +330,7 @@ public abstract class ServicePartitionClientTest
             // After a non-transient exception, the SUT clears the cached client. Because lastRsp has already been
             // captured from the first GetClientAsync call, the next iteration takes the rsp-based GetClientAsync
             // overload.
-            SetupReportOperationException(new OperationRetryControl
-            {
-                ShouldRetry = true,
-                IsTransient = false,
-                MaxRetryCount = 5,
-                ExceptionId = "ex",
-                GetRetryDelay = _ => ShortRetryDelay,
-            });
+            SetupReportOperationException(NonTransientRetry());
             int calls = 0;
 
             _ = await sut.InvokeWithRetryAsync<object>(
@@ -368,14 +361,7 @@ public abstract class ServicePartitionClientTest
             _ = communicationClientFactory
                 .Setup(_ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(newCommunicationClient.Object);
-            SetupReportOperationException(new OperationRetryControl
-            {
-                ShouldRetry = true,
-                IsTransient = false,
-                MaxRetryCount = 5,
-                ExceptionId = "ex",
-                GetRetryDelay = _ => ShortRetryDelay,
-            });
+            SetupReportOperationException(NonTransientRetry());
             int calls = 0;
 
             _ = await sut.InvokeWithRetryAsync<object>(
@@ -830,6 +816,16 @@ public abstract class ServicePartitionClientTest
             {
                 ShouldRetry = true,
                 IsTransient = true,
+                MaxRetryCount = maxRetryCount,
+                ExceptionId = "exception",
+                GetRetryDelay = _ => delay ?? ShortRetryDelay,
+            };
+
+        protected static OperationRetryControl NonTransientRetry(int maxRetryCount = 5, TimeSpan? delay = null) =>
+            new()
+            {
+                ShouldRetry = true,
+                IsTransient = false,
                 MaxRetryCount = maxRetryCount,
                 ExceptionId = "exception",
                 GetRetryDelay = _ => delay ?? ShortRetryDelay,
