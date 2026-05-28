@@ -22,36 +22,6 @@ public abstract class ResolvedServicePartitionClientTest
 
     protected ResolvedServicePartitionClientTest() => sut = new(other);
 
-    public sealed class Constructor : ResolvedServicePartitionClientTest
-    {
-        [Fact]
-        public void InitializesProperties()
-        {
-            var sut = new ResolvedServicePartitionClient();
-            Assert.Null(sut.Rsp);
-            Assert.Null(sut.Client);
-        }
-    }
-
-    public sealed class Rsp : ResolvedServicePartitionClientTest
-    {
-        [Fact]
-        public void ReturnsValuePreviouslySet()
-        {
-            ResolvedServicePartition rsp = Type<ResolvedServicePartition>.Uninitialized();
-            sut.Rsp = rsp;
-            Assert.Same(rsp, sut.Rsp);
-        }
-
-        [Fact]
-        public void IsNullAfterSettingToNull()
-        {
-            sut.Rsp = Type<ResolvedServicePartition>.Uninitialized();
-            sut.Rsp = null;
-            Assert.Null(sut.Rsp);
-        }
-    }
-
     public sealed class Client : ResolvedServicePartitionClientTest
     {
         readonly ICommunicationClient client = Mock.Of<ICommunicationClient>();
@@ -72,6 +42,17 @@ public abstract class ResolvedServicePartitionClientTest
         }
     }
 
+    public sealed class Constructor : ResolvedServicePartitionClientTest
+    {
+        [Fact]
+        public void InitializesProperties()
+        {
+            var sut = new ResolvedServicePartitionClient();
+            Assert.Null(sut.Rsp);
+            Assert.Null(sut.Client);
+        }
+    }
+
     public sealed class Constructor_ResolvedServicePartitionClient : ResolvedServicePartitionClientTest
     {
         [Fact]
@@ -86,6 +67,25 @@ public abstract class ResolvedServicePartitionClientTest
         {
             var thrown = Assert.Throws<ArgumentNullException>(() => new ResolvedServicePartitionClient(null));
             Assert.Equal("other", thrown.ParamName);
+        }
+    }
+
+    public sealed class Rsp : ResolvedServicePartitionClientTest
+    {
+        [Fact]
+        public void ReturnsValuePreviouslySet()
+        {
+            ResolvedServicePartition rsp = Type<ResolvedServicePartition>.Uninitialized();
+            sut.Rsp = rsp;
+            Assert.Same(rsp, sut.Rsp);
+        }
+
+        [Fact]
+        public void IsNullAfterSettingToNull()
+        {
+            sut.Rsp = Type<ResolvedServicePartition>.Uninitialized();
+            sut.Rsp = null;
+            Assert.Null(sut.Rsp);
         }
     }
 }
