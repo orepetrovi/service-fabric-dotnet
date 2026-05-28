@@ -189,6 +189,29 @@ public abstract class ExponentialRetryPolicyTest
         [Fact]
         public void DefaultIsNine() =>
             Assert.Equal(9, ExponentialRetryPolicy.MaxDelayMultiplier);
+
+        [Fact]
+        public void CapsDelayMultiplierUsedByGetNextRetryDelay()
+        {
+            int original = ExponentialRetryPolicy.MaxDelayMultiplier;
+            try
+            {
+                int newMax = fuzzy.Int32().Between(1, 5);
+                ExponentialRetryPolicy.MaxDelayMultiplier = newMax;
+                sut.BaseRetryDelay = TimeSpan.FromMilliseconds(1);
+                int retryAttempt = (newMax + fuzzy.Int32().Between(1, 10))
+                    * ExponentialRetryPolicy.SameDelayRequestCounter;
+                long expectedBaseMs = 1L << newMax;
+                var expectedMin = TimeSpan.FromMilliseconds(expectedBaseMs);
+                var expectedMax = TimeSpan.FromMilliseconds(expectedBaseMs + maxRetryJitter.TotalMilliseconds);
+                TimeSpan delay = sut.GetNextRetryDelay(new RetryDelayParameters(retryAttempt, fuzzy.Boolean()));
+                Assert.InRange(delay, expectedMin, expectedMax);
+            }
+            finally
+            {
+                ExponentialRetryPolicy.MaxDelayMultiplier = original;
+            }
+        }
     }
 
     public sealed class SameDelayRequestCounter : ExponentialRetryPolicyTest
@@ -196,6 +219,29 @@ public abstract class ExponentialRetryPolicyTest
         [Fact]
         public void DefaultIsThree() =>
             Assert.Equal(3, ExponentialRetryPolicy.SameDelayRequestCounter);
+
+        [Fact]
+        public void DeterminesGroupingUsedByGetNextRetryDelay()
+        {
+            int original = ExponentialRetryPolicy.SameDelayRequestCounter;
+            try
+            {
+                int newCounter = fuzzy.Int32().Between(2, 10);
+                ExponentialRetryPolicy.SameDelayRequestCounter = newCounter;
+                sut.BaseRetryDelay = TimeSpan.FromMilliseconds(1);
+                int delayMultiplier = fuzzy.Int32().Between(1, ExponentialRetryPolicy.MaxDelayMultiplier - 1);
+                int retryAttempt = delayMultiplier * newCounter;
+                long expectedBaseMs = 1L << delayMultiplier;
+                var expectedMin = TimeSpan.FromMilliseconds(expectedBaseMs);
+                var expectedMax = TimeSpan.FromMilliseconds(expectedBaseMs + maxRetryJitter.TotalMilliseconds);
+                TimeSpan delay = sut.GetNextRetryDelay(new RetryDelayParameters(retryAttempt, fuzzy.Boolean()));
+                Assert.InRange(delay, expectedMin, expectedMax);
+            }
+            finally
+            {
+                ExponentialRetryPolicy.SameDelayRequestCounter = original;
+            }
+        }
     }
 
     const int Samples = 100;
