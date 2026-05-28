@@ -11,28 +11,28 @@ namespace Microsoft.ServiceFabric.Services.Communication.Client;
 
 public abstract class RetryDelayParametersTest
 {
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
     readonly RetryDelayParameters sut;
 
     // Constructor parameters
     readonly int retryAttempt = fuzzy.Int32();
     readonly bool isTransient = fuzzy.Boolean();
 
-    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-
     RetryDelayParametersTest() =>
         sut = new RetryDelayParameters(retryAttempt, isTransient);
 
-    public sealed class IsTransient : RetryDelayParametersTest
+    public sealed class Constructor : RetryDelayParametersTest
     {
-        [Fact]
-        public void ReturnsValueGivenToConstructor() =>
-            Assert.Equal(isTransient, sut.IsTransient);
-    }
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void InitializesProperties(bool isTransient)
+        {
+            var sut = new RetryDelayParameters(retryAttempt, isTransient);
 
-    public sealed class RetryAttempt : RetryDelayParametersTest
-    {
-        [Fact]
-        public void ReturnsValueGivenToConstructor() =>
+            Assert.Equal(isTransient, sut.IsTransient);
             Assert.Equal(retryAttempt, sut.RetryAttempt);
+        }
     }
 }
