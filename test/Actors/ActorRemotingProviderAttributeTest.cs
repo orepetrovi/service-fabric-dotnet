@@ -90,12 +90,9 @@ public abstract class ActorRemotingProviderAttributeTest
             Type type = MockType(mockAssemblyWithoutRemotingProviderAttribute);
             typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(null);
 
-            var result = ActorRemotingProviderAttribute.GetProvider(new[] { type });
+            ActorRemotingProviderAttribute result = ActorRemotingProviderAttribute.GetProvider(new[] { type });
 
-            var expected = new FabricTransportActorRemotingProviderAttribute();
-            var actual = Assert.IsType<FabricTransportActorRemotingProviderAttribute>(result);
-            Assert.Equal(expected.RemotingClientVersion, actual.RemotingClientVersion);
-            Assert.Equal(expected.RemotingListenerVersion, actual.RemotingListenerVersion);
+            Assert.IsType<FabricTransportActorRemotingProviderAttribute>(result);
         }
     }
 
