@@ -66,6 +66,14 @@ public abstract class OperationRetrySettingsTest
             var sut = new OperationRetrySettings(retryPolicy);
             Assert.Same(retryPolicy, sut.RetryPolicy);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for retryPolicy.
+        public void ThrowsArgumentNullExceptionWhenRetryPolicyIsNull()
+        {
+            var actual = Assert.Throws<ArgumentNullException>(
+                () => new OperationRetrySettings(null));
+            Assert.Equal(nameof(retryPolicy), actual.ParamName);
+        }
     }
 
     public sealed class Constructor_TimeSpan_TimeSpan_Int32_Int32 : OperationRetrySettingsTest
