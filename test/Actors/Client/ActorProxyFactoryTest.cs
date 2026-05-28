@@ -97,7 +97,7 @@ public abstract class ActorProxyFactoryTest
 
             Assert.Same(actorId, proxy.ActorId);
             Assert.Equal(expectedUri, proxy.ActorServicePartitionClientV2.ServiceUri);
-            Assert.Equal(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
+            Assert.Same(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
             Assert.Same(factory, proxy.ActorServicePartitionClientV2.Factory);
         }
 
@@ -161,7 +161,7 @@ public abstract class ActorProxyFactoryTest
 
             var proxy = (IActorProxy)sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName);
 
-            Assert.Equal(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
+            Assert.Same(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
         }
     }
 
@@ -179,7 +179,7 @@ public abstract class ActorProxyFactoryTest
 
             Assert.Same(actorId, proxy.ActorId);
             Assert.Same(serviceUri, proxy.ActorServicePartitionClientV2.ServiceUri);
-            Assert.Equal(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
+            Assert.Same(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
             Assert.Same(factory, proxy.ActorServicePartitionClientV2.Factory);
         }
 
@@ -208,7 +208,7 @@ public abstract class ActorProxyFactoryTest
 
             Assert.Same(actorId, proxy.ActorId);
             Assert.Same(serviceUri, proxy.ActorServicePartitionClientV2.ServiceUri);
-            Assert.Equal(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
+            Assert.Same(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
             Assert.Same(factory, proxy.ActorServicePartitionClientV2.Factory);
         }
 
@@ -236,7 +236,7 @@ public abstract class ActorProxyFactoryTest
             var proxy = (IServiceProxy)sut.CreateActorServiceProxy<IActorService>(serviceUri, actorId, listenerName);
 
             Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
-            Assert.Equal(listenerName, proxy.ServicePartitionClient2.ListenerName);
+            Assert.Same(listenerName, proxy.ServicePartitionClient2.ListenerName);
             Assert.Equal(actorId.GetPartitionKey(), proxy.ServicePartitionClient2.PartitionKey.Value);
             Assert.Same(factory, proxy.ServicePartitionClient2.Factory);
         }
@@ -265,7 +265,7 @@ public abstract class ActorProxyFactoryTest
             var proxy = (IServiceProxy)sut.CreateActorServiceProxy<IActorService>(serviceUri, partitionKey, listenerName);
 
             Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
-            Assert.Equal(listenerName, proxy.ServicePartitionClient2.ListenerName);
+            Assert.Same(listenerName, proxy.ServicePartitionClient2.ListenerName);
             Assert.Equal(partitionKey, proxy.ServicePartitionClient2.PartitionKey.Value);
             Assert.Same(factory, proxy.ServicePartitionClient2.Factory);
         }
