@@ -95,6 +95,17 @@ public abstract class ActorLogicalCallContextTest : IDisposable
         }
 
         [Fact]
+        public void IsEquivalentToClearWhenValueIsNull()
+        {
+            ActorLogicalCallContext.Set(fuzzy.String());
+
+            ActorLogicalCallContext.Set(null);
+
+            Assert.False(ActorLogicalCallContext.TryGet(out string value));
+            Assert.Null(value);
+        }
+
+        [Fact]
         public async Task StoresValueObservableByAwaitedTask()
         {
             string expected = fuzzy.String();
@@ -131,17 +142,6 @@ public abstract class ActorLogicalCallContextTest : IDisposable
 
             ActorLogicalCallContext.TryGet(out string actual);
             Assert.Same(expected, actual);
-        }
-
-        [Fact]
-        public void IsEquivalentToClearWhenValueIsNull()
-        {
-            ActorLogicalCallContext.Set(fuzzy.String());
-
-            ActorLogicalCallContext.Set(null);
-
-            Assert.False(ActorLogicalCallContext.TryGet(out string value));
-            Assert.Null(value);
         }
     }
 
