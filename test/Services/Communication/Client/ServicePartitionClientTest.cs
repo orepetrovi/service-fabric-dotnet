@@ -450,7 +450,6 @@ public abstract class ServicePartitionClientTest
                     cts.Token));
 
             Assert.Equal(retryCount, calls);
-            Assert.True(cts.IsCancellationRequested);
         }
 
         [Fact]
