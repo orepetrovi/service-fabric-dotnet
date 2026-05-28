@@ -13,13 +13,21 @@ namespace Microsoft.ServiceFabric.Services.Communication.Client;
 
 public abstract class ResolvedServicePartitionClientTest
 {
-    readonly ResolvedServicePartitionClient sut = new();
+    readonly ResolvedServicePartitionClient other = new()
+    {
+        Rsp = MakeRsp(),
+        Client = Mock.Of<ICommunicationClient>(),
+    };
+    readonly ResolvedServicePartitionClient sut;
+
+    protected ResolvedServicePartitionClientTest() => sut = new(other);
 
     public sealed class Constructor : ResolvedServicePartitionClientTest
     {
         [Fact]
         public void InitializesProperties()
         {
+            var sut = new ResolvedServicePartitionClient();
             Assert.Null(sut.Rsp);
             Assert.Null(sut.Client);
         }
@@ -66,19 +74,11 @@ public abstract class ResolvedServicePartitionClientTest
 
     public sealed class Constructor_ResolvedServicePartitionClient : ResolvedServicePartitionClientTest
     {
-        readonly ResolvedServicePartitionClient other = new()
-        {
-            Rsp = MakeRsp(),
-            Client = Mock.Of<ICommunicationClient>(),
-        };
-
         [Fact]
         public void CopiesRspAndClientFromOther()
         {
-            var copy = new ResolvedServicePartitionClient(other);
-
-            Assert.Same(other.Rsp, copy.Rsp);
-            Assert.Same(other.Client, copy.Client);
+            Assert.Same(other.Rsp, sut.Rsp);
+            Assert.Same(other.Client, sut.Client);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Copy constructor should throw ArgumentNullException when other is null
