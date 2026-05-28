@@ -25,7 +25,7 @@ public abstract class ServicePartitionClientTest
     readonly Mock<ICommunicationClientFactory<ICommunicationClient>> communicationClientFactory = new(MockBehavior.Strict);
     readonly Uri serviceUri = fuzzy.Uri();
     readonly ServicePartitionKey partitionKey = new(fuzzy.Int64());
-    readonly TargetReplicaSelector targetReplicaSelector = fuzzy.Enum<TargetReplicaSelector>();
+    const TargetReplicaSelector targetReplicaSelector = TargetReplicaSelector.RandomReplica;
     readonly string listenerName = fuzzy.String();
     readonly OperationRetrySettings retrySettings = new();
 
@@ -48,9 +48,19 @@ public abstract class ServicePartitionClientTest
             Assert.Same(communicationClientFactory.Object, sut.Factory);
             Assert.Same(serviceUri, sut.ServiceUri);
             Assert.Same(partitionKey, sut.PartitionKey);
-            Assert.Equal(targetReplicaSelector, sut.TargetReplicaSelector);
             Assert.Same(listenerName, sut.ListenerName);
             Assert.Same(retrySettings, sut.Field<OperationRetrySettings>().Value);
+        }
+
+        [Theory]
+        [InlineData(TargetReplicaSelector.Default)]
+        [InlineData(TargetReplicaSelector.RandomReplica)]
+        [InlineData(TargetReplicaSelector.RandomSecondaryReplica)]
+        public void InitializesTargetReplicaSelector(TargetReplicaSelector selector)
+        {
+            var sut = new ServicePartitionClient<ICommunicationClient>(
+                communicationClientFactory.Object, serviceUri, partitionKey, selector, listenerName, retrySettings);
+            Assert.Equal(selector, sut.TargetReplicaSelector);
         }
 
         [Fact]
