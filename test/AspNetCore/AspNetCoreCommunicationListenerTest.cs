@@ -142,7 +142,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
             bool stopped = false;
             bool stoppedBeforeDispose = false;
-            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Callback(() => stopped = true).Returns(NewCompletedTask());
+            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Callback(() => stopped = true).Returns(Task.CompletedTask);
             _ = fixture.Host.Setup(_ => _.Dispose()).Callback(() => stoppedBeforeDispose = stopped);
 
             await fixture.Sut.CloseAsync(cancellationToken);
@@ -158,7 +158,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
             bool stopped = false;
             bool stoppedBeforeDispose = false;
-            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Callback(() => stopped = true).Returns(NewCompletedTask());
+            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Callback(() => stopped = true).Returns(Task.CompletedTask);
             _ = fixture.Host.Setup(_ => _.Dispose()).Callback(() => stoppedBeforeDispose = stopped);
 
             await fixture.Sut.CloseAsync(cancellationToken);
@@ -500,8 +500,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
         internal WebHostFixture(ServiceContext context, string listenerUrl = "http://+:0", string serverAddress = null)
         {
-            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(NewCompletedTask);
-            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(NewCompletedTask);
+            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
             Sut = new TestListener(context, (url, listener) =>
             {
                 BuildUrl = url;
@@ -524,8 +524,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
         internal GenericHostFixture(ServiceContext context, string listenerUrl = "http://+:0", string serverAddress = null)
         {
-            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(NewCompletedTask);
-            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(NewCompletedTask);
+            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
             Sut = new TestListener(context, (url, listener) =>
             {
                 BuildUrl = url;
@@ -560,12 +560,5 @@ public abstract class AspNetCoreCommunicationListenerTest
 
         internal new EndpointResourceDescription GetEndpointResourceDescription(string endpointName) =>
             base.GetEndpointResourceDescription(endpointName);
-    }
-
-    static Task NewCompletedTask()
-    {
-        var tcs = new TaskCompletionSource<object>();
-        tcs.SetResult(null);
-        return tcs.Task;
     }
 }
