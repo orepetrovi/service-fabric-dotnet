@@ -41,22 +41,22 @@ public abstract class ActorDataContractSurrogateTest
     {
         [Fact]
         public void ReturnsActorReferenceWhenTypeImplementsIActor() =>
-            Assert.Equal(typeof(ActorReference), sut.GetSurrogateType(typeof(IFactoryTestActor)));
+            Assert.Same(typeof(ActorReference), sut.GetSurrogateType(typeof(IFactoryTestActor)));
 
         [Fact]
         public void ReturnsInputTypeWhenItDoesNotImplementIActor() =>
-            Assert.Equal(typeof(string), sut.GetSurrogateType(typeof(string)));
+            Assert.Same(typeof(string), sut.GetSurrogateType(typeof(string)));
     }
 #else
     public sealed class GetDataContractType_Type : ActorDataContractSurrogateTest
     {
         [Fact]
         public void ReturnsActorReferenceWhenTypeImplementsIActor() =>
-            Assert.Equal(typeof(ActorReference), sut.GetDataContractType(typeof(IFactoryTestActor)));
+            Assert.Same(typeof(ActorReference), sut.GetDataContractType(typeof(IFactoryTestActor)));
 
         [Fact]
         public void ReturnsInputTypeWhenItDoesNotImplementIActor() =>
-            Assert.Equal(typeof(string), sut.GetDataContractType(typeof(string)));
+            Assert.Same(typeof(string), sut.GetDataContractType(typeof(string)));
     }
 #endif
 
