@@ -146,7 +146,7 @@ public abstract class ActorDataContractSurrogateTest
 
             object result = sut.GetObjectToSerialize(actor, fuzzy.Type());
 
-            var reference = Assert.IsType<ActorReference>(result);
+            var reference = (ActorReference)result;
             Assert.Same(actorId, reference.ActorId);
             Assert.Same(serviceUri, reference.ServiceUri);
             Assert.Same(listenerName, reference.ListenerName);
@@ -190,7 +190,7 @@ public abstract class ActorDataContractSurrogateTest
     {
         [Fact]
         public void IsActorDataContractSurrogate() =>
-            Assert.IsType<ActorDataContractSurrogate>(ActorDataContractSurrogate.Instance);
+            Assert.Same(typeof(ActorDataContractSurrogate), ActorDataContractSurrogate.Instance.GetType());
     }
 
 #if !NET
