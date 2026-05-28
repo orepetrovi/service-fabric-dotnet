@@ -367,6 +367,40 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
+        public async Task UpdatesLastRspFromReResolvedClientAfterNonTransientException()
+        {
+            // After a non-transient exception the SUT re-resolves via the rsp-based GetClientAsync overload. The
+            // second client carries a distinct ResolvedServicePartition, and the SUT must adopt it as the new lastRsp.
+            var newRsp = Type<ResolvedServicePartition>.Uninitialized();
+            var newClientMock = new Mock<ICommunicationClient>();
+            newClientMock.SetupGet(_ => _.ResolvedServicePartition).Returns(newRsp);
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(newClientMock.Object);
+            SetupReportOperationException(new OperationRetryControl
+            {
+                ShouldRetry = true,
+                IsTransient = false,
+                MaxRetryCount = 5,
+                ExceptionId = "ex",
+                GetRetryDelay = _ => ShortRetryDelay,
+            });
+            int calls = 0;
+
+            _ = await sut.InvokeWithRetryAsync<object>(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.FromResult<object>(calls);
+                },
+                cancellationToken);
+
+            Assert.True(sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition actual));
+            Assert.Same(newRsp, actual);
+        }
+
+        [Fact]
         public async Task DoesNotResetCommunicationClientWhenExceptionIsTransient()
         {
             SetupReportOperationException(TransientRetry());
