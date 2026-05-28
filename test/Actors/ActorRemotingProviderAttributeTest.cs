@@ -185,7 +185,7 @@ public abstract class ActorRemotingProviderAttributeTest
         var type = new Mock<Type>();
         _ = type.Setup(_ => _.Assembly).Returns(assembly);
 #if NETFRAMEWORK
-        var reflectableType = type.As<IReflectableType>();
+        Mock<IReflectableType> reflectableType = type.As<IReflectableType>();
         _ = reflectableType.Setup(_ => _.GetTypeInfo()).Returns(MockTypeInfo(assembly));
 #endif
         return type.Object;
