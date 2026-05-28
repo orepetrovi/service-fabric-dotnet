@@ -81,7 +81,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public void DoesNotInvokeHostBeforeOpenAsyncOnGenericHost()
+        public void DoesNotBuildHostWhenNotOpenedOnGenericHost()
         {
             var fixture = new GenericHostFixture(serviceContext);
 
@@ -91,7 +91,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public void DoesNotInvokeHostBeforeOpenAsyncOnWebHost()
+        public void DoesNotBuildHostWhenNotOpenedOnWebHost()
         {
             var fixture = new WebHostFixture(serviceContext);
 
@@ -196,7 +196,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public async Task DoesNotInvokeHostBeforeOpenAsyncOnGenericHost()
+        public async Task DoesNotBuildHostWhenNotOpenedOnGenericHost()
         {
             var fixture = new GenericHostFixture(serviceContext);
 
@@ -206,7 +206,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public async Task DoesNotInvokeHostBeforeOpenAsyncOnWebHost()
+        public async Task DoesNotBuildHostWhenNotOpenedOnWebHost()
         {
             var fixture = new WebHostFixture(serviceContext);
 
