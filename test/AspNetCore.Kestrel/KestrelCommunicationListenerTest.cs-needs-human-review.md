@@ -1,29 +1,3 @@
-### ⚠️ Should Fix — Test file belongs in a dedicated `AspNetCore.Kestrel` test project
-Reported by: `gemini`. Cross-check: `gpt` Agree, `opus` Agree. Author pushed back; deferred for human decision.
-
-`KestrelCommunicationListener` ships from [src/AspNetCore.Kestrel/Microsoft.ServiceFabric.AspNetCore.Kestrel.csproj](src/AspNetCore.Kestrel/Microsoft.ServiceFabric.AspNetCore.Kestrel.csproj), but its tests live in [test/AspNetCore/Microsoft.ServiceFabric.AspNetCore.Tests.csproj](test/AspNetCore/Microsoft.ServiceFabric.AspNetCore.Tests.csproj), which already aggregates three product projects ([Configuration, HttpSys, Kestrel](test/AspNetCore/Microsoft.ServiceFabric.AspNetCore.Tests.csproj#L25-L27)). [.github/instructions/test.instructions.md](.github/instructions/test.instructions.md#L13-L17) and [CONTRIBUTING.md](CONTRIBUTING.md#L12) both require a 1:1 mapping with the `.Tests` suffix. The `Aliases="KestrelAssembly"` extern-alias workaround on the Kestrel `ProjectReference` is a direct symptom of this violation: `KestrelCommunicationListener` is defined in both `AspNetCore` and `AspNetCore.Kestrel`, so the aggregated tests project needs an alias to disambiguate.
-
-**Author response (Push back — out of scope):**
-Declining to make this change as part of the task "test `KestrelCommunicationListener`". Rationale:
-
-1. **Scope.** The user's request was to add a unit test class for one type. The same out-of-scope reasoning the user applied to bug fixes ("Fixing bugs in `KestrelCommunicationListener` is out of scope") applies to restructuring the test project layout. Reorganizing test projects is a structural refactor with its own review and risk profile.
-
-2. **Partial fix makes the repo worse, not better.** The current `test/AspNetCore` project co-locates tests for three product projects — `AspNetCore.Configuration`, `AspNetCore.HttpSys`, and `AspNetCore.Kestrel`. Extracting only Kestrel leaves Configuration and HttpSys still co-located in violation of the same rule, and introduces a new inconsistency: one of three siblings has its own test project, two do not. A reader cannot tell from the layout whether `test/AspNetCore` is "the aggregated AspNetCore tests project" or "the AspNetCore-plus-leftovers project". The finding itself acknowledges this: *"The pre-existing co-location for HttpSys/Configuration is itself a violation, not justification."* Agreed — which is exactly why the fix needs to cover all three, not just one, and that is a separate task.
-
-3. **The extern-alias is a symptom of a deeper duplication, not of test-project layout.** `KestrelCommunicationListener` exists in both `Microsoft.ServiceFabric.AspNetCore` and `Microsoft.ServiceFabric.AspNetCore.Kestrel` — that type duplication is what forces the alias on consumers (including any test project that references both). Splitting the test project removes the alias from the new Kestrel-only tests project, but the duplication itself, and the alias requirement for any consumer that references both assemblies, remain. That is also a separate concern.
-
-4. **Concrete follow-up.** Recommend a dedicated task that:
-   - Creates `test/AspNetCore.Configuration/`, `test/AspNetCore.HttpSys/`, and `test/AspNetCore.Kestrel/` test projects mirroring their src counterparts 1:1.
-   - Moves `ServiceFabricConfiguration*Test.cs`, `HttpSysCommunicationListenerTest*.cs`, and `KestrelCommunicationListenerTest*.cs` (with their `-needs-human-review.md` siblings) into the respective new projects.
-   - Decides how to share `TestMocksRepository`, `KeyedCollectionImpl`, and the `Mocks/` folder across the four projects (shared project, linked files, or a small internal test-helper project).
-   - Updates each `src/AspNetCore*/AssemblyInfo.cs` `InternalsVisibleTo` entry to point at its matching `.Tests` assembly.
-   - Adds all three new projects to `code.slnx`.
-   - Separately addresses the `KestrelCommunicationListener` type duplication between `AspNetCore` and `AspNetCore.Kestrel`, which is the actual source of the extern-alias requirement.
-
-Human reviewer: please confirm scope before this is acted on.
-
----
-
 ### ⚠️ Should Fix — Inspector workaround TODO references an unfiled issue
 Reported by: `gemini`, `opus`.
 
