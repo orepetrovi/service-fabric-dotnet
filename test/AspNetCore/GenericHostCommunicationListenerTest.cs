@@ -362,7 +362,7 @@ public abstract class GenericHostCommunicationListenerTest
                 return buildHost;
             };
             var localListener = new TestListener(serviceContext, buildThatConfiguresSuffix, listenerUrl);
-            var localSut = new GenericHostCommunicationListener(buildThatConfiguresSuffix, localListener);
+            ICommunicationListener localSut = new GenericHostCommunicationListener(buildThatConfiguresSuffix, localListener);
 
             string actual = await localSut.OpenAsync(cancellation);
 
