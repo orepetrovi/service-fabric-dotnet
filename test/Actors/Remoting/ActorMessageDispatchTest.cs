@@ -23,8 +23,6 @@ public abstract class ActorMessageDispatchTest
     {
         [Fact]
         public void EqualsCrcOfIActorCommunicationFullName() =>
-            Assert.Equal(
-                IdUtil.ComputeIdWithCRC("Microsoft.ServiceFabric.Actors.Communication.IActorCommunication"),
-                ActorMessageDispatch.InterfaceIdV2);
+            Assert.Equal(1034796820, ActorMessageDispatch.InterfaceIdV2);
     }
 }
