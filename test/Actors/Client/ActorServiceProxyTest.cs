@@ -17,6 +17,8 @@ namespace Microsoft.ServiceFabric.Actors.Client;
 
 public abstract class ActorServiceProxyTest : IDisposable
 {
+    readonly ActorServiceProxy sut = new();
+
     readonly Remoting.V2.Client.ActorProxyFactory previousV2;
     readonly IServiceRemotingClientFactory factory = new Mock<IServiceRemotingClientFactory> { DefaultValue = DefaultValue.Mock }.Object;
 
