@@ -45,16 +45,6 @@ public abstract class ActorRemotingProviderAttributeTest
             typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(Assembly.GetEntryAssembly());
 
         [Fact]
-        public void ReturnsRemotingProviderAttributeOfEntryAssemblyWhenTypesIsNull()
-        {
-            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(assemblyWithRemotingProviderAttribute);
-
-            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider();
-
-            Assert.Same(expectedRemotingProvider, provider);
-        }
-
-        [Fact]
         public void ReturnsRemotingProviderAttributeOfTypeAssembly()
         {
             Type type = MockType(assemblyWithRemotingProviderAttribute);
@@ -98,6 +88,16 @@ public abstract class ActorRemotingProviderAttributeTest
             typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(MockAssembly(entryProvider));
 
             ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider(new[] { type });
+
+            Assert.Same(expectedRemotingProvider, provider);
+        }
+
+        [Fact]
+        public void ReturnsRemotingProviderAttributeOfEntryAssemblyWhenTypesIsNull()
+        {
+            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(assemblyWithRemotingProviderAttribute);
+
+            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider();
 
             Assert.Same(expectedRemotingProvider, provider);
         }
