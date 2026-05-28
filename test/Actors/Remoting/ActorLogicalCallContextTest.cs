@@ -96,7 +96,7 @@ public abstract class ActorLogicalCallContextTest : IDisposable
         [Fact]
         public void IsEquivalentToClearWhenCallContextValueIsNull()
         {
-            ActorLogicalCallContext.Set(fuzzy.String());
+            ActorLogicalCallContext.Set(callContextValue);
 
             ActorLogicalCallContext.Set(null);
 
