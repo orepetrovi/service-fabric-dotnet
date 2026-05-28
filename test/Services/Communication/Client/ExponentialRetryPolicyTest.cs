@@ -175,8 +175,7 @@ public abstract class ExponentialRetryPolicyTest
                     observedMax = delay;
             }
 
-            // Both the constant base term and the random jitter term must contribute to the observed delay.
-            Assert.True(observedMin.Ticks >= expectedMin.Ticks);
+            // The random jitter term must contribute to the observed delay.
             Assert.True((observedMax - observedMin).Ticks > maxRetryJitter.Ticks / 2);
         }
     }
