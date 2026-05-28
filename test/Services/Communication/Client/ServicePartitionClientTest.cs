@@ -575,13 +575,20 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public async Task InvokesUnderlyingOverloadWithDefaultCancellationToken()
+        public async Task ReturnsResultOfFuncWhenNoExceptionThrown()
         {
             var expected = new object();
 
             object actual = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(expected));
 
             Assert.Same(expected, actual);
+        }
+
+        [Fact]
+        public async Task DefaultsCancellationTokenToNoneWhenNotSpecified()
+        {
+            _ = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()));
+
             communicationClientFactory.Verify(
                 _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, CancellationToken.None),
                 Times.Once);
@@ -681,13 +688,20 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public async Task InvokesUnderlyingOverloadWithDefaultCancellationToken()
+        public async Task PassesResolvedClientToFunc()
         {
             ICommunicationClient actual = null;
 
             await sut.InvokeWithRetryAsync(c => { actual = c; return Task.CompletedTask; });
 
             Assert.Same(client, actual);
+        }
+
+        [Fact]
+        public async Task DefaultsCancellationTokenToNoneWhenNotSpecified()
+        {
+            await sut.InvokeWithRetryAsync(_ => Task.CompletedTask);
+
             communicationClientFactory.Verify(
                 _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, CancellationToken.None),
                 Times.Once);
