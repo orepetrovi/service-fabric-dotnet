@@ -25,7 +25,7 @@ public abstract class ServicePartitionClientTest
     readonly Mock<ICommunicationClientFactory<ICommunicationClient>> communicationClientFactory = new(MockBehavior.Strict);
     readonly Uri serviceUri = fuzzy.Uri();
     readonly ServicePartitionKey partitionKey = new(fuzzy.Int64());
-    const TargetReplicaSelector targetReplicaSelector = TargetReplicaSelector.RandomReplica;
+    readonly TargetReplicaSelector targetReplicaSelector = fuzzy.Enum<TargetReplicaSelector>();
     readonly string listenerName = fuzzy.String();
     readonly OperationRetrySettings retrySettings = new();
 
