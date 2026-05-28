@@ -51,6 +51,15 @@ public abstract class ServicePartitionClientTest
             Assert.Equal(nameof(communicationClientFactory), actual.ParamName);
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for serviceUri.
+        public void ThrowsArgumentNullExceptionWhenServiceUriIsNull()
+        {
+            var actual = Assert.Throws<ArgumentNullException>(
+                () => new ServicePartitionClient<ICommunicationClient>(
+                    communicationClientFactory.Object, null, partitionKey, targetReplicaSelector, listenerName, retrySettings));
+            Assert.Equal(nameof(serviceUri), actual.ParamName);
+        }
+
         [Fact]
         public void InitializesProperties()
         {
