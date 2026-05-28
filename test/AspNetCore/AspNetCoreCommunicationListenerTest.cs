@@ -337,7 +337,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public async Task InvokesBuildWithGetListenerUrlAndSelfOnGenericHost()
         {
-            string listenerUrl = "http://+:" + fuzzy.UInt16();
+            string listenerUrl = "http://+:" + fuzzy.UInt16().Minimum(1);
             var fixture = new GenericHostFixture(serviceContext, listenerUrl);
 
             _ = await fixture.Sut.OpenAsync(cancellation);
@@ -349,7 +349,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public async Task InvokesBuildWithGetListenerUrlAndSelfOnWebHost()
         {
-            string listenerUrl = "http://+:" + fuzzy.UInt16();
+            string listenerUrl = "http://+:" + fuzzy.UInt16().Minimum(1);
             var fixture = new WebHostFixture(serviceContext, listenerUrl);
 
             _ = await fixture.Sut.OpenAsync(cancellation);
