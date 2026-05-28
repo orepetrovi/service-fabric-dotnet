@@ -107,9 +107,6 @@ public abstract class ExponentialRetryPolicyTest
     {
         new readonly IRetryPolicy sut;
 
-        // Method parameters
-        RetryDelayParameters retryDelayParameters;
-
         readonly TimeSpan baseRetryDelay = fuzzy.TimeSpan()
             .Minimum(TimeSpan.FromMilliseconds(100))
             .Maximum(TimeSpan.FromMilliseconds(1000));
@@ -160,7 +157,7 @@ public abstract class ExponentialRetryPolicyTest
 
         void AssertDelayWithinExpectedRange(int retryAttempt, int delayMultiplier)
         {
-            retryDelayParameters = new RetryDelayParameters(retryAttempt, fuzzy.Boolean());
+            var retryDelayParameters = new RetryDelayParameters(retryAttempt, fuzzy.Boolean());
 
             long expectedBaseMs = (long)((int)baseRetryDelay.TotalMilliseconds << delayMultiplier);
             var expectedMin = TimeSpan.FromMilliseconds(expectedBaseMs);
