@@ -139,10 +139,12 @@ public abstract class ActorProxyFactoryTest
             // override configured here. Reaching this branch via the lazy-init path would require an actor
             // interface from an assembly carrying an ActorRemotingProviderAttribute with V2_1, which would
             // change the provider seen by the other tests in this assembly.
+            // TODO: Replace with sut.Method<Action<RemotingClientVersion>>() once Inspector handles open generic
+            // method definitions. Inspector 0.3.12 iterates all instance methods and calls Delegate.CreateDelegate
+            // on each, which throws ArgumentException for the generic CreateActorProxy<TActorInterface> overloads
+            // declared on this type. See https://github.com/olegsych/inspector/issues/5.
             sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2_1);
-
             var proxy = (IActorProxy)sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName: null);
-
             Assert.Equal(ServiceRemotingProviderAttribute.DefaultWrappedMessageStackListenerName, proxy.ActorServicePartitionClientV2.ListenerName);
         }
 
@@ -242,9 +244,7 @@ public abstract class ActorProxyFactoryTest
         public void DoesNothingWhenProxyFactoryWasNeverCreated()
         {
             var sut = new ActorProxyFactory();
-
             sut.Dispose();
-
             Assert.Null(sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value);
         }
 
