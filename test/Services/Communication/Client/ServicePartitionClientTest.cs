@@ -42,6 +42,15 @@ public abstract class ServicePartitionClientTest
 
     public sealed class Constructor : ServicePartitionClientTest
     {
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for communicationClientFactory.
+        public void ThrowsArgumentNullExceptionWhenCommunicationClientFactoryIsNull()
+        {
+            var actual = Assert.Throws<ArgumentNullException>(
+                () => new ServicePartitionClient<ICommunicationClient>(
+                    null, serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings));
+            Assert.Equal(nameof(communicationClientFactory), actual.ParamName);
+        }
+
         [Fact]
         public async Task InitializesProperties()
         {
@@ -159,6 +168,14 @@ public abstract class ServicePartitionClientTest
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTaskOfTResult_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
     {
         readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
+        public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
+        {
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.InvokeWithRetryAsync<object>((Func<ICommunicationClient, Task<object>>)null, cancellationToken));
+            Assert.Equal("func", actual.ParamName);
+        }
 
         [Fact]
         public async Task ReturnsResultOfFuncWhenNoExceptionThrown()
@@ -394,7 +411,9 @@ public abstract class ServicePartitionClientTest
         public async Task CancelsWhenClientRetryTimeoutElapses()
         {
             var timeout = TimeSpan.FromMilliseconds(500);
-            var retrySettings = new OperationRetrySettings(new TimeoutRetryPolicy(timeout));
+            var policy = new Mock<IRetryPolicy>();
+            policy.SetupGet(_ => _.ClientRetryTimeout).Returns(timeout);
+            var retrySettings = new OperationRetrySettings(policy.Object);
             var sut = new ServicePartitionClient<ICommunicationClient>(
                 communicationClientFactory.Object,
                 serviceUri,
@@ -432,7 +451,9 @@ public abstract class ServicePartitionClientTest
         {
             var timeout = TimeSpan.FromMilliseconds(100);
             var retryDelay = TimeSpan.FromSeconds(30);
-            var retrySettings = new OperationRetrySettings(new TimeoutRetryPolicy(timeout));
+            var policy = new Mock<IRetryPolicy>();
+            policy.SetupGet(_ => _.ClientRetryTimeout).Returns(timeout);
+            var retrySettings = new OperationRetrySettings(policy.Object);
             var sut = new ServicePartitionClient<ICommunicationClient>(
                 communicationClientFactory.Object,
                 serviceUri,
@@ -462,6 +483,14 @@ public abstract class ServicePartitionClientTest
 
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTaskOfTResult_TypeArray : InvokeWithRetryAsyncBase
     {
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
+        public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
+        {
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.InvokeWithRetryAsync<object>((Func<ICommunicationClient, Task<object>>)null));
+            Assert.Equal("func", actual.ParamName);
+        }
+
         [Fact]
         public async Task InvokesUnderlyingOverloadWithDefaultCancellationToken()
         {
@@ -488,6 +517,14 @@ public abstract class ServicePartitionClientTest
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTask_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
     {
         readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
+        public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
+        {
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.InvokeWithRetryAsync((Func<ICommunicationClient, Task>)null, cancellationToken));
+            Assert.Equal("func", actual.ParamName);
+        }
 
         [Fact]
         public async Task InvokesFuncAndCompletes()
@@ -524,6 +561,14 @@ public abstract class ServicePartitionClientTest
 
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTask_TypeArray : InvokeWithRetryAsyncBase
     {
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
+        public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
+        {
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.InvokeWithRetryAsync((Func<ICommunicationClient, Task>)null));
+            Assert.Equal("func", actual.ParamName);
+        }
+
         [Fact]
         public async Task InvokesUnderlyingOverloadWithDefaultCancellationToken()
         {
@@ -576,18 +621,4 @@ public abstract class ServicePartitionClientTest
         }
     }
 
-    /// <summary>
-    /// Minimal <see cref="IRetryPolicy"/> implementation used to drive the SUT's ClientRetryTimeout-based linked
-    /// cancellation logic. Only the values consumed by the SUT are populated.
-    /// </summary>
-    sealed class TimeoutRetryPolicy : IRetryPolicy
-    {
-        public TimeoutRetryPolicy(TimeSpan clientRetryTimeout) => ClientRetryTimeout = clientRetryTimeout;
-
-        public int TotalNumberOfRetries => int.MaxValue;
-
-        public TimeSpan ClientRetryTimeout { get; }
-
-        public TimeSpan GetNextRetryDelay(RetryDelayParameters retryDelayParameters) => TimeSpan.Zero;
-    }
 }
