@@ -446,8 +446,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
-            string suffix = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}", context.PartitionId, context.ReplicaOrInstanceId);
-            Assert.Equal($"http://{context.PublishAddress}:{port}{suffix}", actual);
+            Assert.Equal($"http://{context.PublishAddress}:{port}{fixture.Sut.UrlSuffix}", actual);
         }
 
         [Fact]
@@ -460,8 +459,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
-            string suffix = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}", context.PartitionId, context.ReplicaOrInstanceId);
-            Assert.Equal($"http://{context.PublishAddress}:{port}{suffix}", actual);
+            Assert.Equal($"http://{context.PublishAddress}:{port}{fixture.Sut.UrlSuffix}", actual);
         }
 
         [Fact]
