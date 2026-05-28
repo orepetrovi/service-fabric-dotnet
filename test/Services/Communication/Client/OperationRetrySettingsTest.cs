@@ -37,7 +37,7 @@ public abstract class OperationRetrySettingsTest
         {
             var clientRetryTimeout = fuzzy.TimeSpan();
             var retryPolicy = new Mock<IRetryPolicy>();
-            retryPolicy.SetupGet(p => p.ClientRetryTimeout).Returns(clientRetryTimeout);
+            _ = retryPolicy.SetupGet(p => p.ClientRetryTimeout).Returns(clientRetryTimeout);
             var sut = new OperationRetrySettings(retryPolicy.Object);
             Assert.Equal(clientRetryTimeout, sut.ClientRetryTimeout);
         }
@@ -131,7 +131,7 @@ public abstract class OperationRetrySettingsTest
         {
             var totalNumberOfRetries = fuzzy.Int32();
             var retryPolicy = new Mock<IRetryPolicy>();
-            retryPolicy.SetupGet(p => p.TotalNumberOfRetries).Returns(totalNumberOfRetries);
+            _ = retryPolicy.SetupGet(p => p.TotalNumberOfRetries).Returns(totalNumberOfRetries);
             var sut = new OperationRetrySettings(retryPolicy.Object);
             Assert.Equal(totalNumberOfRetries, sut.DefaultMaxRetryCountForTransientErrors);
         }
