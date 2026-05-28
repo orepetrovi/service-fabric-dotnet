@@ -222,6 +222,19 @@ public abstract class ActorProxyFactoryTest
 
             Assert.Equal(ServiceRemotingProviderAttribute.DefaultV2listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
         }
+
+        [Fact]
+        public void SubstitutesDefaultListenerNameWhenOverrideDefaultIsSetAndCallerSuppliedEmpty()
+        {
+            // Exercises the string.IsNullOrEmpty empty-string branch in OverrideListenerNameIfConditionMet.
+            // OverrideListenerNameIfConditionMet is shared across all CreateActorProxy/CreateActorServiceProxy
+            // overloads, so a single representative test here covers the empty-string case for all of them.
+            OverrideDefaultListenerName(RemotingClientVersion.V2);
+
+            var proxy = (IActorProxy)sut.CreateActorProxy<IFactoryTestActor>(serviceUri, actorId, listenerName: "");
+
+            Assert.Equal(ServiceRemotingProviderAttribute.DefaultV2listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
+        }
     }
 
     public sealed class CreateActorServiceProxy_Uri_ActorId_String : ActorProxyFactoryTest
