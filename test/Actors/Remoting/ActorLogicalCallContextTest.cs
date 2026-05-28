@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Fuzzy;
 using Xunit;
 
@@ -80,6 +81,45 @@ public abstract class ActorLogicalCallContextTest : IDisposable
             ActorLogicalCallContext.TryGet(out string actual);
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public async Task StoresValueObservableByAwaitedTask()
+        {
+            string expected = fuzzy.String();
+            ActorLogicalCallContext.Set(expected);
+
+            string actual = await Task.Run(() =>
+            {
+                ActorLogicalCallContext.TryGet(out string value);
+                return value;
+            }, TestContext.Current.CancellationToken);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task StoresValueObservableAfterAwait()
+        {
+            string expected = fuzzy.String();
+            ActorLogicalCallContext.Set(expected);
+
+            await Task.Yield();
+
+            ActorLogicalCallContext.TryGet(out string actual);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task InAwaitedTaskDoesNotAffectCaller()
+        {
+            string expected = fuzzy.String();
+            ActorLogicalCallContext.Set(expected);
+
+            await Task.Run(() => ActorLogicalCallContext.Set(fuzzy.String()), TestContext.Current.CancellationToken);
+
+            ActorLogicalCallContext.TryGet(out string actual);
+            Assert.Equal(expected, actual);
+        }
     }
 
     public sealed class Clear : ActorLogicalCallContextTest
@@ -101,6 +141,18 @@ public abstract class ActorLogicalCallContextTest : IDisposable
         {
             ActorLogicalCallContext.Clear();
             Assert.False(ActorLogicalCallContext.IsPresent());
+        }
+
+        [Fact]
+        public async Task InAwaitedTaskDoesNotAffectCaller()
+        {
+            string expected = fuzzy.String();
+            ActorLogicalCallContext.Set(expected);
+
+            await Task.Run(() => ActorLogicalCallContext.Clear(), TestContext.Current.CancellationToken);
+
+            ActorLogicalCallContext.TryGet(out string actual);
+            Assert.Equal(expected, actual);
         }
     }
 }
