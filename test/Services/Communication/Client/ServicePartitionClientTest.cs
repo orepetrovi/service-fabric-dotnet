@@ -565,6 +565,61 @@ public abstract class ServicePartitionClientTest
 
             Assert.True(stopwatch.ElapsedMilliseconds < retryDelay.TotalMilliseconds, $"Elapsed {stopwatch.ElapsedMilliseconds}ms >= retry delay {retryDelay.TotalMilliseconds}ms");
         }
+
+        [Fact]
+        public async Task SetsClientRequestTrackerToLogContextRequestIdWhenPresent()
+        {
+            LogContext.Clear();
+            ClientRequestTracker.Set(null);
+            try
+            {
+                var requestId = fuzzy.Guid();
+                LogContext.Set(new LogContext { RequestId = requestId });
+                string actual = null;
+
+                _ = await sut.InvokeWithRetryAsync<object>(
+                    _ =>
+                    {
+                        ClientRequestTracker.TryGet(out actual);
+                        return Task.FromResult(new object());
+                    },
+                    cancellation);
+
+                Assert.Equal(requestId.ToString(), actual);
+            }
+            finally
+            {
+                LogContext.Clear();
+                ClientRequestTracker.Set(null);
+            }
+        }
+
+        [Fact]
+        public async Task SetsClientRequestTrackerToGeneratedGuidWhenLogContextIsAbsent()
+        {
+            LogContext.Clear();
+            ClientRequestTracker.Set(null);
+            try
+            {
+                string actual = null;
+
+                _ = await sut.InvokeWithRetryAsync<object>(
+                    _ =>
+                    {
+                        ClientRequestTracker.TryGet(out actual);
+                        return Task.FromResult(new object());
+                    },
+                    cancellation);
+
+                Assert.True(Guid.TryParse(actual, out Guid parsed));
+                Assert.NotEqual(Guid.Empty, parsed);
+            }
+            finally
+            {
+                LogContext.Clear();
+                ClientRequestTracker.Set(null);
+            }
+        }
     }
 
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTaskOfTResult_TypeArray : InvokeWithRetryAsyncBase
