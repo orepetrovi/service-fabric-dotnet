@@ -85,5 +85,9 @@ public abstract class ConstantRetryPolicyTest
             // Probability of every sample falling below half of the configured max with a uniform [0,1) scale is 2^-Samples.
             Assert.True(observedMax.Ticks > expectedMax.Ticks / 2);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for retryDelayParameters.
+        public void ThrowsArgumentNullExceptionWhenRetryDelayParametersIsNull() =>
+            _ = Assert.Throws<ArgumentNullException>(() => sut.GetNextRetryDelay(null));
     }
 }
