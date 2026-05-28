@@ -58,14 +58,20 @@ public abstract class ExceptionHandlingRetryResultTest
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for exception.
-        public void ThrowsArgumentNullExceptionWhenExceptionIsNull() =>
-            _ = Assert.Throws<ArgumentNullException>(
+        public void ThrowsArgumentNullExceptionWhenExceptionIsNull()
+        {
+            var actual = Assert.Throws<ArgumentNullException>(
                 () => new ExceptionHandlingRetryResult(null, isTransient, retrySettings));
+            Assert.Equal(nameof(exception), actual.ParamName);
+        }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for retrySettings.
-        public void ThrowsArgumentNullExceptionWhenRetrySettingsIsNull() =>
-            _ = Assert.Throws<ArgumentNullException>(
+        public void ThrowsArgumentNullExceptionWhenRetrySettingsIsNull()
+        {
+            var actual = Assert.Throws<ArgumentNullException>(
                 () => new ExceptionHandlingRetryResult(exception, isTransient, (OperationRetrySettings)null));
+            Assert.Equal(nameof(retrySettings), actual.ParamName);
+        }
     }
 
     public sealed class Constructor_Exception_Boolean_OperationRetrySettings_Int32 : ExceptionHandlingRetryResultTest
@@ -96,14 +102,20 @@ public abstract class ExceptionHandlingRetryResultTest
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for exception.
-        public void ThrowsArgumentNullExceptionWhenExceptionIsNull() =>
-            _ = Assert.Throws<ArgumentNullException>(
+        public void ThrowsArgumentNullExceptionWhenExceptionIsNull()
+        {
+            var actual = Assert.Throws<ArgumentNullException>(
                 () => new ExceptionHandlingRetryResult(null, isTransient, retrySettings, maxRetryCount));
+            Assert.Equal(nameof(exception), actual.ParamName);
+        }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for retrySettings.
-        public void ThrowsArgumentNullExceptionWhenRetrySettingsIsNull() =>
-            _ = Assert.Throws<ArgumentNullException>(
+        public void ThrowsArgumentNullExceptionWhenRetrySettingsIsNull()
+        {
+            var actual = Assert.Throws<ArgumentNullException>(
                 () => new ExceptionHandlingRetryResult(exception, isTransient, (OperationRetrySettings)null, maxRetryCount));
+            Assert.Equal(nameof(retrySettings), actual.ParamName);
+        }
     }
 
     public sealed class Constructor_Exception_Boolean_TimeSpan_Int32 : ExceptionHandlingRetryResultTest
@@ -122,9 +134,12 @@ public abstract class ExceptionHandlingRetryResultTest
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for exception.
-        public void ThrowsArgumentNullExceptionWhenExceptionIsNull() =>
-            _ = Assert.Throws<ArgumentNullException>(
+        public void ThrowsArgumentNullExceptionWhenExceptionIsNull()
+        {
+            var actual = Assert.Throws<ArgumentNullException>(
                 () => new ExceptionHandlingRetryResult((Exception)null, isTransient, retryDelay, maxRetryCount));
+            Assert.Equal(nameof(exception), actual.ParamName);
+        }
     }
 
     public sealed class Constructor_String_Boolean_TimeSpan_Int32 : ExceptionHandlingRetryResultTest
