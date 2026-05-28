@@ -311,7 +311,11 @@ public abstract class ServicePartitionClientTest
                 Retry("b"), // 2 >= max → throws
             });
             _ = communicationClientFactory
-                .Setup(_ => _.ReportOperationExceptionAsync(client, It.IsAny<ExceptionInformation>(), retrySettings, CancellationToken.None))
+                .Setup(_ => _.ReportOperationExceptionAsync(
+                    client,
+                    It.Is<ExceptionInformation>(i => i.Exception == clientException && i.TargetReplica == targetReplicaSelector),
+                    retrySettings,
+                    CancellationToken.None))
                 .ReturnsAsync(controls.Dequeue);
             int calls = 0;
 
