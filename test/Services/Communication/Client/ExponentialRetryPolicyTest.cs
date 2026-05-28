@@ -193,16 +193,19 @@ public abstract class ExponentialRetryPolicyTest
             int original = ExponentialRetryPolicy.MaxDelayMultiplier;
             try
             {
-                int newMax = fuzzy.Int32().Between(1, 5);
+                int newMax = fuzzy.Int32().Between(1, original - 1);
                 ExponentialRetryPolicy.MaxDelayMultiplier = newMax;
-                sut.BaseRetryDelay = TimeSpan.FromMilliseconds(1);
+                // Construct a policy with zero jitter so the cap can be asserted exactly: a no-op setter would leave
+                // the original (larger) cap in effect, producing a strictly larger shifted base delay.
+                var policy = new ExponentialRetryPolicy(defaultMaxRetryCount, TimeSpan.Zero, clientRetryTimeout)
+                {
+                    BaseRetryDelay = TimeSpan.FromSeconds(1),
+                };
                 int retryAttempt = (newMax + fuzzy.Int32().Between(1, 10))
                     * ExponentialRetryPolicy.SameDelayRequestCounter;
-                long expectedBaseMs = 1L << newMax;
-                var expectedMin = TimeSpan.FromMilliseconds(expectedBaseMs);
-                var expectedMax = TimeSpan.FromMilliseconds(expectedBaseMs + maxRetryJitter.TotalMilliseconds);
-                TimeSpan delay = sut.GetNextRetryDelay(new RetryDelayParameters(retryAttempt, fuzzy.Boolean()));
-                Assert.InRange(delay, expectedMin, expectedMax);
+                var expected = TimeSpan.FromMilliseconds((int)policy.BaseRetryDelay.TotalMilliseconds << newMax);
+                TimeSpan delay = policy.GetNextRetryDelay(new RetryDelayParameters(retryAttempt, fuzzy.Boolean()));
+                Assert.Equal(expected, delay);
             }
             finally
             {
@@ -223,16 +226,22 @@ public abstract class ExponentialRetryPolicyTest
             int original = ExponentialRetryPolicy.SameDelayRequestCounter;
             try
             {
-                int newCounter = original + fuzzy.Int32().Between(1, 7);
+                // Doubling the counter ensures a no-op setter (keeping `original`) would produce a different multiplier
+                // (`2 * delayMultiplier`) than the expected one (`delayMultiplier`), making the test distinguish setter
+                // behavior. Restrict delayMultiplier so the no-op multiplier stays below MaxDelayMultiplier (avoiding
+                // the cap masking the difference).
+                int newCounter = original * 2;
                 ExponentialRetryPolicy.SameDelayRequestCounter = newCounter;
-                sut.BaseRetryDelay = TimeSpan.FromMilliseconds(1);
-                int delayMultiplier = fuzzy.Int32().Between(1, ExponentialRetryPolicy.MaxDelayMultiplier - 1);
+                // Construct a policy with zero jitter so the multiplier-driven shift can be asserted exactly.
+                var policy = new ExponentialRetryPolicy(defaultMaxRetryCount, TimeSpan.Zero, clientRetryTimeout)
+                {
+                    BaseRetryDelay = TimeSpan.FromSeconds(1),
+                };
+                int delayMultiplier = fuzzy.Int32().Between(1, (ExponentialRetryPolicy.MaxDelayMultiplier - 1) / 2);
                 int retryAttempt = delayMultiplier * newCounter;
-                long expectedBaseMs = 1L << delayMultiplier;
-                var expectedMin = TimeSpan.FromMilliseconds(expectedBaseMs);
-                var expectedMax = TimeSpan.FromMilliseconds(expectedBaseMs + maxRetryJitter.TotalMilliseconds);
-                TimeSpan delay = sut.GetNextRetryDelay(new RetryDelayParameters(retryAttempt, fuzzy.Boolean()));
-                Assert.InRange(delay, expectedMin, expectedMax);
+                var expected = TimeSpan.FromMilliseconds((int)policy.BaseRetryDelay.TotalMilliseconds << delayMultiplier);
+                TimeSpan delay = policy.GetNextRetryDelay(new RetryDelayParameters(retryAttempt, fuzzy.Boolean()));
+                Assert.Equal(expected, delay);
             }
             finally
             {
