@@ -1,0 +1,133 @@
+// ------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
+// ------------------------------------------------------------
+
+using System;
+using System.Runtime.Serialization;
+using Fuzzy;
+using Microsoft.ServiceFabric.Actors.Client;
+using Microsoft.ServiceFabric.Actors.Remoting.V2.Client;
+using Microsoft.ServiceFabric.Actors.Tests;
+using Moq;
+using Xunit;
+
+namespace Microsoft.ServiceFabric.Actors.Remoting;
+
+public abstract class ActorDataContractSurrogateTest
+{
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+#if NET
+    readonly ISerializationSurrogateProvider sut = ActorDataContractSurrogate.Instance;
+#else
+    readonly IDataContractSurrogate sut = ActorDataContractSurrogate.Instance;
+#endif
+
+    public sealed class Instance : ActorDataContractSurrogateTest
+    {
+        [Fact]
+        public void IsNonNullActorDataContractSurrogate() =>
+            Assert.IsType<ActorDataContractSurrogate>(ActorDataContractSurrogate.Instance);
+    }
+
+#if NET
+    public sealed class GetSurrogateType_Type : ActorDataContractSurrogateTest
+    {
+        [Fact]
+        public void ReturnsActorReferenceWhenTypeImplementsIActor() =>
+            Assert.Equal(typeof(ActorReference), sut.GetSurrogateType(typeof(IFactoryTestActor)));
+
+        [Fact]
+        public void ReturnsInputTypeWhenItDoesNotImplementIActor() =>
+            Assert.Equal(typeof(string), sut.GetSurrogateType(typeof(string)));
+    }
+#else
+    public sealed class GetDataContractType_Type : ActorDataContractSurrogateTest
+    {
+        [Fact]
+        public void ReturnsActorReferenceWhenTypeImplementsIActor() =>
+            Assert.Equal(typeof(ActorReference), sut.GetDataContractType(typeof(IFactoryTestActor)));
+
+        [Fact]
+        public void ReturnsInputTypeWhenItDoesNotImplementIActor() =>
+            Assert.Equal(typeof(string), sut.GetDataContractType(typeof(string)));
+    }
+#endif
+
+    public sealed class GetObjectToSerialize_Object_Type : ActorDataContractSurrogateTest
+    {
+        [Fact]
+        public void ReturnsNullWhenObjIsNull() =>
+            Assert.Null(sut.GetObjectToSerialize(null, typeof(IFactoryTestActor)));
+
+        [Fact]
+        public void ReturnsActorReferenceWhenObjImplementsIActor()
+        {
+            var actorId = fuzzy.ActorId();
+            var serviceUri = new Uri($"fabric:/{fuzzy.String().LettersOrDigits()}/{fuzzy.String().LettersOrDigits()}");
+            var listenerName = fuzzy.String().LettersOrDigits();
+            var partitionClient = new Mock<IActorServicePartitionClient>();
+            partitionClient.SetupGet(p => p.ServiceUri).Returns(serviceUri);
+            partitionClient.SetupGet(p => p.ListenerName).Returns(listenerName);
+            var actorProxy = new Mock<IActorProxy>();
+            actorProxy.SetupGet(a => a.ActorId).Returns(actorId);
+            actorProxy.SetupGet(a => a.ActorServicePartitionClientV2).Returns(partitionClient.Object);
+            var actor = actorProxy.As<IFactoryTestActor>().Object;
+
+            var result = sut.GetObjectToSerialize(actor, typeof(IFactoryTestActor));
+
+            var reference = Assert.IsType<ActorReference>(result);
+            Assert.Same(actorId, reference.ActorId);
+            Assert.Equal(serviceUri, reference.ServiceUri);
+            Assert.Equal(listenerName, reference.ListenerName);
+        }
+
+        [Fact]
+        public void ReturnsObjUnchangedWhenItDoesNotImplementIActor()
+        {
+            var obj = new object();
+            Assert.Same(obj, sut.GetObjectToSerialize(obj, typeof(object)));
+        }
+    }
+
+    public sealed class GetDeserializedObject_Object_Type : ActorDataContractSurrogateTest
+    {
+        [Fact]
+        public void ReturnsNullWhenObjIsNull() =>
+            Assert.Null(sut.GetDeserializedObject(null, typeof(IFactoryTestActor)));
+
+        [Fact]
+        public void ReturnsBindResultWhenObjImplementsIActorReferenceAndTargetTypeImplementsIActor()
+        {
+            var bound = new object();
+            var reference = new Mock<IActorReference>();
+            reference.Setup(r => r.Bind(typeof(IFactoryTestActor))).Returns(bound);
+
+            var result = sut.GetDeserializedObject(reference.Object, typeof(IFactoryTestActor));
+
+            Assert.Same(bound, result);
+        }
+
+        [Fact]
+        public void ReturnsObjWhenTargetTypeImplementsIActorReference()
+        {
+            var reference = new Mock<IActorReference>().Object;
+            Assert.Same(reference, sut.GetDeserializedObject(reference, typeof(IActorReference)));
+        }
+
+        [Fact]
+        public void ReturnsObjWhenTargetTypeDoesNotImplementIActor()
+        {
+            var reference = new Mock<IActorReference>().Object;
+            Assert.Same(reference, sut.GetDeserializedObject(reference, typeof(object)));
+        }
+
+        [Fact]
+        public void ReturnsObjWhenItDoesNotImplementIActorReference()
+        {
+            var obj = new object();
+            Assert.Same(obj, sut.GetDeserializedObject(obj, typeof(IFactoryTestActor)));
+        }
+    }
+}
