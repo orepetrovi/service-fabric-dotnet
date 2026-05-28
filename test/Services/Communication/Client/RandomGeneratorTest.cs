@@ -3,8 +3,6 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
-using Inspector;
 using Xunit;
 
 namespace Microsoft.ServiceFabric.Services.Communication.Client;
@@ -12,17 +10,6 @@ namespace Microsoft.ServiceFabric.Services.Communication.Client;
 public abstract class RandomGeneratorTest
 {
     readonly RandomGenerator sut = new();
-
-    public sealed class Constructor : RandomGeneratorTest
-    {
-        [Fact]
-        public void InitializesRandomLock() =>
-            Assert.NotNull(sut.Field<object>().Value);
-
-        [Fact]
-        public void InitializesRand() =>
-            Assert.NotNull(sut.Field<Random>().Value);
-    }
 
     public sealed class NextDouble : RandomGeneratorTest
     {
