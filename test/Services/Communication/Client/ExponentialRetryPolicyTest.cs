@@ -128,7 +128,7 @@ public abstract class ExponentialRetryPolicyTest
         }
 
         [Fact]
-        public void DoublesBaseDelayWhenRetryAttemptIncreasesBySameDelayRequestCounter()
+        public void ShiftsBaseDelayByDelayMultiplierWhenRetryAttemptIsMultipleOfSameDelayRequestCounter()
         {
             int delayMultiplier = fuzzy.Int32().Between(1, ExponentialRetryPolicy.MaxDelayMultiplier - 1);
             int retryAttempt = delayMultiplier * ExponentialRetryPolicy.SameDelayRequestCounter;
