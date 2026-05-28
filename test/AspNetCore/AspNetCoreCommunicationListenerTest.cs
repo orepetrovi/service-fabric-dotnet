@@ -31,13 +31,6 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    static Task NewCompletedTask()
-    {
-        var tcs = new TaskCompletionSource<object>();
-        tcs.SetResult(null);
-        return tcs.Task;
-    }
-
     AspNetCoreCommunicationListenerTest() =>
         sut = new TestListener(serviceContext, build);
 
@@ -571,5 +564,12 @@ public abstract class AspNetCoreCommunicationListenerTest
 
         internal new EndpointResourceDescription GetEndpointResourceDescription(string endpointName) =>
             base.GetEndpointResourceDescription(endpointName);
+    }
+
+    static Task NewCompletedTask()
+    {
+        var tcs = new TaskCompletionSource<object>();
+        tcs.SetResult(null);
+        return tcs.Task;
     }
 }
