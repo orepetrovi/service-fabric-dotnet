@@ -490,12 +490,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
         internal WebHostFixture(ServiceContext context, string listenerUrl = "http://+:0", string serverAddress = null)
         {
-            var startTcs = new TaskCompletionSource<object>();
-            startTcs.SetResult(null);
-            var stopTcs = new TaskCompletionSource<object>();
-            stopTcs.SetResult(null);
-            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(startTcs.Task);
-            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(stopTcs.Task);
+            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
             Sut = new TestListener(context, (url, listener) =>
             {
                 BuildUrl = url;
@@ -518,12 +514,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
         internal GenericHostFixture(ServiceContext context, string listenerUrl = "http://+:0", string serverAddress = null)
         {
-            var startTcs = new TaskCompletionSource<object>();
-            startTcs.SetResult(null);
-            var stopTcs = new TaskCompletionSource<object>();
-            stopTcs.SetResult(null);
-            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(startTcs.Task);
-            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(stopTcs.Task);
+            _ = Host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            _ = Host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
             Sut = new TestListener(context, (url, listener) =>
             {
                 BuildUrl = url;
