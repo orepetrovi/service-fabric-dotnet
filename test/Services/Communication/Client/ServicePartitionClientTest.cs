@@ -235,7 +235,7 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public async Task ThrowsWhenExceptionTypeIsInDoNotRetryExceptionTypes()
+        public async Task RethrowsExceptionWhenInDoNotRetryExceptionTypes()
         {
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => sut.InvokeWithRetryAsync<object>(
@@ -561,7 +561,7 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public async Task PassesDoNotRetryExceptionTypesToUnderlyingOverload()
+        public async Task RethrowsExceptionWhenInDoNotRetryExceptionTypes()
         {
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, clientException.GetType()));
@@ -611,7 +611,7 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public async Task RethrowsExceptionFromFuncWhenInDoNotRetryExceptionTypes()
+        public async Task RethrowsExceptionWhenInDoNotRetryExceptionTypes()
         {
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => sut.InvokeWithRetryAsync(
@@ -655,7 +655,7 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public async Task PassesDoNotRetryExceptionTypesToUnderlyingOverload()
+        public async Task RethrowsExceptionWhenInDoNotRetryExceptionTypes()
         {
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => sut.InvokeWithRetryAsync(_ => throw clientException, clientException.GetType()));
