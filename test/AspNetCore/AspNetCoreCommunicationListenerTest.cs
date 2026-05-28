@@ -37,7 +37,7 @@ public abstract class AspNetCoreCommunicationListenerTest
     public sealed class Abort : AspNetCoreCommunicationListenerTest
     {
         [Fact]
-        public async Task InvokesHostDisposeOnGenericHost()
+        public async Task DisposesHostAfterOpenAsyncOnGenericHost()
         {
             var fixture = new GenericHostFixture(serviceContext);
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
@@ -45,11 +45,10 @@ public abstract class AspNetCoreCommunicationListenerTest
             fixture.Sut.Abort();
 
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
-            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
         }
 
         [Fact]
-        public async Task InvokesHostDisposeOnWebHost()
+        public async Task DisposesHostAfterOpenAsyncOnWebHost()
         {
             var fixture = new WebHostFixture(serviceContext);
             _ = await fixture.Sut.OpenAsync(CancellationToken.None);
@@ -57,6 +56,27 @@ public abstract class AspNetCoreCommunicationListenerTest
             fixture.Sut.Abort();
 
             fixture.Host.Verify(_ => _.Dispose(), Times.Once());
+        }
+
+        [Fact]
+        public async Task DoesNotInvokeStopAsyncOnGenericHost()
+        {
+            var fixture = new GenericHostFixture(serviceContext);
+            _ = await fixture.Sut.OpenAsync(CancellationToken.None);
+
+            fixture.Sut.Abort();
+
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
+        }
+
+        [Fact]
+        public async Task DoesNotInvokeStopAsyncOnWebHost()
+        {
+            var fixture = new WebHostFixture(serviceContext);
+            _ = await fixture.Sut.OpenAsync(CancellationToken.None);
+
+            fixture.Sut.Abort();
+
             fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
         }
 
