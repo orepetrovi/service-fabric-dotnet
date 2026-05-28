@@ -22,8 +22,10 @@ public abstract class FabricActorExceptionConvertorTest
 
     public sealed class TryConvertFromServiceException_ServiceException : FabricActorExceptionConvertorTest
     {
-        readonly string message = fuzzy.String();
+        // Method parameters
         readonly ServiceException serviceException;
+
+        readonly string message = fuzzy.String();
 
         public TryConvertFromServiceException_ServiceException() =>
             serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
@@ -63,9 +65,11 @@ public abstract class FabricActorExceptionConvertorTest
 
     public sealed class TryConvertFromServiceException_ServiceException_Exception : FabricActorExceptionConvertorTest
     {
-        readonly string message = fuzzy.String();
-        readonly Exception innerException = new InvalidOperationException(fuzzy.String());
+        // Method parameters
         readonly ServiceException serviceException;
+        readonly Exception innerException = new InvalidOperationException(fuzzy.String());
+
+        readonly string message = fuzzy.String();
 
         public TryConvertFromServiceException_ServiceException_Exception() =>
             serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
@@ -105,9 +109,11 @@ public abstract class FabricActorExceptionConvertorTest
 
     public sealed class TryConvertFromServiceException_ServiceException_ExceptionArray : FabricActorExceptionConvertorTest
     {
-        readonly string message = fuzzy.String();
+        // Method parameters
         readonly ServiceException serviceException;
         readonly Exception[] innerExceptions = null;
+
+        readonly string message = fuzzy.String();
 
         public TryConvertFromServiceException_ServiceException_ExceptionArray() =>
             serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
