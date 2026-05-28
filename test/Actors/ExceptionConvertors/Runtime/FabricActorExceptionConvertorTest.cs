@@ -93,11 +93,5 @@ public abstract class FabricActorExceptionConvertorTest
         }
     }
 
-    sealed class UnknownFabricException : FabricException
-    {
-        public UnknownFabricException(string message)
-            : base(message)
-        {
-        }
-    }
+    sealed class UnknownFabricException(string message) : FabricException(message);
 }
