@@ -26,42 +26,6 @@ public abstract class FabricActorExceptionConvertorTest
             ActualExceptionData = new Dictionary<string, string> { { "HResult", fuzzy.Int32().ToString() } },
         };
 
-    public sealed class TryConvertFromServiceException_ServiceException_ExceptionArray : FabricActorExceptionConvertorTest
-    {
-        readonly string message = fuzzy.String();
-
-        [Theory]
-        [InlineData(typeof(DuplicateMessageException))]
-        [InlineData(typeof(InvalidReentrantCallException))]
-        [InlineData(typeof(ReminderNotFoundException))]
-        [InlineData(typeof(ReentrancyModeDisallowedException))]
-        [InlineData(typeof(ReentrantActorInvalidStateException))]
-        [InlineData(typeof(ActorConcurrencyLockTimeoutException))]
-        [InlineData(typeof(ActorDeletedException))]
-        [InlineData(typeof(ReminderLoadInProgressException))]
-        public void ReturnsTrueAndProducesKnownFabricExceptionWithPreservedMessage(Type knownType)
-        {
-            ServiceException serviceException = ServiceExceptionFor(knownType, message);
-
-            bool result = sut.TryConvertFromServiceException(serviceException, (Exception[])null, out Exception actual);
-
-            Assert.True(result);
-            Assert.IsType(knownType, actual);
-            Assert.Equal(message, actual.Message);
-        }
-
-        [Fact]
-        public void ReturnsFalseWhenActualExceptionTypeIsUnknown()
-        {
-            var serviceException = new ServiceException(fuzzy.String(), message);
-
-            bool result = sut.TryConvertFromServiceException(serviceException, (Exception[])null, out Exception actual);
-
-            Assert.False(result);
-            Assert.Null(actual);
-        }
-    }
-
     public sealed class TryConvertFromServiceException_ServiceException : FabricActorExceptionConvertorTest
     {
         readonly string message = fuzzy.String();
@@ -96,6 +60,42 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.IsType<DuplicateMessageException>(actual);
             Assert.Equal(message, actual.Message);
             Assert.Same(inner, actual.InnerException);
+        }
+    }
+
+    public sealed class TryConvertFromServiceException_ServiceException_ExceptionArray : FabricActorExceptionConvertorTest
+    {
+        readonly string message = fuzzy.String();
+
+        [Theory]
+        [InlineData(typeof(DuplicateMessageException))]
+        [InlineData(typeof(InvalidReentrantCallException))]
+        [InlineData(typeof(ReminderNotFoundException))]
+        [InlineData(typeof(ReentrancyModeDisallowedException))]
+        [InlineData(typeof(ReentrantActorInvalidStateException))]
+        [InlineData(typeof(ActorConcurrencyLockTimeoutException))]
+        [InlineData(typeof(ActorDeletedException))]
+        [InlineData(typeof(ReminderLoadInProgressException))]
+        public void ReturnsTrueAndProducesKnownFabricExceptionWithPreservedMessage(Type knownType)
+        {
+            ServiceException serviceException = ServiceExceptionFor(knownType, message);
+
+            bool result = sut.TryConvertFromServiceException(serviceException, (Exception[])null, out Exception actual);
+
+            Assert.True(result);
+            Assert.IsType(knownType, actual);
+            Assert.Equal(message, actual.Message);
+        }
+
+        [Fact]
+        public void ReturnsFalseWhenActualExceptionTypeIsUnknown()
+        {
+            var serviceException = new ServiceException(fuzzy.String(), message);
+
+            bool result = sut.TryConvertFromServiceException(serviceException, (Exception[])null, out Exception actual);
+
+            Assert.False(result);
+            Assert.Null(actual);
         }
     }
 }
