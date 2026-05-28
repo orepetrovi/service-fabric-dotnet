@@ -38,8 +38,8 @@ public abstract class GenericHostCommunicationListenerTest
     GenericHostCommunicationListenerTest()
     {
         buildHost = host.Object;
-        _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(Task.CompletedTask);
-        _ = host.Setup(_ => _.StopAsync(cancellation)).Returns(Task.CompletedTask);
+        _ = host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        _ = host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         build = (url, l) =>
         {
