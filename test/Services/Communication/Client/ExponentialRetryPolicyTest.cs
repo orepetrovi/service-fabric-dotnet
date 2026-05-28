@@ -28,10 +28,6 @@ public abstract class ExponentialRetryPolicyTest
     public sealed class BaseRetryDelay : ExponentialRetryPolicyTest
     {
         [Fact]
-        public void DefaultIsOneSecond() =>
-            Assert.Equal(TimeSpan.FromSeconds(1), sut.BaseRetryDelay);
-
-        [Fact]
         public void IsSetToGivenValue()
         {
             TimeSpan expected = fuzzy.TimeSpan();
@@ -52,6 +48,7 @@ public abstract class ExponentialRetryPolicyTest
         {
             Assert.Equal(defaultMaxRetryCount, sut.TotalNumberOfRetries);
             Assert.Equal(clientRetryTimeout, sut.ClientRetryTimeout);
+            Assert.Equal(TimeSpan.FromSeconds(1), sut.BaseRetryDelay);
         }
 
         [Fact]
@@ -83,6 +80,7 @@ public abstract class ExponentialRetryPolicyTest
         {
             Assert.Equal(defaultMaxRetryCount, sut.TotalNumberOfRetries);
             Assert.Equal(clientRetryTimeout, sut.ClientRetryTimeout);
+            Assert.Equal(TimeSpan.FromSeconds(1), sut.BaseRetryDelay);
         }
 
         [Fact]
