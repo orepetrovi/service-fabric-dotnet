@@ -443,7 +443,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public async Task AppendsUrlSuffixToReturnedUrlOnGenericHost()
         {
-            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16().Minimum(1);
+            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16();
             var fixture = new GenericHostFixture(serviceContext, serverAddress: serverAddress);
             fixture.Sut.ConfigureToUseUniqueServiceUrl();
 
@@ -455,7 +455,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public async Task AppendsUrlSuffixToReturnedUrlOnWebHost()
         {
-            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16().Minimum(1);
+            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16();
             var fixture = new WebHostFixture(serviceContext, serverAddress: serverAddress);
             fixture.Sut.ConfigureToUseUniqueServiceUrl();
 
