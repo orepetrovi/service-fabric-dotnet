@@ -38,7 +38,7 @@ public abstract class ActorServiceProxyTest : IDisposable
     void IDisposable.Dispose() =>
         ActorProxy.DefaultProxyFactory.Field<Remoting.V2.Client.ActorProxyFactory>().Set(previousV2);
 
-    public sealed class CreateOfTServiceInterface_Uri_ActorId_String : ActorServiceProxyTest
+    public sealed class CreateOfIActorService_Uri_ActorId_String : ActorServiceProxyTest
     {
         // Method parameters
         readonly Uri serviceUri = fuzzy.Uri();
@@ -47,7 +47,7 @@ public abstract class ActorServiceProxyTest : IDisposable
 
         readonly long partitionKey = fuzzy.Int64();
 
-        public CreateOfTServiceInterface_Uri_ActorId_String() =>
+        public CreateOfIActorService_Uri_ActorId_String() =>
             actorId = new ActorId(partitionKey);
 
         [Fact]
@@ -62,7 +62,7 @@ public abstract class ActorServiceProxyTest : IDisposable
         }
     }
 
-    public sealed class CreateOfTServiceInterface_Uri_Int64_String : ActorServiceProxyTest
+    public sealed class CreateOfIActorService_Uri_Int64_String : ActorServiceProxyTest
     {
         readonly Uri serviceUri = fuzzy.Uri();
         readonly long partitionKey = fuzzy.Int64();
