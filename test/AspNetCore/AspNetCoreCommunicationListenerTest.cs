@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Hosting;
-using Microsoft.ServiceFabric.AspNetCore.Tests;
 using Moq;
 using Xunit;
 
@@ -315,9 +314,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
     public sealed class GetEndpointResourceDescription : AspNetCoreCommunicationListenerTest
     {
-        // TestMocksRepository wires an endpoint collection into the mocked ICodePackageActivationContext
-        // that these tests mutate; fuzzy.StatelessServiceContext() does not provide that plumbing.
-        readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
+        readonly StatelessServiceContext context = fuzzy.StatelessServiceContext();
         readonly TestListener listener;
 
         // Method parameters
