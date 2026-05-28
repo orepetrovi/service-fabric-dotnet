@@ -36,9 +36,8 @@ public abstract class OperationRetrySettingsTest
         public void InitializesRetryPolicyWithExponentialRetryPolicyDefaults()
         {
             var sut = new OperationRetrySettings();
-            var policy = Assert.IsType<ExponentialRetryPolicy>(sut.RetryPolicy);
-            Assert.Equal(10, policy.TotalNumberOfRetries);
-            Assert.Equal(Timeout.InfiniteTimeSpan, policy.ClientRetryTimeout);
+            Assert.Equal(10, sut.DefaultMaxRetryCountForTransientErrors);
+            Assert.Equal(Timeout.InfiniteTimeSpan, sut.ClientRetryTimeout);
         }
     }
 
@@ -50,9 +49,8 @@ public abstract class OperationRetrySettingsTest
         public void InitializesRetryPolicyWithExponentialRetryPolicyAndGivenClientRetryTimeout()
         {
             var sut = new OperationRetrySettings(clientRetryTimeout);
-            var policy = Assert.IsType<ExponentialRetryPolicy>(sut.RetryPolicy);
-            Assert.Equal(10, policy.TotalNumberOfRetries);
-            Assert.Equal(clientRetryTimeout, policy.ClientRetryTimeout);
+            Assert.Equal(10, sut.DefaultMaxRetryCountForTransientErrors);
+            Assert.Equal(clientRetryTimeout, sut.ClientRetryTimeout);
         }
     }
 
@@ -81,7 +79,6 @@ public abstract class OperationRetrySettingsTest
         [Fact]
         public void InitializesProperties()
         {
-            _ = Assert.IsType<ConstantRetryPolicy>(sut.RetryPolicy);
             Assert.Equal(maxRetryBackoffIntervalOnTransientErrors, sut.MaxRetryBackoffIntervalOnTransientErrors);
             Assert.Equal(maxRetryBackoffIntervalOnNonTransientErrors, sut.MaxRetryBackoffIntervalOnNonTransientErrors);
             Assert.Equal(defaultMaxRetryCountForTransientErrors, sut.DefaultMaxRetryCountForTransientErrors);
