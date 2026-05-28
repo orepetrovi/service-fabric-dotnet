@@ -6,7 +6,6 @@
 using System;
 using Fuzzy;
 using Inspector;
-using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Microsoft.ServiceFabric.Services.Remoting.V2.Client;
 using Moq;
