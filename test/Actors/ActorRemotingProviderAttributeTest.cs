@@ -26,15 +26,6 @@ public abstract class ActorRemotingProviderAttributeTest
         [Fact]
         public void InitializesRemotingListenerVersionToV2_1() =>
             Assert.Equal(RemotingListenerVersion.V2_1, sut.RemotingListenerVersion);
-
-        sealed class TestActorRemotingProviderAttribute : ActorRemotingProviderAttribute
-        {
-            public override Dictionary<string, Func<ActorService, IServiceRemotingListener>> CreateServiceRemotingListeners() =>
-                throw new NotImplementedException();
-
-            public override IServiceRemotingClientFactory CreateServiceRemotingClientFactory(IServiceRemotingCallbackMessageHandler callbackMessageHandler) =>
-                throw new NotImplementedException();
-        }
     }
 
     public sealed class GetProvider : ActorRemotingProviderAttributeTest, IDisposable
@@ -85,6 +76,34 @@ public abstract class ActorRemotingProviderAttributeTest
         }
     }
 
+    public sealed class RemotingClientVersion_ : ActorRemotingProviderAttributeTest
+    {
+        readonly ActorRemotingProviderAttribute sut = new TestActorRemotingProviderAttribute();
+
+        [Theory]
+        [InlineData(RemotingClientVersion.V2)]
+        [InlineData(RemotingClientVersion.V2_1)]
+        public void SetsValue(RemotingClientVersion value)
+        {
+            sut.RemotingClientVersion = value;
+            Assert.Equal(value, sut.RemotingClientVersion);
+        }
+    }
+
+    public sealed class RemotingListenerVersion_ : ActorRemotingProviderAttributeTest
+    {
+        readonly ActorRemotingProviderAttribute sut = new TestActorRemotingProviderAttribute();
+
+        [Theory]
+        [InlineData(RemotingListenerVersion.V2)]
+        [InlineData(RemotingListenerVersion.V2_1)]
+        public void SetsValue(RemotingListenerVersion value)
+        {
+            sut.RemotingListenerVersion = value;
+            Assert.Equal(value, sut.RemotingListenerVersion);
+        }
+    }
+
     public sealed class StaticConstructor : ActorRemotingProviderAttributeTest
     {
         [Fact]
@@ -122,4 +141,13 @@ public abstract class ActorRemotingProviderAttributeTest
 
     // Make Assembly concrete to enable mocking on NetFx
     public class TestAssembly : Assembly { }
+
+    sealed class TestActorRemotingProviderAttribute : ActorRemotingProviderAttribute
+    {
+        public override Dictionary<string, Func<ActorService, IServiceRemotingListener>> CreateServiceRemotingListeners() =>
+            throw new NotImplementedException();
+
+        public override IServiceRemotingClientFactory CreateServiceRemotingClientFactory(IServiceRemotingCallbackMessageHandler callbackMessageHandler) =>
+            throw new NotImplementedException();
+    }
 }
