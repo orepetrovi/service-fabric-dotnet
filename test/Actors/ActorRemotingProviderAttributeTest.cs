@@ -6,114 +6,93 @@ using Microsoft.ServiceFabric.Actors.Remoting.FabricTransport;
 using Moq;
 using Xunit;
 
-namespace Microsoft.ServiceFabric.Actors.Tests
+namespace Microsoft.ServiceFabric.Actors.Tests;
+
+public abstract class ActorRemotingProviderAttributeTest
 {
-    public class ActorRemotingProviderAttributeTest
+    public sealed class GetProvider : ActorRemotingProviderAttributeTest, IDisposable
     {
-        public class StaticConstructor : ActorRemotingProviderAttributeTest
+        readonly Assembly mockAssemblyWithoutRemotingProviderAttribute = MockAssembly();
+        readonly Assembly mockAssemblyWithRemotingProviderAttribute;
+        readonly ActorRemotingProviderAttribute expectedRemotingProvider = new FabricTransportActorRemotingProviderAttribute();
+
+        public GetProvider() =>
+            mockAssemblyWithRemotingProviderAttribute = MockAssembly(expectedRemotingProvider);
+
+        void IDisposable.Dispose() =>
+            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(Assembly.GetEntryAssembly());
+
+        [Fact]
+        public void ReturnsRemotingProviderAttributeOfEntryAssemblyWhenTypesIsNull()
         {
-            [Fact]
-            public void InitializesEntryAssembly()
-            {
-                Assert.Same(Assembly.GetEntryAssembly(), typeof(ActorRemotingProviderAttribute).Field<Assembly>().Value);
-            }
+            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(mockAssemblyWithRemotingProviderAttribute);
+
+            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider();
+
+            Assert.Same(expectedRemotingProvider, provider);
         }
 
-        public class GetProvider : ActorRemotingProviderAttributeTest, IDisposable
+        [Fact]
+        public void ReturnsRemotingProviderAttributeOfTypeAssembly()
         {
-            protected readonly Assembly mockAssemblyWithoutRemotingProviderAttribute = MockAssembly();
-            protected readonly Assembly mockAssemblyWithRemotingProviderAttribute;
-            private readonly ActorRemotingProviderAttribute expectedRemotingProvider =
-                new FabricTransportActorRemotingProviderAttribute();
+            Type type = MockType(mockAssemblyWithRemotingProviderAttribute);
+            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(null);
 
-            public GetProvider()
-            {
-                this.mockAssemblyWithRemotingProviderAttribute = MockAssembly(this.expectedRemotingProvider);
-            }
+            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider(new[] { type });
 
-            public class WithNullArgument : GetProvider
-            {
-                [Fact]
-                public void ReturnsRemotingProviderAttributeOfEntryAssembly()
-                {
-                    typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(this.mockAssemblyWithRemotingProviderAttribute);
+            Assert.Same(expectedRemotingProvider, provider);
+        }
 
-                    ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider();
+        [Fact]
+        public void ReturnsDefaultFabricTransportActorRemotingProviderWhenTypeHasNoAssemblyProviderAttribute()
+        {
+            Type type = MockType(mockAssemblyWithoutRemotingProviderAttribute);
+            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(null);
 
-                    Assert.Same(this.expectedRemotingProvider, provider);
-                }
-            }
+            var result = ActorRemotingProviderAttribute.GetProvider(new[] { type });
 
-            public class WithTypeArrayArgument : GetProvider
-            {
-                readonly Type mockTypeWithRemotingProviderAssemblyAttribute; 
-                readonly Type mockTypeWithoutRemotingProviderAssemblyAttribute;
-
-                public WithTypeArrayArgument()
-                {
-                    this.mockTypeWithRemotingProviderAssemblyAttribute = MockType(this.mockAssemblyWithRemotingProviderAttribute);
-                    this.mockTypeWithoutRemotingProviderAssemblyAttribute = MockType(this.mockAssemblyWithoutRemotingProviderAttribute);
-
-                    typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(null);
-                }
-
-                [Fact]
-                public void ReturnsDefaultFabricTransportActorRemotingProviderWhenTypeHasNoAssemblyProviderAttribute()
-                {
-                    var result = ActorRemotingProviderAttribute.GetProvider(new[] { this.mockTypeWithoutRemotingProviderAssemblyAttribute });
-
-                    var expected = new FabricTransportActorRemotingProviderAttribute();
-                    var actual = Assert.IsType<FabricTransportActorRemotingProviderAttribute>(result);
-                    Assert.Equal(expected.RemotingClientVersion, actual.RemotingClientVersion);
-                    Assert.Equal(expected.RemotingListenerVersion, actual.RemotingListenerVersion);
-                }
-
-                [Fact]
-                public void ReturnsRemotingProviderAttributeOfTypeAssembly()
-                {
-                    var types = new Type[] { this.mockTypeWithRemotingProviderAssemblyAttribute };
-
-                    ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider(types);
-
-                    Assert.Same(this.expectedRemotingProvider, provider);
-                }
-            }
-
-            public void Dispose()
-            {
-                typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(Assembly.GetEntryAssembly());
-            }
-
-            static Assembly MockAssembly(ActorRemotingProviderAttribute provider = null)
-            {
-                var assembly = new Mock<TestAssembly>();
-                Attribute[] attributes = provider == null ? new Attribute[0] : new[] { provider };
-                assembly.Setup(_ => _.GetCustomAttributes(typeof(ActorRemotingProviderAttribute), It.IsAny<bool>())).Returns(attributes);
-                return assembly.Object;
-            }
-
-            static Type MockType(Assembly assembly)
-            {
-                var type = new Mock<Type>();
-                type.Setup(_ => _.Assembly).Returns(assembly);
-#if NETFRAMEWORK
-                var reflectableType = type.As<IReflectableType>();
-                reflectableType.Setup(_ => _.GetTypeInfo()).Returns(MockTypeInfo(assembly));
-#endif
-                return type.Object;
-            }
-
-#if NETFRAMEWORK
-            static TypeInfo MockTypeInfo(Assembly assembly)
-            {
-                var typeInfo = new Mock<TypeDelegator>();
-                typeInfo.Setup(_ => _.Assembly).Returns(assembly);
-                return typeInfo.Object;
-            }
-#endif
-
-            // Make Assembly concrete to enable mocking on NetFx
-            public class TestAssembly : Assembly { }
+            var expected = new FabricTransportActorRemotingProviderAttribute();
+            var actual = Assert.IsType<FabricTransportActorRemotingProviderAttribute>(result);
+            Assert.Equal(expected.RemotingClientVersion, actual.RemotingClientVersion);
+            Assert.Equal(expected.RemotingListenerVersion, actual.RemotingListenerVersion);
         }
     }
+
+    public sealed class StaticConstructor : ActorRemotingProviderAttributeTest
+    {
+        [Fact]
+        public void InitializesEntryAssembly() =>
+            Assert.Same(Assembly.GetEntryAssembly(), typeof(ActorRemotingProviderAttribute).Field<Assembly>().Value);
+    }
+
+    static Assembly MockAssembly(ActorRemotingProviderAttribute provider = null)
+    {
+        var assembly = new Mock<TestAssembly>();
+        Attribute[] attributes = provider == null ? new Attribute[0] : new[] { provider };
+        assembly.Setup(_ => _.GetCustomAttributes(typeof(ActorRemotingProviderAttribute), It.IsAny<bool>())).Returns(attributes);
+        return assembly.Object;
+    }
+
+    static Type MockType(Assembly assembly)
+    {
+        var type = new Mock<Type>();
+        type.Setup(_ => _.Assembly).Returns(assembly);
+#if NETFRAMEWORK
+        var reflectableType = type.As<IReflectableType>();
+        reflectableType.Setup(_ => _.GetTypeInfo()).Returns(MockTypeInfo(assembly));
+#endif
+        return type.Object;
+    }
+
+#if NETFRAMEWORK
+    static TypeInfo MockTypeInfo(Assembly assembly)
+    {
+        var typeInfo = new Mock<TypeDelegator>();
+        typeInfo.Setup(_ => _.Assembly).Returns(assembly);
+        return typeInfo.Object;
+    }
+#endif
+
+    // Make Assembly concrete to enable mocking on NetFx
+    public class TestAssembly : Assembly { }
 }
