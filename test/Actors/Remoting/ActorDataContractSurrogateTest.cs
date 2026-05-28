@@ -37,7 +37,7 @@ public abstract class ActorDataContractSurrogateTest
 
         [Fact]
         public void ThrowsNotImplementedException() =>
-            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(memberInfo, dataContractType));
+            _ = Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(memberInfo, dataContractType));
     }
 
     public sealed class GetCustomDataToExport_Type_Type : ActorDataContractSurrogateTest
@@ -47,7 +47,7 @@ public abstract class ActorDataContractSurrogateTest
 
         [Fact]
         public void ThrowsNotImplementedException() =>
-            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(clrType, dataContractType));
+            _ = Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(clrType, dataContractType));
     }
 
     public sealed class GetDataContractType_Type : ActorDataContractSurrogateTest
@@ -169,7 +169,7 @@ public abstract class ActorDataContractSurrogateTest
 
         [Fact]
         public void ThrowsNotImplementedException() =>
-            Assert.Throws<NotImplementedException>(() => sut.GetReferencedTypeOnImport(typeName, typeNamespace, customData));
+            _ = Assert.Throws<NotImplementedException>(() => sut.GetReferencedTypeOnImport(typeName, typeNamespace, customData));
     }
 #endif
 
@@ -201,7 +201,7 @@ public abstract class ActorDataContractSurrogateTest
 
         [Fact]
         public void ThrowsNotImplementedException() =>
-            Assert.Throws<NotImplementedException>(() => sut.ProcessImportedType(typeDeclaration, compileUnit));
+            _ = Assert.Throws<NotImplementedException>(() => sut.ProcessImportedType(typeDeclaration, compileUnit));
     }
 #endif
 }
