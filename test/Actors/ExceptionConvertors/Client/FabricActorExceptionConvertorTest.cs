@@ -104,7 +104,11 @@ public abstract class FabricActorExceptionConvertorTest
     public sealed class TryConvertFromServiceException_ServiceException_ExceptionArray : FabricActorExceptionConvertorTest
     {
         readonly string message = fuzzy.String();
+        readonly ServiceException serviceException;
         readonly Exception[] innerExceptions = null;
+
+        public TryConvertFromServiceException_ServiceException_ExceptionArray() =>
+            serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
 
         [Theory]
         [InlineData(typeof(DuplicateMessageException))]
@@ -130,9 +134,9 @@ public abstract class FabricActorExceptionConvertorTest
         [Fact]
         public void ReturnsFalseWhenActualExceptionTypeIsUnknown()
         {
-            var serviceException = new ServiceException(fuzzy.String(), message);
+            var unknownServiceException = new ServiceException(fuzzy.String(), message);
 
-            bool result = sut.TryConvertFromServiceException(serviceException, innerExceptions, out Exception actual);
+            bool result = sut.TryConvertFromServiceException(unknownServiceException, innerExceptions, out Exception actual);
 
             Assert.False(result);
             Assert.Null(actual);
@@ -142,7 +146,6 @@ public abstract class FabricActorExceptionConvertorTest
         public void PassesFirstInnerExceptionToProducedException()
         {
             var innerException = new InvalidOperationException(fuzzy.String());
-            ServiceException serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
 
             bool result = sut.TryConvertFromServiceException(serviceException, new[] { innerException, new Exception(fuzzy.String()) }, out Exception actual);
 
@@ -158,7 +161,7 @@ public abstract class FabricActorExceptionConvertorTest
             // TryConvertFromServiceException dereferences serviceException.ActualExceptionType without validation,
             // surfacing the defect as a NullReferenceException.
             var exception = Assert.Throws<ArgumentNullException>(() => sut.TryConvertFromServiceException(null, innerExceptions, out Exception _));
-            Assert.Equal("serviceException", exception.ParamName);
+            Assert.Equal(nameof(serviceException), exception.ParamName);
         }
     }
 
