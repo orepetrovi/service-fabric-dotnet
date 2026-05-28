@@ -89,10 +89,5 @@ public abstract class ResolvedServicePartitionClientTest
         }
     }
 
-    static ResolvedServicePartition MakeRsp()
-    {
-        var rsp = Type<ResolvedServicePartition>.Uninitialized();
-        rsp.Property<ServicePartitionInformation>().Set(Type<SingletonPartitionInformation>.Uninitialized());
-        return rsp;
-    }
+    static ResolvedServicePartition MakeRsp() => Type<ResolvedServicePartition>.Uninitialized();
 }
