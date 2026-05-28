@@ -1,7 +1,5 @@
-// ------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
-// ------------------------------------------------------------
 
 using System;
 using System.Fabric;
@@ -12,18 +10,13 @@ using Fuzzy;
 using Inspector;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.ServiceFabric.AspNetCore.Tests;
 using Moq;
 using Xunit;
-using AspNetCoreSR = Microsoft.ServiceFabric.Services.Communication.AspNetCore.SR;
-using HttpSysSR = Microsoft.ServiceFabric.AspNetCore.HttpSys.SR;
 
 namespace Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 
 public abstract class HttpSysCommunicationListenerTest
 {
-    readonly HttpSysCommunicationListener sut;
-
     // Constructor parameters
     readonly ServiceContext serviceContext = fuzzy.ServiceContext();
     readonly string endpointName = fuzzy.String();
@@ -31,15 +24,10 @@ public abstract class HttpSysCommunicationListenerTest
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    HttpSysCommunicationListenerTest() =>
-        sut = new HttpSysCommunicationListener(serviceContext, endpointName, build);
-
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : HttpSysCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = InspectorWorkarounds.Constructor<HttpSysCommunicationListener>(
-            typeof(ServiceContext),
-            typeof(string),
-            typeof(Func<string, AspNetCoreCommunicationListener, IHost>));
+        static readonly ConstructorInfo ctor = typeof(HttpSysCommunicationListener)
+            .GetConstructor([typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IHost>)]);
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
@@ -47,14 +35,14 @@ public abstract class HttpSysCommunicationListenerTest
         public void ThrowsArgumentExceptionWhenEndpointNameIsNull()
         {
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, null, build));
-            Assert.Equal(HttpSysSR.EndpointNameNullOrEmptyExceptionMessage, exception.Message);
+            Assert.Equal("endpointName cannot be null or empty string.", exception.Message);
         }
 
         [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, string.Empty, build));
-            Assert.Equal(HttpSysSR.EndpointNameNullOrEmptyExceptionMessage, exception.Message);
+            Assert.Equal("endpointName cannot be null or empty string.", exception.Message);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing paramName argument to ArgumentException.
@@ -71,23 +59,21 @@ public abstract class HttpSysCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : HttpSysCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = InspectorWorkarounds.Constructor<HttpSysCommunicationListener>(
-            typeof(ServiceContext),
-            typeof(string),
-            typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>));
+        static readonly ConstructorInfo ctor = typeof(HttpSysCommunicationListener)
+            .GetConstructor([typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>)]);
 
         [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsNull()
         {
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, null, build));
-            Assert.Equal(HttpSysSR.EndpointNameNullOrEmptyExceptionMessage, exception.Message);
+            Assert.Equal("endpointName cannot be null or empty string.", exception.Message);
         }
 
         [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
         {
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, string.Empty, build));
-            Assert.Equal(HttpSysSR.EndpointNameNullOrEmptyExceptionMessage, exception.Message);
+            Assert.Equal("endpointName cannot be null or empty string.", exception.Message);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing paramName argument to ArgumentException.
@@ -104,10 +90,8 @@ public abstract class HttpSysCommunicationListenerTest
 
     public sealed class GetListenerUrl : HttpSysCommunicationListenerTest
     {
-        // TestMocksRepository wires an endpoint collection into the mocked ICodePackageActivationContext
-        // that these tests mutate; fuzzy.StatelessServiceContext() does not provide that plumbing.
-        readonly StatelessServiceContext context = TestMocksRepository.GetMockStatelessServiceContext();
-        new readonly AspNetCoreCommunicationListener sut;
+        readonly StatelessServiceContext context = fuzzy.StatelessServiceContext();
+        readonly AspNetCoreCommunicationListener sut;
 
         public GetListenerUrl() =>
             sut = new HttpSysCommunicationListener(context, endpointName, build);
@@ -163,8 +147,8 @@ public abstract class HttpSysCommunicationListenerTest
         [Fact]
         public void ThrowsInvalidOperationExceptionWhenEndpointIsNotInManifest()
         {
-            var exception = Assert.Throws<InvalidOperationException>(() => sut.GetListenerUrl());
-            Assert.Equal(string.Format(CultureInfo.InvariantCulture, AspNetCoreSR.EndpointNameNotFoundExceptionMessage, endpointName), exception.Message);
+            var exception = Assert.Throws<InvalidOperationException>(sut.GetListenerUrl);
+            Assert.Equal($"{endpointName} not found in Service Manifest.", exception.Message);
         }
     }
 }
