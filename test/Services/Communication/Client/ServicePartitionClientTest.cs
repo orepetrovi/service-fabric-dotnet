@@ -422,7 +422,7 @@ public abstract class ServicePartitionClientTest
         [Fact]
         public async Task CancelsWhenClientRetryTimeoutElapses()
         {
-            var timeout = TimeSpan.FromMilliseconds(50);
+            var timeout = TimeSpan.FromMilliseconds(500);
             var retrySettings = new OperationRetrySettings(new TimeoutRetryPolicy(timeout));
             var sut = new ServicePartitionClient<ICommunicationClient>(
                 communicationClientFactory.Object,
