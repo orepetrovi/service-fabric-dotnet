@@ -4,6 +4,11 @@
 // ------------------------------------------------------------
 
 using System;
+#if !NET
+using System.CodeDom;
+using System.Collections.ObjectModel;
+using System.Reflection;
+#endif
 using System.Runtime.Serialization;
 using Fuzzy;
 using Microsoft.ServiceFabric.Actors.Client;
@@ -130,4 +135,45 @@ public abstract class ActorDataContractSurrogateTest
             Assert.Same(obj, sut.GetDeserializedObject(obj, typeof(IFactoryTestActor)));
         }
     }
+
+#if !NET
+    public sealed class GetCustomDataToExport_Type_Type : ActorDataContractSurrogateTest
+    {
+        [Fact]
+        public void ThrowsNotImplementedException() =>
+            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(typeof(object), typeof(object)));
+    }
+
+    public sealed class GetCustomDataToExport_MemberInfo_Type : ActorDataContractSurrogateTest
+    {
+        [Fact]
+        public void ThrowsNotImplementedException() =>
+            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(typeof(object).GetMembers()[0], typeof(object)));
+    }
+
+    public sealed class GetKnownCustomDataTypes_Collection : ActorDataContractSurrogateTest
+    {
+        [Fact]
+        public void LeavesCollectionUnchanged()
+        {
+            var types = new Collection<Type>();
+            sut.GetKnownCustomDataTypes(types);
+            Assert.Empty(types);
+        }
+    }
+
+    public sealed class GetReferencedTypeOnImport_String_String_Object : ActorDataContractSurrogateTest
+    {
+        [Fact]
+        public void ThrowsNotImplementedException() =>
+            Assert.Throws<NotImplementedException>(() => sut.GetReferencedTypeOnImport(fuzzy.String(), fuzzy.String(), new object()));
+    }
+
+    public sealed class ProcessImportedType_CodeTypeDeclaration_CodeCompileUnit : ActorDataContractSurrogateTest
+    {
+        [Fact]
+        public void ThrowsNotImplementedException() =>
+            Assert.Throws<NotImplementedException>(() => sut.ProcessImportedType(new CodeTypeDeclaration(), new CodeCompileUnit()));
+    }
+#endif
 }
