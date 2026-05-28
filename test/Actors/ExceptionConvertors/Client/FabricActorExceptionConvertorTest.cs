@@ -180,7 +180,7 @@ public abstract class FabricActorExceptionConvertorTest
     // this assertion captures the existing behavior, not the intended one.
     static void AssertRemoteMetadataCopied(ServiceException expected, Exception actual)
     {
-        string hresult = expected.ActualExceptionData["HResult"];
+        string hresult = expected.ActualExceptionData[nameof(Exception.HResult)];
         Assert.Equal(hresult, actual.Data["RemoteHResult"]);
         Assert.Equal((FabricErrorCode)long.Parse(hresult), actual.Data["RemoteFabricErrorCode"]);
         Assert.Equal(expected.ActualExceptionStackTrace, actual.Data["RemoteStackTrace"]);
