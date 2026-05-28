@@ -1,7 +1,5 @@
-// ------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
-// ------------------------------------------------------------
 
 using System;
 using System.Fabric;
@@ -220,7 +218,7 @@ public abstract class GenericHostCommunicationListenerTest
 
             Assert.False(open.IsCompleted);
             tcs.SetResult(null);
-            await open;
+            _ = await open;
         }
 
         [Fact]
@@ -369,7 +367,7 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task UsesFirstServerAddressWhenMultipleAreConfigured()
         {
-            ushort firstPort = fuzzy.UInt16().Maximum((ushort)(ushort.MaxValue - 5));
+            ushort firstPort = fuzzy.UInt16().Maximum(ushort.MaxValue - 5);
             ushort secondPort = (ushort)(firstPort + fuzzy.SByte().Between(1, 5));
             var features = new FeatureCollection();
             features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { $"http://+:{firstPort}", $"http://+:{secondPort}" }));
