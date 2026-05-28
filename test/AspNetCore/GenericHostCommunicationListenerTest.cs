@@ -86,7 +86,7 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task PassesCancellationTokenToHostStopAsync()
         {
-            _ = await sut.OpenAsync(cancellation);
+            _ = await sut.OpenAsync(CancellationToken.None);
 
             await sut.CloseAsync(cancellation);
 
