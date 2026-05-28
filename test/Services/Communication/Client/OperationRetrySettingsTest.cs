@@ -95,6 +95,10 @@ public abstract class OperationRetrySettingsTest
     public sealed class DefaultMaxRetryCountForNonTransientErrors : OperationRetrySettingsTest
     {
         [Fact]
+        public void ReturnsMaxRetryCountOnNonTransientErrorsOfConstantRetryPolicy() =>
+            Assert.Equal(defaultMaxRetryCountForNonTransientErrors, sut.DefaultMaxRetryCountForNonTransientErrors);
+
+        [Fact]
         public void ReturnsInt32MaxValueWhenRetryPolicyIsNotConstantRetryPolicy()
         {
             var sut = new OperationRetrySettings(Mock.Of<IRetryPolicy>());
@@ -105,6 +109,10 @@ public abstract class OperationRetrySettingsTest
     public sealed class MaxRetryBackoffIntervalOnNonTransientErrors : OperationRetrySettingsTest
     {
         [Fact]
+        public void ReturnsMaxRetryBackoffIntervalOnNonTransientErrorsOfConstantRetryPolicy() =>
+            Assert.Equal(maxRetryBackoffIntervalOnNonTransientErrors, sut.MaxRetryBackoffIntervalOnNonTransientErrors);
+
+        [Fact]
         public void ThrowsNotSupportedExceptionWhenRetryPolicyIsNotConstantRetryPolicy()
         {
             var sut = new OperationRetrySettings(Mock.Of<IRetryPolicy>());
@@ -114,6 +122,10 @@ public abstract class OperationRetrySettingsTest
 
     public sealed class MaxRetryBackoffIntervalOnTransientErrors : OperationRetrySettingsTest
     {
+        [Fact]
+        public void ReturnsMaxRetryBackoffIntervalOnTransientErrorsOfConstantRetryPolicy() =>
+            Assert.Equal(maxRetryBackoffIntervalOnTransientErrors, sut.MaxRetryBackoffIntervalOnTransientErrors);
+
         [Fact]
         public void ThrowsNotSupportedExceptionWhenRetryPolicyIsNotConstantRetryPolicy()
         {
