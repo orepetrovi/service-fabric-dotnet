@@ -529,6 +529,16 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
+        public async Task PassesCancellationTokenToGetClientAsync()
+        {
+            await sut.InvokeWithRetryAsync(_ => Task.CompletedTask, cancellationToken);
+
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, cancellationToken),
+                Times.Once);
+        }
+
+        [Fact]
         public async Task RethrowsExceptionFromFuncWhenInDoNotRetryExceptionTypes()
         {
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
