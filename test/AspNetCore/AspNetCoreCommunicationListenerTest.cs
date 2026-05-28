@@ -373,6 +373,8 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public async Task InvokesBuildWithGetListenerUrlAndSelfOnGenericHost()
         {
+            // Minimum(1) avoids port 0: it would make listenerUrl byte-identical to the fixture's
+            // "http://+:0" default, letting a buggy SUT that ignored GetListenerUrl() still pass.
             string listenerUrl = "http://+:" + fuzzy.UInt16().Minimum(1);
             var fixture = new GenericHostFixture(serviceContext, listenerUrl);
 
@@ -385,6 +387,8 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public async Task InvokesBuildWithGetListenerUrlAndSelfOnWebHost()
         {
+            // Minimum(1) avoids port 0: it would make listenerUrl byte-identical to the fixture's
+            // "http://+:0" default, letting a buggy SUT that ignored GetListenerUrl() still pass.
             string listenerUrl = "http://+:" + fuzzy.UInt16().Minimum(1);
             var fixture = new WebHostFixture(serviceContext, listenerUrl);
 
@@ -418,7 +422,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         public async Task ReturnsUrlFromServerAddressFeatureOnGenericHost()
         {
             string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16().Minimum(1);
-            var fixture = new GenericHostFixture(serviceContext, "http://+:" + fuzzy.UInt16().Minimum(1), serverAddress);
+            var fixture = new GenericHostFixture(serviceContext, "http://+:" + fuzzy.UInt16(), serverAddress);
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
@@ -429,7 +433,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         public async Task ReturnsUrlFromServerAddressFeatureOnWebHost()
         {
             string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16().Minimum(1);
-            var fixture = new WebHostFixture(serviceContext, "http://+:" + fuzzy.UInt16().Minimum(1), serverAddress);
+            var fixture = new WebHostFixture(serviceContext, "http://+:" + fuzzy.UInt16(), serverAddress);
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
