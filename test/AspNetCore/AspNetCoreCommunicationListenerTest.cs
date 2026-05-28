@@ -44,7 +44,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             fixture.Sut.Abort();
 
-            fixture.Host.Verify(_ => _.Dispose(), Times.Once());
+            fixture.Host.Verify(_ => _.Dispose(), Times.Once);
         }
 
         [Fact]
@@ -55,7 +55,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             fixture.Sut.Abort();
 
-            fixture.Host.Verify(_ => _.Dispose(), Times.Once());
+            fixture.Host.Verify(_ => _.Dispose(), Times.Once);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             fixture.Sut.Abort();
 
-            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Fact]
@@ -77,7 +77,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             fixture.Sut.Abort();
 
-            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Fact]
@@ -89,8 +89,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             Assert.Null(fixture.BuildUrl);
             Assert.Null(fixture.BuildListener);
-            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
-            fixture.Host.Verify(_ => _.Dispose(), Times.Never());
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never);
+            fixture.Host.Verify(_ => _.Dispose(), Times.Never);
         }
 
         [Fact]
@@ -102,8 +102,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             Assert.Null(fixture.BuildUrl);
             Assert.Null(fixture.BuildListener);
-            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
-            fixture.Host.Verify(_ => _.Dispose(), Times.Never());
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never);
+            fixture.Host.Verify(_ => _.Dispose(), Times.Never);
         }
     }
 
@@ -119,8 +119,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             await fixture.Sut.CloseAsync(cancellationToken);
 
-            fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once());
-            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Once());
+            fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once);
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -131,8 +131,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             await fixture.Sut.CloseAsync(cancellationToken);
 
-            fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once());
-            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Once());
+            fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once);
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -148,7 +148,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             await fixture.Sut.CloseAsync(cancellationToken);
 
             Assert.True(stoppedBeforeDispose, "Dispose called before StopAsync");
-            fixture.Host.Verify(_ => _.Dispose(), Times.Once());
+            fixture.Host.Verify(_ => _.Dispose(), Times.Once);
         }
 
         [Fact]
@@ -164,7 +164,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             await fixture.Sut.CloseAsync(cancellationToken);
 
             Assert.True(stoppedBeforeDispose, "Dispose called before StopAsync");
-            fixture.Host.Verify(_ => _.Dispose(), Times.Once());
+            fixture.Host.Verify(_ => _.Dispose(), Times.Once);
         }
 
         [Fact]
@@ -178,10 +178,10 @@ public abstract class AspNetCoreCommunicationListenerTest
             Task closeTask = fixture.Sut.CloseAsync(cancellationToken);
 
             Assert.False(closeTask.IsCompleted);
-            fixture.Host.Verify(_ => _.Dispose(), Times.Never());
+            fixture.Host.Verify(_ => _.Dispose(), Times.Never);
             tcs.SetResult(null);
             await closeTask;
-            fixture.Host.Verify(_ => _.Dispose(), Times.Once());
+            fixture.Host.Verify(_ => _.Dispose(), Times.Once);
         }
 
         [Fact]
@@ -195,10 +195,10 @@ public abstract class AspNetCoreCommunicationListenerTest
             Task closeTask = fixture.Sut.CloseAsync(cancellationToken);
 
             Assert.False(closeTask.IsCompleted);
-            fixture.Host.Verify(_ => _.Dispose(), Times.Never());
+            fixture.Host.Verify(_ => _.Dispose(), Times.Never);
             tcs.SetResult(null);
             await closeTask;
-            fixture.Host.Verify(_ => _.Dispose(), Times.Once());
+            fixture.Host.Verify(_ => _.Dispose(), Times.Once);
         }
 
         [Fact]
@@ -210,8 +210,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             Assert.Null(fixture.BuildUrl);
             Assert.Null(fixture.BuildListener);
-            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
-            fixture.Host.Verify(_ => _.Dispose(), Times.Never());
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never);
+            fixture.Host.Verify(_ => _.Dispose(), Times.Never);
         }
 
         [Fact]
@@ -223,8 +223,8 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             Assert.Null(fixture.BuildUrl);
             Assert.Null(fixture.BuildListener);
-            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
-            fixture.Host.Verify(_ => _.Dispose(), Times.Never());
+            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never);
+            fixture.Host.Verify(_ => _.Dispose(), Times.Never);
         }
     }
 
@@ -401,7 +401,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             _ = await fixture.Sut.OpenAsync(cancellationToken);
 
-            fixture.Host.Verify(_ => _.StartAsync(cancellationToken), Times.Once());
+            fixture.Host.Verify(_ => _.StartAsync(cancellationToken), Times.Once);
         }
 
         [Fact]
@@ -411,7 +411,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             _ = await fixture.Sut.OpenAsync(cancellationToken);
 
-            fixture.Host.Verify(_ => _.StartAsync(cancellationToken), Times.Once());
+            fixture.Host.Verify(_ => _.StartAsync(cancellationToken), Times.Once);
         }
 
         [Fact]
