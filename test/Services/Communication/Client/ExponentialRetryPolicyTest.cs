@@ -57,9 +57,9 @@ public abstract class ExponentialRetryPolicyTest
             // Eliminate the base delay term so the observed delay is the jitter component alone.
             sut.BaseRetryDelay = TimeSpan.Zero;
             var parameters = new RetryDelayParameters(0, fuzzy.Boolean());
-            TimeSpan expectedMax = TimeSpan.FromSeconds(2);
+            var expectedMax = TimeSpan.FromSeconds(2);
 
-            TimeSpan observedMax = TimeSpan.Zero;
+            var observedMax = TimeSpan.Zero;
             for (int i = 0; i < Samples; i++)
             {
                 TimeSpan delay = sut.GetNextRetryDelay(parameters);
@@ -90,7 +90,7 @@ public abstract class ExponentialRetryPolicyTest
             sut.BaseRetryDelay = TimeSpan.Zero;
             var parameters = new RetryDelayParameters(0, fuzzy.Boolean());
 
-            TimeSpan observedMax = TimeSpan.Zero;
+            var observedMax = TimeSpan.Zero;
             for (int i = 0; i < Samples; i++)
             {
                 TimeSpan delay = sut.GetNextRetryDelay(parameters);
@@ -163,11 +163,11 @@ public abstract class ExponentialRetryPolicyTest
             retryDelayParameters = new RetryDelayParameters(retryAttempt, fuzzy.Boolean());
 
             long expectedBaseMs = (long)((int)baseRetryDelay.TotalMilliseconds << delayMultiplier);
-            TimeSpan expectedMin = TimeSpan.FromMilliseconds(expectedBaseMs);
-            TimeSpan expectedMax = TimeSpan.FromMilliseconds(expectedBaseMs + maxRetryJitter.TotalMilliseconds);
+            var expectedMin = TimeSpan.FromMilliseconds(expectedBaseMs);
+            var expectedMax = TimeSpan.FromMilliseconds(expectedBaseMs + maxRetryJitter.TotalMilliseconds);
 
-            TimeSpan observedMin = TimeSpan.MaxValue;
-            TimeSpan observedMax = TimeSpan.Zero;
+            var observedMin = TimeSpan.MaxValue;
+            var observedMax = TimeSpan.Zero;
             for (int i = 0; i < Samples; i++)
             {
                 TimeSpan delay = sut.GetNextRetryDelay(retryDelayParameters);
