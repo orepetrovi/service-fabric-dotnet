@@ -145,6 +145,18 @@ public abstract class ActorProxyFactoryTest
 
             Assert.Equal(ServiceRemotingProviderAttribute.DefaultWrappedMessageStackListenerName, proxy.ActorServicePartitionClientV2.ListenerName);
         }
+
+        [Fact]
+        public void PreservesListenerNameWhenOverrideDefaultIsSetAndCallerSuppliedNonNull()
+        {
+            // Exercises the guard branch in OverrideListenerNameIfConditionMet: when the override is enabled
+            // but the caller supplies a non-empty listenerName, the caller-supplied value must be preserved.
+            sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2_1);
+
+            var proxy = (IActorProxy)sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName);
+
+            Assert.Equal(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
+        }
     }
 
     public sealed class CreateActorProxy_Type_Uri_ActorId_String : ActorProxyFactoryTest
