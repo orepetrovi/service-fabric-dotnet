@@ -100,11 +100,12 @@ public abstract class ActorProxyFactoryTest
         {
             // Exercises the lazy-init branch in GetOrSetProxyFactory reachable only when ActorProxyFactory is
             // constructed without a Func. proxyFactoryV2 is assigned before the V2 factory invokes the default
-            // provider's CreateServiceRemotingClientFactory delegate, which requires the Service Fabric runtime
-            // and is expected to fail in this unit test environment.
+            // provider's CreateServiceRemotingClientFactory delegate, which may or may not fail depending on
+            // whether the Service Fabric runtime is available; either outcome leaves proxyFactoryV2 assigned.
             var sut = new ActorProxyFactory(retrySettings);
 
-            _ = Assert.ThrowsAny<Exception>(() => sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName));
+            try { sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName); }
+            catch { }
 
             var v2 = sut.Field<Remoting.V2.Client.ActorProxyFactory>().Value;
             Assert.NotNull(v2);
@@ -121,7 +122,8 @@ public abstract class ActorProxyFactoryTest
             // Fabric runtime, so it is replaced with one bound to the mock client factory before creating the
             // proxy whose ListenerName is then observed.
             var sut = new ActorProxyFactory(retrySettings);
-            _ = Assert.ThrowsAny<Exception>(() => sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName));
+            try { sut.CreateActorProxy<IFactoryTestActor>(actorId, applicationName, serviceName, listenerName); }
+            catch { }
 
             sut.Field<Remoting.V2.Client.ActorProxyFactory>()
                 .Set(new Remoting.V2.Client.ActorProxyFactory(createServiceRemotingClientFactory, retrySettings));
