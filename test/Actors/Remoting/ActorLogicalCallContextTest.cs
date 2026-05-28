@@ -132,7 +132,6 @@ public abstract class ActorLogicalCallContextTest : IDisposable
 
             ActorLogicalCallContext.Clear();
 
-            Assert.False(ActorLogicalCallContext.IsPresent());
             Assert.False(ActorLogicalCallContext.TryGet(out string value));
             Assert.Null(value);
         }
@@ -141,7 +140,8 @@ public abstract class ActorLogicalCallContextTest : IDisposable
         public void IsNoOpWhenValueIsNotSet()
         {
             ActorLogicalCallContext.Clear();
-            Assert.False(ActorLogicalCallContext.IsPresent());
+            Assert.False(ActorLogicalCallContext.TryGet(out string value));
+            Assert.Null(value);
         }
 
         [Fact]
