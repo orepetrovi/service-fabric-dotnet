@@ -132,6 +132,18 @@ public abstract class ActorLogicalCallContextTest : IDisposable
             ActorLogicalCallContext.TryGet(out string actual);
             Assert.Same(expected, actual);
         }
+
+        [Fact]
+        public void IsEquivalentToClearWhenValueIsNull()
+        {
+            ActorLogicalCallContext.Set(fuzzy.String());
+
+            ActorLogicalCallContext.Set(null);
+
+            Assert.False(ActorLogicalCallContext.IsPresent());
+            Assert.False(ActorLogicalCallContext.TryGet(out string value));
+            Assert.Null(value);
+        }
     }
 
     public sealed class TryGet : ActorLogicalCallContextTest
