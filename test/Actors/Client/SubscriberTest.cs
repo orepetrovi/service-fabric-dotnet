@@ -89,7 +89,7 @@ public abstract class SubscriberTest
     public new sealed class GetHashCode : SubscriberTest
     {
         [Fact]
-        public void EqualForEqualSubscribers() =>
+        public void ReturnsEqualHashCodesForEqualSubscribers() =>
             Assert.Equal(new Subscriber(actorId, eventId, instance).GetHashCode(), sut.GetHashCode());
     }
 }
