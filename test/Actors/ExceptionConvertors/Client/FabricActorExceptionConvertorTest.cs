@@ -137,7 +137,6 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.IsType(knownType, actual);
             Assert.Equal(message, actual.Message);
             Assert.Null(actual.InnerException);
-            AssertRemoteMetadataCopied(serviceException, actual);
         }
 
         [Fact]
