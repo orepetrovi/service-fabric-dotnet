@@ -84,8 +84,8 @@ public abstract class ActorDataContractSurrogateTest
 
             var reference = Assert.IsType<ActorReference>(result);
             Assert.Same(actorId, reference.ActorId);
-            Assert.Equal(serviceUri, reference.ServiceUri);
-            Assert.Equal(listenerName, reference.ListenerName);
+            Assert.Same(serviceUri, reference.ServiceUri);
+            Assert.Same(listenerName, reference.ListenerName);
         }
 
         [Fact]
