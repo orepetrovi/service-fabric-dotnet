@@ -115,50 +115,6 @@ public abstract class ServicePartitionClientTest
         }
     }
 
-    public abstract class InvokeWithRetryAsyncBase : ServicePartitionClientTest
-    {
-        protected readonly Mock<ICommunicationClient> communicationClient = new();
-        protected readonly ResolvedServicePartition rsp = Type<ResolvedServicePartition>.Uninitialized();
-
-        // Default: GetClientAsync returns the mock client; ReportOperationExceptionAsync handles `clientException`
-        // with a transient retry that uses a short delay so tests don't slow down.
-        protected static readonly TimeSpan ShortRetryDelay = TimeSpan.FromMilliseconds(1);
-
-        protected readonly Exception clientException = new InvalidOperationException();
-
-        protected ICommunicationClient client => communicationClient.Object;
-
-        protected InvokeWithRetryAsyncBase()
-        {
-            _ = communicationClient.SetupGet(_ => _.ResolvedServicePartition).Returns(rsp);
-            _ = communicationClientFactory
-                .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(client);
-            _ = communicationClientFactory
-                .Setup(_ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(client);
-        }
-
-        protected void SetupReportOperationException(OperationRetryControl control, Exception expectedException = null) =>
-            _ = communicationClientFactory
-                .Setup(_ => _.ReportOperationExceptionAsync(
-                    client,
-                    It.Is<ExceptionInformation>(i => i.Exception == (expectedException ?? clientException) && i.TargetReplica == targetReplicaSelector),
-                    retrySettings,
-                    CancellationToken.None))
-                .ReturnsAsync(control);
-
-        protected static OperationRetryControl TransientRetry(int maxRetryCount = 5, TimeSpan? delay = null) =>
-            new()
-            {
-                ShouldRetry = true,
-                IsTransient = true,
-                MaxRetryCount = maxRetryCount,
-                ExceptionId = "exception",
-                GetRetryDelay = _ => delay ?? ShortRetryDelay,
-            };
-    }
-
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTaskOfTResult_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
     {
         static readonly Method method = typeof(ServicePartitionClient<ICommunicationClient>)
@@ -837,4 +793,47 @@ public abstract class ServicePartitionClientTest
         }
     }
 
+    public abstract class InvokeWithRetryAsyncBase : ServicePartitionClientTest
+    {
+        protected readonly Mock<ICommunicationClient> communicationClient = new();
+        protected readonly ResolvedServicePartition rsp = Type<ResolvedServicePartition>.Uninitialized();
+
+        // Default: GetClientAsync returns the mock client; ReportOperationExceptionAsync handles `clientException`
+        // with a transient retry that uses a short delay so tests don't slow down.
+        protected static readonly TimeSpan ShortRetryDelay = TimeSpan.FromMilliseconds(1);
+
+        protected readonly Exception clientException = new InvalidOperationException();
+
+        protected ICommunicationClient client => communicationClient.Object;
+
+        protected InvokeWithRetryAsyncBase()
+        {
+            _ = communicationClient.SetupGet(_ => _.ResolvedServicePartition).Returns(rsp);
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(client);
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(client);
+        }
+
+        protected void SetupReportOperationException(OperationRetryControl control, Exception expectedException = null) =>
+            _ = communicationClientFactory
+                .Setup(_ => _.ReportOperationExceptionAsync(
+                    client,
+                    It.Is<ExceptionInformation>(i => i.Exception == (expectedException ?? clientException) && i.TargetReplica == targetReplicaSelector),
+                    retrySettings,
+                    CancellationToken.None))
+                .ReturnsAsync(control);
+
+        protected static OperationRetryControl TransientRetry(int maxRetryCount = 5, TimeSpan? delay = null) =>
+            new()
+            {
+                ShouldRetry = true,
+                IsTransient = true,
+                MaxRetryCount = maxRetryCount,
+                ExceptionId = "exception",
+                GetRetryDelay = _ => delay ?? ShortRetryDelay,
+            };
+    }
 }
