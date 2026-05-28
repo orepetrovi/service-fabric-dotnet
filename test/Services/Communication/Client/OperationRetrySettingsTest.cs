@@ -41,19 +41,6 @@ public abstract class OperationRetrySettingsTest
         }
     }
 
-    public sealed class Constructor_TimeSpan : OperationRetrySettingsTest
-    {
-        readonly TimeSpan clientRetryTimeout = fuzzy.TimeSpan();
-
-        [Fact]
-        public void InitializesRetryPolicyWithExponentialRetryPolicyAndGivenClientRetryTimeout()
-        {
-            var sut = new OperationRetrySettings(clientRetryTimeout);
-            Assert.Equal(10, sut.DefaultMaxRetryCountForTransientErrors);
-            Assert.Equal(clientRetryTimeout, sut.ClientRetryTimeout);
-        }
-    }
-
     public sealed class Constructor_IRetryPolicy : OperationRetrySettingsTest
     {
         readonly IRetryPolicy retryPolicy = Mock.Of<IRetryPolicy>();
@@ -71,6 +58,19 @@ public abstract class OperationRetrySettingsTest
             var actual = Assert.Throws<ArgumentNullException>(
                 () => new OperationRetrySettings(null));
             Assert.Equal(nameof(retryPolicy), actual.ParamName);
+        }
+    }
+
+    public sealed class Constructor_TimeSpan : OperationRetrySettingsTest
+    {
+        readonly TimeSpan clientRetryTimeout = fuzzy.TimeSpan();
+
+        [Fact]
+        public void InitializesRetryPolicyWithExponentialRetryPolicyAndGivenClientRetryTimeout()
+        {
+            var sut = new OperationRetrySettings(clientRetryTimeout);
+            Assert.Equal(10, sut.DefaultMaxRetryCountForTransientErrors);
+            Assert.Equal(clientRetryTimeout, sut.ClientRetryTimeout);
         }
     }
 
