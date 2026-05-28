@@ -14,6 +14,6 @@ public abstract class RandomGeneratorTest
     public sealed class NextDouble : RandomGeneratorTest
     {
         [Fact]
-        public void DoesNotThrow() => sut.NextDouble();
+        public void Completes() => sut.NextDouble();
     }
 }
