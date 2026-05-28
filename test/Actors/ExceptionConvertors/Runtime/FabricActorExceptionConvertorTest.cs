@@ -18,6 +18,33 @@ public abstract class FabricActorExceptionConvertorTest
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
+    public sealed class GetInnerExceptions : FabricActorExceptionConvertorTest
+    {
+        readonly string message = fuzzy.String();
+
+        [Fact]
+        public void ReturnsArrayContainingInnerExceptionWhenPresent()
+        {
+            var inner = new InvalidOperationException(fuzzy.String());
+            var original = new DuplicateMessageException(message, inner);
+
+            Exception[] result = sut.GetInnerExceptions(original);
+
+            Exception actual = Assert.Single(result);
+            Assert.Same(inner, actual);
+        }
+
+        [Fact]
+        public void ReturnsNullWhenInnerExceptionIsAbsent()
+        {
+            var original = new DuplicateMessageException(message);
+
+            Exception[] result = sut.GetInnerExceptions(original);
+
+            Assert.Null(result);
+        }
+    }
+
     public sealed class TryConvertToServiceException : FabricActorExceptionConvertorTest
     {
         readonly string message = fuzzy.String();
@@ -63,33 +90,6 @@ public abstract class FabricActorExceptionConvertorTest
 
             Assert.False(result);
             Assert.Null(converted);
-        }
-    }
-
-    public sealed class GetInnerExceptions : FabricActorExceptionConvertorTest
-    {
-        readonly string message = fuzzy.String();
-
-        [Fact]
-        public void ReturnsArrayContainingInnerExceptionWhenPresent()
-        {
-            var inner = new InvalidOperationException(fuzzy.String());
-            var original = new DuplicateMessageException(message, inner);
-
-            Exception[] result = sut.GetInnerExceptions(original);
-
-            Exception actual = Assert.Single(result);
-            Assert.Same(inner, actual);
-        }
-
-        [Fact]
-        public void ReturnsNullWhenInnerExceptionIsAbsent()
-        {
-            var original = new DuplicateMessageException(message);
-
-            Exception[] result = sut.GetInnerExceptions(original);
-
-            Assert.Null(result);
         }
     }
 
