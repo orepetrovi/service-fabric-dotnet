@@ -472,6 +472,13 @@ public abstract class ServicePartitionClientTest
             // Stopwatch precision varies; allow a small margin per Microsoft documentation.
             Assert.True(stopwatch.ElapsedMilliseconds >= timeout.TotalMilliseconds - 25, $"Elapsed {stopwatch.ElapsedMilliseconds}ms < {timeout.TotalMilliseconds}ms");
             Assert.False(cts.IsCancellationRequested);
+            communicationClientFactory.Verify(
+                _ => _.ReportOperationExceptionAsync(
+                    client,
+                    It.Is<ExceptionInformation>(i => i.Exception == clientException && i.TargetReplica == targetReplicaSelector),
+                    retrySettings,
+                    CancellationToken.None),
+                Times.AtLeastOnce);
         }
 
         [Fact]
@@ -506,6 +513,13 @@ public abstract class ServicePartitionClientTest
             stopwatch.Stop();
 
             Assert.True(stopwatch.ElapsedMilliseconds < retryDelay.TotalMilliseconds, $"Elapsed {stopwatch.ElapsedMilliseconds}ms >= retry delay {retryDelay.TotalMilliseconds}ms");
+            communicationClientFactory.Verify(
+                _ => _.ReportOperationExceptionAsync(
+                    client,
+                    It.Is<ExceptionInformation>(i => i.Exception == clientException && i.TargetReplica == targetReplicaSelector),
+                    retrySettings,
+                    CancellationToken.None),
+                Times.AtLeastOnce);
         }
 
         [Fact]
