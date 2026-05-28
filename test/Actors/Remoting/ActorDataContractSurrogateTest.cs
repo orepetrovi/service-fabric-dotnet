@@ -135,7 +135,7 @@ public abstract class ActorDataContractSurrogateTest
         {
             ActorId actorId = fuzzy.ActorId();
             Uri serviceUri = fuzzy.Uri();
-            string listenerName = fuzzy.String().LettersOrDigits();
+            string listenerName = fuzzy.String();
             var partitionClient = new Mock<IActorServicePartitionClient>();
             _ = partitionClient.SetupGet(_ => _.ServiceUri).Returns(serviceUri);
             _ = partitionClient.SetupGet(_ => _.ListenerName).Returns(listenerName);
