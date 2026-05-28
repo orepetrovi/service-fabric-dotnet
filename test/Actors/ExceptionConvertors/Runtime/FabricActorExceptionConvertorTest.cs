@@ -60,7 +60,7 @@ public abstract class FabricActorExceptionConvertorTest
         [InlineData(typeof(ReminderLoadInProgressException))]
         public void ReturnsTrueAndProducesServiceExceptionForKnownFabricException(Type knownType)
         {
-            var original = (FabricException)Activator.CreateInstance(knownType, new object[] { message });
+            var original = (FabricException)Activator.CreateInstance(knownType, message);
 
             bool result = sut.TryConvertToServiceException(original, out ServiceException converted);
 
