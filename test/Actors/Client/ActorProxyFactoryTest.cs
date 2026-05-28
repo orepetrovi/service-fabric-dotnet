@@ -36,13 +36,6 @@ public abstract class ActorProxyFactoryTest
         sut = new ActorProxyFactory(createServiceRemotingClientFactory, retrySettings);
     }
 
-    // TODO: Replace with sut.Method<Action<RemotingClientVersion>>() once Inspector handles open generic
-    // method definitions. Inspector 0.3.12 iterates all instance methods and calls Delegate.CreateDelegate
-    // on each, which throws ArgumentException for the generic CreateActorProxy<TActorInterface> overloads
-    // declared on this type. See https://github.com/olegsych/inspector/issues/5.
-    void OverrideDefaultListenerName(RemotingClientVersion version) =>
-        sut.Method("OverrideDefaultListenerName").Invoke(version);
-
     public sealed class Constructor_FuncOfIServiceRemotingCallbackMessageHandlerOfIServiceRemotingClientFactory_OperationRetrySettings : ActorProxyFactoryTest
     {
         [Fact]
@@ -317,4 +310,11 @@ public abstract class ActorProxyFactoryTest
             throw new NotImplementedException();
         }
     }
+
+    // TODO: Replace with sut.Method<Action<RemotingClientVersion>>() once Inspector handles open generic
+    // method definitions. Inspector 0.3.12 iterates all instance methods and calls Delegate.CreateDelegate
+    // on each, which throws ArgumentException for the generic CreateActorProxy<TActorInterface> overloads
+    // declared on this type. See https://github.com/olegsych/inspector/issues/5.
+    void OverrideDefaultListenerName(RemotingClientVersion version) =>
+        sut.Method("OverrideDefaultListenerName").Invoke(version);
 }
