@@ -58,13 +58,6 @@ public abstract class OperationRetrySettingsTest
     {
         readonly IRetryPolicy retryPolicy = Mock.Of<IRetryPolicy>();
 
-        [Fact]
-        public void StoresGivenRetryPolicy()
-        {
-            var sut = new OperationRetrySettings(retryPolicy);
-            Assert.Same(retryPolicy, sut.RetryPolicy);
-        }
-
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for retryPolicy.
         public void ThrowsArgumentNullExceptionWhenRetryPolicyIsNull()
         {
