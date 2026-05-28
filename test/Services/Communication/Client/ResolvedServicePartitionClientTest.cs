@@ -75,7 +75,7 @@ public abstract class ResolvedServicePartitionClientTest
         [Fact]
         public void ReturnsValuePreviouslySet()
         {
-            ResolvedServicePartition rsp = Type<ResolvedServicePartition>.Uninitialized();
+            var rsp = Type<ResolvedServicePartition>.Uninitialized();
             sut.Rsp = rsp;
             Assert.Same(rsp, sut.Rsp);
         }
