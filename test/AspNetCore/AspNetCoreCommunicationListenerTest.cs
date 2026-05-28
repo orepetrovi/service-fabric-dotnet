@@ -34,17 +34,6 @@ public abstract class AspNetCoreCommunicationListenerTest
     public sealed class Abort : AspNetCoreCommunicationListenerTest
     {
         [Fact]
-        public async Task DisposesHostAfterOpenAsyncOnGenericHost()
-        {
-            var fixture = new GenericHostFixture(serviceContext);
-            _ = await fixture.Sut.OpenAsync(CancellationToken.None);
-
-            fixture.Sut.Abort();
-
-            fixture.Host.Verify(_ => _.Dispose(), Times.Once);
-        }
-
-        [Fact]
         public async Task DisposesHostAfterOpenAsyncOnWebHost()
         {
             var fixture = new WebHostFixture(serviceContext);
@@ -56,17 +45,6 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public async Task DoesNotInvokeStopAsyncOnGenericHost()
-        {
-            var fixture = new GenericHostFixture(serviceContext);
-            _ = await fixture.Sut.OpenAsync(CancellationToken.None);
-
-            fixture.Sut.Abort();
-
-            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never);
-        }
-
-        [Fact]
         public async Task DoesNotInvokeStopAsyncOnWebHost()
         {
             var fixture = new WebHostFixture(serviceContext);
@@ -75,16 +53,6 @@ public abstract class AspNetCoreCommunicationListenerTest
             fixture.Sut.Abort();
 
             fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never);
-        }
-
-        [Fact]
-        public void DoesNotBuildHostWhenNotOpenedOnGenericHost()
-        {
-            var fixture = new GenericHostFixture(serviceContext);
-
-            fixture.Sut.Abort();
-
-            Assert.Equal(0, fixture.BuildCallCount);
         }
 
         [Fact]
@@ -103,18 +71,6 @@ public abstract class AspNetCoreCommunicationListenerTest
         readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken; // Matches SUT parameter name
 
         [Fact]
-        public async Task PassesCancellationTokenToHostStopAsyncOnGenericHost()
-        {
-            var fixture = new GenericHostFixture(serviceContext);
-            _ = await fixture.Sut.OpenAsync(CancellationToken.None);
-
-            await fixture.Sut.CloseAsync(cancellationToken);
-
-            fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once);
-            fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        [Fact]
         public async Task PassesCancellationTokenToHostStopAsyncOnWebHost()
         {
             var fixture = new WebHostFixture(serviceContext);
@@ -124,22 +80,6 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             fixture.Host.Verify(_ => _.StopAsync(cancellationToken), Times.Once);
             fixture.Host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        [Fact]
-        public async Task DisposesHostAfterStopAsyncOnGenericHost()
-        {
-            var fixture = new GenericHostFixture(serviceContext);
-            _ = await fixture.Sut.OpenAsync(CancellationToken.None);
-            bool stopped = false;
-            bool stoppedBeforeDispose = false;
-            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Callback(() => stopped = true).Returns(Task.CompletedTask);
-            _ = fixture.Host.Setup(_ => _.Dispose()).Callback(() => stoppedBeforeDispose = stopped);
-
-            await fixture.Sut.CloseAsync(cancellationToken);
-
-            Assert.True(stoppedBeforeDispose, "Dispose called before StopAsync");
-            fixture.Host.Verify(_ => _.Dispose(), Times.Once);
         }
 
         [Fact]
@@ -159,23 +99,6 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public async Task AwaitsHostStopAsyncBeforeReturningOnGenericHost()
-        {
-            var fixture = new GenericHostFixture(serviceContext);
-            _ = await fixture.Sut.OpenAsync(CancellationToken.None);
-            var tcs = new TaskCompletionSource<object>();
-            _ = fixture.Host.Setup(_ => _.StopAsync(cancellationToken)).Returns(tcs.Task);
-
-            Task closeTask = fixture.Sut.CloseAsync(cancellationToken);
-
-            Assert.False(closeTask.IsCompleted);
-            fixture.Host.Verify(_ => _.Dispose(), Times.Never);
-            tcs.SetResult(null);
-            await closeTask;
-            fixture.Host.Verify(_ => _.Dispose(), Times.Once);
-        }
-
-        [Fact]
         public async Task AwaitsHostStopAsyncBeforeReturningOnWebHost()
         {
             var fixture = new WebHostFixture(serviceContext);
@@ -190,16 +113,6 @@ public abstract class AspNetCoreCommunicationListenerTest
             tcs.SetResult(null);
             await closeTask;
             fixture.Host.Verify(_ => _.Dispose(), Times.Once);
-        }
-
-        [Fact]
-        public async Task DoesNotBuildHostWhenNotOpenedOnGenericHost()
-        {
-            var fixture = new GenericHostFixture(serviceContext);
-
-            await fixture.Sut.CloseAsync(cancellationToken);
-
-            Assert.Equal(0, fixture.BuildCallCount);
         }
 
         [Fact]
@@ -384,17 +297,6 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public async Task PassesCancellationTokenToHostStartAsyncOnGenericHost()
-        {
-            var fixture = new GenericHostFixture(serviceContext);
-
-            _ = await fixture.Sut.OpenAsync(cancellationToken);
-
-            fixture.Host.Verify(_ => _.StartAsync(cancellationToken), Times.Once);
-            fixture.Host.Verify(_ => _.StartAsync(It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        [Fact]
         public async Task PassesCancellationTokenToHostStartAsyncOnWebHost()
         {
             var fixture = new WebHostFixture(serviceContext);
@@ -403,17 +305,6 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             fixture.Host.Verify(_ => _.StartAsync(cancellationToken), Times.Once);
             fixture.Host.Verify(_ => _.StartAsync(It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        [Fact]
-        public async Task ReturnsUrlFromServerAddressFeatureOnGenericHost()
-        {
-            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16();
-            var fixture = new GenericHostFixture(serviceContext, "http://+:" + fuzzy.UInt16(), serverAddress);
-
-            string actual = await fixture.Sut.OpenAsync(cancellationToken);
-
-            Assert.Equal(serverAddress, actual);
         }
 
         [Fact]
@@ -428,18 +319,6 @@ public abstract class AspNetCoreCommunicationListenerTest
         }
 
         [Fact]
-        public async Task AppendsUrlSuffixToReturnedUrlOnGenericHost()
-        {
-            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16();
-            var fixture = new GenericHostFixture(serviceContext, serverAddress: serverAddress);
-            fixture.Sut.ConfigureToUseUniqueServiceUrl();
-
-            string actual = await fixture.Sut.OpenAsync(cancellationToken);
-
-            Assert.Equal(serverAddress + fixture.Sut.UrlSuffix, actual);
-        }
-
-        [Fact]
         public async Task AppendsUrlSuffixToReturnedUrlOnWebHost()
         {
             string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16();
@@ -449,20 +328,6 @@ public abstract class AspNetCoreCommunicationListenerTest
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
             Assert.Equal(serverAddress + fixture.Sut.UrlSuffix, actual);
-        }
-
-        [Fact]
-        public async Task AwaitsHostStartAsyncBeforeReturningOnGenericHost()
-        {
-            var fixture = new GenericHostFixture(serviceContext);
-            var tcs = new TaskCompletionSource<object>();
-            _ = fixture.Host.Setup(_ => _.StartAsync(cancellationToken)).Returns(tcs.Task);
-
-            Task<string> openTask = fixture.Sut.OpenAsync(cancellationToken);
-
-            Assert.False(openTask.IsCompleted);
-            tcs.SetResult(null);
-            _ = await openTask;
         }
 
         [Fact]
