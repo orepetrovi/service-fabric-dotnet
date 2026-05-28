@@ -135,17 +135,6 @@ public abstract class FabricActorExceptionConvertorTest
         }
 
         [Fact]
-        public void ReturnsFalseWhenActualExceptionTypeIsUnknown()
-        {
-            var unknownServiceException = new ServiceException(fuzzy.String(), message);
-
-            bool result = sut.TryConvertFromServiceException(unknownServiceException, innerExceptions, out Exception actual);
-
-            Assert.False(result);
-            Assert.Null(actual);
-        }
-
-        [Fact]
         public void PassesFirstInnerExceptionToProducedException()
         {
             var innerException = new InvalidOperationException(fuzzy.String());
@@ -156,6 +145,17 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.IsType<DuplicateMessageException>(actual);
             Assert.Equal(message, actual.Message);
             Assert.Same(innerException, actual.InnerException);
+        }
+
+        [Fact]
+        public void ReturnsFalseWhenActualExceptionTypeIsUnknown()
+        {
+            var unknownServiceException = new ServiceException(fuzzy.String(), message);
+
+            bool result = sut.TryConvertFromServiceException(unknownServiceException, innerExceptions, out Exception actual);
+
+            Assert.False(result);
+            Assert.Null(actual);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. TryConvertFromServiceException doesn't validate serviceException.
