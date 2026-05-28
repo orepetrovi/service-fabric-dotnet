@@ -105,6 +105,17 @@ public abstract class ActorRemotingProviderAttributeTest
         }
 
         [Fact]
+        public void ReturnsRemotingProviderAttributeOfEntryAssemblyWhenTypesIsEmpty()
+        {
+            types = [];
+            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(assemblyWithAttribute);
+
+            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider(types);
+
+            Assert.Same(expected, provider);
+        }
+
+        [Fact]
         public void ReturnsRemotingProviderAttributeOfEntryAssemblyWhenNoTypeAssemblyHasAttribute()
         {
             types = [MockType(assemblyWithoutAttribute)];
