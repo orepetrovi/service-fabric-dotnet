@@ -408,6 +408,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             _ = await fixture.Sut.OpenAsync(cancellationToken);
 
             fixture.Host.Verify(_ => _.StartAsync(cancellationToken), Times.Once);
+            fixture.Host.Verify(_ => _.StartAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -418,6 +419,7 @@ public abstract class AspNetCoreCommunicationListenerTest
             _ = await fixture.Sut.OpenAsync(cancellationToken);
 
             fixture.Host.Verify(_ => _.StartAsync(cancellationToken), Times.Once);
+            fixture.Host.Verify(_ => _.StartAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
