@@ -43,13 +43,22 @@ public abstract class ServicePartitionClientTest
     public sealed class Constructor : ServicePartitionClientTest
     {
         [Fact]
-        public void InitializesProperties()
+        public async Task InitializesProperties()
         {
             Assert.Same(communicationClientFactory.Object, sut.Factory);
             Assert.Same(serviceUri, sut.ServiceUri);
             Assert.Same(partitionKey, sut.PartitionKey);
             Assert.Same(listenerName, sut.ListenerName);
-            Assert.Same(retrySettings, sut.Field<OperationRetrySettings>().Value);
+
+            // Observe retrySettings indirectly: it must be forwarded to GetClientAsync.
+            var clientMock = new Mock<ICommunicationClient>();
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(clientMock.Object);
+
+            _ = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()), TestContext.Current.CancellationToken);
+
+            communicationClientFactory.VerifyAll();
         }
 
         [Theory]
@@ -72,11 +81,20 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public void DefaultsRetrySettingsWhenArgumentIsNull()
+        public async Task DefaultsRetrySettingsWhenArgumentIsNull()
         {
             var sut = new ServicePartitionClient<ICommunicationClient>(
                 communicationClientFactory.Object, serviceUri, partitionKey, targetReplicaSelector, listenerName, null);
-            Assert.NotNull(sut.Field<OperationRetrySettings>().Value);
+
+            // Observe the default retrySettings indirectly: a non-null instance must be forwarded to GetClientAsync.
+            var clientMock = new Mock<ICommunicationClient>();
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, It.IsNotNull<OperationRetrySettings>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(clientMock.Object);
+
+            _ = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()), TestContext.Current.CancellationToken);
+
+            communicationClientFactory.VerifyAll();
         }
 
         [Fact]
@@ -105,10 +123,16 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public void ReturnsTrueAndLastRspWhenSet()
+        public async Task ReturnsTrueAndLastRspWhenSet()
         {
+            // Drive InvokeWithRetryAsync so the SUT assigns lastRsp from communicationClient.ResolvedServicePartition.
             var rsp = Type<ResolvedServicePartition>.Uninitialized();
-            sut.Field<ResolvedServicePartition>().Set(rsp);
+            var clientMock = new Mock<ICommunicationClient>();
+            clientMock.SetupGet(_ => _.ResolvedServicePartition).Returns(rsp);
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(clientMock.Object);
+            _ = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()), TestContext.Current.CancellationToken);
 
             bool actual = sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition resolvedServicePartition);
 
