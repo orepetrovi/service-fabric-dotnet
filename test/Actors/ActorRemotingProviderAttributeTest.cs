@@ -149,9 +149,7 @@ public abstract class ActorRemotingProviderAttributeTest
 
     public sealed class RemotingClientVersion : ActorRemotingProviderAttributeTest
     {
-        [Theory]
-        [InlineData(ClientVersion.V2)]
-        [InlineData(ClientVersion.V2_1)]
+        [Theory, InlineData(ClientVersion.V2), InlineData(ClientVersion.V2_1)]
         public void SetsValue(ClientVersion value)
         {
             sut.RemotingClientVersion = value;
@@ -161,9 +159,7 @@ public abstract class ActorRemotingProviderAttributeTest
 
     public sealed class RemotingListenerVersion : ActorRemotingProviderAttributeTest
     {
-        [Theory]
-        [InlineData(ListenerVersion.V2)]
-        [InlineData(ListenerVersion.V2_1)]
+        [Theory, InlineData(ListenerVersion.V2), InlineData(ListenerVersion.V2_1)]
         public void SetsValue(ListenerVersion value)
         {
             sut.RemotingListenerVersion = value;
