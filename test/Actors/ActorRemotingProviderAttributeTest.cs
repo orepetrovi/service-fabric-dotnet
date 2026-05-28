@@ -1,8 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Inspector;
 using Microsoft.ServiceFabric.Actors.Remoting;
 using Microsoft.ServiceFabric.Actors.Remoting.FabricTransport;
+using Microsoft.ServiceFabric.Actors.Runtime;
+using Microsoft.ServiceFabric.Services.Remoting;
+using Microsoft.ServiceFabric.Services.Remoting.Runtime;
+using Microsoft.ServiceFabric.Services.Remoting.V2.Client;
 using Moq;
 using Xunit;
 
@@ -10,6 +15,28 @@ namespace Microsoft.ServiceFabric.Actors.Tests;
 
 public abstract class ActorRemotingProviderAttributeTest
 {
+    public sealed class Constructor : ActorRemotingProviderAttributeTest
+    {
+        readonly ActorRemotingProviderAttribute sut = new TestActorRemotingProviderAttribute();
+
+        [Fact]
+        public void InitializesRemotingClientVersionToV2_1() =>
+            Assert.Equal(RemotingClientVersion.V2_1, sut.RemotingClientVersion);
+
+        [Fact]
+        public void InitializesRemotingListenerVersionToV2_1() =>
+            Assert.Equal(RemotingListenerVersion.V2_1, sut.RemotingListenerVersion);
+
+        sealed class TestActorRemotingProviderAttribute : ActorRemotingProviderAttribute
+        {
+            public override Dictionary<string, Func<ActorService, IServiceRemotingListener>> CreateServiceRemotingListeners() =>
+                throw new NotImplementedException();
+
+            public override IServiceRemotingClientFactory CreateServiceRemotingClientFactory(IServiceRemotingCallbackMessageHandler callbackMessageHandler) =>
+                throw new NotImplementedException();
+        }
+    }
+
     public sealed class GetProvider : ActorRemotingProviderAttributeTest, IDisposable
     {
         readonly Assembly mockAssemblyWithoutRemotingProviderAttribute = MockAssembly();
