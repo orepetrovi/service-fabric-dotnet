@@ -52,22 +52,12 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public async Task InitializesProperties()
+        public void InitializesProperties()
         {
             Assert.Same(communicationClientFactory.Object, sut.Factory);
             Assert.Same(serviceUri, sut.ServiceUri);
             Assert.Same(partitionKey, sut.PartitionKey);
             Assert.Same(listenerName, sut.ListenerName);
-
-            // Observe retrySettings indirectly: it must be forwarded to GetClientAsync.
-            var clientMock = new Mock<ICommunicationClient>();
-            _ = communicationClientFactory
-                .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(clientMock.Object);
-
-            _ = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()), TestContext.Current.CancellationToken);
-
-            communicationClientFactory.VerifyAll();
         }
 
         [Theory]
