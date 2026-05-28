@@ -200,7 +200,7 @@ public abstract class ActorRemotingProviderAttributeTest
 #endif
 
     // Make Assembly concrete to enable mocking on NetFx
-    public class TestAssembly : Assembly { }
+    internal class TestAssembly : Assembly { }
 
     sealed class TestActorRemotingProviderAttribute : ActorRemotingProviderAttribute
     {
