@@ -26,8 +26,8 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
 
         // Wire-format configuration key the SUT contracts on; intentionally a literal, not nameof(...), because the
         // key is independent of the method name and must remain stable across renames for back-compat.
-        const string SettingName = "UseServiceFabricIntegration";
-        static readonly string SettingValue = true.ToString();
+        const string settingName = "UseServiceFabricIntegration";
+        static readonly string settingValue = true.ToString();
 
         [Fact]
         public void ReturnsHostBuilder()
@@ -56,7 +56,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         [Fact]
         public void ReturnsHostBuilderWithoutReconfiguringWhenSettingIsAlreadyTrue()
         {
-            _ = hostBuilder.Setup(_ => _.GetSetting(SettingName)).Returns(SettingValue);
+            _ = hostBuilder.Setup(_ => _.GetSetting(settingName)).Returns(settingValue);
 
             IWebHostBuilder actual = hostBuilder.Object.UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.UseUniqueServiceUrl);
 
@@ -70,9 +70,9 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         [Fact]
         public void MarksHostBuilderSettingToTrue()
         {
-            hostBuilder.Object.UseServiceFabricIntegration(listener, options);
+            _ = hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
-            hostBuilder.Verify(_ => _.UseSetting(SettingName, SettingValue), Times.Once);
+            hostBuilder.Verify(_ => _.UseSetting(settingName, settingValue), Times.Once);
             hostBuilder.Verify(_ => _.UseSetting(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
@@ -81,7 +81,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl | ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
         public void ConfiguresListenerToUseUniqueServiceUrlWhenOptionsHasUseUniqueServiceUrlFlag(ServiceFabricIntegrationOptions options)
         {
-            hostBuilder.Object.UseServiceFabricIntegration(listener, options);
+            _ = hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
             Assert.NotEmpty(listener.UrlSuffix);
         }
@@ -91,7 +91,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
         public void DoesNotConfigureListenerToUseUniqueServiceUrlWhenOptionsDoesNotHaveUseUniqueServiceUrlFlag(ServiceFabricIntegrationOptions options)
         {
-            hostBuilder.Object.UseServiceFabricIntegration(listener, options);
+            _ = hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
             Assert.Empty(listener.UrlSuffix);
         }
@@ -146,7 +146,7 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
                 .Setup(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()))
                 .Callback<Action<IServiceCollection>>(a => captured = a);
 
-            hostBuilder.Object.UseServiceFabricIntegration(listener, options);
+            _ = hostBuilder.Object.UseServiceFabricIntegration(listener, options);
 
             hostBuilder.Verify(_ => _.ConfigureServices(It.IsAny<Action<IServiceCollection>>()), Times.Once);
             Assert.NotNull(captured);
