@@ -30,5 +30,6 @@
     <Compile Include="ExceptionConvertors\Runtime\FabricActorExceptionConvertorTest.cs" />
     <Compile Include="IFuzzExtensions.cs" />
     <Compile Include="Remoting\ActorDataContractSurrogateTest.cs" />
+    <Compile Include="Remoting\ActorLogicalCallContextTest.cs" />
   </ItemGroup>
 </Project>
