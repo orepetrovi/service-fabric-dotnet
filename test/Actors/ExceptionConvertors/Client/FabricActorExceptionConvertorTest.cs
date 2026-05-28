@@ -49,6 +49,15 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.False(result);
             Assert.Null(actual);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. TryConvertFromServiceException doesn't validate serviceException.
+        public void ThrowsArgumentNullExceptionWhenServiceExceptionIsNull()
+        {
+            // TryConvertFromServiceException dereferences serviceException.ActualExceptionType without validation,
+            // surfacing the defect as a NullReferenceException.
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.TryConvertFromServiceException(null, out Exception _));
+            Assert.Equal(nameof(serviceException), exception.ParamName);
+        }
     }
 
     public sealed class TryConvertFromServiceException_ServiceException_Exception : FabricActorExceptionConvertorTest
@@ -80,6 +89,15 @@ public abstract class FabricActorExceptionConvertorTest
 
             Assert.False(result);
             Assert.Null(actual);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. TryConvertFromServiceException doesn't validate serviceException.
+        public void ThrowsArgumentNullExceptionWhenServiceExceptionIsNull()
+        {
+            // TryConvertFromServiceException dereferences serviceException.ActualExceptionType without validation,
+            // surfacing the defect as a NullReferenceException.
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.TryConvertFromServiceException(null, innerException, out Exception _));
+            Assert.Equal(nameof(serviceException), exception.ParamName);
         }
     }
 
@@ -132,6 +150,15 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.IsType<DuplicateMessageException>(actual);
             Assert.Equal(message, actual.Message);
             Assert.Same(innerException, actual.InnerException);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. TryConvertFromServiceException doesn't validate serviceException.
+        public void ThrowsArgumentNullExceptionWhenServiceExceptionIsNull()
+        {
+            // TryConvertFromServiceException dereferences serviceException.ActualExceptionType without validation,
+            // surfacing the defect as a NullReferenceException.
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.TryConvertFromServiceException(null, innerExceptions, out Exception _));
+            Assert.Equal("serviceException", exception.ParamName);
         }
     }
 
