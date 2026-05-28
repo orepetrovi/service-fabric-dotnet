@@ -181,6 +181,17 @@ public abstract class ActorProxyFactoryTest
             Assert.Equal(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
             Assert.Same(factory, proxy.ActorServicePartitionClientV2.Factory);
         }
+
+        [Fact]
+        public void SubstitutesDefaultListenerNameWhenOverrideDefaultIsSetAndCallerSuppliedNull()
+        {
+            // Exercises the override-on branch in OverrideListenerNameIfConditionMet for this overload.
+            sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2);
+
+            var proxy = (IActorProxy)sut.CreateActorProxy(actorInterfaceType, serviceUri, actorId, listenerName: null);
+
+            Assert.Equal(ServiceRemotingProviderAttribute.DefaultV2listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
+        }
     }
 
     public sealed class CreateActorProxy_Uri_ActorId_String : ActorProxyFactoryTest
@@ -199,6 +210,17 @@ public abstract class ActorProxyFactoryTest
             Assert.Same(serviceUri, proxy.ActorServicePartitionClientV2.ServiceUri);
             Assert.Equal(listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
             Assert.Same(factory, proxy.ActorServicePartitionClientV2.Factory);
+        }
+
+        [Fact]
+        public void SubstitutesDefaultListenerNameWhenOverrideDefaultIsSetAndCallerSuppliedNull()
+        {
+            // Exercises the override-on branch in OverrideListenerNameIfConditionMet for this overload.
+            sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2);
+
+            var proxy = (IActorProxy)sut.CreateActorProxy<IFactoryTestActor>(serviceUri, actorId, listenerName: null);
+
+            Assert.Equal(ServiceRemotingProviderAttribute.DefaultV2listenerName, proxy.ActorServicePartitionClientV2.ListenerName);
         }
     }
 
@@ -219,6 +241,17 @@ public abstract class ActorProxyFactoryTest
             Assert.Equal(actorId.GetPartitionKey(), proxy.ServicePartitionClient2.PartitionKey.Value);
             Assert.Same(factory, proxy.ServicePartitionClient2.Factory);
         }
+
+        [Fact]
+        public void SubstitutesDefaultListenerNameWhenOverrideDefaultIsSetAndCallerSuppliedNull()
+        {
+            // Exercises the override-on branch in OverrideListenerNameIfConditionMet for this overload.
+            sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2);
+
+            var proxy = (IServiceProxy)sut.CreateActorServiceProxy<IActorService>(serviceUri, actorId, listenerName: null);
+
+            Assert.Equal(ServiceRemotingProviderAttribute.DefaultV2listenerName, proxy.ServicePartitionClient2.ListenerName);
+        }
     }
 
     public sealed class CreateActorServiceProxy_Uri_Int64_String : ActorProxyFactoryTest
@@ -237,6 +270,17 @@ public abstract class ActorProxyFactoryTest
             Assert.Equal(listenerName, proxy.ServicePartitionClient2.ListenerName);
             Assert.Equal(partitionKey, proxy.ServicePartitionClient2.PartitionKey.Value);
             Assert.Same(factory, proxy.ServicePartitionClient2.Factory);
+        }
+
+        [Fact]
+        public void SubstitutesDefaultListenerNameWhenOverrideDefaultIsSetAndCallerSuppliedNull()
+        {
+            // Exercises the override-on branch in OverrideListenerNameIfConditionMet for this overload.
+            sut.Method("OverrideDefaultListenerName").Invoke(RemotingClientVersion.V2);
+
+            var proxy = (IServiceProxy)sut.CreateActorServiceProxy<IActorService>(serviceUri, partitionKey, listenerName: null);
+
+            Assert.Equal(ServiceRemotingProviderAttribute.DefaultV2listenerName, proxy.ServicePartitionClient2.ListenerName);
         }
     }
 
