@@ -64,7 +64,7 @@ public abstract class ActorDataContractSurrogateTest
     {
         [Fact]
         public void ReturnsNullWhenObjIsNull() =>
-            Assert.Null(sut.GetObjectToSerialize(null, typeof(IFactoryTestActor)));
+            Assert.Null(sut.GetObjectToSerialize(null, fuzzy.Type()));
 
         [Fact]
         public void ReturnsActorReferenceWhenObjImplementsIActor()
@@ -92,7 +92,7 @@ public abstract class ActorDataContractSurrogateTest
         public void ReturnsObjUnchangedWhenItDoesNotImplementIActor()
         {
             var obj = new object();
-            Assert.Same(obj, sut.GetObjectToSerialize(obj, typeof(object)));
+            Assert.Same(obj, sut.GetObjectToSerialize(obj, fuzzy.Type()));
         }
     }
 
@@ -132,7 +132,7 @@ public abstract class ActorDataContractSurrogateTest
         public void ReturnsObjWhenItDoesNotImplementIActorReference()
         {
             var obj = new object();
-            Assert.Same(obj, sut.GetDeserializedObject(obj, typeof(IFactoryTestActor)));
+            Assert.Same(obj, sut.GetDeserializedObject(obj, fuzzy.Type()));
         }
 
         interface IActorAndReference : IActor, IActorReference { }
