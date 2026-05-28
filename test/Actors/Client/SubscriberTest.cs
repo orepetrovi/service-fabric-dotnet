@@ -38,7 +38,7 @@ public abstract class SubscriberTest
     public new sealed class Equals : SubscriberTest
     {
         // Method parameters
-        readonly object obj;
+        object obj;
 
         public Equals() =>
             obj = new Subscriber(actorId, eventId, instance);
@@ -57,33 +57,48 @@ public abstract class SubscriberTest
                 ActorIdKind.String => new ActorId(actorId.GetStringId()),
                 _ => throw new InvalidOperationException(),
             };
-
             Assert.NotSame(actorId, clone);
-            Assert.True(sut.Equals(new Subscriber(clone, eventId, instance)));
+            obj = new Subscriber(clone, eventId, instance);
+
+            Assert.True(sut.Equals(obj));
         }
 
         [Fact]
-        public void ReturnsFalseWhenObjIsNull() =>
-            Assert.False(sut.Equals(null));
+        public void ReturnsFalseWhenObjIsNull()
+        {
+            obj = null;
+            Assert.False(sut.Equals(obj));
+        }
 
         [Fact]
-        public void ReturnsFalseWhenObjIsNotSubscriber() =>
-            Assert.False(sut.Equals(new object()));
+        public void ReturnsFalseWhenObjIsNotSubscriber()
+        {
+            obj = new object();
+            Assert.False(sut.Equals(obj));
+        }
 
         [Fact]
         public void ReturnsFalseWhenActorIdIsDifferent()
         {
             var differentActorId = new ActorId(actorId.ToString() + fuzzy.String());
-            Assert.False(sut.Equals(new Subscriber(differentActorId, eventId, instance)));
+            obj = new Subscriber(differentActorId, eventId, instance);
+
+            Assert.False(sut.Equals(obj));
         }
 
         [Fact]
-        public void ReturnsFalseWhenEventIdIsDifferent() =>
-            Assert.False(sut.Equals(new Subscriber(actorId, eventId + fuzzy.SByte().Between(1, 5), instance)));
+        public void ReturnsFalseWhenEventIdIsDifferent()
+        {
+            obj = new Subscriber(actorId, eventId + fuzzy.SByte().Between(1, 5), instance);
+            Assert.False(sut.Equals(obj));
+        }
 
         [Fact]
-        public void ReturnsFalseWhenInstanceIsDifferentReference() =>
-            Assert.False(sut.Equals(new Subscriber(actorId, eventId, new object())));
+        public void ReturnsFalseWhenInstanceIsDifferentReference()
+        {
+            obj = new Subscriber(actorId, eventId, new object());
+            Assert.False(sut.Equals(obj));
+        }
     }
 
     public new sealed class GetHashCode : SubscriberTest
