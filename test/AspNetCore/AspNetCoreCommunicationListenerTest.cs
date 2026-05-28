@@ -421,7 +421,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public async Task ReturnsUrlFromServerAddressFeatureOnGenericHost()
         {
-            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16().Minimum(1);
+            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16();
             var fixture = new GenericHostFixture(serviceContext, "http://+:" + fuzzy.UInt16(), serverAddress);
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
@@ -432,7 +432,7 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public async Task ReturnsUrlFromServerAddressFeatureOnWebHost()
         {
-            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16().Minimum(1);
+            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16();
             var fixture = new WebHostFixture(serviceContext, "http://+:" + fuzzy.UInt16(), serverAddress);
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
