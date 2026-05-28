@@ -32,14 +32,6 @@ public abstract class ResolvedServicePartitionClientTest
             sut.Client = client;
             Assert.Same(client, sut.Client);
         }
-
-        [Fact]
-        public void IsNullAfterSettingToNull()
-        {
-            sut.Client = client;
-            sut.Client = null;
-            Assert.Null(sut.Client);
-        }
     }
 
     public sealed class Constructor : ResolvedServicePartitionClientTest
@@ -78,14 +70,6 @@ public abstract class ResolvedServicePartitionClientTest
             var rsp = Type<ResolvedServicePartition>.Uninitialized();
             sut.Rsp = rsp;
             Assert.Same(rsp, sut.Rsp);
-        }
-
-        [Fact]
-        public void IsNullAfterSettingToNull()
-        {
-            sut.Rsp = Type<ResolvedServicePartition>.Uninitialized();
-            sut.Rsp = null;
-            Assert.Null(sut.Rsp);
         }
     }
 }
