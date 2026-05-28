@@ -85,15 +85,15 @@ public abstract class FabricActorExceptionConvertorTest
         [InlineData(typeof(ReminderLoadInProgressException))]
         public void ReturnsTrueAndProducesKnownFabricExceptionWithPreservedMessage(Type knownType)
         {
-            ServiceException serviceException = ServiceExceptionFor(knownType, message);
+            ServiceException knownServiceException = ServiceExceptionFor(knownType, message);
 
-            bool result = sut.TryConvertFromServiceException(serviceException, innerExceptions, out Exception actual);
+            bool result = sut.TryConvertFromServiceException(knownServiceException, innerExceptions, out Exception actual);
 
             Assert.True(result);
             Assert.IsType(knownType, actual);
             Assert.Equal(message, actual.Message);
             Assert.Null(actual.InnerException);
-            AssertRemoteMetadataCopied(serviceException, actual);
+            AssertRemoteMetadataCopied(knownServiceException, actual);
         }
 
         [Fact]
