@@ -29,16 +29,16 @@ public abstract class ActorLogicalCallContextTest : IDisposable
 
             ActorLogicalCallContext.Clear();
 
-            Assert.False(ActorLogicalCallContext.TryGet(out string value));
-            Assert.Null(value);
+            Assert.False(ActorLogicalCallContext.TryGet(out string callContextValue));
+            Assert.Null(callContextValue);
         }
 
         [Fact]
         public void IsNoOpWhenValueIsNotSet()
         {
             ActorLogicalCallContext.Clear();
-            Assert.False(ActorLogicalCallContext.TryGet(out string value));
-            Assert.Null(value);
+            Assert.False(ActorLogicalCallContext.TryGet(out string callContextValue));
+            Assert.Null(callContextValue);
         }
 
         [Fact]
@@ -70,28 +70,27 @@ public abstract class ActorLogicalCallContextTest : IDisposable
 
     public sealed class Set : ActorLogicalCallContextTest
     {
+        // Method parameters
+        readonly string callContextValue = fuzzy.String();
+
         [Fact]
         public void StoresValueObservableByTryGet()
         {
-            string expected = fuzzy.String();
-
-            ActorLogicalCallContext.Set(expected);
+            ActorLogicalCallContext.Set(callContextValue);
 
             ActorLogicalCallContext.TryGet(out string actual);
-            Assert.Same(expected, actual);
+            Assert.Same(callContextValue, actual);
         }
 
         [Fact]
         public void OverwritesPreviousValue()
         {
-            string previous = fuzzy.String();
-            ActorLogicalCallContext.Set(previous);
-            string expected = previous + fuzzy.String();
+            ActorLogicalCallContext.Set(fuzzy.String());
 
-            ActorLogicalCallContext.Set(expected);
+            ActorLogicalCallContext.Set(callContextValue);
 
             ActorLogicalCallContext.TryGet(out string actual);
-            Assert.Same(expected, actual);
+            Assert.Same(callContextValue, actual);
         }
 
         [Fact]
@@ -101,15 +100,14 @@ public abstract class ActorLogicalCallContextTest : IDisposable
 
             ActorLogicalCallContext.Set(null);
 
-            Assert.False(ActorLogicalCallContext.TryGet(out string value));
-            Assert.Null(value);
+            Assert.False(ActorLogicalCallContext.TryGet(out string actual));
+            Assert.Null(actual);
         }
 
         [Fact]
         public async Task StoresValueObservableByAwaitedTask()
         {
-            string expected = fuzzy.String();
-            ActorLogicalCallContext.Set(expected);
+            ActorLogicalCallContext.Set(callContextValue);
 
             string actual = await Task.Run(() =>
             {
@@ -117,31 +115,29 @@ public abstract class ActorLogicalCallContextTest : IDisposable
                 return value;
             }, TestContext.Current.CancellationToken);
 
-            Assert.Same(expected, actual);
+            Assert.Same(callContextValue, actual);
         }
 
         [Fact]
         public async Task StoresValueObservableAfterAwait()
         {
-            string expected = fuzzy.String();
-            ActorLogicalCallContext.Set(expected);
+            ActorLogicalCallContext.Set(callContextValue);
 
             await Task.Yield();
 
             ActorLogicalCallContext.TryGet(out string actual);
-            Assert.Same(expected, actual);
+            Assert.Same(callContextValue, actual);
         }
 
         [Fact]
         public async Task InAwaitedTaskDoesNotAffectCaller()
         {
-            string expected = fuzzy.String();
-            ActorLogicalCallContext.Set(expected);
+            ActorLogicalCallContext.Set(callContextValue);
 
-            await Task.Run(() => ActorLogicalCallContext.Set(expected + fuzzy.String()), TestContext.Current.CancellationToken);
+            await Task.Run(() => ActorLogicalCallContext.Set(callContextValue + fuzzy.String()), TestContext.Current.CancellationToken);
 
             ActorLogicalCallContext.TryGet(out string actual);
-            Assert.Same(expected, actual);
+            Assert.Same(callContextValue, actual);
         }
     }
 
@@ -150,9 +146,9 @@ public abstract class ActorLogicalCallContextTest : IDisposable
         [Fact]
         public void ReturnsFalseAndNullWhenValueIsNotSet()
         {
-            bool result = ActorLogicalCallContext.TryGet(out string value);
+            bool result = ActorLogicalCallContext.TryGet(out string callContextValue);
             Assert.False(result);
-            Assert.Null(value);
+            Assert.Null(callContextValue);
         }
 
         [Fact]
@@ -161,10 +157,10 @@ public abstract class ActorLogicalCallContextTest : IDisposable
             string expected = fuzzy.String();
             ActorLogicalCallContext.Set(expected);
 
-            bool result = ActorLogicalCallContext.TryGet(out string value);
+            bool result = ActorLogicalCallContext.TryGet(out string callContextValue);
 
             Assert.True(result);
-            Assert.Same(expected, value);
+            Assert.Same(expected, callContextValue);
         }
     }
 }
