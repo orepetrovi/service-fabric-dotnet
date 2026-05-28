@@ -154,6 +154,37 @@ public abstract class ActorRemotingProviderAttributeTest
 
             Assert.Same(typeof(FabricTransportActorRemotingProviderAttribute), result.GetType());
         }
+
+        static Assembly MockAssembly(ActorRemotingProviderAttribute provider = null)
+        {
+            var assembly = new Mock<TestAssembly>();
+            Attribute[] attributes = provider == null ? [] : [provider];
+            _ = assembly.Setup(_ => _.GetCustomAttributes(typeof(ActorRemotingProviderAttribute), true)).Returns(attributes);
+            return assembly.Object;
+        }
+
+        static Type MockType(Assembly assembly)
+        {
+            var type = new Mock<Type>();
+            _ = type.Setup(_ => _.Assembly).Returns(assembly);
+#if NETFRAMEWORK
+            Mock<IReflectableType> reflectableType = type.As<IReflectableType>();
+            _ = reflectableType.Setup(_ => _.GetTypeInfo()).Returns(MockTypeInfo(assembly));
+#endif
+            return type.Object;
+        }
+
+#if NETFRAMEWORK
+        static TypeInfo MockTypeInfo(Assembly assembly)
+        {
+            var typeInfo = new Mock<TypeDelegator>();
+            _ = typeInfo.Setup(_ => _.Assembly).Returns(assembly);
+            return typeInfo.Object;
+        }
+#endif
+
+        // Make Assembly concrete to enable mocking on NetFx
+        internal class TestAssembly : Assembly { }
     }
 
     public sealed class RemotingClientVersion : ActorRemotingProviderAttributeTest
@@ -177,37 +208,6 @@ public abstract class ActorRemotingProviderAttributeTest
             Assert.Equal(value, sut.RemotingListenerVersion);
         }
     }
-
-    static Assembly MockAssembly(ActorRemotingProviderAttribute provider = null)
-    {
-        var assembly = new Mock<TestAssembly>();
-        Attribute[] attributes = provider == null ? [] : [provider];
-        _ = assembly.Setup(_ => _.GetCustomAttributes(typeof(ActorRemotingProviderAttribute), true)).Returns(attributes);
-        return assembly.Object;
-    }
-
-    static Type MockType(Assembly assembly)
-    {
-        var type = new Mock<Type>();
-        _ = type.Setup(_ => _.Assembly).Returns(assembly);
-#if NETFRAMEWORK
-        Mock<IReflectableType> reflectableType = type.As<IReflectableType>();
-        _ = reflectableType.Setup(_ => _.GetTypeInfo()).Returns(MockTypeInfo(assembly));
-#endif
-        return type.Object;
-    }
-
-#if NETFRAMEWORK
-    static TypeInfo MockTypeInfo(Assembly assembly)
-    {
-        var typeInfo = new Mock<TypeDelegator>();
-        _ = typeInfo.Setup(_ => _.Assembly).Returns(assembly);
-        return typeInfo.Object;
-    }
-#endif
-
-    // Make Assembly concrete to enable mocking on NetFx
-    internal class TestAssembly : Assembly { }
 
     sealed class TestActorRemotingProviderAttribute : ActorRemotingProviderAttribute
     {
