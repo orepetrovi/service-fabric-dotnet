@@ -126,7 +126,7 @@ public abstract class FabricActorExceptionConvertorTest
             var innerException = new InvalidOperationException(fuzzy.String());
             ServiceException serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
 
-            bool result = sut.TryConvertFromServiceException(serviceException, new[] { innerException }, out Exception actual);
+            bool result = sut.TryConvertFromServiceException(serviceException, new[] { innerException, new Exception(fuzzy.String()) }, out Exception actual);
 
             Assert.True(result);
             Assert.IsType<DuplicateMessageException>(actual);
