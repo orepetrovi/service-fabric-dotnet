@@ -34,12 +34,12 @@ public abstract class ActorRemotingProviderAttributeTest
 
     public sealed class GetProvider : ActorRemotingProviderAttributeTest, IDisposable
     {
-        readonly Assembly assemblyWithoutRemotingProviderAttribute = MockAssembly();
-        readonly Assembly assemblyWithRemotingProviderAttribute;
-        readonly ActorRemotingProviderAttribute expectedRemotingProvider = new FabricTransportActorRemotingProviderAttribute();
+        readonly Assembly assemblyWithoutAttribute = MockAssembly();
+        readonly Assembly assemblyWithAttribute;
+        readonly ActorRemotingProviderAttribute expected = new FabricTransportActorRemotingProviderAttribute();
 
         public GetProvider() =>
-            assemblyWithRemotingProviderAttribute = MockAssembly(expectedRemotingProvider);
+            assemblyWithAttribute = MockAssembly(expected);
 
         void IDisposable.Dispose() =>
             typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(Assembly.GetEntryAssembly());
@@ -47,79 +47,79 @@ public abstract class ActorRemotingProviderAttributeTest
         [Fact]
         public void ReturnsRemotingProviderAttributeOfTypeAssembly()
         {
-            Type type = MockType(assemblyWithRemotingProviderAttribute);
+            Type type = MockType(assemblyWithAttribute);
             typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(null);
 
-            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider(new[] { type });
+            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider([type]);
 
-            Assert.Same(expectedRemotingProvider, provider);
+            Assert.Same(expected, provider);
         }
 
         [Fact]
         public void ReturnsRemotingProviderAttributeOfLaterTypeWhenEarlierTypeAssemblyHasNoAttribute()
         {
-            Type typeWithoutAttr = MockType(assemblyWithoutRemotingProviderAttribute);
-            Type typeWithAttr = MockType(assemblyWithRemotingProviderAttribute);
+            Type typeWithoutAttr = MockType(assemblyWithoutAttribute);
+            Type typeWithAttr = MockType(assemblyWithAttribute);
             typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(null);
 
-            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider(new[] { typeWithoutAttr, typeWithAttr });
+            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider([typeWithoutAttr, typeWithAttr]);
 
-            Assert.Same(expectedRemotingProvider, provider);
+            Assert.Same(expected, provider);
         }
 
         [Fact]
         public void ReturnsRemotingProviderAttributeOfEarlierTypeWhenMultipleTypeAssembliesHaveAttributes()
         {
-            Type earlierType = MockType(assemblyWithRemotingProviderAttribute);
+            Type earlierType = MockType(assemblyWithAttribute);
             var otherProvider = new FabricTransportActorRemotingProviderAttribute();
             Type laterType = MockType(MockAssembly(otherProvider));
             typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(null);
 
-            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider(new[] { earlierType, laterType });
+            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider([earlierType, laterType]);
 
-            Assert.Same(expectedRemotingProvider, provider);
+            Assert.Same(expected, provider);
         }
 
         [Fact]
         public void ReturnsRemotingProviderAttributeOfTypeAssemblyWhenEntryAssemblyAlsoHasAttribute()
         {
-            Type type = MockType(assemblyWithRemotingProviderAttribute);
+            Type type = MockType(assemblyWithAttribute);
             var entryProvider = new FabricTransportActorRemotingProviderAttribute();
             typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(MockAssembly(entryProvider));
 
-            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider(new[] { type });
+            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider([type]);
 
-            Assert.Same(expectedRemotingProvider, provider);
+            Assert.Same(expected, provider);
         }
 
         [Fact]
         public void ReturnsRemotingProviderAttributeOfEntryAssemblyWhenTypesIsNull()
         {
-            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(assemblyWithRemotingProviderAttribute);
+            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(assemblyWithAttribute);
 
             ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider();
 
-            Assert.Same(expectedRemotingProvider, provider);
+            Assert.Same(expected, provider);
         }
 
         [Fact]
         public void ReturnsRemotingProviderAttributeOfEntryAssemblyWhenNoTypeAssemblyHasAttribute()
         {
-            Type type = MockType(assemblyWithoutRemotingProviderAttribute);
-            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(assemblyWithRemotingProviderAttribute);
+            Type type = MockType(assemblyWithoutAttribute);
+            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(assemblyWithAttribute);
 
-            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider(new[] { type });
+            ActorRemotingProviderAttribute provider = ActorRemotingProviderAttribute.GetProvider([type]);
 
-            Assert.Same(expectedRemotingProvider, provider);
+            Assert.Same(expected, provider);
         }
 
         [Fact]
         public void ReturnsDefaultFabricTransportActorRemotingProviderWhenTypeHasNoAssemblyProviderAttribute()
         {
-            Type type = MockType(assemblyWithoutRemotingProviderAttribute);
+            Type type = MockType(assemblyWithoutAttribute);
             typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(null);
 
-            ActorRemotingProviderAttribute result = ActorRemotingProviderAttribute.GetProvider(new[] { type });
+            ActorRemotingProviderAttribute result = ActorRemotingProviderAttribute.GetProvider([type]);
 
             Assert.IsType<FabricTransportActorRemotingProviderAttribute>(result);
         }
@@ -127,10 +127,10 @@ public abstract class ActorRemotingProviderAttributeTest
         [Fact]
         public void ReturnsDefaultFabricTransportActorRemotingProviderWhenNeitherTypeAssemblyNorEntryAssemblyHasAttribute()
         {
-            Type type = MockType(assemblyWithoutRemotingProviderAttribute);
-            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(assemblyWithoutRemotingProviderAttribute);
+            Type type = MockType(assemblyWithoutAttribute);
+            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(assemblyWithoutAttribute);
 
-            ActorRemotingProviderAttribute result = ActorRemotingProviderAttribute.GetProvider(new[] { type });
+            ActorRemotingProviderAttribute result = ActorRemotingProviderAttribute.GetProvider([type]);
 
             Assert.IsType<FabricTransportActorRemotingProviderAttribute>(result);
         }
@@ -173,7 +173,7 @@ public abstract class ActorRemotingProviderAttributeTest
     static Assembly MockAssembly(ActorRemotingProviderAttribute provider = null)
     {
         var assembly = new Mock<TestAssembly>();
-        Attribute[] attributes = provider == null ? [] : new[] { provider };
+        Attribute[] attributes = provider == null ? [] : [provider];
         assembly.Setup(_ => _.GetCustomAttributes(typeof(ActorRemotingProviderAttribute), true)).Returns(attributes);
         return assembly.Object;
     }
