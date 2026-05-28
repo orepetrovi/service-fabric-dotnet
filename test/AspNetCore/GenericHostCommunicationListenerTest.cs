@@ -271,12 +271,12 @@ public abstract class GenericHostCommunicationListenerTest
             ushort firstPort = fuzzy.UInt16().Maximum(ushort.MaxValue - 5);
             ushort secondPort = (ushort)(firstPort + fuzzy.SByte().Between(1, 5));
             var features = new FeatureCollection();
-            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { $"http://+:{firstPort}", $"http://+:{secondPort}" }));
+            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { $"http://127.0.0.1:{firstPort}", $"http://127.0.0.1:{secondPort}" }));
             SetupServer(Mock.Of<IServer>(_ => _.Features == features));
 
             string actual = await sut.OpenAsync(cancellation);
 
-            Assert.Equal($"http://{serviceContext.PublishAddress}:{firstPort}", actual);
+            Assert.Equal($"http://127.0.0.1:{firstPort}", actual);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing null check on IServerAddressesFeature.
