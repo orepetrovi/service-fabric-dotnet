@@ -174,17 +174,17 @@ public abstract class ActorRemotingProviderAttributeTest
     {
         var assembly = new Mock<TestAssembly>();
         Attribute[] attributes = provider == null ? [] : [provider];
-        assembly.Setup(_ => _.GetCustomAttributes(typeof(ActorRemotingProviderAttribute), true)).Returns(attributes);
+        _ = assembly.Setup(_ => _.GetCustomAttributes(typeof(ActorRemotingProviderAttribute), true)).Returns(attributes);
         return assembly.Object;
     }
 
     static Type MockType(Assembly assembly)
     {
         var type = new Mock<Type>();
-        type.Setup(_ => _.Assembly).Returns(assembly);
+        _ = type.Setup(_ => _.Assembly).Returns(assembly);
 #if NETFRAMEWORK
         var reflectableType = type.As<IReflectableType>();
-        reflectableType.Setup(_ => _.GetTypeInfo()).Returns(MockTypeInfo(assembly));
+        _ = reflectableType.Setup(_ => _.GetTypeInfo()).Returns(MockTypeInfo(assembly));
 #endif
         return type.Object;
     }
@@ -193,7 +193,7 @@ public abstract class ActorRemotingProviderAttributeTest
     static TypeInfo MockTypeInfo(Assembly assembly)
     {
         var typeInfo = new Mock<TypeDelegator>();
-        typeInfo.Setup(_ => _.Assembly).Returns(assembly);
+        _ = typeInfo.Setup(_ => _.Assembly).Returns(assembly);
         return typeInfo.Object;
     }
 #endif
