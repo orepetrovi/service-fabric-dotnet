@@ -4,7 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
-#if !NET
+#if NETFRAMEWORK
 using System.CodeDom;
 using System.Collections.ObjectModel;
 using System.Reflection;
@@ -29,7 +29,7 @@ public abstract class ActorDataContractSurrogateTest
     readonly IDataContractSurrogate sut = new ActorDataContractSurrogate();
 #endif
 
-#if !NET
+#if NETFRAMEWORK
     public sealed class GetCustomDataToExport_MemberInfo_Type : ActorDataContractSurrogateTest
     {
         readonly MemberInfo memberInfo = typeof(object).GetMethod(nameof(object.ToString));
@@ -104,7 +104,7 @@ public abstract class ActorDataContractSurrogateTest
         interface IActorAndReference : IActor, IActorReference { }
     }
 
-#if !NET
+#if NETFRAMEWORK
     public sealed class GetKnownCustomDataTypes_Collection : ActorDataContractSurrogateTest
     {
         // Method parameters
@@ -160,7 +160,7 @@ public abstract class ActorDataContractSurrogateTest
         }
     }
 
-#if !NET
+#if NETFRAMEWORK
     public sealed class GetReferencedTypeOnImport_String_String_Object : ActorDataContractSurrogateTest
     {
         readonly string typeName = fuzzy.String();
@@ -193,7 +193,7 @@ public abstract class ActorDataContractSurrogateTest
             Assert.Same(typeof(ActorDataContractSurrogate), ActorDataContractSurrogate.Instance.GetType());
     }
 
-#if !NET
+#if NETFRAMEWORK
     public sealed class ProcessImportedType_CodeTypeDeclaration_CodeCompileUnit : ActorDataContractSurrogateTest
     {
         readonly CodeTypeDeclaration typeDeclaration = new();
