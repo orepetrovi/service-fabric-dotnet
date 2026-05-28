@@ -120,14 +120,14 @@ public abstract class ExponentialRetryPolicyTest
         [Fact]
         public void ReturnsBaseDelayPlusJitterWhenRetryAttemptIsBelowSameDelayRequestCounter()
         {
-            int retryAttempt = fuzzy.Int32().Between(0, ExponentialRetryPolicy.SameDelayRequestCounter - 1);
+            var retryAttempt = fuzzy.Int32().Between(0, ExponentialRetryPolicy.SameDelayRequestCounter - 1);
             AssertDelayWithinExpectedRange(retryAttempt, delayMultiplier: 0);
         }
 
         [Fact]
         public void ShiftsBaseDelayByDelayMultiplierWhenRetryAttemptIsMultipleOfSameDelayRequestCounter()
         {
-            int delayMultiplier = fuzzy.Int32().Between(1, ExponentialRetryPolicy.MaxDelayMultiplier - 1);
+            var delayMultiplier = fuzzy.Int32().Between(1, ExponentialRetryPolicy.MaxDelayMultiplier - 1);
             int retryAttempt = delayMultiplier * ExponentialRetryPolicy.SameDelayRequestCounter;
             AssertDelayWithinExpectedRange(retryAttempt, delayMultiplier);
         }
@@ -135,7 +135,7 @@ public abstract class ExponentialRetryPolicyTest
         [Fact]
         public void UsesSameBaseDelayForSameDelayRequestCounterConsecutiveAttempts()
         {
-            int delayMultiplier = fuzzy.Int32().Between(0, ExponentialRetryPolicy.MaxDelayMultiplier - 1);
+            var delayMultiplier = fuzzy.Int32().Between(0, ExponentialRetryPolicy.MaxDelayMultiplier - 1);
             int firstAttempt = delayMultiplier * ExponentialRetryPolicy.SameDelayRequestCounter;
             int lastAttempt = firstAttempt + ExponentialRetryPolicy.SameDelayRequestCounter - 1;
             AssertDelayWithinExpectedRange(firstAttempt, delayMultiplier);
@@ -145,7 +145,7 @@ public abstract class ExponentialRetryPolicyTest
         [Fact]
         public void CapsDelayMultiplierAtMaxDelayMultiplier()
         {
-            int extraAttempts = fuzzy.Int32().Between(1, 100);
+            var extraAttempts = fuzzy.Int32().Between(1, 100);
             int retryAttempt = (ExponentialRetryPolicy.MaxDelayMultiplier + extraAttempts)
                 * ExponentialRetryPolicy.SameDelayRequestCounter;
             AssertDelayWithinExpectedRange(retryAttempt, ExponentialRetryPolicy.MaxDelayMultiplier);
@@ -192,7 +192,7 @@ public abstract class ExponentialRetryPolicyTest
             int original = ExponentialRetryPolicy.MaxDelayMultiplier;
             try
             {
-                int newMax = fuzzy.Int32().Between(1, original - 1);
+                var newMax = fuzzy.Int32().Between(1, original - 1);
                 ExponentialRetryPolicy.MaxDelayMultiplier = newMax;
                 // Construct a policy with zero jitter so the cap can be asserted exactly: a no-op setter would leave
                 // the original (larger) cap in effect, producing a strictly larger shifted base delay.
@@ -230,7 +230,7 @@ public abstract class ExponentialRetryPolicyTest
                 ExponentialRetryPolicy.SameDelayRequestCounter = newCounter;
                 // Construct a policy with zero jitter so the multiplier-driven shift can be asserted exactly.
                 var policy = new ExponentialRetryPolicy(defaultMaxRetryCount, TimeSpan.Zero, clientRetryTimeout);
-                int delayMultiplier = fuzzy.Int32().Between(1, (ExponentialRetryPolicy.MaxDelayMultiplier - 1) / 2);
+                var delayMultiplier = fuzzy.Int32().Between(1, (ExponentialRetryPolicy.MaxDelayMultiplier - 1) / 2);
                 int retryAttempt = delayMultiplier * newCounter;
                 var expected = TimeSpan.FromMilliseconds((int)policy.BaseRetryDelay.TotalMilliseconds << delayMultiplier);
                 TimeSpan delay = policy.GetNextRetryDelay(new RetryDelayParameters(retryAttempt, fuzzy.Boolean()));
