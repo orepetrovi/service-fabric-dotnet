@@ -74,11 +74,7 @@ public abstract class SubscriberTest
         [Fact]
         public void ReturnsFalseWhenActorIdIsDifferent()
         {
-            ActorId differentActorId;
-            do
-                differentActorId = fuzzy.ActorId();
-            while (differentActorId.Equals(actorId));
-
+            var differentActorId = new ActorId(actorId.ToString() + fuzzy.String());
             Assert.False(sut.Equals(new Subscriber(differentActorId, eventId, instance)));
         }
 
