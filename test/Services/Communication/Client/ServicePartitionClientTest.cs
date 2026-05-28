@@ -7,8 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Fabric;
-using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Fuzzy;
@@ -159,12 +157,9 @@ public abstract class ServicePartitionClientTest
 
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTaskOfTResult_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
     {
-        static readonly MethodInfo method = typeof(ServicePartitionClient<ICommunicationClient>).GetMethods()
-            .Single(m => m.Name == nameof(ServicePartitionClient<ICommunicationClient>.InvokeWithRetryAsync)
-                && m.IsGenericMethod
-                && m.GetParameters() is { Length: 3 } p
-                && p[1].ParameterType == typeof(CancellationToken))
-            .MakeGenericMethod(typeof(object));
+        static readonly Method method = typeof(ServicePartitionClient<ICommunicationClient>)
+            .Method<Func<Func<ICommunicationClient, Task<object>>, CancellationToken, Type[], Task<object>>>(
+                nameof(ServicePartitionClient<ICommunicationClient>.InvokeWithRetryAsync));
 
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
 
@@ -574,11 +569,9 @@ public abstract class ServicePartitionClientTest
 
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTaskOfTResult_TypeArray : InvokeWithRetryAsyncBase
     {
-        static readonly MethodInfo method = typeof(ServicePartitionClient<ICommunicationClient>).GetMethods()
-            .Single(m => m.Name == nameof(ServicePartitionClient<ICommunicationClient>.InvokeWithRetryAsync)
-                && m.IsGenericMethod
-                && m.GetParameters().Length == 2)
-            .MakeGenericMethod(typeof(object));
+        static readonly Method method = typeof(ServicePartitionClient<ICommunicationClient>)
+            .Method<Func<Func<ICommunicationClient, Task<object>>, Type[], Task<object>>>(
+                nameof(ServicePartitionClient<ICommunicationClient>.InvokeWithRetryAsync));
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
         public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
@@ -628,11 +621,9 @@ public abstract class ServicePartitionClientTest
 
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTask_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
     {
-        static readonly MethodInfo method = typeof(ServicePartitionClient<ICommunicationClient>).GetMethods()
-            .Single(m => m.Name == nameof(ServicePartitionClient<ICommunicationClient>.InvokeWithRetryAsync)
-                && !m.IsGenericMethod
-                && m.GetParameters() is { Length: 3 } p
-                && p[1].ParameterType == typeof(CancellationToken));
+        static readonly Method method = typeof(ServicePartitionClient<ICommunicationClient>)
+            .Method<Func<Func<ICommunicationClient, Task>, CancellationToken, Type[], Task>>(
+                nameof(ServicePartitionClient<ICommunicationClient>.InvokeWithRetryAsync));
 
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
 
@@ -699,10 +690,9 @@ public abstract class ServicePartitionClientTest
 
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTask_TypeArray : InvokeWithRetryAsyncBase
     {
-        static readonly MethodInfo method = typeof(ServicePartitionClient<ICommunicationClient>).GetMethods()
-            .Single(m => m.Name == nameof(ServicePartitionClient<ICommunicationClient>.InvokeWithRetryAsync)
-                && !m.IsGenericMethod
-                && m.GetParameters().Length == 2);
+        static readonly Method method = typeof(ServicePartitionClient<ICommunicationClient>)
+            .Method<Func<Func<ICommunicationClient, Task>, Type[], Task>>(
+                nameof(ServicePartitionClient<ICommunicationClient>.InvokeWithRetryAsync));
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
         public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
