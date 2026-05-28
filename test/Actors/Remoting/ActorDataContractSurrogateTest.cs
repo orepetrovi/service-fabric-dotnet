@@ -32,16 +32,22 @@ public abstract class ActorDataContractSurrogateTest
 #if !NET
     public sealed class GetCustomDataToExport_MemberInfo_Type : ActorDataContractSurrogateTest
     {
+        readonly MemberInfo memberInfo = typeof(object).GetMethod(nameof(object.ToString));
+        readonly Type dataContractType = fuzzy.Type();
+
         [Fact]
         public void ThrowsNotImplementedException() =>
-            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(typeof(object).GetMethod(nameof(object.ToString)), fuzzy.Type()));
+            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(memberInfo, dataContractType));
     }
 
     public sealed class GetCustomDataToExport_Type_Type : ActorDataContractSurrogateTest
     {
+        readonly Type clrType = fuzzy.Type();
+        readonly Type dataContractType = fuzzy.Type();
+
         [Fact]
         public void ThrowsNotImplementedException() =>
-            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(fuzzy.Type(), fuzzy.Type()));
+            Assert.Throws<NotImplementedException>(() => sut.GetCustomDataToExport(clrType, dataContractType));
     }
 
     public sealed class GetDataContractType_Type : ActorDataContractSurrogateTest
@@ -101,15 +107,19 @@ public abstract class ActorDataContractSurrogateTest
 #if !NET
     public sealed class GetKnownCustomDataTypes_Collection : ActorDataContractSurrogateTest
     {
+        // Method parameters
+        readonly Collection<Type> customDataTypes;
+
+        readonly Type expected = fuzzy.Type();
+
+        public GetKnownCustomDataTypes_Collection() =>
+            customDataTypes = new Collection<Type> { expected };
+
         [Fact]
         public void LeavesCollectionUnchanged()
         {
-            Type expected = fuzzy.Type();
-            var types = new Collection<Type> { expected };
-
-            sut.GetKnownCustomDataTypes(types);
-
-            Assert.Single(types, expected);
+            sut.GetKnownCustomDataTypes(customDataTypes);
+            Assert.Single(customDataTypes, expected);
         }
     }
 #endif
@@ -153,9 +163,13 @@ public abstract class ActorDataContractSurrogateTest
 #if !NET
     public sealed class GetReferencedTypeOnImport_String_String_Object : ActorDataContractSurrogateTest
     {
+        readonly string typeName = fuzzy.String();
+        readonly string typeNamespace = fuzzy.String();
+        readonly object customData = new();
+
         [Fact]
         public void ThrowsNotImplementedException() =>
-            Assert.Throws<NotImplementedException>(() => sut.GetReferencedTypeOnImport(fuzzy.String(), fuzzy.String(), new object()));
+            Assert.Throws<NotImplementedException>(() => sut.GetReferencedTypeOnImport(typeName, typeNamespace, customData));
     }
 #endif
 
@@ -182,9 +196,12 @@ public abstract class ActorDataContractSurrogateTest
 #if !NET
     public sealed class ProcessImportedType_CodeTypeDeclaration_CodeCompileUnit : ActorDataContractSurrogateTest
     {
+        readonly CodeTypeDeclaration typeDeclaration = new();
+        readonly CodeCompileUnit compileUnit = new();
+
         [Fact]
         public void ThrowsNotImplementedException() =>
-            Assert.Throws<NotImplementedException>(() => sut.ProcessImportedType(new CodeTypeDeclaration(), new CodeCompileUnit()));
+            Assert.Throws<NotImplementedException>(() => sut.ProcessImportedType(typeDeclaration, compileUnit));
     }
 #endif
 }
