@@ -265,6 +265,20 @@ public abstract class GenericHostCommunicationListenerTest
             Assert.Equal(SR.ErrorNoUrlFromAspNetCore, exception.Message);
         }
 
+        [Fact]
+        public async Task UsesFirstServerAddressWhenMultipleAreConfigured()
+        {
+            ushort firstPort = fuzzy.UInt16().Maximum(ushort.MaxValue - 5);
+            ushort secondPort = (ushort)(firstPort + fuzzy.SByte().Between(1, 5));
+            var features = new FeatureCollection();
+            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { $"http://+:{firstPort}", $"http://+:{secondPort}" }));
+            SetupServer(Mock.Of<IServer>(_ => _.Features == features));
+
+            string actual = await sut.OpenAsync(cancellation);
+
+            Assert.Equal($"http://{serviceContext.PublishAddress}:{firstPort}", actual);
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug. Missing null check on IServerAddressesFeature.
         public async Task ThrowsInvalidOperationExceptionWhenServerAddressesFeatureIsNotRegistered()
         {
@@ -354,20 +368,6 @@ public abstract class GenericHostCommunicationListenerTest
 
             Assert.Same(localListener, configuredListener);
             Assert.Equal($"http://{serviceContext.PublishAddress}:{port}{localListener.UrlSuffix}", actual);
-        }
-
-        [Fact]
-        public async Task UsesFirstServerAddressWhenMultipleAreConfigured()
-        {
-            ushort firstPort = fuzzy.UInt16().Maximum(ushort.MaxValue - 5);
-            ushort secondPort = (ushort)(firstPort + fuzzy.SByte().Between(1, 5));
-            var features = new FeatureCollection();
-            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { $"http://+:{firstPort}", $"http://+:{secondPort}" }));
-            SetupServer(Mock.Of<IServer>(_ => _.Features == features));
-
-            string actual = await sut.OpenAsync(cancellation);
-
-            Assert.Equal($"http://{serviceContext.PublishAddress}:{firstPort}", actual);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. OpenAsync skips Dispose when StartAsync throws.
