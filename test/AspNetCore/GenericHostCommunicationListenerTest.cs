@@ -24,7 +24,9 @@ public abstract class GenericHostCommunicationListenerTest
     readonly Func<string, AspNetCoreCommunicationListener, IHost> build;
     readonly AspNetCoreCommunicationListener listener;
 
-    readonly string listenerUrl = $"http://+:{fuzzy.UInt16()}";
+    // Minimum(1) avoids port 0: it would make listenerUrl byte-identical to a plausible
+    // "http://+:0" default, letting a buggy SUT that ignored GetListenerUrl() still pass.
+    readonly string listenerUrl = $"http://+:{fuzzy.UInt16().Minimum(1)}";
     readonly StatelessServiceContext serviceContext = fuzzy.StatelessServiceContext();
     readonly Mock<IHost> host = new();
     readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
