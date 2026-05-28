@@ -49,6 +49,21 @@ public abstract class SubscriberTest
             Assert.True(sut.Equals(obj));
 
         [Fact]
+        public void ReturnsTrueWhenActorIdValueMatchesButReferenceDiffers()
+        {
+            ActorId clone = actorId.Kind switch
+            {
+                ActorIdKind.Long => new ActorId(actorId.GetLongId()),
+                ActorIdKind.Guid => new ActorId(actorId.GetGuidId()),
+                ActorIdKind.String => new ActorId(actorId.GetStringId()),
+                _ => throw new InvalidOperationException(),
+            };
+
+            Assert.NotSame(actorId, clone);
+            Assert.True(sut.Equals(new Subscriber(clone, eventId, instance)));
+        }
+
+        [Fact]
         public void ReturnsFalseWhenObjIsNull() =>
             Assert.False(sut.Equals(null));
 
