@@ -6,7 +6,6 @@
 using System;
 using Fuzzy;
 using Microsoft.ServiceFabric.Actors.Tests;
-using Microsoft.ServiceFabric.Services.Common;
 using Xunit;
 
 namespace Microsoft.ServiceFabric.Actors.Client;
@@ -90,13 +89,7 @@ public abstract class SubscriberTest
     public new sealed class GetHashCode : SubscriberTest
     {
         [Fact]
-        public void CombinesHashCodesOfActorIdEventIdAndInstance()
-        {
-            int expected = IdUtil.HashCombine(
-                IdUtil.HashCombine(actorId.GetHashCode(), eventId.GetHashCode()),
-                instance.GetHashCode());
-
-            Assert.Equal(expected, sut.GetHashCode());
-        }
+        public void EqualForEqualSubscribers() =>
+            Assert.Equal(new Subscriber(actorId, eventId, instance).GetHashCode(), sut.GetHashCode());
     }
 }
