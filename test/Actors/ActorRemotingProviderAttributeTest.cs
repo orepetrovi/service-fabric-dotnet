@@ -152,6 +152,7 @@ public abstract class ActorRemotingProviderAttributeTest
         [Theory, InlineData(ClientVersion.V2), InlineData(ClientVersion.V2_1)]
         public void SetsValue(ClientVersion value)
         {
+            sut.RemotingClientVersion = value == ClientVersion.V2 ? ClientVersion.V2_1 : ClientVersion.V2;
             sut.RemotingClientVersion = value;
             Assert.Equal(value, sut.RemotingClientVersion);
         }
@@ -162,6 +163,7 @@ public abstract class ActorRemotingProviderAttributeTest
         [Theory, InlineData(ListenerVersion.V2), InlineData(ListenerVersion.V2_1)]
         public void SetsValue(ListenerVersion value)
         {
+            sut.RemotingListenerVersion = value == ListenerVersion.V2 ? ListenerVersion.V2_1 : ListenerVersion.V2;
             sut.RemotingListenerVersion = value;
             Assert.Equal(value, sut.RemotingListenerVersion);
         }
