@@ -194,11 +194,11 @@ public abstract class FabricActorExceptionConvertorTest
     // Documents current SUT behavior: FromServiceException copies remote metadata into Data. Note that
     // RemoteFabricErrorCode is derived from ActualExceptionData["HResult"] rather than "FabricErrorCode";
     // this assertion captures the existing behavior, not the intended one.
-    static void AssertRemoteMetadataCopied(ServiceException expected, Exception actual)
+    static void AssertRemoteMetadataCopied(ServiceException serviceException, Exception actual)
     {
-        string hresult = expected.ActualExceptionData[nameof(Exception.HResult)];
+        string hresult = serviceException.ActualExceptionData[nameof(Exception.HResult)];
         Assert.Equal(hresult, actual.Data["RemoteHResult"]);
         Assert.Equal((FabricErrorCode)long.Parse(hresult), actual.Data["RemoteFabricErrorCode"]);
-        Assert.Equal(expected.ActualExceptionStackTrace, actual.Data["RemoteStackTrace"]);
+        Assert.Equal(serviceException.ActualExceptionStackTrace, actual.Data["RemoteStackTrace"]);
     }
 }
