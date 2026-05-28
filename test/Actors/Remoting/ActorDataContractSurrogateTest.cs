@@ -158,9 +158,12 @@ public abstract class ActorDataContractSurrogateTest
         [Fact]
         public void LeavesCollectionUnchanged()
         {
-            var types = new Collection<Type>();
+            Type expected = fuzzy.Type();
+            var types = new Collection<Type> { expected };
+
             sut.GetKnownCustomDataTypes(types);
-            Assert.Empty(types);
+
+            Assert.Single(types, expected);
         }
     }
 
