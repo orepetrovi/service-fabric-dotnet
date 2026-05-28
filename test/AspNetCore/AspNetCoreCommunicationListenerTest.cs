@@ -417,25 +417,23 @@ public abstract class AspNetCoreCommunicationListenerTest
         [Fact]
         public async Task ReturnsUrlFromServerAddressFeatureOnGenericHost()
         {
-            ushort serverPort = fuzzy.UInt16().Maximum((ushort)(ushort.MaxValue - 5));
-            ushort listenerPort = (ushort)(serverPort + fuzzy.SByte().Between(1, 5));
-            var fixture = new GenericHostFixture(serviceContext, "http://+:" + listenerPort, "http://+:" + serverPort + "/");
+            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16().Minimum(1);
+            var fixture = new GenericHostFixture(serviceContext, "http://+:" + fuzzy.UInt16().Minimum(1), serverAddress);
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
-            Assert.Equal($"http://{fixture.Sut.ServiceContext.PublishAddress}:{serverPort}", actual);
+            Assert.Equal(serverAddress, actual);
         }
 
         [Fact]
         public async Task ReturnsUrlFromServerAddressFeatureOnWebHost()
         {
-            ushort serverPort = fuzzy.UInt16().Maximum((ushort)(ushort.MaxValue - 5));
-            ushort listenerPort = (ushort)(serverPort + fuzzy.SByte().Between(1, 5));
-            var fixture = new WebHostFixture(serviceContext, "http://+:" + listenerPort, "http://+:" + serverPort + "/");
+            string serverAddress = "http://127.0.0.1:" + fuzzy.UInt16().Minimum(1);
+            var fixture = new WebHostFixture(serviceContext, "http://+:" + fuzzy.UInt16().Minimum(1), serverAddress);
 
             string actual = await fixture.Sut.OpenAsync(cancellationToken);
 
-            Assert.Equal($"http://{fixture.Sut.ServiceContext.PublishAddress}:{serverPort}", actual);
+            Assert.Equal(serverAddress, actual);
         }
 
         [Fact]
