@@ -18,7 +18,6 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Compile Remove="**\*.cs" />
     <Compile Include="ActorEventSourceTest.cs" />
-    <Compile Include="ActorRemotingProviderAttributeTest.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Client\ActorProxyEventExtensionsTest.cs" />
     <Compile Include="Client\ActorProxyFactoryTest.cs" />
@@ -31,5 +30,6 @@
     <Compile Include="IFuzzExtensions.cs" />
     <Compile Include="Remoting\ActorDataContractSurrogateTest.cs" />
     <Compile Include="Remoting\ActorLogicalCallContextTest.cs" />
+    <Compile Include="Remoting\ActorRemotingProviderAttributeTest.cs" />
   </ItemGroup>
 </Project>
