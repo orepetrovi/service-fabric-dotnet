@@ -23,12 +23,14 @@ public abstract class FabricActorExceptionConvertorTest
     public sealed class TryConvertFromServiceException_ServiceException : FabricActorExceptionConvertorTest
     {
         readonly string message = fuzzy.String();
+        readonly ServiceException serviceException;
+
+        public TryConvertFromServiceException_ServiceException() =>
+            serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
 
         [Fact]
         public void ProducesKnownFabricExceptionWithoutInnerException()
         {
-            ServiceException serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
-
             bool result = sut.TryConvertFromServiceException(serviceException, out Exception actual);
 
             Assert.True(result);
@@ -41,25 +43,28 @@ public abstract class FabricActorExceptionConvertorTest
     public sealed class TryConvertFromServiceException_ServiceException_Exception : FabricActorExceptionConvertorTest
     {
         readonly string message = fuzzy.String();
+        readonly Exception innerException = new InvalidOperationException(fuzzy.String());
+        readonly ServiceException serviceException;
+
+        public TryConvertFromServiceException_ServiceException_Exception() =>
+            serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
 
         [Fact]
         public void PassesInnerExceptionToProducedException()
         {
-            var inner = new InvalidOperationException(fuzzy.String());
-            ServiceException serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
-
-            bool result = sut.TryConvertFromServiceException(serviceException, inner, out Exception actual);
+            bool result = sut.TryConvertFromServiceException(serviceException, innerException, out Exception actual);
 
             Assert.True(result);
             Assert.IsType<DuplicateMessageException>(actual);
             Assert.Equal(message, actual.Message);
-            Assert.Same(inner, actual.InnerException);
+            Assert.Same(innerException, actual.InnerException);
         }
     }
 
     public sealed class TryConvertFromServiceException_ServiceException_ExceptionArray : FabricActorExceptionConvertorTest
     {
         readonly string message = fuzzy.String();
+        readonly Exception[] innerExceptions = null;
 
         [Theory]
         [InlineData(typeof(DuplicateMessageException))]
@@ -74,7 +79,7 @@ public abstract class FabricActorExceptionConvertorTest
         {
             ServiceException serviceException = ServiceExceptionFor(knownType, message);
 
-            bool result = sut.TryConvertFromServiceException(serviceException, (Exception[])null, out Exception actual);
+            bool result = sut.TryConvertFromServiceException(serviceException, innerExceptions, out Exception actual);
 
             Assert.True(result);
             Assert.IsType(knownType, actual);
@@ -86,7 +91,7 @@ public abstract class FabricActorExceptionConvertorTest
         {
             var serviceException = new ServiceException(fuzzy.String(), message);
 
-            bool result = sut.TryConvertFromServiceException(serviceException, (Exception[])null, out Exception actual);
+            bool result = sut.TryConvertFromServiceException(serviceException, innerExceptions, out Exception actual);
 
             Assert.False(result);
             Assert.Null(actual);
