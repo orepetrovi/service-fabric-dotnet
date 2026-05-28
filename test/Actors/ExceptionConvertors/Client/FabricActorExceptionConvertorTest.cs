@@ -37,6 +37,7 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.IsType<DuplicateMessageException>(actual);
             Assert.Equal(message, actual.Message);
             Assert.Null(actual.InnerException);
+            AssertRemoteMetadataCopied(serviceException, actual);
         }
 
         [Fact]
@@ -78,6 +79,7 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.IsType<DuplicateMessageException>(actual);
             Assert.Equal(message, actual.Message);
             Assert.Same(innerException, actual.InnerException);
+            AssertRemoteMetadataCopied(serviceException, actual);
         }
 
         [Fact]
@@ -129,6 +131,7 @@ public abstract class FabricActorExceptionConvertorTest
             Assert.IsType(knownType, actual);
             Assert.Equal(message, actual.Message);
             Assert.Null(actual.InnerException);
+            AssertRemoteMetadataCopied(serviceException, actual);
         }
 
         [Fact]
@@ -169,5 +172,17 @@ public abstract class FabricActorExceptionConvertorTest
         new(knownType.FullName, message)
         {
             ActualExceptionData = new Dictionary<string, string> { { nameof(Exception.HResult), fuzzy.Int32().ToString() } },
+            ActualExceptionStackTrace = fuzzy.String(),
         };
+
+    // Documents current SUT behavior: FromServiceException copies remote metadata into Data. Note that
+    // RemoteFabricErrorCode is derived from ActualExceptionData["HResult"] rather than "FabricErrorCode";
+    // this assertion captures the existing behavior, not the intended one.
+    static void AssertRemoteMetadataCopied(ServiceException expected, Exception actual)
+    {
+        string hresult = expected.ActualExceptionData["HResult"];
+        Assert.Equal(hresult, actual.Data["RemoteHResult"]);
+        Assert.Equal((FabricErrorCode)long.Parse(hresult), actual.Data["RemoteFabricErrorCode"]);
+        Assert.Equal(expected.ActualExceptionStackTrace, actual.Data["RemoteStackTrace"]);
+    }
 }
