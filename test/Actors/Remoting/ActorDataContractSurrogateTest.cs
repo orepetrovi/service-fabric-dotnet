@@ -24,9 +24,9 @@ public abstract class ActorDataContractSurrogateTest
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
 #if NET
-    readonly ISerializationSurrogateProvider sut = ActorDataContractSurrogate.Instance;
+    readonly ISerializationSurrogateProvider sut = new ActorDataContractSurrogate();
 #else
-    readonly IDataContractSurrogate sut = ActorDataContractSurrogate.Instance;
+    readonly IDataContractSurrogate sut = new ActorDataContractSurrogate();
 #endif
 
 #if !NET
