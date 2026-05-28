@@ -30,6 +30,7 @@ public abstract class ExceptionHandlingRetryResultTest
         readonly Mock<IRetryPolicy> retryPolicy = new();
         readonly OperationRetrySettings retrySettings;
         readonly int totalNumberOfRetries = fuzzy.Int32();
+        readonly TimeSpan initialRetryDelay = fuzzy.TimeSpan();
 
         public Constructor_Exception_Boolean_OperationRetrySettings()
         {
@@ -37,26 +38,24 @@ public abstract class ExceptionHandlingRetryResultTest
             retrySettings = new OperationRetrySettings(retryPolicy.Object);
         }
 
-        [Fact]
-        public void InitializesPropertiesWhenIsTransientIsTrue()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void InitializesProperties(bool isTransient)
         {
-            var sut = new ExceptionHandlingRetryResult(exception, isTransient: true, retrySettings);
+            _ = retryPolicy
+                .Setup(_ => _.GetNextRetryDelay(It.Is<RetryDelayParameters>(
+                    p => p.RetryAttempt == 0 && p.IsTransient == isTransient)))
+                .Returns(initialRetryDelay);
+
+            var sut = new ExceptionHandlingRetryResult(exception, isTransient, retrySettings);
 
             Assert.Equal(exception.GetType().FullName, sut.ExceptionId);
-            Assert.True(sut.IsTransient);
-            Assert.Equal(totalNumberOfRetries, sut.MaxRetryCount);
-        }
-
-        [Fact]
-        public void InitializesPropertiesWhenIsTransientIsFalse()
-        {
-            var sut = new ExceptionHandlingRetryResult(exception, isTransient: false, retrySettings);
-
-            Assert.Equal(exception.GetType().FullName, sut.ExceptionId);
-            Assert.False(sut.IsTransient);
+            Assert.Equal(isTransient, sut.IsTransient);
+            Assert.Equal(initialRetryDelay, sut.RetryDelay);
             // OperationRetrySettings.DefaultMaxRetryCountForNonTransientErrors returns int.MaxValue
             // when the underlying retry policy is not a ConstantRetryPolicy.
-            Assert.Equal(int.MaxValue, sut.MaxRetryCount);
+            Assert.Equal(isTransient ? totalNumberOfRetries : int.MaxValue, sut.MaxRetryCount);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for exception.
