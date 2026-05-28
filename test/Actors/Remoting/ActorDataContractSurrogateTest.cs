@@ -52,21 +52,36 @@ public abstract class ActorDataContractSurrogateTest
 
     public sealed class GetDataContractType : ActorDataContractSurrogateTest
     {
-        [Fact]
-        public void ReturnsActorReferenceWhenTypeImplementsIActor() =>
-            Assert.Same(typeof(ActorReference), sut.GetDataContractType(typeof(IFactoryTestActor)));
+        Type type;
 
         [Fact]
-        public void ReturnsInputTypeWhenItDoesNotImplementIActor() =>
-            Assert.Same(typeof(string), sut.GetDataContractType(typeof(string)));
+        public void ReturnsActorReferenceWhenTypeImplementsIActor()
+        {
+            type = typeof(IFactoryTestActor);
+            Assert.Same(typeof(ActorReference), sut.GetDataContractType(type));
+        }
+
+        [Fact]
+        public void ReturnsInputTypeWhenItDoesNotImplementIActor()
+        {
+            type = typeof(string);
+            Assert.Same(typeof(string), sut.GetDataContractType(type));
+        }
     }
 #endif
 
     public sealed class GetDeserializedObject : ActorDataContractSurrogateTest
     {
+        object obj;
+        Type targetType;
+
         [Fact]
-        public void ReturnsNullWhenObjIsNull() =>
-            Assert.Null(sut.GetDeserializedObject(null, fuzzy.Type()));
+        public void ReturnsNullWhenObjIsNull()
+        {
+            obj = null;
+            targetType = fuzzy.Type();
+            Assert.Null(sut.GetDeserializedObject(obj, targetType));
+        }
 
         [Fact]
         public void ReturnsBindResultWhenObjImplementsIActorReferenceAndTargetTypeImplementsIActor()
@@ -74,8 +89,10 @@ public abstract class ActorDataContractSurrogateTest
             var bound = new object();
             var reference = new Mock<IActorReference>();
             _ = reference.Setup(_ => _.Bind(typeof(IFactoryTestActor))).Returns(bound);
+            obj = reference.Object;
+            targetType = typeof(IFactoryTestActor);
 
-            object result = sut.GetDeserializedObject(reference.Object, typeof(IFactoryTestActor));
+            object result = sut.GetDeserializedObject(obj, targetType);
 
             Assert.Same(bound, result);
         }
@@ -83,22 +100,25 @@ public abstract class ActorDataContractSurrogateTest
         [Fact]
         public void ReturnsObjWhenTargetTypeImplementsIActorReference()
         {
-            var reference = Mock.Of<IActorReference>();
-            Assert.Same(reference, sut.GetDeserializedObject(reference, typeof(IActorAndReference)));
+            obj = Mock.Of<IActorReference>();
+            targetType = typeof(IActorAndReference);
+            Assert.Same(obj, sut.GetDeserializedObject(obj, targetType));
         }
 
         [Fact]
         public void ReturnsObjWhenTargetTypeDoesNotImplementIActor()
         {
-            var reference = Mock.Of<IActorReference>();
-            Assert.Same(reference, sut.GetDeserializedObject(reference, typeof(object)));
+            obj = Mock.Of<IActorReference>();
+            targetType = typeof(object);
+            Assert.Same(obj, sut.GetDeserializedObject(obj, targetType));
         }
 
         [Fact]
         public void ReturnsObjWhenItDoesNotImplementIActorReference()
         {
-            var obj = new object();
-            Assert.Same(obj, sut.GetDeserializedObject(obj, fuzzy.Type()));
+            obj = new object();
+            targetType = fuzzy.Type();
+            Assert.Same(obj, sut.GetDeserializedObject(obj, targetType));
         }
 
         interface IActorAndReference : IActor, IActorReference { }
@@ -126,9 +146,16 @@ public abstract class ActorDataContractSurrogateTest
 
     public sealed class GetObjectToSerialize : ActorDataContractSurrogateTest
     {
+        object obj;
+        Type targetType;
+
         [Fact]
-        public void ReturnsNullWhenObjIsNull() =>
-            Assert.Null(sut.GetObjectToSerialize(null, fuzzy.Type()));
+        public void ReturnsNullWhenObjIsNull()
+        {
+            obj = null;
+            targetType = fuzzy.Type();
+            Assert.Null(sut.GetObjectToSerialize(obj, targetType));
+        }
 
         [Fact]
         public void ReturnsActorReferenceWhenObjImplementsIActor()
@@ -142,9 +169,10 @@ public abstract class ActorDataContractSurrogateTest
             var actorProxy = new Mock<IActorProxy>();
             _ = actorProxy.SetupGet(_ => _.ActorId).Returns(actorId);
             _ = actorProxy.SetupGet(_ => _.ActorServicePartitionClientV2).Returns(partitionClient.Object);
-            IFactoryTestActor actor = actorProxy.As<IFactoryTestActor>().Object;
+            obj = actorProxy.As<IFactoryTestActor>().Object;
+            targetType = fuzzy.Type();
 
-            object result = sut.GetObjectToSerialize(actor, fuzzy.Type());
+            object result = sut.GetObjectToSerialize(obj, targetType);
 
             var reference = (ActorReference)result;
             Assert.Same(actorId, reference.ActorId);
@@ -155,8 +183,9 @@ public abstract class ActorDataContractSurrogateTest
         [Fact]
         public void ReturnsObjUnchangedWhenItDoesNotImplementIActor()
         {
-            var obj = new object();
-            Assert.Same(obj, sut.GetObjectToSerialize(obj, fuzzy.Type()));
+            obj = new object();
+            targetType = fuzzy.Type();
+            Assert.Same(obj, sut.GetObjectToSerialize(obj, targetType));
         }
     }
 
@@ -176,13 +205,21 @@ public abstract class ActorDataContractSurrogateTest
 #if NET
     public sealed class GetSurrogateType : ActorDataContractSurrogateTest
     {
-        [Fact]
-        public void ReturnsActorReferenceWhenTypeImplementsIActor() =>
-            Assert.Same(typeof(ActorReference), sut.GetSurrogateType(typeof(IFactoryTestActor)));
+        Type type;
 
         [Fact]
-        public void ReturnsInputTypeWhenItDoesNotImplementIActor() =>
-            Assert.Same(typeof(string), sut.GetSurrogateType(typeof(string)));
+        public void ReturnsActorReferenceWhenTypeImplementsIActor()
+        {
+            type = typeof(IFactoryTestActor);
+            Assert.Same(typeof(ActorReference), sut.GetSurrogateType(type));
+        }
+
+        [Fact]
+        public void ReturnsInputTypeWhenItDoesNotImplementIActor()
+        {
+            type = typeof(string);
+            Assert.Same(typeof(string), sut.GetSurrogateType(type));
+        }
     }
 #endif
 
