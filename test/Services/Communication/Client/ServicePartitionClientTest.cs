@@ -334,6 +334,43 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
+        public async Task ResetsRetryCountWhenExceptionIdChangesAcrossIterations()
+        {
+            // Utility.ShouldRetryOperation resets the retry counter whenever ExceptionId differs from the previous
+            // iteration. Verify the SUT forwards ExceptionId so distinct ids cause more than MaxRetryCount retries.
+            const int maxRetryCount = 2;
+            var controls = new Queue<OperationRetryControl>(new[]
+            {
+                Retry("a"), // count: null→"a", 1
+                Retry("a"), // count: 2
+                Retry("b"), // reset: "a"→"b", 1
+                Retry("b"), // count: 2
+                Retry("b"), // 2 >= max → throws
+            });
+            _ = communicationClientFactory
+                .Setup(_ => _.ReportOperationExceptionAsync(client, It.IsAny<ExceptionInformation>(), retrySettings, CancellationToken.None))
+                .ReturnsAsync(controls.Dequeue);
+            int calls = 0;
+
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.InvokeWithRetryAsync<object>(
+                    _ => { calls++; throw clientException; },
+                    cancellationToken));
+
+            Assert.Same(clientException, actual);
+            Assert.Equal(5, calls);
+
+            static OperationRetryControl Retry(string id) => new()
+            {
+                ShouldRetry = true,
+                IsTransient = true,
+                MaxRetryCount = maxRetryCount,
+                ExceptionId = id,
+                GetRetryDelay = _ => ShortRetryDelay,
+            };
+        }
+
+        [Fact]
         public async Task ResetsCommunicationClientWhenExceptionIsNotTransient()
         {
             // After a non-transient exception, the SUT clears the cached client. Because lastRsp has already been
