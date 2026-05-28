@@ -93,7 +93,7 @@ public abstract class ActorServiceProxyTest : IDisposable
             actorId = new ActorId(partitionKey);
 
         [Fact]
-        public void ReturnsActorServiceProxyWithGivenServiceUriListenerNameAndPartitionKeyDerivedFromActorId()
+        public void ReturnsActorServiceWithGivenServiceUriListenerNameAndPartitionKeyDerivedFromActorId()
         {
             var proxy = (IServiceProxy)ActorServiceProxy.Create(serviceUri, actorId, listenerName);
 
@@ -111,7 +111,7 @@ public abstract class ActorServiceProxyTest : IDisposable
         readonly string listenerName = fuzzy.String();
 
         [Fact]
-        public void ReturnsActorServiceProxyWithGivenServiceUriPartitionKeyAndListenerName()
+        public void ReturnsActorServiceWithGivenServiceUriPartitionKeyAndListenerName()
         {
             var proxy = (IServiceProxy)ActorServiceProxy.Create(serviceUri, partitionKey, listenerName);
 
