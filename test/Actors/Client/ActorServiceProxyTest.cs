@@ -33,7 +33,7 @@ public abstract class ActorServiceProxyTest : IDisposable
         field.Set(new Remoting.V2.Client.ActorProxyFactory(_ => factory));
     }
 
-    public void Dispose() =>
+    void IDisposable.Dispose() =>
         ActorProxy.DefaultProxyFactory.Field<Remoting.V2.Client.ActorProxyFactory>().Set(previousV2);
 
     public sealed class Create_Uri_ActorId_String : ActorServiceProxyTest
