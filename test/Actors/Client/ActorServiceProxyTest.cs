@@ -38,48 +38,6 @@ public abstract class ActorServiceProxyTest : IDisposable
     void IDisposable.Dispose() =>
         ActorProxy.DefaultProxyFactory.Field<Remoting.V2.Client.ActorProxyFactory>().Set(previousV2);
 
-    public sealed class Create_Uri_ActorId_String : ActorServiceProxyTest
-    {
-        // Method parameters
-        readonly Uri serviceUri = fuzzy.Uri();
-        readonly ActorId actorId;
-        readonly string listenerName = fuzzy.String();
-
-        readonly long partitionKey = fuzzy.Int64();
-
-        public Create_Uri_ActorId_String() =>
-            actorId = new ActorId(partitionKey);
-
-        [Fact]
-        public void ReturnsActorServiceProxyWithGivenServiceUriListenerNameAndPartitionKeyDerivedFromActorId()
-        {
-            var proxy = (IServiceProxy)ActorServiceProxy.Create(serviceUri, actorId, listenerName);
-
-            Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
-            Assert.Same(listenerName, proxy.ServicePartitionClient2.ListenerName);
-            Assert.Equal(partitionKey, proxy.ServicePartitionClient2.PartitionKey.Value);
-            Assert.Same(factory, proxy.ServicePartitionClient2.Factory);
-        }
-    }
-
-    public sealed class Create_Uri_Int64_String : ActorServiceProxyTest
-    {
-        readonly Uri serviceUri = fuzzy.Uri();
-        readonly long partitionKey = fuzzy.Int64();
-        readonly string listenerName = fuzzy.String();
-
-        [Fact]
-        public void ReturnsActorServiceProxyWithGivenServiceUriPartitionKeyAndListenerName()
-        {
-            var proxy = (IServiceProxy)ActorServiceProxy.Create(serviceUri, partitionKey, listenerName);
-
-            Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
-            Assert.Same(listenerName, proxy.ServicePartitionClient2.ListenerName);
-            Assert.Equal(partitionKey, proxy.ServicePartitionClient2.PartitionKey.Value);
-            Assert.Same(factory, proxy.ServicePartitionClient2.Factory);
-        }
-    }
-
     public sealed class CreateOfTServiceInterface_Uri_ActorId_String : ActorServiceProxyTest
     {
         // Method parameters
@@ -114,6 +72,48 @@ public abstract class ActorServiceProxyTest : IDisposable
         public void ReturnsServiceProxyWithGivenServiceUriPartitionKeyAndListenerName()
         {
             var proxy = (IServiceProxy)ActorServiceProxy.Create<IActorService>(serviceUri, partitionKey, listenerName);
+
+            Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
+            Assert.Same(listenerName, proxy.ServicePartitionClient2.ListenerName);
+            Assert.Equal(partitionKey, proxy.ServicePartitionClient2.PartitionKey.Value);
+            Assert.Same(factory, proxy.ServicePartitionClient2.Factory);
+        }
+    }
+
+    public sealed class Create_Uri_ActorId_String : ActorServiceProxyTest
+    {
+        // Method parameters
+        readonly Uri serviceUri = fuzzy.Uri();
+        readonly ActorId actorId;
+        readonly string listenerName = fuzzy.String();
+
+        readonly long partitionKey = fuzzy.Int64();
+
+        public Create_Uri_ActorId_String() =>
+            actorId = new ActorId(partitionKey);
+
+        [Fact]
+        public void ReturnsActorServiceProxyWithGivenServiceUriListenerNameAndPartitionKeyDerivedFromActorId()
+        {
+            var proxy = (IServiceProxy)ActorServiceProxy.Create(serviceUri, actorId, listenerName);
+
+            Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
+            Assert.Same(listenerName, proxy.ServicePartitionClient2.ListenerName);
+            Assert.Equal(partitionKey, proxy.ServicePartitionClient2.PartitionKey.Value);
+            Assert.Same(factory, proxy.ServicePartitionClient2.Factory);
+        }
+    }
+
+    public sealed class Create_Uri_Int64_String : ActorServiceProxyTest
+    {
+        readonly Uri serviceUri = fuzzy.Uri();
+        readonly long partitionKey = fuzzy.Int64();
+        readonly string listenerName = fuzzy.String();
+
+        [Fact]
+        public void ReturnsActorServiceProxyWithGivenServiceUriPartitionKeyAndListenerName()
+        {
+            var proxy = (IServiceProxy)ActorServiceProxy.Create(serviceUri, partitionKey, listenerName);
 
             Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
             Assert.Same(listenerName, proxy.ServicePartitionClient2.ListenerName);
