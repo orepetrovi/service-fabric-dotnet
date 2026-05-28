@@ -27,6 +27,7 @@ public abstract class GenericHostCommunicationListenerTest
     readonly string listenerUrl = $"http://+:{fuzzy.UInt16()}";
     readonly StatelessServiceContext serviceContext = fuzzy.StatelessServiceContext();
     readonly Mock<IHost> host = new();
+    readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
     IHost buildHost;
     string buildUrl;
     AspNetCoreCommunicationListener buildListener;
@@ -37,8 +38,8 @@ public abstract class GenericHostCommunicationListenerTest
     GenericHostCommunicationListenerTest()
     {
         buildHost = host.Object;
-        _ = host.Setup(_ => _.StartAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-        _ = host.Setup(_ => _.StopAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(Task.CompletedTask);
+        _ = host.Setup(_ => _.StopAsync(cancellation)).Returns(Task.CompletedTask);
 
         build = (url, l) =>
         {
@@ -58,7 +59,7 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task DisposesHostAfterOpenAsync()
         {
-            _ = await sut.OpenAsync(CancellationToken.None);
+            _ = await sut.OpenAsync(cancellation);
             sut.Abort();
             host.Verify(_ => _.Dispose(), Times.Once());
         }
@@ -83,14 +84,12 @@ public abstract class GenericHostCommunicationListenerTest
 
     public sealed class CloseAsync : GenericHostCommunicationListenerTest
     {
-        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
-
         public CloseAsync() => SetupServer($"http://+:{fuzzy.UInt16()}");
 
         [Fact]
         public async Task PassesCancellationTokenToHostStopAsync()
         {
-            _ = await sut.OpenAsync(CancellationToken.None);
+            _ = await sut.OpenAsync(cancellation);
 
             await sut.CloseAsync(cancellation);
 
@@ -101,7 +100,7 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task DisposesHostAfterStopAsync()
         {
-            _ = await sut.OpenAsync(CancellationToken.None);
+            _ = await sut.OpenAsync(cancellation);
             bool stopped = false;
             bool stoppedBeforeDispose = false;
             _ = host.Setup(_ => _.StopAsync(cancellation)).Callback(() => stopped = true).Returns(Task.CompletedTask);
@@ -116,7 +115,7 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task AwaitsHostStopAsyncBeforeReturning()
         {
-            _ = await sut.OpenAsync(CancellationToken.None);
+            _ = await sut.OpenAsync(cancellation);
             var tcs = new TaskCompletionSource<object>();
             _ = host.Setup(_ => _.StopAsync(cancellation)).Returns(tcs.Task);
 
@@ -144,7 +143,7 @@ public abstract class GenericHostCommunicationListenerTest
         {
             // SUT awaits host.StopAsync then calls Dispose without try/finally,
             // so a faulted stop leaks the host. Expected behavior is to always Dispose.
-            _ = await sut.OpenAsync(CancellationToken.None);
+            _ = await sut.OpenAsync(cancellation);
             _ = host.Setup(_ => _.StopAsync(cancellation)).ThrowsAsync(new InvalidOperationException());
 
             _ = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CloseAsync(cancellation));
@@ -176,8 +175,6 @@ public abstract class GenericHostCommunicationListenerTest
 
     public sealed class OpenAsync : GenericHostCommunicationListenerTest
     {
-        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
-
         public OpenAsync() => SetupServer($"http://+:{fuzzy.UInt16()}");
 
         [Fact]
