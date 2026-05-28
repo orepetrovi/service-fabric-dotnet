@@ -140,7 +140,7 @@ public abstract class ServiceFabricSetupFilterTest
             var sut = new ServiceFabricSetupFilter(urlSuffix, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
             sut.Configure(next.Object)(app.Object);
 
-            Type[] middlewareTypes = RegisteredMiddlewares().Select(_ => _.GetType()).ToArray();
+            Type[] middlewareTypes = [.. RegisteredMiddlewares().Select(_ => _.GetType())];
             Assert.Equal([typeof(ServiceFabricMiddleware), typeof(ServiceFabricReverseProxyIntegrationMiddleware)], middlewareTypes);
         }
 
