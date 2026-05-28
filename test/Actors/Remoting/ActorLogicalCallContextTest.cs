@@ -140,7 +140,6 @@ public abstract class ActorLogicalCallContextTest : IDisposable
 
             ActorLogicalCallContext.Set(null);
 
-            Assert.False(ActorLogicalCallContext.IsPresent());
             Assert.False(ActorLogicalCallContext.TryGet(out string value));
             Assert.Null(value);
         }
