@@ -166,13 +166,13 @@ public abstract class ServicePartitionClientTest
                 && p[1].ParameterType == typeof(CancellationToken))
             .MakeGenericMethod(typeof(object));
 
-        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
         public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
         {
             var actual = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.InvokeWithRetryAsync<object>((Func<ICommunicationClient, Task<object>>)null, cancellationToken));
+                () => sut.InvokeWithRetryAsync<object>((Func<ICommunicationClient, Task<object>>)null, cancellation));
             Assert.Equal(method.Parameter<Func<ICommunicationClient, Task<object>>>().Name, actual.ParamName);
         }
 
@@ -180,7 +180,7 @@ public abstract class ServicePartitionClientTest
         public async Task ThrowsArgumentNullExceptionWhenDoNotRetryExceptionTypesIsNull()
         {
             var actual = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, cancellationToken, (Type[])null));
+                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, cancellation, (Type[])null));
             Assert.Equal(method.Parameter<Type[]>().Name, actual.ParamName);
         }
 
@@ -189,7 +189,7 @@ public abstract class ServicePartitionClientTest
         {
             var expected = new object();
 
-            object actual = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(expected), cancellationToken);
+            object actual = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(expected), cancellation);
 
             Assert.Same(expected, actual);
         }
@@ -199,7 +199,7 @@ public abstract class ServicePartitionClientTest
         {
             ICommunicationClient actual = null;
 
-            _ = await sut.InvokeWithRetryAsync<object>(c => { actual = c; return Task.FromResult(new object()); }, cancellationToken);
+            _ = await sut.InvokeWithRetryAsync<object>(c => { actual = c; return Task.FromResult(new object()); }, cancellation);
 
             Assert.Same(client, actual);
         }
@@ -207,10 +207,10 @@ public abstract class ServicePartitionClientTest
         [Fact]
         public async Task PassesCancellationTokenToGetClientAsync()
         {
-            _ = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()), cancellationToken);
+            _ = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()), cancellation);
 
             communicationClientFactory.Verify(
-                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, cancellationToken),
+                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, cancellation),
                 Times.Once);
         }
 
@@ -227,7 +227,7 @@ public abstract class ServicePartitionClientTest
                     if (calls == 1) throw clientException;
                     return Task.FromResult<object>(calls);
                 },
-                cancellationToken);
+                cancellation);
 
             Assert.Equal(2, calls);
             Assert.Equal(2, actual);
@@ -239,7 +239,7 @@ public abstract class ServicePartitionClientTest
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => sut.InvokeWithRetryAsync<object>(
                     _ => throw clientException,
-                    cancellationToken,
+                    cancellation,
                     clientException.GetType()));
 
             Assert.Same(clientException, actual);
@@ -259,7 +259,7 @@ public abstract class ServicePartitionClientTest
                     if (calls == 1) throw aggregate;
                     return Task.FromResult<object>(calls);
                 },
-                cancellationToken);
+                cancellation);
 
             Assert.Equal(2, calls);
             Assert.Equal(2, actual);
@@ -273,7 +273,7 @@ public abstract class ServicePartitionClientTest
             AggregateException actual = await Assert.ThrowsAsync<AggregateException>(
                 () => sut.InvokeWithRetryAsync<object>(
                     _ => throw aggregate,
-                    cancellationToken,
+                    cancellation,
                     clientException.GetType()));
 
             Assert.Same(clientException, Assert.Single(actual.InnerExceptions));
@@ -286,7 +286,7 @@ public abstract class ServicePartitionClientTest
             SetupReportOperationException(new OperationRetryControl { ShouldRetry = false, Exception = transformed });
 
             ApplicationException actual = await Assert.ThrowsAsync<ApplicationException>(
-                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, cancellationToken));
+                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, cancellation));
 
             Assert.Same(transformed, actual);
         }
@@ -297,7 +297,7 @@ public abstract class ServicePartitionClientTest
             SetupReportOperationException(new OperationRetryControl { ShouldRetry = false, Exception = null });
 
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
-                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, cancellationToken));
+                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, cancellation));
 
             Assert.Same(clientException, actual);
         }
@@ -311,7 +311,7 @@ public abstract class ServicePartitionClientTest
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => sut.InvokeWithRetryAsync<object>(
                     _ => { calls++; throw clientException; },
-                    cancellationToken));
+                    cancellation));
 
             Assert.Same(clientException, actual);
             Assert.Equal(3, calls);
@@ -326,7 +326,7 @@ public abstract class ServicePartitionClientTest
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => sut.InvokeWithRetryAsync<object>(
                     _ => { calls++; throw clientException; },
-                    cancellationToken));
+                    cancellation));
 
             Assert.Same(clientException, actual);
             Assert.Equal(1, calls);
@@ -354,7 +354,7 @@ public abstract class ServicePartitionClientTest
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => sut.InvokeWithRetryAsync<object>(
                     _ => { calls++; throw clientException; },
-                    cancellationToken));
+                    cancellation));
 
             Assert.Same(clientException, actual);
             Assert.Equal(5, calls);
@@ -392,7 +392,7 @@ public abstract class ServicePartitionClientTest
                     if (calls == 1) throw clientException;
                     return Task.FromResult<object>(calls);
                 },
-                cancellationToken);
+                cancellation);
 
             communicationClientFactory.Verify(
                 _ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
@@ -430,7 +430,7 @@ public abstract class ServicePartitionClientTest
                     if (calls == 1) throw clientException;
                     return Task.FromResult<object>(calls);
                 },
-                cancellationToken);
+                cancellation);
 
             Assert.True(sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition actual));
             Assert.Same(newRsp, actual);
@@ -449,7 +449,7 @@ public abstract class ServicePartitionClientTest
                     if (calls == 1) throw clientException;
                     return Task.FromResult<object>(calls);
                 },
-                cancellationToken);
+                cancellation);
 
             communicationClientFactory.Verify(
                 _ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
@@ -627,13 +627,13 @@ public abstract class ServicePartitionClientTest
                 && m.GetParameters() is { Length: 3 } p
                 && p[1].ParameterType == typeof(CancellationToken));
 
-        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
         public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
         {
             var actual = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.InvokeWithRetryAsync((Func<ICommunicationClient, Task>)null, cancellationToken));
+                () => sut.InvokeWithRetryAsync((Func<ICommunicationClient, Task>)null, cancellation));
             Assert.Equal(method.Parameter<Func<ICommunicationClient, Task>>().Name, actual.ParamName);
         }
 
@@ -641,7 +641,7 @@ public abstract class ServicePartitionClientTest
         public async Task ThrowsArgumentNullExceptionWhenDoNotRetryExceptionTypesIsNull()
         {
             var actual = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.InvokeWithRetryAsync(_ => throw clientException, cancellationToken, (Type[])null));
+                () => sut.InvokeWithRetryAsync(_ => throw clientException, cancellation, (Type[])null));
             Assert.Equal(method.Parameter<Type[]>().Name, actual.ParamName);
         }
 
@@ -650,7 +650,7 @@ public abstract class ServicePartitionClientTest
         {
             ICommunicationClient actual = null;
 
-            await sut.InvokeWithRetryAsync(c => { actual = c; return Task.CompletedTask; }, cancellationToken);
+            await sut.InvokeWithRetryAsync(c => { actual = c; return Task.CompletedTask; }, cancellation);
 
             Assert.Same(client, actual);
         }
@@ -658,10 +658,10 @@ public abstract class ServicePartitionClientTest
         [Fact]
         public async Task PassesCancellationTokenToGetClientAsync()
         {
-            await sut.InvokeWithRetryAsync(_ => Task.CompletedTask, cancellationToken);
+            await sut.InvokeWithRetryAsync(_ => Task.CompletedTask, cancellation);
 
             communicationClientFactory.Verify(
-                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, cancellationToken),
+                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, cancellation),
                 Times.Once);
         }
 
@@ -671,7 +671,7 @@ public abstract class ServicePartitionClientTest
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => sut.InvokeWithRetryAsync(
                     _ => throw clientException,
-                    cancellationToken,
+                    cancellation,
                     clientException.GetType()));
 
             Assert.Same(clientException, actual);
@@ -683,7 +683,7 @@ public abstract class ServicePartitionClientTest
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => sut.InvokeWithRetryAsync(
                     _ => Task.FromException(clientException),
-                    cancellationToken,
+                    cancellation,
                     clientException.GetType()));
 
             Assert.Same(clientException, actual);
