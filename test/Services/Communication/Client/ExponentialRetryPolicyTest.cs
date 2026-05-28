@@ -30,7 +30,7 @@ public abstract class ExponentialRetryPolicyTest
         [Fact]
         public void IsSetToGivenValue()
         {
-            TimeSpan expected = fuzzy.TimeSpan();
+            var expected = fuzzy.TimeSpan();
             sut.BaseRetryDelay = expected;
             Assert.Equal(expected, sut.BaseRetryDelay);
         }
