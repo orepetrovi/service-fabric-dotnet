@@ -67,7 +67,7 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task DoesNotInvokeStopAsync()
         {
-            _ = await sut.OpenAsync(CancellationToken.None);
+            _ = await sut.OpenAsync(cancellation);
             sut.Abort();
             host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
         }
