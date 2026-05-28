@@ -98,6 +98,27 @@ public abstract class ActorRemotingProviderAttributeTest
 
             Assert.IsType<FabricTransportActorRemotingProviderAttribute>(result);
         }
+
+        [Fact]
+        public void ReturnsDefaultFabricTransportActorRemotingProviderWhenNeitherTypeAssemblyNorEntryAssemblyHasAttribute()
+        {
+            Type type = MockType(assemblyWithoutRemotingProviderAttribute);
+            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(assemblyWithoutRemotingProviderAttribute);
+
+            ActorRemotingProviderAttribute result = ActorRemotingProviderAttribute.GetProvider(new[] { type });
+
+            Assert.IsType<FabricTransportActorRemotingProviderAttribute>(result);
+        }
+
+        [Fact]
+        public void ReturnsDefaultFabricTransportActorRemotingProviderWhenTypesIsNullAndEntryAssemblyIsNull()
+        {
+            typeof(ActorRemotingProviderAttribute).Field<Assembly>().Set(null);
+
+            ActorRemotingProviderAttribute result = ActorRemotingProviderAttribute.GetProvider();
+
+            Assert.IsType<FabricTransportActorRemotingProviderAttribute>(result);
+        }
     }
 
     public sealed class RemotingClientVersion_ : ActorRemotingProviderAttributeTest
