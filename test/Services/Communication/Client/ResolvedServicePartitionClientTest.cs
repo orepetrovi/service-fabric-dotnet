@@ -24,11 +24,10 @@ public abstract class ResolvedServicePartitionClientTest
 
     public sealed class Client : ResolvedServicePartitionClientTest
     {
-        readonly ICommunicationClient client = Mock.Of<ICommunicationClient>();
-
         [Fact]
         public void ReturnsValuePreviouslySet()
         {
+            var client = Mock.Of<ICommunicationClient>();
             sut.Client = client;
             Assert.Same(client, sut.Client);
         }
