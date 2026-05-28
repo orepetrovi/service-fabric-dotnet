@@ -14,21 +14,32 @@ public abstract class ConstantRetryPolicyTest
     readonly ConstantRetryPolicy sut;
 
     // Constructor parameters
-    readonly TimeSpan maxRetryBackoffIntervalOnTransientErrors = fuzzy.TimeSpan().Minimum(TimeSpan.FromTicks(1000));
-    readonly TimeSpan maxRetryBackoffIntervalOnNonTransientErrors = fuzzy.TimeSpan().Minimum(TimeSpan.FromTicks(1000));
+    readonly TimeSpan maxRetryBackoffIntervalOnTransientErrors = fuzzy.TimeSpan()
+        .Minimum(TimeSpan.FromTicks(1000))
+        .Maximum(TimeSpan.FromTicks(TimeSpan.MaxValue.Ticks / 3));
+    readonly TimeSpan maxRetryBackoffIntervalOnNonTransientErrors;
     readonly int maxRetryCount = fuzzy.Int32();
     readonly int maxRetryCountOnNonTransientErrors = fuzzy.Int32();
     readonly TimeSpan clientRetryTimeout = fuzzy.TimeSpan();
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    ConstantRetryPolicyTest() =>
+    ConstantRetryPolicyTest()
+    {
+        // Derive non-transient maximum from transient so the two are separated by more than 2x.
+        // This makes the branch selection in GetNextRetryDelay testable: swapping the two fields
+        // would land the observed delay outside (expectedMax/2, expectedMax] and fail the assertions.
+        maxRetryBackoffIntervalOnNonTransientErrors = maxRetryBackoffIntervalOnTransientErrors
+            + fuzzy.TimeSpan()
+                .Minimum(maxRetryBackoffIntervalOnTransientErrors)
+                .Maximum(TimeSpan.MaxValue - maxRetryBackoffIntervalOnTransientErrors);
         sut = new ConstantRetryPolicy(
             maxRetryBackoffIntervalOnTransientErrors,
             maxRetryBackoffIntervalOnNonTransientErrors,
             maxRetryCount,
             maxRetryCountOnNonTransientErrors,
             clientRetryTimeout);
+    }
 
     public sealed class Constructor : ConstantRetryPolicyTest
     {
