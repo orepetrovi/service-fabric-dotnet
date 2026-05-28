@@ -70,7 +70,6 @@ public abstract class ActorLogicalCallContextTest : IDisposable
 
     public sealed class Set : ActorLogicalCallContextTest
     {
-        // Method parameters
         readonly string callContextValue = fuzzy.String();
 
         [Fact]
