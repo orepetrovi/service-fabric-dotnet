@@ -20,14 +20,14 @@ public abstract class FabricActorExceptionConvertorTest
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    public sealed class TryConvertFromServiceException_ServiceException : FabricActorExceptionConvertorTest
+    public sealed class TryConvertFromServiceException_ServiceException_Exception : FabricActorExceptionConvertorTest
     {
         // Method parameters
         readonly ServiceException serviceException;
 
         readonly string message = fuzzy.String();
 
-        public TryConvertFromServiceException_ServiceException() =>
+        public TryConvertFromServiceException_ServiceException_Exception() =>
             serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
 
         [Fact]
@@ -63,7 +63,7 @@ public abstract class FabricActorExceptionConvertorTest
         }
     }
 
-    public sealed class TryConvertFromServiceException_ServiceException_Exception : FabricActorExceptionConvertorTest
+    public sealed class TryConvertFromServiceException_ServiceException_Exception_Exception : FabricActorExceptionConvertorTest
     {
         // Method parameters
         readonly ServiceException serviceException;
@@ -71,7 +71,7 @@ public abstract class FabricActorExceptionConvertorTest
 
         readonly string message = fuzzy.String();
 
-        public TryConvertFromServiceException_ServiceException_Exception() =>
+        public TryConvertFromServiceException_ServiceException_Exception_Exception() =>
             serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
 
         [Fact]
@@ -107,7 +107,7 @@ public abstract class FabricActorExceptionConvertorTest
         }
     }
 
-    public sealed class TryConvertFromServiceException_ServiceException_ExceptionArray : FabricActorExceptionConvertorTest
+    public sealed class TryConvertFromServiceException_ServiceException_ExceptionArray_Exception : FabricActorExceptionConvertorTest
     {
         // Method parameters
         readonly ServiceException serviceException;
@@ -115,7 +115,7 @@ public abstract class FabricActorExceptionConvertorTest
 
         readonly string message = fuzzy.String();
 
-        public TryConvertFromServiceException_ServiceException_ExceptionArray() =>
+        public TryConvertFromServiceException_ServiceException_ExceptionArray_Exception() =>
             serviceException = ServiceExceptionFor(typeof(DuplicateMessageException), message);
 
         [Theory]
