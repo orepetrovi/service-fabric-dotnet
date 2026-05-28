@@ -175,7 +175,7 @@ public abstract class ActorDataContractSurrogateTest
     public sealed class Instance : ActorDataContractSurrogateTest
     {
         [Fact]
-        public void IsNonNullActorDataContractSurrogate() =>
+        public void IsActorDataContractSurrogate() =>
             Assert.IsType<ActorDataContractSurrogate>(ActorDataContractSurrogate.Instance);
     }
 
