@@ -41,17 +41,17 @@ public abstract class ActorServiceProxyTest : IDisposable
     public sealed class Create_Uri_ActorId_String : ActorServiceProxyTest
     {
         readonly Uri serviceUri = fuzzy.Uri();
-        readonly ActorId actorId = fuzzy.ActorId();
+        readonly long partitionKey = fuzzy.Int64();
         readonly string listenerName = fuzzy.String();
 
         [Fact]
         public void ReturnsActorServiceProxyWithGivenServiceUriListenerNameAndPartitionKeyDerivedFromActorId()
         {
-            var proxy = (IServiceProxy)ActorServiceProxy.Create(serviceUri, actorId, listenerName);
+            var proxy = (IServiceProxy)ActorServiceProxy.Create(serviceUri, new ActorId(partitionKey), listenerName);
 
             Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
             Assert.Same(listenerName, proxy.ServicePartitionClient2.ListenerName);
-            Assert.Equal(actorId.GetPartitionKey(), proxy.ServicePartitionClient2.PartitionKey.Value);
+            Assert.Equal(partitionKey, proxy.ServicePartitionClient2.PartitionKey.Value);
             Assert.Same(factory, proxy.ServicePartitionClient2.Factory);
         }
     }
@@ -77,17 +77,17 @@ public abstract class ActorServiceProxyTest : IDisposable
     public sealed class CreateOfTServiceInterface_Uri_ActorId_String : ActorServiceProxyTest
     {
         readonly Uri serviceUri = fuzzy.Uri();
-        readonly ActorId actorId = fuzzy.ActorId();
+        readonly long partitionKey = fuzzy.Int64();
         readonly string listenerName = fuzzy.String();
 
         [Fact]
         public void ReturnsServiceProxyWithGivenServiceUriListenerNameAndPartitionKeyDerivedFromActorId()
         {
-            var proxy = (IServiceProxy)ActorServiceProxy.Create<IActorService>(serviceUri, actorId, listenerName);
+            var proxy = (IServiceProxy)ActorServiceProxy.Create<IActorService>(serviceUri, new ActorId(partitionKey), listenerName);
 
             Assert.Same(serviceUri, proxy.ServicePartitionClient2.ServiceUri);
             Assert.Same(listenerName, proxy.ServicePartitionClient2.ListenerName);
-            Assert.Equal(actorId.GetPartitionKey(), proxy.ServicePartitionClient2.PartitionKey.Value);
+            Assert.Equal(partitionKey, proxy.ServicePartitionClient2.PartitionKey.Value);
             Assert.Same(factory, proxy.ServicePartitionClient2.Factory);
         }
     }
