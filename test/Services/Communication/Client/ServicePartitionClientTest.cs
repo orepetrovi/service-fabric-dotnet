@@ -621,6 +621,18 @@ public abstract class ServicePartitionClientTest
 
             Assert.Same(clientException, actual);
         }
+
+        [Fact]
+        public async Task AwaitsTaskReturnedByFunc()
+        {
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.InvokeWithRetryAsync(
+                    _ => Task.FromException(clientException),
+                    cancellationToken,
+                    clientException.GetType()));
+
+            Assert.Same(clientException, actual);
+        }
     }
 
     public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTask_TypeArray : InvokeWithRetryAsyncBase
@@ -659,6 +671,15 @@ public abstract class ServicePartitionClientTest
         {
             Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
                 () => sut.InvokeWithRetryAsync(_ => throw clientException, clientException.GetType()));
+
+            Assert.Same(clientException, actual);
+        }
+
+        [Fact]
+        public async Task AwaitsTaskReturnedByFunc()
+        {
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.InvokeWithRetryAsync(_ => Task.FromException(clientException), clientException.GetType()));
 
             Assert.Same(clientException, actual);
         }
