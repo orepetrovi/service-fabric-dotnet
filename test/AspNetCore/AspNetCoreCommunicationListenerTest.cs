@@ -237,7 +237,7 @@ public abstract class AspNetCoreCommunicationListenerTest
 
             string prefix = string.Format(CultureInfo.InvariantCulture, "/{0}/{1}/", context.PartitionId, context.ReplicaOrInstanceId);
             Assert.StartsWith(prefix, listener.UrlSuffix);
-            var trailing = Guid.Parse(listener.UrlSuffix.Substring(prefix.Length));
+            var trailing = Guid.Parse(listener.UrlSuffix[prefix.Length..]);
             Assert.NotEqual(Guid.Empty, trailing);
         }
 
