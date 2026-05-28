@@ -26,12 +26,11 @@ public abstract class ActorRemotingProviderAttributeTest
     public sealed class Constructor : ActorRemotingProviderAttributeTest
     {
         [Fact]
-        public void InitializesRemotingClientVersionToV2_1() =>
+        public void InitializesPropertiesToV2_1()
+        {
             Assert.Equal(ClientVersion.V2_1, sut.RemotingClientVersion);
-
-        [Fact]
-        public void InitializesRemotingListenerVersionToV2_1() =>
             Assert.Equal(ListenerVersion.V2_1, sut.RemotingListenerVersion);
+        }
     }
 
     public sealed class GetProvider : ActorRemotingProviderAttributeTest, IDisposable
