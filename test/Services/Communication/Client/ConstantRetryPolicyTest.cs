@@ -56,10 +56,14 @@ public abstract class ConstantRetryPolicyTest
 
     public sealed class GetNextRetryDelay : ConstantRetryPolicyTest
     {
+        new readonly IRetryPolicy sut;
+
         // Method parameters
         readonly int retryAttempt = fuzzy.Int32();
 
         const int Samples = 100;
+
+        public GetNextRetryDelay() => sut = base.sut;
 
         [Fact]
         public void ReturnsRandomDelayScaledByMaxRetryBackoffIntervalOnTransientErrorsWhenIsTransient() =>
