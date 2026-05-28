@@ -48,3 +48,42 @@ Assert.Same(actorId, reference.ActorId);
 This preserves the routing coverage gemini correctly defended while eliminating redundant dependencies on a different type's contract.
 
 Human reviewer should decide whether to keep all three field assertions, adopt opus's single-identity-assertion refinement, or leave as-is.
+
+### ❓ Conditional compilation — Use `#elif NETFRAMEWORK` instead of `#else` (reported by `gemini`, supported by `gpt`, disputed by `opus`)
+
+**Original finding (`gemini`):**
+
+`csharp.instructions.md` dictates: *"If conditional compilation is required, use `#if NET` for .NET Core code, `#if NETFRAMEWORK` for .NET Framework code"*. An `#else` block implies that the alternative branch is exclusively for .NET Framework, but doing so obscures the target explicitly and violates the guideline.
+
+In [test/Actors/Remoting/ActorDataContractSurrogateTest.cs](test/Actors/Remoting/ActorDataContractSurrogateTest.cs#L26), change:
+
+```csharp
+#if NET
+    readonly ISerializationSurrogateProvider sut = new ActorDataContractSurrogate();
+#else
+    readonly IDataContractSurrogate sut = new ActorDataContractSurrogate();
+#endif
+```
+
+to:
+
+```csharp
+#if NET
+    readonly ISerializationSurrogateProvider sut = new ActorDataContractSurrogate();
+#elif NETFRAMEWORK
+    readonly IDataContractSurrogate sut = new ActorDataContractSurrogate();
+#endif
+```
+
+**Cross-check — `gpt` (Agree):** The rule is at [.github/instructions/csharp.instructions.md](.github/instructions/csharp.instructions.md#L132). The test project targets `net10.0;net9.0;net8.0;net472` per [test/Directory.Build.props](test/Directory.Build.props#L4), so `#else` is behaviorally equivalent today. However, the same file already uses explicit `#if NETFRAMEWORK` for usings ([lines 7–11](test/Actors/Remoting/ActorDataContractSurrogateTest.cs#L7-L11)) and members ([line 31](test/Actors/Remoting/ActorDataContractSurrogateTest.cs#L31)). Replacing `#else` with `#elif NETFRAMEWORK` makes the target explicit and avoids silently mapping any future non-`NET` target to .NET Framework.
+
+**Cross-check — `opus` (Disagree):** The rule prescribes which symbol to use (`NET` vs `NETFRAMEWORK`), not that `#else` is prohibited. With only two possible TFMs, `#else` is unambiguous. The file already mixes both styles and both forms satisfy the rule as written. The change is purely stylistic.
+
+**Author response — `gemini` (Insist):**
+
+1. **Rule compliance.** The `#else` block is uniquely for .NET Framework code; the instruction directs that .NET Framework code use `#if NETFRAMEWORK`. Using `#else` for code that is in fact .NET Framework code does not honor the directive.
+2. **Fail Fast.** Per `coding.instructions.md`, `#else` silently maps any future TFM to .NET Framework; explicit `#elif NETFRAMEWORK` fails fast if a third target appears.
+3. **Internal consistency.** Same file already uses explicit `#if NETFRAMEWORK` elsewhere ([lines 8 and 31](test/Actors/Remoting/ActorDataContractSurrogateTest.cs#L7-L11)); mixing the two styles is ambiguous.
+4. **Intuitiveness.** Explicit branch labels improve readability per the "informative and intuitive" guidance.
+
+**Why human review:** The rule's text in [.github/instructions/csharp.instructions.md](.github/instructions/csharp.instructions.md#L132) does not literally forbid `#else`; whether the spirit of the rule (plus the fail-fast / consistency principles) requires explicit `#elif NETFRAMEWORK` is a judgment call best made by the team.
