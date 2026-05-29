@@ -39,9 +39,9 @@ public abstract class ExclusiveFileStreamTest : IDisposable
 
     public sealed class Acquire : ExclusiveFileStreamTest
     {
-        FileMode fileMode = FileMode.Open;
-        FileShare fileShare = FileShare.None;
-        FileAccess fileAccess = FileAccess.ReadWrite;
+        readonly FileMode fileMode = FileMode.Open;
+        readonly FileShare fileShare = FileShare.None;
+        readonly FileAccess fileAccess = FileAccess.ReadWrite;
 
         [Fact]
         public void OpensFileAtGivenPathWithGivenModeShareAndAccess()
@@ -74,7 +74,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         [Fact(Explicit = true)]
         public async Task RetriesUntilFileBecomesAvailable()
         {
-            fileAccess = FileAccess.Read;
+            FileAccess fileAccess = FileAccess.Read;
             CancellationToken cancellation = TestContext.Current.CancellationToken;
             using FileStream locked = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
 
