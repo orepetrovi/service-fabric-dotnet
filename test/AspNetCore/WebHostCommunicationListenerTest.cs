@@ -27,6 +27,7 @@ public abstract class WebHostCommunicationListenerTest
     readonly string listenerUrl = $"http://+:{fuzzy.UInt16()}";
     readonly StatelessServiceContext serviceContext = fuzzy.StatelessServiceContext();
     readonly Mock<IWebHost> host = new();
+    readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
     IWebHost buildHost;
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
@@ -48,7 +49,7 @@ public abstract class WebHostCommunicationListenerTest
         [Fact]
         public async Task DisposesHostWithoutStoppingAfterOpenAsync()
         {
-            _ = await sut.OpenAsync(CancellationToken.None);
+            _ = await sut.OpenAsync(cancellation);
             sut.Abort();
             host.Verify(_ => _.Dispose(), Times.Once());
             host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
@@ -65,8 +66,6 @@ public abstract class WebHostCommunicationListenerTest
 
     public sealed class CloseAsync : WebHostCommunicationListenerTest
     {
-        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
-
         [Fact]
         public async Task PassesCancellationTokenToHostStopAsync()
         {
@@ -139,8 +138,6 @@ public abstract class WebHostCommunicationListenerTest
 
     public sealed class OpenAsync : WebHostCommunicationListenerTest
     {
-        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
-
         [Fact]
         public async Task InvokesBuildWithListenerUrlAndListener()
         {
