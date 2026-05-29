@@ -37,6 +37,21 @@ public abstract class HttpSysCommunicationListenerTest
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
         [Fact]
+        public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new HttpSysCommunicationListener(null, endpointName, build));
+            Assert.Equal(ctor.Parameter<ServiceContext>().Name, exception.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenBuildIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => new HttpSysCommunicationListener(serviceContext, endpointName, (Func<string, AspNetCoreCommunicationListener, IHost>)null));
+            Assert.Equal(ctor.Parameter<Func<string, AspNetCoreCommunicationListener, IHost>>().Name, exception.ParamName);
+        }
+
+        [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsNull()
         {
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, null, build));
@@ -66,6 +81,21 @@ public abstract class HttpSysCommunicationListenerTest
     {
         static readonly ConstructorInfo ctor = typeof(HttpSysCommunicationListener)
             .GetConstructor([typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>)]);
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new HttpSysCommunicationListener(null, endpointName, build));
+            Assert.Equal(ctor.Parameter<ServiceContext>().Name, exception.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenBuildIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => new HttpSysCommunicationListener(serviceContext, endpointName, (Func<string, AspNetCoreCommunicationListener, IWebHost>)null));
+            Assert.Equal(ctor.Parameter<Func<string, AspNetCoreCommunicationListener, IWebHost>>().Name, exception.ParamName);
+        }
 
         [Fact]
         public void ThrowsArgumentExceptionWhenEndpointNameIsNull()
