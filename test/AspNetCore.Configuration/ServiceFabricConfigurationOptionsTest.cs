@@ -50,7 +50,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal(sut.Method<Func<ConfigurationSection, ConfigurationProperty, string>>("DefaultExtractValueFunc"), sut.ExtractValueFunc);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing packageName argument validation.
+        [Fact(Explicit = true)] // TODO: SUT bug. Incorrect packageName argument exception ParamName.
         public void ThrowsArgumentNullExceptionWhenPackageNameIsNull()
         {
             // The constructor throws `new ArgumentNullException(packageName)`, passing the (null) value as the
