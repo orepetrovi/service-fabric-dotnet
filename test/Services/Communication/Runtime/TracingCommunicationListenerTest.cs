@@ -75,9 +75,9 @@ public abstract class TracingCommunicationListenerTest
             _ = listener.Setup(_ => _.Abort()).Throws(expectedException);
             string actualError = null;
             string expectedError = null;
-            _ = trace.Setup(_ => _.Error(It.IsAny<string>())).Callback((string m) =>
+            _ = trace.Setup(_ => _.Error(It.IsAny<string>())).Callback((string message) =>
             {
-                actualError = m;
+                actualError = message;
                 expectedError = $"Abort of {original} failed: {expectedException}";
             });
 
@@ -114,9 +114,9 @@ public abstract class TracingCommunicationListenerTest
             _ = listener.Setup(_ => _.CloseAsync(cancellation)).Throws(expectedException);
             string actualWarning = null;
             string expectedWarning = null;
-            _ = trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string m) =>
+            _ = trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string message) =>
             {
-                actualWarning = m;
+                actualWarning = message;
                 expectedWarning = $"Closing of {original} failed: {expectedException}";
             });
 
@@ -157,9 +157,9 @@ public abstract class TracingCommunicationListenerTest
             _ = listener.Setup(_ => _.OpenAsync(cancellation)).Throws(expectedException);
             string actualWarning = null;
             string expectedWarning = null;
-            _ = trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string m) =>
+            _ = trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string message) =>
             {
-                actualWarning = m;
+                actualWarning = message;
                 expectedWarning = $"Opening of {original} failed: {expectedException}";
             });
 
