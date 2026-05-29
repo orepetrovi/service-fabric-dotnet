@@ -190,4 +190,33 @@ public abstract class HttpSysCommunicationListenerTest
             Assert.Equal($"{endpointName} not found in Service Manifest.", exception.Message);
         }
     }
+
+    // The IHost constructor overload independently re-implements the endpointName assignment
+    // performed by the IWebHost overload. This fixture proves that branch is exercised end-to-end
+    // by constructing the SUT via the IHost overload and observing GetListenerUrl resolves the
+    // endpoint stored by that constructor.
+    public sealed class GetListenerUrlWhenBuiltWithIHostDelegate : HttpSysCommunicationListenerTest
+    {
+        new readonly HttpSysCommunicationListener sut;
+
+        public GetListenerUrlWhenBuiltWithIHostDelegate() =>
+            sut = new HttpSysCommunicationListener(serviceContext, endpointName, (_, _) => Mock.Of<IHost>());
+
+        [Fact]
+        public void ReturnsUrlWithProtocolLowercaseAndPortFromEndpoint()
+        {
+            var endpoint = new EndpointResourceDescription
+            {
+                Name = endpointName,
+                Protocol = EndpointProtocol.Http,
+            };
+            int port = fuzzy.UInt16();
+            endpoint.Property<int>().Set(port);
+            serviceContext.CodePackageActivationContext.GetEndpoints().Add(endpoint);
+
+            string actual = sut.GetListenerUrl();
+
+            Assert.Equal($"http://+:{port}", actual);
+        }
+    }
 }
