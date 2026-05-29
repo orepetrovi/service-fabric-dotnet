@@ -93,7 +93,7 @@ public abstract class IdUtilTest
         readonly MethodInfo methodInfo = typeof(SampleType).GetMethod("SampleMethod", BindingFlags.NonPublic | BindingFlags.Instance);
 
         [Fact]
-        public void ReturnsCrcOfDeclaringTypeNamespaceConcatenatedWithDeclaringTypeNameAndMethodNameWhenAllPresent()
+        public void ReturnsCrcOfDeclaringTypeNameConcatenatedWithDeclaringTypeNamespaceAndMethodNameWhenAllPresent()
         {
             int expected = Crc(methodInfo.DeclaringType.Name + (methodInfo.DeclaringType.Namespace + methodInfo.Name));
             Assert.Equal(expected, IdUtil.ComputeIdWithCRC(methodInfo));
