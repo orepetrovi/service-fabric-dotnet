@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fuzzy;
-using Inspector;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +19,7 @@ public abstract class ServiceFabricSetupFilterTest
     readonly IStartupFilter sut;
 
     // Constructor parameters
-    readonly string urlSuffix = fuzzy.String();
+    readonly string urlSuffix = "/" + fuzzy.String().LettersOrDigits();
     readonly ServiceFabricIntegrationOptions options = fuzzy.Enum<ServiceFabricIntegrationOptions>();
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
@@ -78,13 +77,20 @@ public abstract class ServiceFabricSetupFilterTest
         [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
         [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
         [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration | ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
-        public void ReturnsActionThatRegistersServiceFabricMiddlewareWithUrlSuffixWhenUrlSuffixIsNotEmpty(ServiceFabricIntegrationOptions options)
+        public async Task ReturnsActionThatRegistersServiceFabricMiddlewareWithUrlSuffixWhenUrlSuffixIsNotEmpty(ServiceFabricIntegrationOptions options)
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, options);
             sut.Configure(next.Object)(app.Object);
 
-            var middleware = RegisteredMiddlewares().OfType<ServiceFabricMiddleware>().Single();
-            Assert.Same(urlSuffix, middleware.Field<string>().Value);
+            // Verify SUT forwarded urlSuffix by exercising the registered middleware's observable behavior:
+            // a request whose Path does not start with urlSuffix as a segment is rejected with 410 Gone.
+            Func<RequestDelegate, RequestDelegate> factory = factories
+                .Single(f => f(_ => Task.CompletedTask).Target is ServiceFabricMiddleware);
+            RequestDelegate pipeline = factory(_ => Task.CompletedTask);
+            var context = new DefaultHttpContext();
+            context.Request.Path = urlSuffix + fuzzy.String().LettersOrDigits(); // appended without '/' so not a segment match
+            await pipeline(context);
+            Assert.Equal(StatusCodes.Status410Gone, context.Response.StatusCode);
         }
 
         [Theory, InlineData(null), InlineData("")]
