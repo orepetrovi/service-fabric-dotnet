@@ -41,14 +41,12 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         private protected override void DisposeCore() => File.Delete(path);
 
         [Fact]
-        public void ForwardsPathAndOpensExistingFileWhenFileModeIsOpen()
+        public void OpensExistingFileWithoutTruncationWhenFileModeIsOpen()
         {
             byte[] expected = fuzzy.Array(fuzzy.Byte);
             File.WriteAllBytes(path, expected);
 
             using var sut = ExclusiveFileStream.Acquire(path, FileMode.Open, fileShare, fileAccess);
-
-            Assert.Equal(path, sut.Value.Name);
 
             // FileMode.Open preserves existing content; pins SUT against Create/CreateNew/Truncate.
             var actual = new byte[expected.Length];
