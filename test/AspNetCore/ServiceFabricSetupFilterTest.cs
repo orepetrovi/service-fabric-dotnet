@@ -44,9 +44,6 @@ public abstract class ServiceFabricSetupFilterTest
                 .Returns(app.Object);
         }
 
-        IReadOnlyList<object> RegisteredMiddlewares() =>
-            [.. factories.Select(f => f(_ => Task.CompletedTask).Target)];
-
         [Fact]
         public void ReturnsActionThatCallsNextWithApplicationBuilder()
         {
@@ -137,5 +134,8 @@ public abstract class ServiceFabricSetupFilterTest
             Assert.Equal([factories.Count], middlewareCountsWhenNextCalled);
             next.Verify(_ => _(It.IsAny<IApplicationBuilder>()), Times.Once);
         }
+
+        IReadOnlyList<object> RegisteredMiddlewares() =>
+            [.. factories.Select(f => f(_ => Task.CompletedTask).Target)];
     }
 }
