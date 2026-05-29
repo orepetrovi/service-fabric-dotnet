@@ -51,7 +51,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         public async Task RetriesUntilFileBecomesAvailable()
         {
             CancellationToken cancellation = TestContext.Current.CancellationToken;
-            FileStream locked = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
+            using FileStream locked = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
 
             Task<ExclusiveFileStream> acquireTask = Task.Run(
                 () => ExclusiveFileStream.Acquire(path, FileMode.Open, FileShare.None, FileAccess.Read),
