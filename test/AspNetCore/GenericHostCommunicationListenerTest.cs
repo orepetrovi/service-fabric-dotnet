@@ -191,20 +191,7 @@ public abstract class GenericHostCommunicationListenerTest
         }
 
         [Fact]
-        public async Task AwaitsHostStartAsyncBeforeReturning()
-        {
-            var start = new TaskCompletionSource<object>();
-            _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(start.Task);
-
-            Task<string> open = sut.OpenAsync(cancellation);
-
-            Assert.False(open.IsCompleted);
-            start.SetResult(null);
-            _ = await open;
-        }
-
-        [Fact]
-        public async Task ResolvesServerAfterHostStartAsyncCompletes()
+        public async Task AwaitsHostStartAsyncBeforeResolvingServer()
         {
             // Guards against a regression where IServer/IServerAddressesFeature is read before
             // StartAsync completes. In real hosting (e.g. Kestrel ":0") addresses are populated
