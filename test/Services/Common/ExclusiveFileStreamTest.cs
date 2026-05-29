@@ -16,9 +16,20 @@ public abstract class ExclusiveFileStreamTest : IDisposable
 {
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
+    readonly ExclusiveFileStream sut;
+    readonly string sutPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
     readonly string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-    void IDisposable.Dispose() => DeleteTempFile();
+    protected ExclusiveFileStreamTest() =>
+        sut = ExclusiveFileStream.Acquire(sutPath, FileMode.CreateNew, FileShare.None, FileAccess.ReadWrite);
+
+    void IDisposable.Dispose()
+    {
+        sut.Dispose();
+        if (File.Exists(sutPath))
+            File.Delete(sutPath);
+        DeleteTempFile();
+    }
 
     protected void DeleteTempFile()
     {
@@ -91,19 +102,8 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         }
     }
 
-    public sealed class Dispose : ExclusiveFileStreamTest, IDisposable
+    public sealed class Dispose : ExclusiveFileStreamTest
     {
-        readonly ExclusiveFileStream sut;
-
-        public Dispose() =>
-            sut = ExclusiveFileStream.Acquire(path, FileMode.CreateNew, FileShare.None, FileAccess.ReadWrite);
-
-        void IDisposable.Dispose()
-        {
-            sut.Dispose();
-            DeleteTempFile();
-        }
-
         [Fact]
         public void DisposesUnderlyingFileStream()
         {
