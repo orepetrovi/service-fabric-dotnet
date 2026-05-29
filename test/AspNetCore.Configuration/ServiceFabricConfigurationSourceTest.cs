@@ -17,15 +17,12 @@ public abstract class ServiceFabricConfigurationSourceTest
 
     // Constructor parameters
     readonly ICodePackageActivationContext activationContext = Mock.Of<ICodePackageActivationContext>();
-    readonly ServiceFabricConfigurationOptions options;
+    readonly ServiceFabricConfigurationOptions options = new(fuzzy.String());
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    ServiceFabricConfigurationSourceTest()
-    {
-        options = new ServiceFabricConfigurationOptions(fuzzy.String());
+    ServiceFabricConfigurationSourceTest() =>
         sut = new ServiceFabricConfigurationSource(activationContext, options);
-    }
 
     public sealed class Build : ServiceFabricConfigurationSourceTest
     {
