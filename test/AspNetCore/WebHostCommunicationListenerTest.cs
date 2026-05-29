@@ -288,21 +288,9 @@ public abstract class WebHostCommunicationListenerTest
         }
 
         [Fact]
-        public async Task AppendsUrlSuffixFromListener()
-        {
-            ushort port = fuzzy.UInt16();
-            SetupServer($"http://+:{port}");
-            listener.ConfigureToUseUniqueServiceUrl();
-
-            string actual = await sut.OpenAsync(cancellation);
-
-            Assert.Equal($"http://{serviceContext.PublishAddress}:{port}{listener.UrlSuffix}", actual);
-        }
-
-        [Fact]
         public async Task AppendsUrlSuffixConfiguredDuringBuild()
         {
-            // Guards against a regression where UrlSuffix is read before invoking build(...).
+            // Covers suffix appending and guards against a regression where UrlSuffix is read before invoking build(...).
             // UseServiceFabricIntegration configures the listener from inside the host-builder delegate,
             // so the suffix isn't known until after build returns.
             ushort port = fuzzy.UInt16();
