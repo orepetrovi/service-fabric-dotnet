@@ -44,9 +44,12 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
                 Assert.Equal(nameof(name), exception.ParamName);
             }
 
-            [Fact]
-            public void InitializesPropertiesWithGivenArguments()
+            [Theory]
+            [InlineData(true)]
+            [InlineData(false)]
+            public void InitializesPropertiesWithGivenArguments(bool listenOnSecondary)
             {
+                var sut = new ServiceReplicaListener(createCommunicationListener, name, listenOnSecondary);
                 Assert.Same(createCommunicationListener, sut.CreateCommunicationListener);
                 Assert.Same(name, sut.Name);
                 Assert.Equal(listenOnSecondary, sut.ListenOnSecondary);
