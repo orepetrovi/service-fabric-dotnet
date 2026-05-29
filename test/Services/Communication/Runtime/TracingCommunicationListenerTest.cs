@@ -19,11 +19,11 @@ public abstract class TracingCommunicationListenerTest
 
     // Constructor parameters
     readonly CommunicationListenerInfo original;
-    readonly Mock<ITrace> trace = new Mock<ITrace>();
+    readonly Mock<ITrace> trace = new();
 
     // Test fixture
-    readonly static IFuzz fuzzy = new RandomFuzz();
-    readonly Mock<ICommunicationListener> listener = new Mock<ICommunicationListener>();
+    static readonly IFuzz fuzzy = new RandomFuzz();
+    readonly Mock<ICommunicationListener> listener = new();
 
     TracingCommunicationListenerTest()
     {
