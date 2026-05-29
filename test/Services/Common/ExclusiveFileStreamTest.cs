@@ -23,19 +23,25 @@ public abstract class ExclusiveFileStreamTest : IDisposable
 
     public sealed class Acquire : ExclusiveFileStreamTest
     {
-        readonly FileMode fileMode = FileMode.CreateNew;
-        readonly FileShare fileShare = FileShare.None;
-        readonly FileAccess fileAccess = FileAccess.ReadWrite;
-
         [Fact]
         public void OpensFileAtGivenPathWithGivenModeShareAndAccess()
         {
-            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, fileMode, fileShare, fileAccess);
+            byte[] expected = Guid.NewGuid().ToByteArray();
+            File.WriteAllBytes(path, expected);
+
+            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, FileMode.Open, FileShare.None, FileAccess.ReadWrite);
 
             Assert.Equal(path, sut.Value.Name);
             Assert.True(sut.Value.CanRead);
             Assert.True(sut.Value.CanWrite);
-            Assert.True(File.Exists(path));
+
+            // FileMode.Open preserves existing content; pins SUT against Create/CreateNew/Truncate.
+            byte[] actual = new byte[expected.Length];
+            Assert.Equal(expected.Length, sut.Value.Read(actual, 0, actual.Length));
+            Assert.Equal(expected, actual);
+
+            // FileShare.None prevents any concurrent open; pins SUT against more permissive shares.
+            _ = Assert.Throws<IOException>(() => File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read));
         }
 
         [Fact]
