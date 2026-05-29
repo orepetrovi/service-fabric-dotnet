@@ -34,8 +34,8 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
         readonly string section1 = fuzzy.String().LettersOrDigits();
         readonly string param1a = fuzzy.String().LettersOrDigits();
-        readonly string param1b = fuzzy.String().LettersOrDigits();
-        readonly string section2 = fuzzy.String().LettersOrDigits();
+        readonly string param1b;
+        readonly string section2;
         readonly string param2 = fuzzy.String().LettersOrDigits();
 
         // Placeholder satisfies MockConfigurationPackage.CreateDefaultPackage; ExtractValueFunc is mocked in the test
@@ -44,6 +44,9 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
         public ConfigAction()
         {
+            param1b = param1a + fuzzy.String().LettersOrDigits();
+            section2 = section1 + fuzzy.String().LettersOrDigits();
+
             IConfigurationRoot root = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
                 { $"{section1}:{param1a}", unused },
@@ -64,8 +67,8 @@ public abstract class ServiceFabricConfigurationOptionsTest
             ConfigurationProperty p2 = sec2.Parameters[param2];
 
             string key1a = fuzzy.String();
-            string key1b = fuzzy.String();
-            string key2 = fuzzy.String();
+            string key1b = key1a + fuzzy.String();
+            string key2 = key1b + fuzzy.String();
             string val1a = fuzzy.String();
             string val1b = fuzzy.String();
             string val2 = fuzzy.String();
