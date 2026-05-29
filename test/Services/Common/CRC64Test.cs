@@ -55,7 +55,7 @@ public abstract class CRC64Test
             Assert.Equal(CRC64.ToCRC64(values.SelectMany(v => v).ToArray()), CRC64.ToCRC64(values));
 
         [Fact]
-        public void ReturnsZeroWhenValuesIsEmpty() =>
+        public void ReturnsZeroWhenValuesAreEmpty() =>
             Assert.Equal(0UL, CRC64.ToCRC64(Array.Empty<byte[]>()));
 
         [Fact]
