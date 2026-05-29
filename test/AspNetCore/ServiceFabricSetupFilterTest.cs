@@ -76,9 +76,14 @@ public abstract class ServiceFabricSetupFilterTest
             Assert.Equal(nameof(app), exception.ParamName);
         }
 
-        [Fact]
-        public void ReturnsActionThatRegistersServiceFabricMiddlewareWithUrlSuffixWhenUrlSuffixIsNotEmpty()
+        [Theory]
+        [InlineData(ServiceFabricIntegrationOptions.None)]
+        [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
+        [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
+        [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration | ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
+        public void ReturnsActionThatRegistersServiceFabricMiddlewareWithUrlSuffixWhenUrlSuffixIsNotEmpty(ServiceFabricIntegrationOptions options)
         {
+            var sut = new ServiceFabricSetupFilter(urlSuffix, options);
             sut.Configure(next.Object)(app.Object);
 
             var middleware = RegisteredMiddlewares().OfType<ServiceFabricMiddleware>().Single();
