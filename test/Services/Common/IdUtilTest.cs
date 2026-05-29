@@ -90,12 +90,13 @@ public abstract class IdUtilTest
 
     public sealed class ComputeIdWithCRC_MethodInfo : IdUtilTest
     {
+        readonly MethodInfo methodInfo = typeof(SampleType).GetMethod("SampleMethod", BindingFlags.NonPublic | BindingFlags.Instance);
+
         [Fact]
         public void ReturnsCrcOfDeclaringTypeNamespaceConcatenatedWithDeclaringTypeNameAndMethodNameWhenAllPresent()
         {
-            MethodInfo m = typeof(SampleType).GetMethod("SampleMethod", BindingFlags.NonPublic | BindingFlags.Instance);
-            int expected = Crc(m.DeclaringType.Name + (m.DeclaringType.Namespace + m.Name));
-            Assert.Equal(expected, IdUtil.ComputeIdWithCRC(m));
+            int expected = Crc(methodInfo.DeclaringType.Name + (methodInfo.DeclaringType.Namespace + methodInfo.Name));
+            Assert.Equal(expected, IdUtil.ComputeIdWithCRC(methodInfo));
         }
 
         [Fact]
@@ -126,12 +127,11 @@ public abstract class IdUtilTest
 
     public sealed class ComputeIdWithCRC_Type : IdUtilTest
     {
+        readonly Type type = typeof(SampleType);
+
         [Fact]
-        public void ReturnsCrcOfNamespaceConcatenatedWithNameWhenNamespaceIsNotNull()
-        {
-            Type t = typeof(SampleType);
-            Assert.Equal(Crc(t.Namespace + t.Name), IdUtil.ComputeIdWithCRC(t));
-        }
+        public void ReturnsCrcOfNamespaceConcatenatedWithNameWhenNamespaceIsNotNull() =>
+            Assert.Equal(Crc(type.Namespace + type.Name), IdUtil.ComputeIdWithCRC(type));
 
         [Fact]
         public void ReturnsCrcOfNameWhenNamespaceIsNull()
