@@ -75,10 +75,10 @@ public abstract class ServiceInstanceListenerTest
             CommunicationListenerInfo actual = ServiceInstanceListener.Instantiate(sut, context);
 
             Assert.Same(name, actual.Name);
-            var tracer = Assert.IsType<TracingCommunicationListener>(actual.Listener);
+            var tracer = (TracingCommunicationListener)actual.Listener;
             var original = tracer.Field<CommunicationListenerInfo>().Value;
             Assert.Equal(new CommunicationListenerInfo(name, listener), original);
-            var trace = Assert.IsType<Trace>(tracer.Field<ITrace>().Value);
+            var trace = (Trace)tracer.Field<ITrace>().Value;
             Assert.Equal(new Trace(typeof(ServiceInstanceListener), context, ServiceEventSource.Instance), trace);
         }
 
@@ -91,10 +91,10 @@ public abstract class ServiceInstanceListenerTest
 
             string expectedName = "default";
             Assert.Same(expectedName, actual.Name);
-            var tracer = Assert.IsType<TracingCommunicationListener>(actual.Listener);
+            var tracer = (TracingCommunicationListener)actual.Listener;
             var original = tracer.Field<CommunicationListenerInfo>().Value;
             Assert.Equal(new CommunicationListenerInfo(expectedName, listener), original);
-            var trace = Assert.IsType<Trace>(tracer.Field<ITrace>().Value);
+            var trace = (Trace)tracer.Field<ITrace>().Value;
             Assert.Equal(new Trace(typeof(ServiceInstanceListener), context, ServiceEventSource.Instance), trace);
         }
 
