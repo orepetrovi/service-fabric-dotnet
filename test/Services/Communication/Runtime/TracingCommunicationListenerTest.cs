@@ -86,7 +86,7 @@ public abstract class TracingCommunicationListenerTest
 
     public sealed class CloseAsync : TracingCommunicationListenerTest
     {
-        readonly CancellationToken cancellation = new CancellationToken();
+        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
 
         [Fact]
         public async Task TracesInfoWhenMethodIsCompletedSuccessfully()
@@ -117,7 +117,7 @@ public abstract class TracingCommunicationListenerTest
 
     public sealed class OpenAsync : TracingCommunicationListenerTest
     {
-        readonly CancellationToken cancellation = new CancellationToken();
+        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
 
         [Fact]
         public async Task TracesInfoWhenMethodIsCompletedSuccessfully()
