@@ -67,8 +67,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
             });
         }
 
-        // TODO: Flaky test.
-        [Fact(Explicit = true)]
+        [Fact(Explicit = true)] // TODO: Flaky test.
         public async Task RetriesUntilFileBecomesAvailable()
         {
             // Races Task.Delay(250) against thread-pool scheduling and the SUT's non-injectable
@@ -92,8 +91,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
             Assert.Equal(path, sut.Value.Name);
         }
 
-        // TODO: SUT testability limitation. MaxAttempts/Thread.Sleep/Random not injectable.
-        [Fact(Explicit = true)]
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. MaxAttempts/Thread.Sleep/Random not injectable.
         public void ThrowsIOExceptionWhenFileRemainsLockedAfterMaxAttempts()
         {
             // ExclusiveFileStream hard-codes MaxAttempts=60 and Thread.Sleep with a non-injectable
