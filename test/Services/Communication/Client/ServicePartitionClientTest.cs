@@ -547,7 +547,7 @@ public abstract class ServicePartitionClientTest
 
             var stopwatch = Stopwatch.StartNew();
             _ = await Assert.ThrowsAnyAsync<OperationCanceledException>(
-                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, TestContext.Current.CancellationToken));
+                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, cancellationToken));
             stopwatch.Stop();
 
             Assert.True(stopwatch.ElapsedMilliseconds < retryDelay.TotalMilliseconds, $"Elapsed {stopwatch.ElapsedMilliseconds}ms >= retry delay {retryDelay.TotalMilliseconds}ms");
@@ -1058,7 +1058,7 @@ public abstract class ServicePartitionClientTest
 
             var stopwatch = Stopwatch.StartNew();
             _ = await Assert.ThrowsAnyAsync<OperationCanceledException>(
-                () => sut.InvokeWithRetryAsync(_ => throw clientException, TestContext.Current.CancellationToken));
+                () => sut.InvokeWithRetryAsync(_ => throw clientException, cancellationToken));
             stopwatch.Stop();
 
             Assert.True(stopwatch.ElapsedMilliseconds >= timeout.TotalMilliseconds - 25, $"Elapsed {stopwatch.ElapsedMilliseconds}ms < {timeout.TotalMilliseconds}ms");
