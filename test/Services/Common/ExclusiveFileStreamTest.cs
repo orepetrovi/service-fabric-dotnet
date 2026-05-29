@@ -25,8 +25,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
     void IDisposable.Dispose()
     {
         sut.Dispose();
-        if (File.Exists(sutPath))
-            File.Delete(sutPath);
+        File.Delete(sutPath);
         DisposeCore();
     }
 
@@ -39,11 +38,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         readonly FileShare fileShare = FileShare.None;
         readonly FileAccess fileAccess = FileAccess.ReadWrite;
 
-        private protected override void DisposeCore()
-        {
-            if (File.Exists(path))
-                File.Delete(path);
-        }
+        private protected override void DisposeCore() => File.Delete(path);
 
         [Fact]
         public void ForwardsPathAndOpensExistingFileWhenFileModeIsOpen()
