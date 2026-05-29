@@ -54,9 +54,27 @@ public abstract class ServiceFabricMiddlewareTest
         [Fact]
         public async Task CallsNextWhenUrlSuffixIsEmpty()
         {
+            // Arrange
+            PathString originalPathBase = "/" + fuzzy.String().LettersOrDigits();
+            PathString originalPath = "/" + fuzzy.String().LettersOrDigits();
+            context.Request.PathBase = originalPathBase;
+            context.Request.Path = originalPath;
+
             var middleware = new ServiceFabricMiddleware(next.Object, string.Empty);
-            _ = next.Setup(_ => _(context)).Returns(Task.FromResult(fuzzy.Int32()));
+            PathString actualPath = default;
+            PathString actualPathBase = default;
+            _ = next.Setup(_ => _(context))
+                .Callback<HttpContext>(c => { actualPath = c.Request.Path; actualPathBase = c.Request.PathBase; })
+                .Returns(Task.FromResult(fuzzy.Int32()));
+
+            // Act
             await middleware.Invoke(context);
+
+            // Assert
+            Assert.Equal(originalPath, actualPath);
+            Assert.Equal(originalPathBase, actualPathBase);
+            Assert.Equal(originalPath, context.Request.Path);
+            Assert.Equal(originalPathBase, context.Request.PathBase);
             next.Verify(_ => _(context), Times.Once);
             next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
         }
