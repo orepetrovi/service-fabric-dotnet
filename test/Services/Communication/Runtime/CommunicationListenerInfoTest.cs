@@ -19,9 +19,9 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
         readonly ICommunicationListener listener = Mock.Of<ICommunicationListener>();
 
         // Fixture
-        static readonly IFuzz fuzzy = new RandomFuzz();
+        static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-        protected CommunicationListenerInfoTest() =>
+        CommunicationListenerInfoTest() =>
             sut = new CommunicationListenerInfo(name, listener);
 
         public sealed class Constructor : CommunicationListenerInfoTest
@@ -48,7 +48,31 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
             }
         }
 
-        public sealed class ToStringTest : CommunicationListenerInfoTest
+        public new sealed class Equals : CommunicationListenerInfoTest
+        {
+            new readonly IEquatable<CommunicationListenerInfo> sut;
+
+            public Equals() =>
+                sut = base.sut;
+
+            [Fact]
+            public void ReturnsTrueWhenNamesAreEqual() =>
+                Assert.True(sut.Equals(new CommunicationListenerInfo(new string(name.ToCharArray()), listener)));
+
+            [Fact]
+            public void ReturnsFalseWhenNameIsDifferent() =>
+                Assert.False(sut.Equals(new CommunicationListenerInfo(name + fuzzy.String(), listener)));
+
+            [Fact]
+            public void ReturnsFalseWhenListenerIsDifferent() =>
+                Assert.False(sut.Equals(new CommunicationListenerInfo(name, Mock.Of<ICommunicationListener>())));
+
+            [Fact]
+            public void ReturnsFalseWhenInfoIsNull() =>
+                Assert.False(sut.Equals(null));
+        }
+
+        public new sealed class ToString : CommunicationListenerInfoTest
         {
             [Fact]
             public void ReturnsStringWithDetailedInformationForTracing()
@@ -60,34 +84,6 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
             [Fact]
             public void ReturnsSameStringCachedForPerformance() =>
                 Assert.Same(sut.ToString(), sut.ToString());
-        }
-
-        public sealed class EqualsTest : CommunicationListenerInfoTest
-        {
-            new readonly IEquatable<CommunicationListenerInfo> sut;
-
-            public EqualsTest() =>
-                sut = base.sut;
-
-            [Fact]
-            public void ReturnsTrueWhenNameAndListenerAreSame() =>
-                Assert.True(sut.Equals(new CommunicationListenerInfo(name, listener)));
-
-            [Fact]
-            public void ReturnsTrueWhenNamesAreEqual() =>
-                Assert.True(sut.Equals(new CommunicationListenerInfo(new string(name.ToCharArray()), listener)));
-
-            [Fact]
-            public void ReturnsFalseWhenNameIsDifferent() =>
-                Assert.False(sut.Equals(new CommunicationListenerInfo(fuzzy.String(), listener)));
-
-            [Fact]
-            public void ReturnsFalseWhenListenerIsDifferent() =>
-                Assert.False(sut.Equals(new CommunicationListenerInfo(name, Mock.Of<ICommunicationListener>())));
-
-            [Fact]
-            public void ReturnsFalseGivenNull() =>
-                Assert.False(sut.Equals(null));
         }
     }
 }
