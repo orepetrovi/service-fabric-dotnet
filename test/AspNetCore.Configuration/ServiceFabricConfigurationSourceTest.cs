@@ -27,17 +27,6 @@ public abstract class ServiceFabricConfigurationSourceTest
         sut = new ServiceFabricConfigurationSource(activationContext, options);
     }
 
-    public sealed class ActivationContext : ServiceFabricConfigurationSourceTest
-    {
-        new readonly ServiceFabricConfigurationSource sut;
-
-        public ActivationContext() => sut = (ServiceFabricConfigurationSource)base.sut;
-
-        [Fact]
-        public void ReturnsActivationContextPassedToConstructor() =>
-            Assert.Same(activationContext, sut.ActivationContext);
-    }
-
     public sealed class Build : ServiceFabricConfigurationSourceTest
     {
         readonly IConfigurationBuilder builder = Mock.Of<IConfigurationBuilder>();
@@ -53,6 +42,10 @@ public abstract class ServiceFabricConfigurationSourceTest
 
     public sealed class Constructor : ServiceFabricConfigurationSourceTest
     {
+        [Fact]
+        public void InitializesActivationContext() =>
+            Assert.Same(activationContext, ((ServiceFabricConfigurationSource)sut).ActivationContext);
+
         [Fact(Explicit = true)] // TODO: SUT bug. Constructor doesn't validate activationContext.
         public void ThrowsArgumentNullExceptionWhenActivationContextIsNull()
         {
