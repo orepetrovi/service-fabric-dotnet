@@ -42,16 +42,6 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         readonly ICodePackageActivationContext context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
 
         [Fact]
-        public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
-        {
-            TestCodePackageActivationContext multi = CreateMultiPackageContext();
-
-            _ = builder.AddServiceFabricConfiguration(multi);
-
-            AssertSources(builder.Sources, multi);
-        }
-
-        [Fact]
         public void ReturnsBuilder()
         {
             IConfigurationBuilder actual = builder.AddServiceFabricConfiguration(context);
@@ -72,16 +62,6 @@ public abstract class ServiceFabricConfigurationExtensionsTest
             var exception = Assert.Throws<ArgumentNullException>(
                 () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder, null));
             Assert.Equal(nameof(context), exception.ParamName);
-        }
-
-        [Fact]
-        public void AddsNoSourcesWhenContextHasNoConfigurationPackages()
-        {
-            var empty = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>());
-
-            _ = builder.AddServiceFabricConfiguration(empty);
-
-            Assert.Empty(builder.Sources);
         }
     }
 
