@@ -71,10 +71,10 @@ public abstract class TracingCommunicationListenerTest
         public void TracesErrorWhenMethodThrowsException()
         {
             var expectedException = new TestException(fuzzy.String());
-            listener.Setup(_ => _.Abort()).Throws(expectedException);
+            _ = listener.Setup(_ => _.Abort()).Throws(expectedException);
             string actualError = null;
             string expectedError = null;
-            trace.Setup(_ => _.Error(It.IsAny<string>())).Callback((string m) =>
+            _ = trace.Setup(_ => _.Error(It.IsAny<string>())).Callback((string m) =>
             {
                 actualError = m;
                 expectedError = $"Abort of {original} failed: {expectedException}";
@@ -107,10 +107,10 @@ public abstract class TracingCommunicationListenerTest
         public async Task TracesWarningWhenMethodThrowsException()
         {
             var expectedException = new TestException(fuzzy.String());
-            listener.Setup(_ => _.CloseAsync(cancellation)).Throws(expectedException);
+            _ = listener.Setup(_ => _.CloseAsync(cancellation)).Throws(expectedException);
             string actualWarning = null;
             string expectedWarning = null;
-            trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string m) =>
+            _ = trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string m) =>
             {
                 actualWarning = m;
                 expectedWarning = $"Closing of {original} failed: {expectedException}";
@@ -133,7 +133,7 @@ public abstract class TracingCommunicationListenerTest
         public async Task TracesInfoWhenMethodIsCompletedSuccessfully()
         {
             string expectedEndpoint = fuzzy.String();
-            listener.Setup(_ => _.OpenAsync(cancellation)).Returns(Task.FromResult(expectedEndpoint));
+            _ = listener.Setup(_ => _.OpenAsync(cancellation)).Returns(Task.FromResult(expectedEndpoint));
 
             string actualEndpoint = await sut.OpenAsync(cancellation);
 
@@ -146,10 +146,10 @@ public abstract class TracingCommunicationListenerTest
         public async Task TracesWarningWhenMethodThrowsException()
         {
             var expectedException = new TestException(fuzzy.String());
-            listener.Setup(_ => _.OpenAsync(cancellation)).Throws(expectedException);
+            _ = listener.Setup(_ => _.OpenAsync(cancellation)).Throws(expectedException);
             string actualWarning = null;
             string expectedWarning = null;
-            trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string m) =>
+            _ = trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string m) =>
             {
                 actualWarning = m;
                 expectedWarning = $"Opening of {original} failed: {expectedException}";
