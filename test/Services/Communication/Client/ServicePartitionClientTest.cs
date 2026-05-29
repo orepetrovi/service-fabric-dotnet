@@ -1186,8 +1186,7 @@ public abstract class ServicePartitionClientTest
         protected readonly Mock<ICommunicationClient> communicationClient = new();
         protected readonly ResolvedServicePartition rsp = Type<ResolvedServicePartition>.Uninitialized();
 
-        // Default: GetClientAsync returns the mock client; ReportOperationExceptionAsync handles `clientException`
-        // with a transient retry that uses a short delay so tests don't slow down.
+        // Short delay used by `TransientRetry` so retry loops in tests don't slow execution.
         protected static readonly TimeSpan ShortRetryDelay = TimeSpan.FromMilliseconds(1);
 
         protected readonly Exception clientException = new InvalidOperationException();
