@@ -46,7 +46,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
             _ = builder.AddServiceFabricConfiguration(context);
 
             IConfigurationSource source = Assert.Single(builder.Sources);
-            var typed = Assert.IsType<ServiceFabricConfigurationSource>(source);
+            var typed = (ServiceFabricConfigurationSource)source;
             Assert.Same(context, typed.ActivationContext);
         }
 
@@ -140,7 +140,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
             _ = builder.AddServiceFabricConfiguration(context, optionsDelegate: null);
 
             IConfigurationSource source = Assert.Single(builder.Sources);
-            var typed = Assert.IsType<ServiceFabricConfigurationSource>(source);
+            var typed = (ServiceFabricConfigurationSource)source;
             Assert.Same(context, typed.ActivationContext);
         }
 
