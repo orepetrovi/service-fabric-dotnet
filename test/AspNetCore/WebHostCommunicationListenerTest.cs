@@ -293,7 +293,7 @@ public abstract class WebHostCommunicationListenerTest
             // UseServiceFabricIntegration configures the listener from inside the host-builder delegate,
             // so the suffix isn't known until after build returns.
             ushort port = fuzzy.UInt16();
-            SetupServer($"http://+:{port}");
+            SetupServer($"http://127.0.0.1:{port}");
             _ = build.Setup(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()))
                 .Callback((string _, AspNetCoreCommunicationListener l) => l.ConfigureToUseUniqueServiceUrl())
                 .Returns(() => buildHost);
@@ -302,7 +302,7 @@ public abstract class WebHostCommunicationListenerTest
 
             build.Verify(_ => _(listenerUrl, listener), Times.Once());
             build.Verify(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()), Times.Once());
-            Assert.Equal($"http://{serviceContext.PublishAddress}:{port}{listener.UrlSuffix}", actual);
+            Assert.Equal($"http://127.0.0.1:{port}{listener.UrlSuffix}", actual);
         }
 
         [Fact]
