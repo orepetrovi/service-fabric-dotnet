@@ -68,7 +68,7 @@ public abstract class ServiceInstanceListenerTest
         readonly ICommunicationListener listener = Mock.Of<ICommunicationListener>();
 
         public Instantiate() =>
-            _ = Mock.Get(createCommunicationListener).Setup(_ => _.Invoke(context)).Returns(listener);
+            _ = Mock.Get(createCommunicationListener).Setup(_ => _(context)).Returns(listener);
 
         [Fact]
         public void ReturnsTracingListener()
@@ -102,7 +102,7 @@ public abstract class ServiceInstanceListenerTest
         [Fact]
         public void ReturnsNullWhenCreateCommunicationListenerReturnsNull()
         {
-            _ = Mock.Get(createCommunicationListener).Setup(_ => _.Invoke(context)).Returns(default(ICommunicationListener));
+            _ = Mock.Get(createCommunicationListener).Setup(_ => _(context)).Returns(default(ICommunicationListener));
             Assert.Null(ServiceInstanceListener.Instantiate(sut, context));
         }
 
