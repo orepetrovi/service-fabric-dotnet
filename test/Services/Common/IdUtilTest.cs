@@ -18,7 +18,7 @@ public abstract class IdUtilTest
 
     public sealed class ComputeId_MethodInfo : IdUtilTest
     {
-        readonly MethodInfo methodInfo = typeof(SampleType).GetMethod(nameof(SampleType.SampleMethod));
+        readonly MethodInfo methodInfo = typeof(SampleType).GetMethod("SampleMethod", BindingFlags.NonPublic | BindingFlags.Instance);
 
         [Fact]
         public void CombinesMethodNameWithDeclaringTypeNamespaceAndNameWhenAllPresent()
@@ -33,7 +33,7 @@ public abstract class IdUtilTest
         [Fact]
         public void CombinesMethodNameWithDeclaringTypeNameWhenDeclaringTypeNamespaceIsNull()
         {
-            MethodInfo m = typeof(IdUtilTest_GlobalNamespaceType).GetMethod(nameof(IdUtilTest_GlobalNamespaceType.Method));
+            MethodInfo m = typeof(IdUtilTest_GlobalNamespaceType).GetMethod(nameof(IdUtilTest_GlobalNamespaceType.Method), BindingFlags.NonPublic | BindingFlags.Instance);
 
             int expected = Combine(m.DeclaringType.Name.GetHashCode(), m.Name.GetHashCode());
 
@@ -93,7 +93,7 @@ public abstract class IdUtilTest
         [Fact]
         public void ReturnsCrcOfDeclaringTypeNamespaceConcatenatedWithDeclaringTypeNameAndMethodNameWhenAllPresent()
         {
-            MethodInfo m = typeof(SampleType).GetMethod(nameof(SampleType.SampleMethod));
+            MethodInfo m = typeof(SampleType).GetMethod("SampleMethod", BindingFlags.NonPublic | BindingFlags.Instance);
             int expected = Crc(m.DeclaringType.Name + (m.DeclaringType.Namespace + m.Name));
             Assert.Equal(expected, IdUtil.ComputeIdWithCRC(m));
         }
@@ -101,7 +101,7 @@ public abstract class IdUtilTest
         [Fact]
         public void ReturnsCrcOfDeclaringTypeNameAndMethodNameWhenDeclaringTypeNamespaceIsNull()
         {
-            MethodInfo m = typeof(IdUtilTest_GlobalNamespaceType).GetMethod(nameof(IdUtilTest_GlobalNamespaceType.Method));
+            MethodInfo m = typeof(IdUtilTest_GlobalNamespaceType).GetMethod(nameof(IdUtilTest_GlobalNamespaceType.Method), BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.Null(m.DeclaringType.Namespace);
             Assert.Equal(Crc(m.DeclaringType.Name + m.Name), IdUtil.ComputeIdWithCRC(m));
         }
@@ -165,6 +165,6 @@ public abstract class IdUtilTest
 
     sealed class SampleType
     {
-        public void SampleMethod() { }
+        void SampleMethod() { }
     }
 }
