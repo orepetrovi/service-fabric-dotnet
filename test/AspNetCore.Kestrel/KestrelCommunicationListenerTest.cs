@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.Fabric;
 using System.Fabric.Description;
 using System.Globalization;
-using System.Reflection;
 using Fuzzy;
 using Inspector;
 using Microsoft.AspNetCore.Hosting;
@@ -27,8 +26,8 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener)
-          .GetConstructor([typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IHost>)]);
+        static readonly Constructor ctor = Type<KestrelCommunicationListener>.Uninitialized()
+            .Constructor<Action<ServiceContext, Func<string, AspNetCoreCommunicationListener, IHost>>>();
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
@@ -59,8 +58,8 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener)
-            .GetConstructor([typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>)]);
+        static readonly Constructor ctor = Type<KestrelCommunicationListener>.Uninitialized()
+            .Constructor<Action<ServiceContext, Func<string, AspNetCoreCommunicationListener, IWebHost>>>();
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
@@ -89,8 +88,8 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener)
-            .GetConstructor([typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IHost>)]);
+        static readonly Constructor ctor = Type<KestrelCommunicationListener>.Uninitialized()
+            .Constructor<Action<ServiceContext, string, Func<string, AspNetCoreCommunicationListener, IHost>>>();
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
@@ -139,8 +138,8 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = typeof(KestrelCommunicationListener)
-            .GetConstructor([typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>)]);
+        static readonly Constructor ctor = Type<KestrelCommunicationListener>.Uninitialized()
+            .Constructor<Action<ServiceContext, string, Func<string, AspNetCoreCommunicationListener, IWebHost>>>();
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
@@ -278,6 +277,7 @@ public abstract class KestrelCommunicationListenerTest
             context.CodePackageActivationContext.GetEndpoints().Add(other);
 
             var exception = Assert.Throws<InvalidOperationException>(sut.GetListenerUrl);
+            Assert.Equal($"{endpointName} not found in Service Manifest.", exception.Message);
         }
     }
 }
