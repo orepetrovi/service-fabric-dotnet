@@ -35,8 +35,8 @@ public abstract class KestrelCommunicationListenerTest
         // 2-arg ctor overloads (which differ only by `Func<..., IHost>` vs `Func<..., IWebHost>`) match and `.Single()`
         // throws. Wrap the `ConstructorInfo` directly until a fixed Inspector version is available.
         // File an issue at https://github.com/olegsych/inspector/issues and remove this workaround once resolved.
-        static readonly Constructor ctor = new Constructor(
-            typeof(KestrelCommunicationListener).GetConstructor(new[] { typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IHost>) })!,
+        static readonly Constructor ctor = new(
+            typeof(KestrelCommunicationListener).GetConstructor([typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IHost>)]),
             Type<KestrelCommunicationListener>.Uninitialized());
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
@@ -72,8 +72,8 @@ public abstract class KestrelCommunicationListenerTest
         // 2-arg ctor overloads (which differ only by `Func<..., IHost>` vs `Func<..., IWebHost>`) match and `.Single()`
         // throws. Wrap the `ConstructorInfo` directly until a fixed Inspector version is available.
         // File an issue at https://github.com/olegsych/inspector/issues and remove this workaround once resolved.
-        static readonly Constructor ctor = new Constructor(
-            typeof(KestrelCommunicationListener).GetConstructor(new[] { typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>) })!,
+        static readonly Constructor ctor = new(
+            typeof(KestrelCommunicationListener).GetConstructor([typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>)]),
             Type<KestrelCommunicationListener>.Uninitialized());
 
         [Fact]
@@ -90,15 +90,12 @@ public abstract class KestrelCommunicationListenerTest
             Assert.Equal(ctor.Parameter<Func<string, AspNetCoreCommunicationListener, IWebHost>>().Name, exception.ParamName);
         }
 
+        // The 2-arg overload chains to the 3-arg ctor with endpointName: null. Testing the default-URL
+        // path through the 2-arg entry point pins the IWebHost-specific 3-arg ctor, so a regression in
+        // just one of the two duplicated 3-arg ctors is caught here. The base-class `sut` is constructed
+        // via the same overload, so we exercise it directly here.
         [Fact]
-        public void GetListenerUrlReturnsDefaultHttpUrl()
-        {
-            // The 2-arg overload chains to the 3-arg ctor with endpointName: null. Testing the default-URL
-            // path through the 2-arg entry point pins the IWebHost-specific 3-arg ctor, so a regression in
-            // just one of the two duplicated 3-arg ctors is caught here. The base-class `sut` is constructed
-            // via the same overload, so we exercise it directly here.
-            Assert.Equal("http://+:0", sut.GetListenerUrl());
-        }
+        public void GetListenerUrlReturnsDefaultHttpUrl() => Assert.Equal("http://+:0", sut.GetListenerUrl());
     }
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
