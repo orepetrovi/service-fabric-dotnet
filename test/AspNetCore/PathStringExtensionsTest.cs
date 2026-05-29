@@ -19,16 +19,21 @@ public abstract class PathStringExtensionsTest
         readonly PathString other;
 
         readonly string segment = "/" + fuzzy.String().LettersOrDigits();
+        readonly string suffix = "/" + fuzzy.String().LettersOrDigits();
 
         public StartsWithSegments()
         {
             other = new PathString(segment);
-            pathString = new PathString(segment + "/" + fuzzy.String().LettersOrDigits());
+            pathString = new PathString(segment + suffix);
         }
 
         [Fact]
-        public void ReturnsTrueWhenPathStringStartsWithOtherFollowedBySegmentSeparator() =>
-            Assert.True(PathStringExtensions.StartsWithSegments(pathString, other, out _, out _));
+        public void ReturnsTrueAndAssignsMatchedToOtherAndRemainingToSuffixWhenPathStringStartsWithOtherFollowedBySegmentSeparator()
+        {
+            Assert.True(PathStringExtensions.StartsWithSegments(pathString, other, out PathString matched, out PathString remaining));
+            Assert.Equal(other.Value, matched.Value);
+            Assert.Equal(suffix, remaining.Value);
+        }
 
         [Fact]
         public void ReturnsTrueAndAssignsMatchedToPathStringAndRemainingToEmptyWhenPathStringEqualsOther()
