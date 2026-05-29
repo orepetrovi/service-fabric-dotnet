@@ -17,12 +17,17 @@ namespace Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 
 public abstract class KestrelCommunicationListenerTest
 {
+    readonly AspNetCoreCommunicationListener sut;
+
     // Constructor parameters
     readonly ServiceContext serviceContext = fuzzy.ServiceContext();
     readonly string endpointName = fuzzy.String();
     readonly Func<string, AspNetCoreCommunicationListener, IWebHost> build = (_, _) => Mock.Of<IWebHost>();
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+    KestrelCommunicationListenerTest() =>
+        sut = new KestrelCommunicationListener(serviceContext, build);
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
     {
@@ -90,8 +95,8 @@ public abstract class KestrelCommunicationListenerTest
         {
             // The 2-arg overload chains to the 3-arg ctor with endpointName: null. Testing the default-URL
             // path through the 2-arg entry point pins the IWebHost-specific 3-arg ctor, so a regression in
-            // just one of the two duplicated 3-arg ctors is caught here.
-            var sut = (AspNetCoreCommunicationListener)new KestrelCommunicationListener(serviceContext, build);
+            // just one of the two duplicated 3-arg ctors is caught here. The base-class `sut` is constructed
+            // via the same overload, so we exercise it directly here.
             Assert.Equal("http://+:0", sut.GetListenerUrl());
         }
     }
@@ -196,7 +201,7 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class GetListenerUrl : KestrelCommunicationListenerTest
     {
-        readonly KestrelCommunicationListener sut;
+        new readonly KestrelCommunicationListener sut;
         readonly StatelessServiceContext context = fuzzy.StatelessServiceContext();
 
         public GetListenerUrl() =>
