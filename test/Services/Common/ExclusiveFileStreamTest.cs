@@ -63,7 +63,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
             // FileShare.None prevents any concurrent open; pins SUT against more permissive shares.
             _ = Assert.Throws<IOException>(() =>
             {
-                using FileStream _ = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using FileStream _ = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             });
         }
 
