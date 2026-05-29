@@ -5,6 +5,7 @@
 
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -29,7 +30,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         [Fact]
         public void OpensFileAtGivenPathWithGivenModeShareAndAccess()
         {
-            using var sut = ExclusiveFileStream.Acquire(path, fileMode, fileShare, fileAccess);
+            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, fileMode, fileShare, fileAccess);
 
             Assert.Equal(path, sut.Value.Name);
             Assert.True(sut.Value.CanRead);
@@ -40,10 +41,10 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         [Fact]
         public async Task RetriesUntilFileBecomesAvailable()
         {
-            var cancellation = TestContext.Current.CancellationToken;
-            var locked = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
+            CancellationToken cancellation = TestContext.Current.CancellationToken;
+            FileStream locked = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
 
-            var acquireTask = Task.Run(
+            Task<ExclusiveFileStream> acquireTask = Task.Run(
                 () => ExclusiveFileStream.Acquire(path, FileMode.Open, FileShare.None, FileAccess.Read),
                 cancellation);
 
@@ -51,14 +52,14 @@ public abstract class ExclusiveFileStreamTest : IDisposable
             await Task.Delay(250, cancellation);
             locked.Dispose();
 
-            using var sut = await acquireTask;
+            using ExclusiveFileStream sut = await acquireTask;
             Assert.Equal(path, sut.Value.Name);
         }
 
         [Fact(Explicit = true)] // TODO: Slow. Exhausts 60+ retries each sleeping 100-1000ms.
         public void ThrowsIOExceptionWhenFileRemainsLockedAfterMaxAttempts()
         {
-            using var locked = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
+            using FileStream locked = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
 
             _ = Assert.Throws<IOException>(() =>
                 ExclusiveFileStream.Acquire(path, FileMode.Open, FileShare.None, FileAccess.Read));
@@ -75,7 +76,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         [Fact]
         public void DisposesUnderlyingFileStream()
         {
-            var stream = sut.Value;
+            FileStream stream = sut.Value;
 
             sut.Dispose();
 
