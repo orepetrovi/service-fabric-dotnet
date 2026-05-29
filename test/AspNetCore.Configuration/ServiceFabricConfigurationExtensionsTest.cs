@@ -125,9 +125,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         [Fact]
         public void AppliesOptionsDelegateChangesToAddedSource()
         {
-            Action<ServiceFabricConfigurationOptions> mutate = options => options.IncludePackageName = false;
-
-            _ = builder.AddServiceFabricConfiguration(context, mutate);
+            _ = builder.AddServiceFabricConfiguration(context, options => options.IncludePackageName = false);
 
             IConfigurationSource source = Assert.Single(builder.Sources);
             var options = source.Field<ServiceFabricConfigurationOptions>().Value;
