@@ -85,12 +85,9 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         public void InvokesOptionsDelegateForEachConfigurationPackage()
         {
             TestCodePackageActivationContext multi = CreateMultiPackageContext();
-
             var captured = new List<string>();
-            _ = Mock.Get(optionsDelegate).Setup(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()))
-                .Callback((ServiceFabricConfigurationOptions o) => captured.Add(o.PackageName));
 
-            _ = builder.AddServiceFabricConfiguration(multi, optionsDelegate);
+            _ = builder.AddServiceFabricConfiguration(multi, options => captured.Add(options.PackageName));
 
             Assert.Equal(multi.GetConfigurationPackageNames(), captured);
         }
