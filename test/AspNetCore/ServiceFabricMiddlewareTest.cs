@@ -42,7 +42,9 @@ public abstract class ServiceFabricMiddlewareTest
 
     public sealed class Invoke : ServiceFabricMiddlewareTest
     {
+        // Method parameters
         readonly HttpContext context = new DefaultHttpContext();
+
         readonly PathString originalPathBase = "/" + fuzzy.String().LettersOrDigits();
 
         public Invoke() => context.Request.PathBase = originalPathBase;
