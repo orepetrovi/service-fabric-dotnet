@@ -34,7 +34,7 @@ public abstract class TracingCommunicationListenerTest
     public sealed class Abort : TracingCommunicationListenerTest
     {
         [Fact]
-        public void TracesInfoWhenMethodIsCompletedSuccessfully()
+        public void TracesInfoWhenListenerCompletes()
         {
             sut.Abort();
 
@@ -45,7 +45,7 @@ public abstract class TracingCommunicationListenerTest
         }
 
         [Fact]
-        public void TracesErrorWhenMethodThrowsException()
+        public void TracesErrorWhenListenerThrows()
         {
             var expectedException = new TestException(fuzzy.String());
             _ = listener.Setup(_ => _.Abort()).Throws(expectedException);
@@ -72,7 +72,7 @@ public abstract class TracingCommunicationListenerTest
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
 
         [Fact]
-        public async Task TracesInfoWhenMethodIsCompletedSuccessfully()
+        public async Task TracesInfoWhenListenerCompletes()
         {
             await sut.CloseAsync(cancellation);
 
@@ -84,7 +84,7 @@ public abstract class TracingCommunicationListenerTest
         }
 
         [Fact]
-        public async Task TracesWarningWhenMethodThrowsException()
+        public async Task TracesWarningWhenListenerThrows()
         {
             var expectedException = new TestException(fuzzy.String());
             _ = listener.Setup(_ => _.CloseAsync(cancellation)).Throws(expectedException);
@@ -136,7 +136,7 @@ public abstract class TracingCommunicationListenerTest
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
 
         [Fact]
-        public async Task TracesInfoWhenMethodIsCompletedSuccessfully()
+        public async Task TracesInfoWhenListenerCompletes()
         {
             string expectedEndpoint = fuzzy.String();
             _ = listener.Setup(_ => _.OpenAsync(cancellation)).Returns(Task.FromResult(expectedEndpoint));
@@ -151,7 +151,7 @@ public abstract class TracingCommunicationListenerTest
         }
 
         [Fact]
-        public async Task TracesWarningWhenMethodThrowsException()
+        public async Task TracesWarningWhenListenerThrows()
         {
             var expectedException = new TestException(fuzzy.String());
             _ = listener.Setup(_ => _.OpenAsync(cancellation)).Throws(expectedException);
