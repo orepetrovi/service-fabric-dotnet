@@ -6,6 +6,7 @@ using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
 using Fuzzy;
+using Inspector;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http.Features;
@@ -123,7 +124,7 @@ public abstract class WebHostCommunicationListenerTest
             // SUT currently stores `build` without validation and throws NullReferenceException
             // when OpenAsync dereferences it. Expected behavior is to fail fast in the constructor.
             var exception = Assert.Throws<ArgumentNullException>(() => new WebHostCommunicationListener(null, listener));
-            Assert.Equal(nameof(build), exception.ParamName);
+            Assert.Equal(sut.Constructor().Parameter<Func<string, AspNetCoreCommunicationListener, IWebHost>>().Name, exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing arg null validation.
@@ -132,7 +133,7 @@ public abstract class WebHostCommunicationListenerTest
             // SUT currently dereferences `listener.ServiceContext` without validation,
             // throwing NullReferenceException instead of ArgumentNullException.
             var exception = Assert.Throws<ArgumentNullException>(() => new WebHostCommunicationListener(build.Object, null));
-            Assert.Equal(nameof(listener), exception.ParamName);
+            Assert.Equal(sut.Constructor().Parameter<AspNetCoreCommunicationListener>().Name, exception.ParamName);
         }
     }
 
