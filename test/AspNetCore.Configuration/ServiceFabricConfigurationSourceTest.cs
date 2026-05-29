@@ -54,7 +54,7 @@ public abstract class ServiceFabricConfigurationSourceTest
             // instead of an ArgumentNullException naming the offending parameter.
             var exception = Assert.Throws<ArgumentNullException>(
                 () => new ServiceFabricConfigurationSource(null, options));
-            Assert.Equal(sut.Constructor().Parameter<ICodePackageActivationContext>().Name, exception.ParamName);
+            Assert.Equal(nameof(activationContext), exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Constructor doesn't validate options.
@@ -65,7 +65,7 @@ public abstract class ServiceFabricConfigurationSourceTest
             // should fail fast and name its own parameter.
             var exception = Assert.Throws<ArgumentNullException>(
                 () => new ServiceFabricConfigurationSource(activationContext, null));
-            Assert.Equal(sut.Constructor().Parameter<ServiceFabricConfigurationOptions>().Name, exception.ParamName);
+            Assert.Equal(nameof(options), exception.ParamName);
         }
     }
 }
