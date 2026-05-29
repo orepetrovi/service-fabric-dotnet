@@ -14,10 +14,10 @@ namespace Microsoft.ServiceFabric.Services.Common;
 
 public abstract class ExclusiveFileStreamTest : IDisposable
 {
-    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-
     readonly ExclusiveFileStream sut;
     readonly string sutPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
     ExclusiveFileStreamTest() =>
         sut = ExclusiveFileStream.Acquire(sutPath, FileMode.CreateNew, FileShare.None, FileAccess.ReadWrite);
