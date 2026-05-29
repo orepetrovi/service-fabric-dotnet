@@ -13,8 +13,13 @@ namespace Microsoft.ServiceFabric.Services
 {
     static class IFuzzExtensions
     {
-        internal static Guid Guid(this IFuzz fuzzy) =>
-            new(fuzzy.Array(fuzzy.Byte, Length.Exactly(16)));
+        internal static Guid Guid(this IFuzz fuzzy)
+        {
+            Guid value;
+            do value = new Guid(fuzzy.Array(fuzzy.Byte, Length.Exactly(16)));
+            while (value == System.Guid.Empty);
+            return value;
+        }
 
         internal static CommunicationListenerInfo CommunicationListenerInfo(this IFuzz fuzzy)
         {
