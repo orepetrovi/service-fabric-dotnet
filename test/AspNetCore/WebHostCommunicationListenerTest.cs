@@ -179,7 +179,7 @@ public abstract class WebHostCommunicationListenerTest
             _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(start.Task);
 
             var features = new FeatureCollection();
-            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { $"http://+:{fuzzy.UInt16()}" }));
+            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { $"http://127.0.0.1:{fuzzy.UInt16()}" }));
             _ = host.Setup(_ => _.ServerFeatures).Returns(() =>
             {
                 readBeforeStart |= !started;
