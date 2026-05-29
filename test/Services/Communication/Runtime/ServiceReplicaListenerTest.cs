@@ -66,10 +66,9 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
 
         public sealed class Instantiate : ServiceReplicaListenerTest
         {
-            // Parameters
+            // Method parameters
             readonly StatefulServiceContext context = fuzzy.StatefulServiceContext();
 
-            // Fixture
             readonly ICommunicationListener listener = Mock.Of<ICommunicationListener>();
 
             public Instantiate() =>
