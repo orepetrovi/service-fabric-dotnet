@@ -27,7 +27,7 @@ public abstract class KestrelCommunicationListenerTest
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
     KestrelCommunicationListenerTest() =>
-        sut = new KestrelCommunicationListener(serviceContext, build);
+        sut = new KestrelCommunicationListener(serviceContext, endpointName, build);
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
     {
@@ -90,12 +90,15 @@ public abstract class KestrelCommunicationListenerTest
             Assert.Equal(ctor.Parameter<Func<string, AspNetCoreCommunicationListener, IWebHost>>().Name, exception.ParamName);
         }
 
-        // The 2-arg overload chains to the 3-arg ctor with endpointName: null. Testing the default-URL
-        // path through the 2-arg entry point pins the IWebHost-specific 3-arg ctor, so a regression in
-        // just one of the two duplicated 3-arg ctors is caught here. The base-class `sut` is constructed
-        // via the same overload, so we exercise it directly here.
         [Fact]
-        public void GetListenerUrlReturnsDefaultHttpUrl() => Assert.Equal("http://+:0", sut.GetListenerUrl());
+        public void GetListenerUrlReturnsDefaultHttpUrl()
+        {
+            // The 2-arg overload chains to the 3-arg ctor with endpointName: null. Testing the default-URL
+            // path through the 2-arg entry point pins the IWebHost-specific 3-arg ctor, so a regression in
+            // just one of the two duplicated 3-arg ctors is caught here.
+            var sut = (AspNetCoreCommunicationListener)new KestrelCommunicationListener(serviceContext, build);
+            Assert.Equal("http://+:0", sut.GetListenerUrl());
+        }
     }
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
@@ -198,12 +201,6 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class GetListenerUrl : KestrelCommunicationListenerTest
     {
-        new readonly KestrelCommunicationListener sut;
-        readonly StatelessServiceContext context = fuzzy.StatelessServiceContext();
-
-        public GetListenerUrl() =>
-            sut = new KestrelCommunicationListener(context, endpointName, build);
-
         // The null-endpoint default-URL path is covered per-overload in the four `Constructor_*` classes,
         // co-located with the duplicated SUT code that stores `this.endpointName`.
 
@@ -224,7 +221,7 @@ public abstract class KestrelCommunicationListenerTest
             // default path ("http://+:0"), defeating this test's discrimination of the endpoint branch.
             int port = fuzzy.UInt16().Minimum(1);
             endpoint.Property<int>().Set(port);
-            context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
+            serviceContext.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
             string actual = sut.GetListenerUrl();
 
@@ -257,7 +254,7 @@ public abstract class KestrelCommunicationListenerTest
             };
             other.Property<int>().Set(fuzzy.UInt16());
 
-            KeyedCollection<string, EndpointResourceDescription> endpoints = context.CodePackageActivationContext.GetEndpoints();
+            KeyedCollection<string, EndpointResourceDescription> endpoints = serviceContext.CodePackageActivationContext.GetEndpoints();
             if (matchingFirst)
             {
                 endpoints.Add(endpoint);
@@ -286,7 +283,7 @@ public abstract class KestrelCommunicationListenerTest
                 Protocol = EndpointProtocol.Http,
             };
             other.Property<int>().Set(fuzzy.UInt16());
-            context.CodePackageActivationContext.GetEndpoints().Add(other);
+            serviceContext.CodePackageActivationContext.GetEndpoints().Add(other);
 
             var exception = Assert.Throws<InvalidOperationException>(sut.GetListenerUrl);
             Assert.Equal(string.Format(CultureInfo.CurrentCulture, SR.EndpointNameNotFoundExceptionMessage, endpointName), exception.Message);
