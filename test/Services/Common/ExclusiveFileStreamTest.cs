@@ -56,7 +56,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
             Assert.Equal(path, sut.Value.Name);
 
             // FileMode.Open preserves existing content; pins SUT against Create/CreateNew/Truncate.
-            byte[] actual = new byte[expected.Length];
+            var actual = new byte[expected.Length];
             Assert.Equal(expected.Length, sut.Value.Read(actual, 0, actual.Length));
             Assert.Equal(expected, actual);
         }
@@ -121,7 +121,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
             // Thread.Sleep(Rand.Next(100, 1000)); the delegate may not reach File.Open before
             // locked.Dispose() (silent false success) or the SUT's random sleep plus a subsequent
             // File.Open may exceed cancellation. Deterministic injection of the clock/sleeper is out of scope.
-            FileAccess fileAccess = FileAccess.Read;
+            var fileAccess = FileAccess.Read;
             CancellationToken cancellation = TestContext.Current.CancellationToken;
             using FileStream locked = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
 
