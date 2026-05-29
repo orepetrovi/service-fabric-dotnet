@@ -80,9 +80,10 @@ public abstract class ServiceFabricMiddlewareTest
         {
             // Arrange
             string remainingPath = "/" + fuzzy.String().LettersOrDigits();
-            string originalPathBase = "/" + fuzzy.String().LettersOrDigits();
+            PathString originalPathBase = "/" + fuzzy.String().LettersOrDigits();
+            PathString originalPath = urlSuffix + remainingPath;
             context.Request.PathBase = originalPathBase;
-            context.Request.Path = urlSuffix + remainingPath;
+            context.Request.Path = originalPath;
 
             PathString actualPath = default;
             PathString actualPathBase = default;
@@ -96,6 +97,8 @@ public abstract class ServiceFabricMiddlewareTest
             // Assert
             Assert.Equal(remainingPath, actualPath.Value);
             Assert.Equal(originalPathBase + urlSuffix, actualPathBase.Value);
+            Assert.Equal(originalPath, context.Request.Path);
+            Assert.Equal(originalPathBase, context.Request.PathBase);
             next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
         }
 
@@ -103,9 +106,10 @@ public abstract class ServiceFabricMiddlewareTest
         public async Task CallsNextWithEmptyPathAndExtendedPathBaseWhenPathEqualsUrlSuffix()
         {
             // Arrange
-            string originalPathBase = "/" + fuzzy.String().LettersOrDigits();
+            PathString originalPathBase = "/" + fuzzy.String().LettersOrDigits();
+            PathString originalPath = urlSuffix;
             context.Request.PathBase = originalPathBase;
-            context.Request.Path = urlSuffix;
+            context.Request.Path = originalPath;
 
             PathString actualPath = default;
             PathString actualPathBase = default;
@@ -119,21 +123,6 @@ public abstract class ServiceFabricMiddlewareTest
             // Assert
             Assert.Equal(PathString.Empty, actualPath);
             Assert.Equal(originalPathBase + urlSuffix, actualPathBase.Value);
-            next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
-        }
-
-        [Fact]
-        public async Task RestoresPathAndPathBaseAfterCallingNext()
-        {
-            string remainingPath = "/" + fuzzy.String().LettersOrDigits();
-            PathString originalPathBase = "/" + fuzzy.String().LettersOrDigits();
-            PathString originalPath = urlSuffix + remainingPath;
-            context.Request.PathBase = originalPathBase;
-            context.Request.Path = originalPath;
-            _ = next.Setup(_ => _(context)).Returns(Task.FromResult(fuzzy.Int32()));
-
-            await sut.Invoke(context);
-
             Assert.Equal(originalPath, context.Request.Path);
             Assert.Equal(originalPathBase, context.Request.PathBase);
             next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
