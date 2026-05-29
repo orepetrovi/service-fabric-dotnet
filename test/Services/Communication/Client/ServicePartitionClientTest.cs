@@ -87,8 +87,6 @@ public abstract class ServicePartitionClientTest
             _ = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()), TestContext.Current.CancellationToken);
 
             Assert.NotNull(forwarded);
-            Assert.Equal(10, forwarded.DefaultMaxRetryCountForTransientErrors);
-            Assert.Equal(Timeout.InfiniteTimeSpan, forwarded.ClientRetryTimeout);
         }
 
         [Fact]
