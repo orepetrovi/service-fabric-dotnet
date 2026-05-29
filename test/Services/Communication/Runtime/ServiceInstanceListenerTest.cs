@@ -54,6 +54,7 @@ public abstract class ServiceInstanceListenerTest
         public void InitializesPropertiesWithDefaultArgumentValues()
         {
             var sut = new ServiceInstanceListener(createCommunicationListener);
+            Assert.Same(createCommunicationListener, sut.CreateCommunicationListener);
             Assert.Same(ServiceInstanceListener.DefaultName, sut.Name);
         }
     }
