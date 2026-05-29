@@ -124,7 +124,7 @@ public abstract class ServicePartitionClientTest
         }
     }
 
-    public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTaskOfTResult_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
+    public sealed class InvokeWithRetryAsync_FuncOfICommunicationClientTaskOfObject_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
     {
         static readonly Method method = typeof(ServicePartitionClient<ICommunicationClient>)
             .Method<Func<Func<ICommunicationClient, Task<object>>, CancellationToken, Type[], Task<object>>>(
@@ -594,7 +594,7 @@ public abstract class ServicePartitionClientTest
         }
     }
 
-    public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTaskOfTResult_TypeArray : InvokeWithRetryAsyncBase
+    public sealed class InvokeWithRetryAsync_FuncOfICommunicationClientTaskOfObject_TypeArray : InvokeWithRetryAsyncBase
     {
         static readonly Method method = typeof(ServicePartitionClient<ICommunicationClient>)
             .Method<Func<Func<ICommunicationClient, Task<object>>, Type[], Task<object>>>(
@@ -650,7 +650,7 @@ public abstract class ServicePartitionClientTest
         }
     }
 
-    public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTask_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
+    public sealed class InvokeWithRetryAsync_FuncOfICommunicationClientTask_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
     {
         static readonly Method method = typeof(ServicePartitionClient<ICommunicationClient>)
             .Method<Func<Func<ICommunicationClient, Task>, CancellationToken, Type[], Task>>(
@@ -798,7 +798,7 @@ public abstract class ServicePartitionClientTest
         }
     }
 
-    public sealed class InvokeWithRetryAsync_FuncOfTCommunicationClientTask_TypeArray : InvokeWithRetryAsyncBase
+    public sealed class InvokeWithRetryAsync_FuncOfICommunicationClientTask_TypeArray : InvokeWithRetryAsyncBase
     {
         static readonly Method method = typeof(ServicePartitionClient<ICommunicationClient>)
             .Method<Func<Func<ICommunicationClient, Task>, Type[], Task>>(
