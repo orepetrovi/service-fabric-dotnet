@@ -106,6 +106,13 @@ public abstract class TracingCommunicationListenerTest
     public sealed class Constructor : TracingCommunicationListenerTest
     {
         [Fact]
+        public void TracesCreationInfo()
+        {
+            trace.Verify(_ => _.Info($"Created {original} of type '{original.Listener.GetType().AssemblyQualifiedName}'."), Times.Once);
+            trace.Verify(_ => _.Info(It.IsAny<string>()), Times.Once);
+        }
+
+        [Fact]
         public void ThrowsArgumentNullExceptionWhenOriginalIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new TracingCommunicationListener(null, trace.Object));
@@ -117,13 +124,6 @@ public abstract class TracingCommunicationListenerTest
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new TracingCommunicationListener(original, null));
             Assert.Equal(nameof(trace), exception.ParamName);
-        }
-
-        [Fact]
-        public void TracesCreationInfo()
-        {
-            trace.Verify(_ => _.Info($"Created {original} of type '{original.Listener.GetType().AssemblyQualifiedName}'."), Times.Once);
-            trace.Verify(_ => _.Info(It.IsAny<string>()), Times.Once);
         }
     }
 
