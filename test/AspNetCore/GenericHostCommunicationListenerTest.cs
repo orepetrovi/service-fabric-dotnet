@@ -104,14 +104,14 @@ public abstract class GenericHostCommunicationListenerTest
         public async Task AwaitsHostStopAsyncBeforeReturning()
         {
             _ = await sut.OpenAsync(cancellation);
-            var tcs = new TaskCompletionSource<object>();
-            _ = host.Setup(_ => _.StopAsync(cancellation)).Returns(tcs.Task);
+            var stop = new TaskCompletionSource<object>();
+            _ = host.Setup(_ => _.StopAsync(cancellation)).Returns(stop.Task);
 
             Task close = sut.CloseAsync(cancellation);
 
             Assert.False(close.IsCompleted);
             host.Verify(_ => _.Dispose(), Times.Never());
-            tcs.SetResult(null);
+            stop.SetResult(null);
             await close;
             host.Verify(_ => _.Dispose(), Times.Once());
         }
@@ -193,13 +193,13 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task AwaitsHostStartAsyncBeforeReturning()
         {
-            var tcs = new TaskCompletionSource<object>();
-            _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(tcs.Task);
+            var start = new TaskCompletionSource<object>();
+            _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(start.Task);
 
             Task<string> open = sut.OpenAsync(cancellation);
 
             Assert.False(open.IsCompleted);
-            tcs.SetResult(null);
+            start.SetResult(null);
             _ = await open;
         }
 
