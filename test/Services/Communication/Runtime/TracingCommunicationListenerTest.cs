@@ -162,10 +162,8 @@ public abstract class TracingCommunicationListenerTest
         }
     }
 
-    sealed class TestException : Exception
+    sealed class TestException(string message) : Exception(message)
     {
-        internal TestException(string message) : base(message) { }
-
         // Stable representation independent of throw history so tests can compare formatted trace
         // messages built before the exception is thrown against those formatted by the product after
         // the exception is thrown (which would otherwise include rethrow stack frames).
