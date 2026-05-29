@@ -292,7 +292,7 @@ public abstract class KestrelCommunicationListenerTest
             context.CodePackageActivationContext.GetEndpoints().Add(other);
 
             var exception = Assert.Throws<InvalidOperationException>(sut.GetListenerUrl);
-            Assert.Equal($"{endpointName} not found in Service Manifest.", exception.Message);
+            Assert.Equal(string.Format(CultureInfo.CurrentCulture, SR.EndpointNameNotFoundExceptionMessage, endpointName), exception.Message);
         }
     }
 }
