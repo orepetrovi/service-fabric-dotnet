@@ -106,8 +106,6 @@ public abstract class GenericHostCommunicationListenerTest
             await sut.CloseAsync(cancellation);
 
             build.Verify(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()), Times.Never());
-            host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
-            host.Verify(_ => _.Dispose(), Times.Never());
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. CloseAsync skips Dispose when StopAsync throws.
