@@ -25,20 +25,6 @@ public abstract class UtilityTest
             lastSeenExceptionId = fuzzy.String() + currentExceptionId; // different by construction
 
         [Fact]
-        public void ReturnsFalseWithoutModifyingRefsWhenMaxRetryCountIsZero()
-        {
-            string lastSeenExceptionIdBefore = lastSeenExceptionId;
-            int currentRetryCountBefore = currentRetryCount;
-
-            bool result = Utility.ShouldRetryOperation(
-                currentExceptionId, 0, ref lastSeenExceptionId, ref currentRetryCount);
-
-            Assert.False(result);
-            Assert.Equal(lastSeenExceptionIdBefore, lastSeenExceptionId);
-            Assert.Equal(currentRetryCountBefore, currentRetryCount);
-        }
-
-        [Fact]
         public void ReturnsTrueAndIncrementsCurrentRetryCountWhenCurrentExceptionIdEqualsLastSeenExceptionIdAndCurrentRetryCountIsBelowMaxRetryCount()
         {
             lastSeenExceptionId = currentExceptionId;
@@ -50,6 +36,20 @@ public abstract class UtilityTest
             Assert.True(result);
             Assert.Equal(currentExceptionId, lastSeenExceptionId);
             Assert.Equal(maxRetryCount, currentRetryCount);
+        }
+
+        [Fact]
+        public void ReturnsFalseWithoutModifyingRefsWhenMaxRetryCountIsZero()
+        {
+            string lastSeenExceptionIdBefore = lastSeenExceptionId;
+            int currentRetryCountBefore = currentRetryCount;
+
+            bool result = Utility.ShouldRetryOperation(
+                currentExceptionId, 0, ref lastSeenExceptionId, ref currentRetryCount);
+
+            Assert.False(result);
+            Assert.Equal(lastSeenExceptionIdBefore, lastSeenExceptionId);
+            Assert.Equal(currentRetryCountBefore, currentRetryCount);
         }
 
         [Fact]
