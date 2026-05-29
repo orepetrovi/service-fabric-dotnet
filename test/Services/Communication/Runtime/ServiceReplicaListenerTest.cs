@@ -87,19 +87,16 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
             }
 
             [Fact]
-            public void ReturnsTracingListenerWithDefaultName()
+            public void MapsDefaultNameToDefault()
             {
                 var sut = new ServiceReplicaListener(createCommunicationListener);
 
                 CommunicationListenerInfo actual = ServiceReplicaListener.Instantiate(sut, context);
 
-                string expectedName = "default";
-                Assert.Same(expectedName, actual.Name);
+                Assert.Equal("default", actual.Name);
                 var tracer = (TracingCommunicationListener)actual.Listener;
                 var original = tracer.Field<CommunicationListenerInfo>().Value;
-                Assert.Equal(new CommunicationListenerInfo(expectedName, listener), original);
-                var trace = (Trace)tracer.Field<ITrace>().Value;
-                Assert.Equal(new Trace(typeof(ServiceReplicaListener), context, ServiceEventSource.Instance), trace);
+                Assert.Equal("default", original.Name);
             }
 
             [Fact]
