@@ -43,7 +43,7 @@ public abstract class RwLockTest
         public async Task BlocksConcurrentWriteLockUntilDisposed()
         {
             TaskCompletionSource<object> release = await HoldAsync(sut.AcquireReadLock);
-            Task write = Task.Run(() => sut.AcquireWriteLock().Dispose(), cancellation);
+            Task write = await StartAcquireAsync(sut.AcquireWriteLock);
 
             await AssertDoesNotComplete(write);
             release.SetResult(null);
@@ -82,7 +82,7 @@ public abstract class RwLockTest
         public async Task BlocksConcurrentReadLockUntilDisposed()
         {
             TaskCompletionSource<object> release = await HoldAsync(sut.AcquireWriteLock);
-            Task read = Task.Run(() => sut.AcquireReadLock().Dispose(), cancellation);
+            Task read = await StartAcquireAsync(sut.AcquireReadLock);
 
             await AssertDoesNotComplete(read);
             release.SetResult(null);
@@ -94,7 +94,7 @@ public abstract class RwLockTest
         public async Task BlocksConcurrentWriteLockUntilDisposed()
         {
             TaskCompletionSource<object> release = await HoldAsync(sut.AcquireWriteLock);
-            Task second = Task.Run(() => sut.AcquireWriteLock().Dispose(), cancellation);
+            Task second = await StartAcquireAsync(sut.AcquireWriteLock);
 
             await AssertDoesNotComplete(second);
             release.SetResult(null);
@@ -124,8 +124,8 @@ public abstract class RwLockTest
     // HoldAsync acquires the lock on a dedicated worker thread and keeps it held until the returned source is signaled.
     async Task<TaskCompletionSource<object>> HoldAsync(Func<IDisposable> acquire)
     {
-        var acquired = new TaskCompletionSource<object>();
-        var release = new TaskCompletionSource<object>();
+        var acquired = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
         _ = Task.Run(() =>
         {
             using IDisposable _ = acquire();
@@ -134,6 +134,21 @@ public abstract class RwLockTest
         }, cancellation);
         await acquired.Task;
         return release;
+    }
+
+    // Signals readiness from inside the worker immediately before the acquire call so the caller can wait until the
+    // competing task is about to attempt the acquire. Without this, AssertDoesNotComplete could observe the BlockedWait
+    // elapse before the thread pool ever scheduled the worker, yielding a false positive.
+    async Task<Task> StartAcquireAsync(Func<IDisposable> acquire)
+    {
+        var ready = new TaskCompletionSource<object>();
+        Task task = Task.Run(() =>
+        {
+            ready.SetResult(null);
+            acquire().Dispose();
+        }, cancellation);
+        await ready.Task;
+        return task;
     }
 
     async Task AssertCompletes(Task task)
