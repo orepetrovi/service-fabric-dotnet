@@ -159,8 +159,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // NullReferenceException instead of the ArgumentNullException expected for a public-facing delegate. This
             // test asserts the correct behavior and will fail until the SUT validates the argument. Fixing the SUT is
             // out of scope for the current change.
-            Action<ConfigurationPackage, IDictionary<string, string>> method = sut.DefaultConfigAction;
-            var exception = Assert.Throws<ArgumentNullException>(() => method(null, data));
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.DefaultConfigAction(null, data));
             Assert.Equal(nameof(config), exception.ParamName);
         }
 
@@ -171,8 +170,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // NullReferenceException instead of the ArgumentNullException expected for a public-facing delegate. This
             // test asserts the correct behavior and will fail until the SUT validates the argument. Fixing the SUT is
             // out of scope for the current change.
-            Action<ConfigurationPackage, IDictionary<string, string>> method = sut.DefaultConfigAction;
-            var exception = Assert.Throws<ArgumentNullException>(() => method(config, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.DefaultConfigAction(config, null));
             Assert.Equal(nameof(data), exception.ParamName);
         }
     }
@@ -209,8 +207,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // a NullReferenceException instead of the ArgumentNullException expected for a public-facing delegate. This
             // test asserts the correct behavior and will fail until the SUT validates the argument. Fixing the SUT is
             // out of scope for the current change.
-            Func<ConfigurationSection, ConfigurationProperty, string> method = sut.DefaultExtractKeyFunc;
-            var exception = Assert.Throws<ArgumentNullException>(() => method(null, property));
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.DefaultExtractKeyFunc(null, property));
             Assert.Equal(nameof(section), exception.ParamName);
         }
 
@@ -221,8 +218,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // produces a NullReferenceException instead of the ArgumentNullException expected for a public-facing
             // delegate. This test asserts the correct behavior and will fail until the SUT validates the argument.
             // Fixing the SUT is out of scope for the current change.
-            Func<ConfigurationSection, ConfigurationProperty, string> method = sut.DefaultExtractKeyFunc;
-            var exception = Assert.Throws<ArgumentNullException>(() => method(section, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.DefaultExtractKeyFunc(section, null));
             Assert.Equal(nameof(property), exception.ParamName);
         }
     }
@@ -271,8 +267,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // produces a NullReferenceException instead of the ArgumentNullException expected for a public-facing
             // delegate. This test asserts the correct behavior and will fail until the SUT validates the argument.
             // Fixing the SUT is out of scope for the current change.
-            Func<ConfigurationSection, ConfigurationProperty, string> method = sut.DefaultExtractValueFunc;
-            var exception = Assert.Throws<ArgumentNullException>(() => method(section, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.DefaultExtractValueFunc(section, null));
             Assert.Equal(nameof(property), exception.ParamName);
         }
     }
