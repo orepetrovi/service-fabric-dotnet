@@ -27,8 +27,7 @@ public abstract class TracingCommunicationListenerTest
 
     TracingCommunicationListenerTest()
     {
-        string name = fuzzy.String();
-        original = new CommunicationListenerInfo(name, listener.Object);
+        original = new CommunicationListenerInfo(fuzzy.String(), listener.Object);
         sut = new TracingCommunicationListener(original, trace.Object);
     }
 
