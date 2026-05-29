@@ -7,12 +7,15 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Fuzzy;
 using Xunit;
 
 namespace Microsoft.ServiceFabric.Services.Common;
 
 public abstract class ExclusiveFileStreamTest : IDisposable
 {
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
     readonly string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
     void IDisposable.Dispose()
@@ -26,7 +29,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         [Fact]
         public void OpensFileAtGivenPathWithGivenModeShareAndAccess()
         {
-            byte[] expected = Guid.NewGuid().ToByteArray();
+            byte[] expected = fuzzy.Array(fuzzy.Byte);
             File.WriteAllBytes(path, expected);
 
             using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, FileMode.Open, FileShare.None, FileAccess.ReadWrite);
