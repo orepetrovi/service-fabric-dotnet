@@ -56,7 +56,7 @@ public abstract class KestrelCommunicationListenerTest
         }
 
         [Fact]
-        public void GetListenerUrlReturnsDefaultHttpUrlOnPortZero()
+        public void GetListenerUrlReturnsDefaultHttpUrl()
         {
             // The 2-arg overload chains to the 3-arg ctor with endpointName: null. Testing the default-URL
             // path through the 2-arg entry point pins the IHost-specific 3-arg ctor, so a regression in
@@ -91,7 +91,7 @@ public abstract class KestrelCommunicationListenerTest
         }
 
         [Fact]
-        public void GetListenerUrlReturnsDefaultHttpUrlOnPortZero()
+        public void GetListenerUrlReturnsDefaultHttpUrl()
         {
             // The 2-arg overload chains to the 3-arg ctor with endpointName: null. Testing the default-URL
             // path through the 2-arg entry point pins the IWebHost-specific 3-arg ctor, so a regression in
@@ -141,7 +141,7 @@ public abstract class KestrelCommunicationListenerTest
         }
 
         [Fact]
-        public void GetListenerUrlReturnsDefaultHttpUrlWhenEndpointNameIsNull()
+        public void GetListenerUrlReturnsDefaultHttpUrl()
         {
             // Pins the null-endpoint default-URL path to this overload's copy of the
             // `endpointName?.Length == 0 / this.endpointName = endpointName` block so a regression
@@ -189,7 +189,7 @@ public abstract class KestrelCommunicationListenerTest
         }
 
         [Fact]
-        public void GetListenerUrlReturnsDefaultHttpUrlWhenEndpointNameIsNull()
+        public void GetListenerUrlReturnsDefaultHttpUrl()
         {
             // Pins the null-endpoint default-URL path to this overload's copy of the
             // `endpointName?.Length == 0 / this.endpointName = endpointName` block so a regression
