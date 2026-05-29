@@ -310,7 +310,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
     static ConfigurationSection Section()
     {
-        var section = Type<ConfigurationSection>.Uninitialized();
+        var section = Type<ConfigurationSection>.New();
         section.Property<string>().Set(fuzzy.String());
         return section;
     }
