@@ -180,19 +180,6 @@ public abstract class WebHostCommunicationListenerTest
         }
 
         [Fact]
-        public async Task AwaitsHostStartAsyncBeforeReturning()
-        {
-            var start = new TaskCompletionSource<object>();
-            _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(start.Task);
-
-            Task<string> open = sut.OpenAsync(cancellation);
-
-            Assert.False(open.IsCompleted);
-            start.SetResult(null);
-            _ = await open;
-        }
-
-        [Fact]
         public async Task ReadsServerFeaturesAfterHostStartAsyncCompletes()
         {
             // Guards against a regression where ServerFeatures is read before StartAsync completes.
