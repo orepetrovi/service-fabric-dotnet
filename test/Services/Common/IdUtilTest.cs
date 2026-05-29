@@ -18,7 +18,7 @@ public abstract class IdUtilTest
 
     public sealed class ComputeId_MethodInfo : IdUtilTest
     {
-        readonly MethodInfo methodInfo = typeof(SampleType).GetMethod("SampleMethod", BindingFlags.NonPublic | BindingFlags.Instance);
+        readonly MethodInfo methodInfo = typeof(SampleType).GetMethod(nameof(SampleType.SampleMethod), BindingFlags.NonPublic | BindingFlags.Instance);
 
         [Fact]
         public void CombinesMethodNameWithDeclaringTypeNamespaceAndNameWhenAllPresent()
@@ -49,6 +49,10 @@ public abstract class IdUtilTest
             Assert.Null(dyn.DeclaringType);
             Assert.Equal(dyn.Name.GetHashCode(), IdUtil.ComputeId(dyn));
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public void ThrowsArgumentNullExceptionWhenMethodInfoIsNull() =>
+            Assert.Equal(nameof(methodInfo), Assert.Throws<ArgumentNullException>(() => IdUtil.ComputeId((MethodInfo)null)).ParamName);
     }
 
     public sealed class ComputeId_String_String : IdUtilTest
@@ -66,6 +70,10 @@ public abstract class IdUtilTest
         [Fact]
         public void ReturnsNameHashWhenNamespaceIsNull() =>
             Assert.Equal(typeName.GetHashCode(), IdUtil.ComputeId(typeName, null));
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public void ThrowsArgumentNullExceptionWhenTypeNameIsNull() =>
+            Assert.Equal(nameof(typeName), Assert.Throws<ArgumentNullException>(() => IdUtil.ComputeId(null, typeNamespace)).ParamName);
     }
 
     public sealed class ComputeId_Type : IdUtilTest
@@ -86,11 +94,15 @@ public abstract class IdUtilTest
             Assert.Null(t.Namespace);
             Assert.Equal(t.Name.GetHashCode(), IdUtil.ComputeId(t));
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public void ThrowsArgumentNullExceptionWhenTypeIsNull() =>
+            Assert.Equal(nameof(type), Assert.Throws<ArgumentNullException>(() => IdUtil.ComputeId((Type)null)).ParamName);
     }
 
     public sealed class ComputeIdWithCRC_MethodInfo : IdUtilTest
     {
-        readonly MethodInfo methodInfo = typeof(SampleType).GetMethod("SampleMethod", BindingFlags.NonPublic | BindingFlags.Instance);
+        readonly MethodInfo methodInfo = typeof(SampleType).GetMethod(nameof(SampleType.SampleMethod), BindingFlags.NonPublic | BindingFlags.Instance);
 
         [Fact]
         public void ReturnsCrcOfDeclaringTypeNameConcatenatedWithDeclaringTypeNamespaceAndMethodNameWhenAllPresent()
@@ -114,15 +126,26 @@ public abstract class IdUtilTest
             Assert.Null(dyn.DeclaringType);
             Assert.Equal(Crc(dyn.Name), IdUtil.ComputeIdWithCRC(dyn));
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public void ThrowsArgumentNullExceptionWhenMethodInfoIsNull() =>
+            Assert.Equal(nameof(methodInfo), Assert.Throws<ArgumentNullException>(() => IdUtil.ComputeIdWithCRC((MethodInfo)null)).ParamName);
     }
 
     public sealed class ComputeIdWithCRC_String : IdUtilTest
     {
-        readonly string typeName = fuzzy.String();
+        // "café" encodes to UTF-8 bytes 63-61-66-C3-A9 (ASCII would drop the 'é'); pinning the expected id anchors both
+        // the encoding choice and the ulong-to-int conversion independently of the SUT's collaborators.
+        readonly string typeName = "café";
+        const int ExpectedId = unchecked((int)0xA56ADE9A);
 
         [Fact]
         public void ReturnsCrc64OfUtf8Bytes() =>
-            Assert.Equal((int)CRC64.ToCRC64(Encoding.UTF8.GetBytes(typeName)), IdUtil.ComputeIdWithCRC(typeName));
+            Assert.Equal(ExpectedId, IdUtil.ComputeIdWithCRC(typeName));
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public void ThrowsArgumentNullExceptionWhenTypeNameIsNull() =>
+            Assert.Equal(nameof(typeName), Assert.Throws<ArgumentNullException>(() => IdUtil.ComputeIdWithCRC((string)null)).ParamName);
     }
 
     public sealed class ComputeIdWithCRC_Type : IdUtilTest
@@ -140,6 +163,10 @@ public abstract class IdUtilTest
             Assert.Null(t.Namespace);
             Assert.Equal(Crc(t.Name), IdUtil.ComputeIdWithCRC(t));
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public void ThrowsArgumentNullExceptionWhenTypeIsNull() =>
+            Assert.Equal(nameof(type), Assert.Throws<ArgumentNullException>(() => IdUtil.ComputeIdWithCRC((Type)null)).ParamName);
     }
 
     public sealed class HashCombine : IdUtilTest
@@ -165,6 +192,6 @@ public abstract class IdUtilTest
 
     sealed class SampleType
     {
-        void SampleMethod() { }
+        internal void SampleMethod() { }
     }
 }
