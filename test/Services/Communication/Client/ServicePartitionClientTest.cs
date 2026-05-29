@@ -76,19 +76,18 @@ public abstract class ServicePartitionClientTest
             var sut = new ServicePartitionClient<ICommunicationClient>(
                 communicationClientFactory.Object, serviceUri, partitionKey, targetReplicaSelector, listenerName, null);
 
-            // Capture the retrySettings forwarded to GetClientAsync and assert observable defaults.
-            OperationRetrySettings forwarded = null;
+            OperationRetrySettings actualRetrySettings = null;
             var communicationClient = new Mock<ICommunicationClient>();
             _ = communicationClientFactory
                 .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, It.IsAny<OperationRetrySettings>(), It.IsAny<CancellationToken>()))
-                .Callback((Uri _, ServicePartitionKey _, TargetReplicaSelector _, string _, OperationRetrySettings settings, CancellationToken _) => forwarded = settings)
+                .Callback((Uri _, ServicePartitionKey _, TargetReplicaSelector _, string _, OperationRetrySettings settings, CancellationToken _) => actualRetrySettings = settings)
                 .ReturnsAsync(communicationClient.Object);
 
             _ = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()), TestContext.Current.CancellationToken);
 
-            Assert.NotNull(forwarded);
-            Assert.Equal(10, forwarded.DefaultMaxRetryCountForTransientErrors);
-            Assert.Equal(Timeout.InfiniteTimeSpan, forwarded.ClientRetryTimeout);
+            Assert.NotNull(actualRetrySettings);
+            Assert.Equal(10, actualRetrySettings.DefaultMaxRetryCountForTransientErrors);
+            Assert.Equal(Timeout.InfiniteTimeSpan, actualRetrySettings.ClientRetryTimeout);
         }
 
         [Fact]
