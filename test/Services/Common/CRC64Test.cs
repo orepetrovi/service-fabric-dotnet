@@ -83,6 +83,10 @@ public abstract class CRC64Test
         public void ReturnsZeroWhenValueIsEmpty() =>
             Assert.Equal("0", CRC64.ToCrc64String(Array.Empty<byte>()));
 
+        [Fact]
+        public void ReturnsSameStringForEqualInputs() =>
+            Assert.Equal(CRC64.ToCrc64String(value), CRC64.ToCrc64String((byte[])value.Clone()));
+
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
         public void ThrowsArgumentNullExceptionWhenValueIsNull() =>
             Assert.Equal(nameof(value), Assert.Throws<ArgumentNullException>(() => CRC64.ToCrc64String(null)).ParamName);
