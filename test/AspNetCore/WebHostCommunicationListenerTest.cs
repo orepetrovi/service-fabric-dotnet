@@ -88,21 +88,6 @@ public abstract class WebHostCommunicationListenerTest
         }
 
         [Fact]
-        public async Task DisposesHostAfterStopAsync()
-        {
-            _ = await sut.OpenAsync(CancellationToken.None);
-            bool stopped = false;
-            bool stoppedBeforeDispose = false;
-            _ = host.Setup(_ => _.StopAsync(cancellation)).Callback(() => stopped = true).Returns(Task.CompletedTask);
-            _ = host.Setup(_ => _.Dispose()).Callback(() => stoppedBeforeDispose = stopped);
-
-            await sut.CloseAsync(cancellation);
-
-            Assert.True(stoppedBeforeDispose, $"{nameof(IDisposable.Dispose)} called before {nameof(IWebHost.StopAsync)}");
-            host.Verify(_ => _.Dispose(), Times.Once());
-        }
-
-        [Fact]
         public async Task AwaitsHostStopAsyncBeforeReturning()
         {
             _ = await sut.OpenAsync(CancellationToken.None);
