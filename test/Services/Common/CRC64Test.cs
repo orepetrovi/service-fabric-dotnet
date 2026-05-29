@@ -23,6 +23,8 @@ public abstract class CRC64Test
 
     public sealed class ToCRC64_ByteArray : CRC64Test
     {
+        readonly byte[] value = fuzzy.Array(fuzzy.Byte);
+
         [Fact]
         public void ReturnsExpectedCrc64ForCheckInput() =>
             Assert.Equal(Crc64WeCheck, CRC64.ToCRC64(CheckInput));
@@ -32,11 +34,8 @@ public abstract class CRC64Test
             Assert.Equal(0UL, CRC64.ToCRC64(Array.Empty<byte>()));
 
         [Fact]
-        public void ReturnsSameValueForEqualInputs()
-        {
-            byte[] value = fuzzy.Array(fuzzy.Byte);
+        public void ReturnsSameValueForEqualInputs() =>
             Assert.Equal(CRC64.ToCRC64(value), CRC64.ToCRC64((byte[])value.Clone()));
-        }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
         public void ThrowsArgumentNullExceptionWhenValueIsNull() =>
@@ -45,18 +44,15 @@ public abstract class CRC64Test
 
     public sealed class ToCRC64_ByteArrayArray : CRC64Test
     {
+        readonly byte[][] values = fuzzy.Array(() => fuzzy.Array(fuzzy.Byte));
+
         [Fact]
         public void ReturnsExpectedCrc64ForCheckInputSplitAcrossArrays() =>
             Assert.Equal(Crc64WeCheck, CRC64.ToCRC64(CheckInput.Take(4).ToArray(), CheckInput.Skip(4).ToArray()));
 
         [Fact]
-        public void ReturnsSameValueAsSingleArrayOverloadForConcatenatedInput()
-        {
-            byte[] first = fuzzy.Array(fuzzy.Byte);
-            byte[] second = fuzzy.Array(fuzzy.Byte);
-            byte[] combined = first.Concat(second).ToArray();
-            Assert.Equal(CRC64.ToCRC64(combined), CRC64.ToCRC64(first, second));
-        }
+        public void ReturnsSameValueAsSingleArrayOverloadForConcatenatedInput() =>
+            Assert.Equal(CRC64.ToCRC64(values.SelectMany(v => v).ToArray()), CRC64.ToCRC64(values));
 
         [Fact]
         public void ReturnsZeroWhenValuesIsEmpty() =>
@@ -77,6 +73,8 @@ public abstract class CRC64Test
 
     public sealed class ToCrc64String : CRC64Test
     {
+        readonly byte[] value = fuzzy.Array(fuzzy.Byte);
+
         [Fact]
         public void ReturnsUppercaseHexadecimalRepresentationOfCrc64() =>
             Assert.Equal("62EC59E3F1A4F00A", CRC64.ToCrc64String(CheckInput));
