@@ -315,11 +315,11 @@ public abstract class ServiceFabricConfigurationOptionsTest
         return section;
     }
 
-    static ConfigurationProperty Property(string value = null, bool isEncrypted = false)
+    static ConfigurationProperty Property(bool isEncrypted = false)
     {
         var property = Type<ConfigurationProperty>.New();
         property.Property<string>(nameof(ConfigurationProperty.Name)).Set(fuzzy.String());
-        property.Property<string>(nameof(ConfigurationProperty.Value)).Set(value ?? fuzzy.String());
+        property.Property<string>(nameof(ConfigurationProperty.Value)).Set(fuzzy.String());
         property.Property<bool>(nameof(ConfigurationProperty.IsEncrypted)).Set(isEncrypted);
         return property;
     }
