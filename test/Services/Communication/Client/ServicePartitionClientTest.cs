@@ -1165,7 +1165,7 @@ public abstract class ServicePartitionClientTest
     public sealed class TryGetLastResolvedServicePartition : ServicePartitionClientTest
     {
         [Fact]
-        public void ReturnsFalseAndNullWhenNoPartitionResolvedYet()
+        public void ReturnsFalseAndSetsResolvedServicePartitionToNullWhenNoPartitionResolvedYet()
         {
             bool actual = sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition resolvedServicePartition);
             Assert.False(actual);
@@ -1173,7 +1173,7 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public async Task ReturnsTrueAndResolvedServicePartitionWhenSet()
+        public async Task ReturnsTrueAndSetsResolvedServicePartitionWhenPartitionWasResolved()
         {
             // Drive InvokeWithRetryAsync so the SUT assigns lastRsp from communicationClient.ResolvedServicePartition.
             var rsp = Type<ResolvedServicePartition>.Uninitialized();
