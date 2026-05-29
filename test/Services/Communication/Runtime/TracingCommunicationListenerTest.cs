@@ -117,6 +117,8 @@ public abstract class TracingCommunicationListenerTest
         {
             trace.Verify(_ => _.Info($"Created {original} of type '{original.Listener.GetType().AssemblyQualifiedName}'."), Times.Once);
             trace.Verify(_ => _.Info(It.IsAny<string>()), Times.Once);
+            trace.Verify(_ => _.Warning(It.IsAny<string>()), Times.Never);
+            trace.Verify(_ => _.Error(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
