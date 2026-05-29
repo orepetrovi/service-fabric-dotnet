@@ -27,7 +27,7 @@ public abstract class GenericHostCommunicationListenerTest
     readonly string listenerUrl = $"http://+:{fuzzy.UInt16()}";
     readonly StatelessServiceContext serviceContext = fuzzy.StatelessServiceContext();
     readonly Mock<IHost> host = new();
-    readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+    readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
     IHost buildHost;
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
@@ -49,7 +49,7 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task DisposesHostAfterOpenAsync()
         {
-            _ = await sut.OpenAsync(cancellationToken);
+            _ = await sut.OpenAsync(cancellation);
             sut.Abort();
             host.Verify(_ => _.Dispose(), Times.Once());
         }
@@ -57,7 +57,7 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task DoesNotInvokeStopAsync()
         {
-            _ = await sut.OpenAsync(cancellationToken);
+            _ = await sut.OpenAsync(cancellation);
             sut.Abort();
             host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
         }
@@ -79,22 +79,22 @@ public abstract class GenericHostCommunicationListenerTest
         {
             _ = await sut.OpenAsync(CancellationToken.None);
 
-            await sut.CloseAsync(cancellationToken);
+            await sut.CloseAsync(cancellation);
 
-            host.Verify(_ => _.StopAsync(cancellationToken), Times.Once());
+            host.Verify(_ => _.StopAsync(cancellation), Times.Once());
             host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Fact]
         public async Task DisposesHostAfterStopAsync()
         {
-            _ = await sut.OpenAsync(cancellationToken);
+            _ = await sut.OpenAsync(cancellation);
             bool stopped = false;
             bool stoppedBeforeDispose = false;
-            _ = host.Setup(_ => _.StopAsync(cancellationToken)).Callback(() => stopped = true).Returns(Task.CompletedTask);
+            _ = host.Setup(_ => _.StopAsync(cancellation)).Callback(() => stopped = true).Returns(Task.CompletedTask);
             _ = host.Setup(_ => _.Dispose()).Callback(() => stoppedBeforeDispose = stopped);
 
-            await sut.CloseAsync(cancellationToken);
+            await sut.CloseAsync(cancellation);
 
             Assert.True(stoppedBeforeDispose, $"{nameof(IDisposable.Dispose)} called before {nameof(IHost.StopAsync)}");
             host.Verify(_ => _.Dispose(), Times.Once());
@@ -103,11 +103,11 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task AwaitsHostStopAsyncBeforeReturning()
         {
-            _ = await sut.OpenAsync(cancellationToken);
+            _ = await sut.OpenAsync(cancellation);
             var tcs = new TaskCompletionSource<object>();
-            _ = host.Setup(_ => _.StopAsync(cancellationToken)).Returns(tcs.Task);
+            _ = host.Setup(_ => _.StopAsync(cancellation)).Returns(tcs.Task);
 
-            Task close = sut.CloseAsync(cancellationToken);
+            Task close = sut.CloseAsync(cancellation);
 
             Assert.False(close.IsCompleted);
             host.Verify(_ => _.Dispose(), Times.Never());
@@ -119,7 +119,7 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task DoesNotInvokeHostBeforeOpenAsync()
         {
-            await sut.CloseAsync(cancellationToken);
+            await sut.CloseAsync(cancellation);
 
             build.Verify(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()), Times.Never());
             host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
@@ -131,10 +131,10 @@ public abstract class GenericHostCommunicationListenerTest
         {
             // SUT awaits host.StopAsync then calls Dispose without try/finally,
             // so a faulted stop leaks the host. Expected behavior is to always Dispose.
-            _ = await sut.OpenAsync(cancellationToken);
-            _ = host.Setup(_ => _.StopAsync(cancellationToken)).ThrowsAsync(new InvalidOperationException());
+            _ = await sut.OpenAsync(cancellation);
+            _ = host.Setup(_ => _.StopAsync(cancellation)).ThrowsAsync(new InvalidOperationException());
 
-            _ = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CloseAsync(cancellationToken));
+            _ = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CloseAsync(cancellation));
 
             host.Verify(_ => _.Dispose(), Times.Once());
         }
@@ -166,7 +166,7 @@ public abstract class GenericHostCommunicationListenerTest
         [Fact]
         public async Task InvokesBuildWithListenerUrlAndListener()
         {
-            _ = await sut.OpenAsync(cancellationToken);
+            _ = await sut.OpenAsync(cancellation);
 
             build.Verify(_ => _(listenerUrl, listener), Times.Once());
             build.Verify(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()), Times.Once());
@@ -177,16 +177,16 @@ public abstract class GenericHostCommunicationListenerTest
         {
             buildHost = null;
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellationToken));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
             Assert.Equal(SR.HostNullExceptionMessage, exception.Message);
         }
 
         [Fact]
         public async Task PassesCancellationTokenToHostStartAsync()
         {
-            _ = await sut.OpenAsync(cancellationToken);
+            _ = await sut.OpenAsync(cancellation);
 
-            host.Verify(_ => _.StartAsync(cancellationToken), Times.Once());
+            host.Verify(_ => _.StartAsync(cancellation), Times.Once());
             host.Verify(_ => _.StartAsync(It.IsAny<CancellationToken>()), Times.Once());
         }
 
@@ -194,9 +194,9 @@ public abstract class GenericHostCommunicationListenerTest
         public async Task AwaitsHostStartAsyncBeforeReturning()
         {
             var tcs = new TaskCompletionSource<object>();
-            _ = host.Setup(_ => _.StartAsync(cancellationToken)).Returns(tcs.Task);
+            _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(tcs.Task);
 
-            Task<string> open = sut.OpenAsync(cancellationToken);
+            Task<string> open = sut.OpenAsync(cancellation);
 
             Assert.False(open.IsCompleted);
             tcs.SetResult(null);
@@ -212,7 +212,7 @@ public abstract class GenericHostCommunicationListenerTest
             bool started = false;
             bool resolvedBeforeStart = false;
             var start = new TaskCompletionSource<object>();
-            _ = host.Setup(_ => _.StartAsync(cancellationToken)).Returns(start.Task);
+            _ = host.Setup(_ => _.StartAsync(cancellation)).Returns(start.Task);
 
             var features = new FeatureCollection();
             features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { $"http://+:{fuzzy.UInt16()}" }));
@@ -225,7 +225,7 @@ public abstract class GenericHostCommunicationListenerTest
             });
             _ = host.Setup(_ => _.Services).Returns(services.Object);
 
-            Task<string> open = sut.OpenAsync(cancellationToken);
+            Task<string> open = sut.OpenAsync(cancellation);
 
             Assert.False(open.IsCompleted);
             started = true;
@@ -240,7 +240,7 @@ public abstract class GenericHostCommunicationListenerTest
         {
             SetupServer((IServer)null);
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellationToken));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
             Assert.Equal(SR.WebServerNotFound, exception.Message);
         }
 
@@ -251,7 +251,7 @@ public abstract class GenericHostCommunicationListenerTest
             // throwing NullReferenceException instead of InvalidOperationException with SR.ErrorNoUrlFromAspNetCore.
             SetupServer(Mock.Of<IServer>(_ => _.Features == new FeatureCollection()));
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellationToken));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
             Assert.Equal(SR.ErrorNoUrlFromAspNetCore, exception.Message);
         }
 
@@ -262,7 +262,7 @@ public abstract class GenericHostCommunicationListenerTest
             features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == Array.Empty<string>()));
             SetupServer(Mock.Of<IServer>(_ => _.Features == features));
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellationToken));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
             Assert.Equal(SR.ErrorNoUrlFromAspNetCore, exception.Message);
         }
 
@@ -275,7 +275,7 @@ public abstract class GenericHostCommunicationListenerTest
             features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == new[] { $"http://127.0.0.1:{firstPort}", $"http://127.0.0.1:{secondPort}" }));
             SetupServer(Mock.Of<IServer>(_ => _.Features == features));
 
-            string actual = await sut.OpenAsync(cancellationToken);
+            string actual = await sut.OpenAsync(cancellation);
 
             Assert.Equal($"http://127.0.0.1:{firstPort}", actual);
         }
@@ -286,7 +286,7 @@ public abstract class GenericHostCommunicationListenerTest
             ushort port = fuzzy.UInt16();
             SetupServer($"http://+:{port}");
 
-            string actual = await sut.OpenAsync(cancellationToken);
+            string actual = await sut.OpenAsync(cancellation);
 
             Assert.Equal($"http://{serviceContext.PublishAddress}:{port}", actual);
         }
@@ -297,7 +297,7 @@ public abstract class GenericHostCommunicationListenerTest
             ushort port = fuzzy.UInt16();
             SetupServer($"http://[::]:{port}");
 
-            string actual = await sut.OpenAsync(cancellationToken);
+            string actual = await sut.OpenAsync(cancellation);
 
             Assert.Equal($"http://{serviceContext.PublishAddress}:{port}", actual);
         }
@@ -308,7 +308,7 @@ public abstract class GenericHostCommunicationListenerTest
             ushort port = fuzzy.UInt16();
             SetupServer($"http://127.0.0.1:{port}");
 
-            string actual = await sut.OpenAsync(cancellationToken);
+            string actual = await sut.OpenAsync(cancellation);
 
             Assert.Equal($"http://127.0.0.1:{port}", actual);
         }
@@ -319,7 +319,7 @@ public abstract class GenericHostCommunicationListenerTest
             ushort port = fuzzy.UInt16();
             SetupServer($"http://+:{port}/");
 
-            string actual = await sut.OpenAsync(cancellationToken);
+            string actual = await sut.OpenAsync(cancellation);
 
             Assert.Equal($"http://{serviceContext.PublishAddress}:{port}", actual);
         }
@@ -336,7 +336,7 @@ public abstract class GenericHostCommunicationListenerTest
                 .Callback((string _, AspNetCoreCommunicationListener l) => l.ConfigureToUseUniqueServiceUrl())
                 .Returns(() => buildHost);
 
-            string actual = await sut.OpenAsync(cancellationToken);
+            string actual = await sut.OpenAsync(cancellation);
 
             build.Verify(_ => _(listenerUrl, listener), Times.Once());
             Assert.Equal($"http://{serviceContext.PublishAddress}:{port}{listener.UrlSuffix}", actual);
@@ -347,9 +347,9 @@ public abstract class GenericHostCommunicationListenerTest
         {
             // SUT assigns this.host = build(...) before awaiting host.StartAsync without try/finally,
             // so a faulted start leaks the host. Expected behavior is to Dispose the host on failure.
-            _ = host.Setup(_ => _.StartAsync(cancellationToken)).ThrowsAsync(new InvalidOperationException());
+            _ = host.Setup(_ => _.StartAsync(cancellation)).ThrowsAsync(new InvalidOperationException());
 
-            _ = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellationToken));
+            _ = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
 
             host.Verify(_ => _.Dispose(), Times.Once());
         }
@@ -360,13 +360,13 @@ public abstract class GenericHostCommunicationListenerTest
             // SUT unconditionally assigns this.host = this.build(...) on every OpenAsync call,
             // so a second open overwrites the first reference, leaking the previous host.
             // Expected behavior is to dispose the previous host before replacing it.
-            _ = await sut.OpenAsync(cancellationToken);
+            _ = await sut.OpenAsync(cancellation);
             var secondHost = new Mock<IHost>();
-            _ = secondHost.Setup(_ => _.StartAsync(cancellationToken)).Returns(Task.CompletedTask);
+            _ = secondHost.Setup(_ => _.StartAsync(cancellation)).Returns(Task.CompletedTask);
             _ = secondHost.Setup(_ => _.Services).Returns(host.Object.Services);
             buildHost = secondHost.Object;
 
-            _ = await sut.OpenAsync(cancellationToken);
+            _ = await sut.OpenAsync(cancellation);
 
             host.Verify(_ => _.Dispose(), Times.Once());
         }
