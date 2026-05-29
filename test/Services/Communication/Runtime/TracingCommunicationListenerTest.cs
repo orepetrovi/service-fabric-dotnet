@@ -49,7 +49,7 @@ public abstract class TracingCommunicationListenerTest
         }
 
         [Fact]
-        public void TracesListenerTypeNameAndHashCode()
+        public void TracesCreationInfo()
         {
             trace.Verify(_ => _.Info($"Created {original} of type '{original.Listener.GetType().AssemblyQualifiedName}'."), Times.Once);
         }
