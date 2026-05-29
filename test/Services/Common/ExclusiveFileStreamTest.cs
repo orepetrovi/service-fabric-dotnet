@@ -22,7 +22,6 @@ public abstract class ExclusiveFileStreamTest : IDisposable
 
     public sealed class Acquire : ExclusiveFileStreamTest
     {
-        // Method parameters
         readonly FileMode fileMode = FileMode.CreateNew;
         readonly FileShare fileShare = FileShare.None;
         readonly FileAccess fileAccess = FileAccess.ReadWrite;
