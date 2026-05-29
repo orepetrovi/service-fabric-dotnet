@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Fuzzy;
@@ -24,11 +25,18 @@ public abstract class TracingCommunicationListenerTest
     // Test fixture
     static readonly IFuzz fuzzy = new RandomFuzz();
     readonly Mock<ICommunicationListener> listener = new();
+    readonly List<string> events = new();
 
     TracingCommunicationListenerTest()
     {
         original = new CommunicationListenerInfo(fuzzy.String(), listener.Object);
         sut = new TracingCommunicationListener(original, trace.Object);
+
+        // Record post-construction trace calls in order to prove that the start trace happens before the
+        // listener call and the completion/failure trace happens after.
+        _ = trace.Setup(_ => _.Info(It.IsAny<string>())).Callback((string m) => events.Add($"info:{m}"));
+        _ = trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string m) => events.Add($"warning:{m}"));
+        _ = trace.Setup(_ => _.Error(It.IsAny<string>())).Callback((string m) => events.Add($"error:{m}"));
     }
 
     public sealed class Abort : TracingCommunicationListenerTest
@@ -36,34 +44,29 @@ public abstract class TracingCommunicationListenerTest
         [Fact]
         public void TracesInfoWhenListenerCompletes()
         {
+            _ = listener.Setup(_ => _.Abort()).Callback(() => events.Add("listener"));
+
             sut.Abort();
 
-            trace.Verify(_ => _.Info($"Aborting {original}..."), Times.Once);
+            Assert.Equal(
+                new[] { $"info:Aborting {original}...", "listener", $"info:Aborted {original}." },
+                events);
             listener.Verify(_ => _.Abort(), Times.Once);
-            trace.Verify(_ => _.Info($"Aborted {original}."), Times.Once);
-            trace.Verify(_ => _.Info(It.IsAny<string>()), Times.Exactly(3));
         }
 
         [Fact]
         public void TracesErrorWhenListenerThrows()
         {
             var expectedException = new TestException(fuzzy.String());
-            _ = listener.Setup(_ => _.Abort()).Throws(expectedException);
-            string actualError = null;
-            string expectedError = null;
-            _ = trace.Setup(_ => _.Error(It.IsAny<string>())).Callback((string message) =>
-            {
-                actualError = message;
-                expectedError = $"Abort of {original} failed: {expectedException}";
-            });
+            _ = listener.Setup(_ => _.Abort()).Callback(() => events.Add("listener")).Throws(expectedException);
 
             var actualException = Assert.Throws<TestException>(() => sut.Abort());
 
-            trace.Verify(_ => _.Info($"Aborting {original}..."), Times.Once);
-            trace.Verify(_ => _.Info(It.IsAny<string>()), Times.Exactly(2));
             Assert.Same(expectedException, actualException);
-            trace.Verify(_ => _.Error(It.IsAny<string>()), Times.Once);
-            Assert.Equal(expectedError, actualError);
+            Assert.Equal(
+                new[] { $"info:Aborting {original}...", "listener", $"error:Abort of {original} failed: {expectedException}" },
+                events);
+            listener.Verify(_ => _.Abort(), Times.Once);
         }
     }
 
@@ -74,36 +77,29 @@ public abstract class TracingCommunicationListenerTest
         [Fact]
         public async Task TracesInfoWhenListenerCompletes()
         {
+            _ = listener.Setup(_ => _.CloseAsync(cancellation)).Callback(() => events.Add("listener")).Returns(Task.CompletedTask);
+
             await sut.CloseAsync(cancellation);
 
-            trace.Verify(_ => _.Info($"Closing {original}..."), Times.Once);
-            listener.Verify(_ => _.CloseAsync(cancellation), Times.Once);
+            Assert.Equal(
+                new[] { $"info:Closing {original}...", "listener", $"info:Closed {original}." },
+                events);
             listener.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
-            trace.Verify(_ => _.Info($"Closed {original}."), Times.Once);
-            trace.Verify(_ => _.Info(It.IsAny<string>()), Times.Exactly(3));
         }
 
         [Fact]
         public async Task TracesWarningWhenListenerThrows()
         {
             var expectedException = new TestException(fuzzy.String());
-            _ = listener.Setup(_ => _.CloseAsync(cancellation)).Throws(expectedException);
-            string actualWarning = null;
-            string expectedWarning = null;
-            _ = trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string message) =>
-            {
-                actualWarning = message;
-                expectedWarning = $"Closing of {original} failed: {expectedException}";
-            });
+            _ = listener.Setup(_ => _.CloseAsync(cancellation)).Callback(() => events.Add("listener")).Throws(expectedException);
 
             var actualException = await Assert.ThrowsAsync<TestException>(() => sut.CloseAsync(cancellation));
 
-            trace.Verify(_ => _.Info($"Closing {original}..."), Times.Once);
-            trace.Verify(_ => _.Info(It.IsAny<string>()), Times.Exactly(2));
             Assert.Same(expectedException, actualException);
+            Assert.Equal(
+                new[] { $"info:Closing {original}...", "listener", $"warning:Closing of {original} failed: {expectedException}" },
+                events);
             listener.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
-            trace.Verify(_ => _.Warning(It.IsAny<string>()), Times.Once);
-            Assert.Equal(expectedWarning, actualWarning);
         }
     }
 
@@ -139,43 +135,40 @@ public abstract class TracingCommunicationListenerTest
         public async Task TracesInfoWhenListenerCompletes()
         {
             string expectedEndpoint = fuzzy.String();
-            _ = listener.Setup(_ => _.OpenAsync(cancellation)).Returns(Task.FromResult(expectedEndpoint));
+            _ = listener.Setup(_ => _.OpenAsync(cancellation)).Callback(() => events.Add("listener")).Returns(Task.FromResult(expectedEndpoint));
 
             string actualEndpoint = await sut.OpenAsync(cancellation);
 
-            trace.Verify(_ => _.Info($"Opening {original}..."), Times.Once);
             Assert.Same(expectedEndpoint, actualEndpoint);
+            Assert.Equal(
+                new[] { $"info:Opening {original}...", "listener", $"info:Opened {original} on endpoint '{expectedEndpoint}'." },
+                events);
             listener.Verify(_ => _.OpenAsync(It.IsAny<CancellationToken>()), Times.Once);
-            trace.Verify(_ => _.Info($"Opened {original} on endpoint '{expectedEndpoint}'."), Times.Once);
-            trace.Verify(_ => _.Info(It.IsAny<string>()), Times.Exactly(3));
         }
 
         [Fact]
         public async Task TracesWarningWhenListenerThrows()
         {
             var expectedException = new TestException(fuzzy.String());
-            _ = listener.Setup(_ => _.OpenAsync(cancellation)).Throws(expectedException);
-            string actualWarning = null;
-            string expectedWarning = null;
-            _ = trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string message) =>
-            {
-                actualWarning = message;
-                expectedWarning = $"Opening of {original} failed: {expectedException}";
-            });
+            _ = listener.Setup(_ => _.OpenAsync(cancellation)).Callback(() => events.Add("listener")).Throws(expectedException);
 
             var actualException = await Assert.ThrowsAsync<TestException>(() => sut.OpenAsync(cancellation));
 
-            trace.Verify(_ => _.Info($"Opening {original}..."), Times.Once);
-            trace.Verify(_ => _.Info(It.IsAny<string>()), Times.Exactly(2));
             Assert.Same(expectedException, actualException);
+            Assert.Equal(
+                new[] { $"info:Opening {original}...", "listener", $"warning:Opening of {original} failed: {expectedException}" },
+                events);
             listener.Verify(_ => _.OpenAsync(It.IsAny<CancellationToken>()), Times.Once);
-            trace.Verify(_ => _.Warning(It.IsAny<string>()), Times.Once);
-            Assert.Equal(expectedWarning, actualWarning);
         }
     }
 
     sealed class TestException : Exception
     {
         internal TestException(string message) : base(message) { }
+
+        // Stable representation independent of throw history so tests can compare formatted trace
+        // messages built before the exception is thrown against those formatted by the product after
+        // the exception is thrown (which would otherwise include rethrow stack frames).
+        public override string ToString() => $"{nameof(TestException)}: {Message}";
     }
 }
