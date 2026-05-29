@@ -86,8 +86,8 @@ public abstract class ServiceFabricConfigurationOptionsTest
         readonly string section2;
         readonly string param2 = fuzzy.String().LettersOrDigits();
 
-        // Placeholder satisfies MockConfigurationPackage.CreateDefaultPackage; ExtractValueFunc is mocked in the test
-        // so the actual parameter values are never read.
+        // MockConfigurationPackage.CreateDefaultPackage dereferences each value via item.Value.Contains(...),
+        // so it must be non-null. The contents are unused because ExtractValueFunc is mocked.
         const string unused = "";
 
         public DefaultConfigAction()
