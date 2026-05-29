@@ -920,9 +920,11 @@ public abstract class ServicePartitionClientTest
         {
             // Cover the callee's exception-id reset branch through the Task-returning wrapper.
             const int maxRetryCount = 2;
+            string id = fuzzy.String();
+            string differentId = id + fuzzy.String();
             var controls = new Queue<OperationRetryControl>(new[]
             {
-                Retry("a"), Retry("a"), Retry("b"), Retry("b"), Retry("b"),
+                Retry(id), Retry(id), Retry(differentId), Retry(differentId), Retry(differentId),
             });
             _ = communicationClientFactory
                 .Setup(_ => _.ReportOperationExceptionAsync(
