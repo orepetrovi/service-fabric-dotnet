@@ -114,7 +114,7 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
             public void ThrowsArgumentNullExceptionWhenListenerIsNull()
             {
                 var exception = Assert.Throws<ArgumentNullException>(() => ServiceReplicaListener.Instantiate(null, context));
-                Assert.Equal("listener", exception.ParamName);
+                Assert.Equal(nameof(listener), exception.ParamName);
             }
         }
     }
