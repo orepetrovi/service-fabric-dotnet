@@ -244,6 +244,17 @@ public abstract class GenericHostCommunicationListenerTest
             Assert.Equal(SR.WebServerNotFound, exception.Message);
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing null check on IServerAddressesFeature.
+        public async Task ThrowsInvalidOperationExceptionWhenServerAddressesFeatureIsNotRegistered()
+        {
+            // SUT currently dereferences server.Features.Get<IServerAddressesFeature>() without a null check,
+            // throwing NullReferenceException instead of InvalidOperationException with SR.ErrorNoUrlFromAspNetCore.
+            SetupServer(Mock.Of<IServer>(_ => _.Features == new FeatureCollection()));
+
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellationToken));
+            Assert.Equal(SR.ErrorNoUrlFromAspNetCore, exception.Message);
+        }
+
         [Fact]
         public async Task ThrowsInvalidOperationExceptionWhenServerHasNoAddresses()
         {
@@ -267,17 +278,6 @@ public abstract class GenericHostCommunicationListenerTest
             string actual = await sut.OpenAsync(cancellationToken);
 
             Assert.Equal($"http://127.0.0.1:{firstPort}", actual);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing null check on IServerAddressesFeature.
-        public async Task ThrowsInvalidOperationExceptionWhenServerAddressesFeatureIsNotRegistered()
-        {
-            // SUT currently dereferences server.Features.Get<IServerAddressesFeature>() without a null check,
-            // throwing NullReferenceException instead of InvalidOperationException with SR.ErrorNoUrlFromAspNetCore.
-            SetupServer(Mock.Of<IServer>(_ => _.Features == new FeatureCollection()));
-
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellationToken));
-            Assert.Equal(SR.ErrorNoUrlFromAspNetCore, exception.Message);
         }
 
         [Fact]
