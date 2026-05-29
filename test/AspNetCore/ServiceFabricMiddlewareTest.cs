@@ -61,18 +61,14 @@ public abstract class ServiceFabricMiddlewareTest
             context.Request.Path = originalPath;
 
             var middleware = new ServiceFabricMiddleware(next.Object, string.Empty);
-            PathString actualPath = default;
-            PathString actualPathBase = default;
-            _ = next.Setup(_ => _(context))
-                .Callback<HttpContext>(c => { actualPath = c.Request.Path; actualPathBase = c.Request.PathBase; })
-                .Returns(Task.FromResult(fuzzy.Int32()));
+            var captured = SetupNextToCaptureRequest();
 
             // Act
             await middleware.Invoke(context);
 
             // Assert
-            Assert.Equal(originalPath, actualPath);
-            Assert.Equal(originalPathBase, actualPathBase);
+            Assert.Equal(originalPath, captured.Path);
+            Assert.Equal(originalPathBase, captured.PathBase);
             Assert.Equal(originalPath, context.Request.Path);
             Assert.Equal(originalPathBase, context.Request.PathBase);
             next.Verify(_ => _(context), Times.Once);
@@ -105,18 +101,14 @@ public abstract class ServiceFabricMiddlewareTest
             context.Request.PathBase = originalPathBase;
             context.Request.Path = originalPath;
 
-            PathString actualPath = default;
-            PathString actualPathBase = default;
-            _ = next.Setup(_ => _(context))
-                .Callback<HttpContext>(c => { actualPath = c.Request.Path; actualPathBase = c.Request.PathBase; })
-                .Returns(Task.FromResult(fuzzy.Int32()));
+            var captured = SetupNextToCaptureRequest();
 
             // Act
             await sut.Invoke(context);
 
             // Assert
-            Assert.Equal(remainingPath, actualPath.Value);
-            Assert.Equal(originalPathBase + urlSuffix, actualPathBase.Value);
+            Assert.Equal(remainingPath, captured.Path.Value);
+            Assert.Equal(originalPathBase + urlSuffix, captured.PathBase.Value);
             Assert.Equal(originalPath, context.Request.Path);
             Assert.Equal(originalPathBase, context.Request.PathBase);
             next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
@@ -131,18 +123,14 @@ public abstract class ServiceFabricMiddlewareTest
             context.Request.PathBase = originalPathBase;
             context.Request.Path = originalPath;
 
-            PathString actualPath = default;
-            PathString actualPathBase = default;
-            _ = next.Setup(_ => _(context))
-                .Callback<HttpContext>(c => { actualPath = c.Request.Path; actualPathBase = c.Request.PathBase; })
-                .Returns(Task.FromResult(fuzzy.Int32()));
+            var captured = SetupNextToCaptureRequest();
 
             // Act
             await sut.Invoke(context);
 
             // Assert
-            Assert.Equal(PathString.Empty, actualPath);
-            Assert.Equal(originalPathBase + urlSuffix, actualPathBase.Value);
+            Assert.Equal(PathString.Empty, captured.Path);
+            Assert.Equal(originalPathBase + urlSuffix, captured.PathBase.Value);
             Assert.Equal(originalPath, context.Request.Path);
             Assert.Equal(originalPathBase, context.Request.PathBase);
             next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
@@ -169,6 +157,21 @@ public abstract class ServiceFabricMiddlewareTest
             Assert.Equal(originalPath, context.Request.Path);
             Assert.Equal(originalPathBase, context.Request.PathBase);
             next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
+        }
+
+        CapturedRequest SetupNextToCaptureRequest()
+        {
+            var captured = new CapturedRequest();
+            _ = next.Setup(_ => _(context))
+                .Callback<HttpContext>(c => { captured.Path = c.Request.Path; captured.PathBase = c.Request.PathBase; })
+                .Returns(Task.FromResult(fuzzy.Int32()));
+            return captured;
+        }
+
+        sealed class CapturedRequest
+        {
+            public PathString Path;
+            public PathString PathBase;
         }
     }
 }
