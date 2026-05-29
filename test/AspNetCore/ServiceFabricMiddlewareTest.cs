@@ -43,6 +43,9 @@ public abstract class ServiceFabricMiddlewareTest
     public sealed class Invoke : ServiceFabricMiddlewareTest
     {
         readonly HttpContext context = new DefaultHttpContext();
+        readonly PathString originalPathBase = "/" + fuzzy.String().LettersOrDigits();
+
+        public Invoke() => context.Request.PathBase = originalPathBase;
 
         [Fact]
         public async Task ThrowsArgumentNullExceptionWhenContextIsNull()
@@ -55,9 +58,7 @@ public abstract class ServiceFabricMiddlewareTest
         public async Task CallsNextWhenUrlSuffixIsEmpty()
         {
             // Arrange
-            PathString originalPathBase = "/" + fuzzy.String().LettersOrDigits();
             PathString originalPath = "/" + fuzzy.String().LettersOrDigits();
-            context.Request.PathBase = originalPathBase;
             context.Request.Path = originalPath;
 
             var middleware = new ServiceFabricMiddleware(next.Object, string.Empty);
@@ -77,9 +78,7 @@ public abstract class ServiceFabricMiddlewareTest
         [Fact]
         public async Task SetsStatusCodeGoneWhenPathDoesNotStartWithUrlSuffixSegment()
         {
-            PathString originalPathBase = "/" + fuzzy.String().LettersOrDigits();
             var originalPath = new PathString(urlSuffix + fuzzy.String().LettersOrDigits()); // appended without '/' so not a segment match
-            context.Request.PathBase = originalPathBase;
             context.Request.Path = originalPath;
 
             await sut.Invoke(context);
@@ -95,9 +94,7 @@ public abstract class ServiceFabricMiddlewareTest
         {
             // Arrange
             string remainingPath = "/" + fuzzy.String().LettersOrDigits();
-            PathString originalPathBase = "/" + fuzzy.String().LettersOrDigits();
             PathString originalPath = urlSuffix + remainingPath;
-            context.Request.PathBase = originalPathBase;
             context.Request.Path = originalPath;
 
             var captured = SetupNextToCaptureRequest();
@@ -117,9 +114,7 @@ public abstract class ServiceFabricMiddlewareTest
         public async Task CallsNextWithEmptyPathAndExtendedPathBaseWhenPathEqualsUrlSuffix()
         {
             // Arrange
-            PathString originalPathBase = "/" + fuzzy.String().LettersOrDigits();
             PathString originalPath = urlSuffix;
-            context.Request.PathBase = originalPathBase;
             context.Request.Path = originalPath;
 
             var captured = SetupNextToCaptureRequest();
@@ -140,9 +135,7 @@ public abstract class ServiceFabricMiddlewareTest
         {
             // Arrange
             string remainingPath = "/" + fuzzy.String().LettersOrDigits();
-            PathString originalPathBase = "/" + fuzzy.String().LettersOrDigits();
             PathString originalPath = urlSuffix + remainingPath;
-            context.Request.PathBase = originalPathBase;
             context.Request.Path = originalPath;
 
             var expected = new InvalidOperationException();
