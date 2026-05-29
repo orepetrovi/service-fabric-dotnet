@@ -13,7 +13,7 @@ namespace Microsoft.ServiceFabric.Services.Common;
 
 public abstract class ExclusiveFileStreamTest : IDisposable
 {
-    protected readonly string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+    readonly string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
     void IDisposable.Dispose()
     {
