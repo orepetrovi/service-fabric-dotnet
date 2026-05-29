@@ -140,9 +140,9 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal(packageName, sut.PackageName);
             Assert.True(sut.IncludePackageName);
             Assert.False(sut.DecryptValue);
-            Assert.NotNull(sut.ConfigAction);
-            Assert.NotNull(sut.ExtractKeyFunc);
-            Assert.NotNull(sut.ExtractValueFunc);
+            Assert.Equal(sut.Method<Action<ConfigurationPackage, IDictionary<string, string>>>(), sut.ConfigAction);
+            Assert.Equal(sut.Method<Func<ConfigurationSection, ConfigurationProperty, string>>("DefaultExtractKeyFunc"), sut.ExtractKeyFunc);
+            Assert.Equal(sut.Method<Func<ConfigurationSection, ConfigurationProperty, string>>("DefaultExtractValueFunc"), sut.ExtractValueFunc);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing packageName argument validation.
