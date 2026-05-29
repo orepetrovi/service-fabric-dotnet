@@ -8,82 +8,81 @@ using Fuzzy;
 using Moq;
 using Xunit;
 
-namespace Microsoft.ServiceFabric.Services.Communication.Runtime
+namespace Microsoft.ServiceFabric.Services.Communication.Runtime;
+
+public abstract class CommunicationListenerInfoTest
 {
-    public abstract class CommunicationListenerInfoTest
+    readonly CommunicationListenerInfo sut;
+
+    // Constructor parameters
+    readonly string name = fuzzy.String();
+    readonly ICommunicationListener listener = Mock.Of<ICommunicationListener>();
+
+    // Fixture
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+    CommunicationListenerInfoTest() =>
+        sut = new CommunicationListenerInfo(name, listener);
+
+    public sealed class Constructor : CommunicationListenerInfoTest
     {
-        readonly CommunicationListenerInfo sut;
-
-        // Constructor parameters
-        readonly string name = fuzzy.String();
-        readonly ICommunicationListener listener = Mock.Of<ICommunicationListener>();
-
-        // Fixture
-        static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-
-        CommunicationListenerInfoTest() =>
-            sut = new CommunicationListenerInfo(name, listener);
-
-        public sealed class Constructor : CommunicationListenerInfoTest
+        [Fact]
+        public void InitializesPropertiesWithGivenArguments()
         {
-            [Fact]
-            public void InitializesPropertiesWithGivenArguments()
-            {
-                Assert.Same(name, sut.Name);
-                Assert.Same(listener, sut.Listener);
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenNameIsNull()
-            {
-                var exception = Assert.Throws<ArgumentNullException>(() => new CommunicationListenerInfo(null, listener));
-                Assert.Equal(nameof(name), exception.ParamName);
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenListenerIsNull()
-            {
-                var exception = Assert.Throws<ArgumentNullException>(() => new CommunicationListenerInfo(name, null));
-                Assert.Equal(nameof(listener), exception.ParamName);
-            }
+            Assert.Same(name, sut.Name);
+            Assert.Same(listener, sut.Listener);
         }
 
-        public new sealed class Equals : CommunicationListenerInfoTest
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenNameIsNull()
         {
-            new readonly IEquatable<CommunicationListenerInfo> sut;
-
-            public Equals() =>
-                sut = base.sut;
-
-            [Fact]
-            public void ReturnsTrueWhenNamesAreEqual() =>
-                Assert.True(sut.Equals(new CommunicationListenerInfo(new string(name.ToCharArray()), listener)));
-
-            [Fact]
-            public void ReturnsFalseWhenNameIsDifferent() =>
-                Assert.False(sut.Equals(new CommunicationListenerInfo(name + fuzzy.String(), listener)));
-
-            [Fact]
-            public void ReturnsFalseWhenListenerIsDifferent() =>
-                Assert.False(sut.Equals(new CommunicationListenerInfo(name, Mock.Of<ICommunicationListener>())));
-
-            [Fact]
-            public void ReturnsFalseWhenInfoIsNull() =>
-                Assert.False(sut.Equals(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => new CommunicationListenerInfo(null, listener));
+            Assert.Equal(nameof(name), exception.ParamName);
         }
 
-        public new sealed class ToString : CommunicationListenerInfoTest
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenListenerIsNull()
         {
-            [Fact]
-            public void ReturnsStringWithDetailedInformationForTracing()
-            {
-                string expected = $"{listener.GetType().Name} '{name}' (#{listener.GetHashCode()})";
-                Assert.Equal(expected, sut.ToString());
-            }
-
-            [Fact]
-            public void ReturnsSameStringCachedForPerformance() =>
-                Assert.Same(sut.ToString(), sut.ToString());
+            var exception = Assert.Throws<ArgumentNullException>(() => new CommunicationListenerInfo(name, null));
+            Assert.Equal(nameof(listener), exception.ParamName);
         }
+    }
+
+    public new sealed class Equals : CommunicationListenerInfoTest
+    {
+        new readonly IEquatable<CommunicationListenerInfo> sut;
+
+        public Equals() =>
+            sut = base.sut;
+
+        [Fact]
+        public void ReturnsTrueWhenNamesAreEqual() =>
+            Assert.True(sut.Equals(new CommunicationListenerInfo(new string(name.ToCharArray()), listener)));
+
+        [Fact]
+        public void ReturnsFalseWhenNameIsDifferent() =>
+            Assert.False(sut.Equals(new CommunicationListenerInfo(name + fuzzy.String(), listener)));
+
+        [Fact]
+        public void ReturnsFalseWhenListenerIsDifferent() =>
+            Assert.False(sut.Equals(new CommunicationListenerInfo(name, Mock.Of<ICommunicationListener>())));
+
+        [Fact]
+        public void ReturnsFalseWhenInfoIsNull() =>
+            Assert.False(sut.Equals(null));
+    }
+
+    public new sealed class ToString : CommunicationListenerInfoTest
+    {
+        [Fact]
+        public void ReturnsStringWithDetailedInformationForTracing()
+        {
+            string expected = $"{listener.GetType().Name} '{name}' (#{listener.GetHashCode()})";
+            Assert.Equal(expected, sut.ToString());
+        }
+
+        [Fact]
+        public void ReturnsSameStringCachedForPerformance() =>
+            Assert.Same(sut.ToString(), sut.ToString());
     }
 }
