@@ -62,7 +62,13 @@ public abstract class ExclusiveFileStreamTest : IDisposable
             Assert.Equal(path, sut.Value.Name);
         }
 
-        [Fact(Explicit = true)] // TODO: Slow. Exhausts 60+ retries each sleeping 100-1000ms.
+        // SUT testability gap: ExclusiveFileStream hard-codes MaxAttempts, the retry interval bounds, the
+        // sleeper (Thread.Sleep), and the clock (Random). Exercising the max-attempt rethrow branch
+        // deterministically requires injecting those collaborators, which is out of scope for this work.
+        // Until the SUT is made testable, this test is marked Explicit so it does not add 30-60s to every
+        // run; covering the rethrow branch by default would require either accepting that slowdown or
+        // changing the SUT.
+        [Fact(Explicit = true)]
         public void ThrowsIOExceptionWhenFileRemainsLockedAfterMaxAttempts()
         {
             using FileStream locked = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
