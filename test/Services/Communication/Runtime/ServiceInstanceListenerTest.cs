@@ -11,106 +11,105 @@ using Microsoft.ServiceFabric.Diagnostics.Tracing;
 using Moq;
 using Xunit;
 
-namespace Microsoft.ServiceFabric.Services.Communication.Runtime
+namespace Microsoft.ServiceFabric.Services.Communication.Runtime;
+
+public abstract class ServiceInstanceListenerTest
 {
-    public abstract class ServiceInstanceListenerTest
+    readonly ServiceInstanceListener sut;
+
+    // Constructor parameters
+    readonly Func<StatelessServiceContext, ICommunicationListener> createCommunicationListener = Mock.Of<Func<StatelessServiceContext, ICommunicationListener>>();
+    readonly string name = fuzzy.String();
+
+    // Test fixture
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+    ServiceInstanceListenerTest() =>
+        sut = new ServiceInstanceListener(createCommunicationListener, name);
+
+    public sealed class Constructor : ServiceInstanceListenerTest
     {
-        readonly ServiceInstanceListener sut;
-
-        // Constructor parameters
-        readonly Func<StatelessServiceContext, ICommunicationListener> createCommunicationListener = Mock.Of<Func<StatelessServiceContext, ICommunicationListener>>();
-        readonly string name = fuzzy.String();
-
-        // Test fixture
-        static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-
-        protected ServiceInstanceListenerTest() =>
-            sut = new ServiceInstanceListener(createCommunicationListener, name);
-
-        public sealed class Constructor : ServiceInstanceListenerTest
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenCreateCommunicationListenerIsNull()
         {
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenCreateCommunicationListenerIsNull()
-            {
-                var exception = Assert.Throws<ArgumentNullException>(() => new ServiceInstanceListener(null, name));
-                Assert.Equal(nameof(createCommunicationListener), exception.ParamName);
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenNameIsNull()
-            {
-                var exception = Assert.Throws<ArgumentNullException>(() => new ServiceInstanceListener(createCommunicationListener, null));
-                Assert.Equal(nameof(name), exception.ParamName);
-            }
-
-            [Fact]
-            public void InitializesPropertiesWithGivenArguments()
-            {
-                Assert.Same(createCommunicationListener, sut.CreateCommunicationListener);
-                Assert.Same(name, sut.Name);
-            }
-
-            [Fact]
-            public void InitializesPropertiesWithDefaultArgumentValues()
-            {
-                var sut = new ServiceInstanceListener(createCommunicationListener);
-                Assert.Same(ServiceInstanceListener.DefaultName, sut.Name);
-            }
+            var exception = Assert.Throws<ArgumentNullException>(() => new ServiceInstanceListener(null, name));
+            Assert.Equal(nameof(createCommunicationListener), exception.ParamName);
         }
 
-        public sealed class Instantiate : ServiceInstanceListenerTest
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenNameIsNull()
         {
-            // Parameters
-            readonly StatelessServiceContext context = fuzzy.StatelessServiceContext();
+            var exception = Assert.Throws<ArgumentNullException>(() => new ServiceInstanceListener(createCommunicationListener, null));
+            Assert.Equal(nameof(name), exception.ParamName);
+        }
 
-            // Fixture
-            readonly ICommunicationListener listener = Mock.Of<ICommunicationListener>();
+        [Fact]
+        public void InitializesPropertiesWithGivenArguments()
+        {
+            Assert.Same(createCommunicationListener, sut.CreateCommunicationListener);
+            Assert.Same(name, sut.Name);
+        }
 
-            public Instantiate() =>
-                Mock.Get(createCommunicationListener).Setup(_ => _.Invoke(context)).Returns(listener);
+        [Fact]
+        public void InitializesPropertiesWithDefaultArgumentValues()
+        {
+            var sut = new ServiceInstanceListener(createCommunicationListener);
+            Assert.Same(ServiceInstanceListener.DefaultName, sut.Name);
+        }
+    }
 
-            [Fact]
-            public void ReturnsTracingListener()
-            {
-                CommunicationListenerInfo actual = ServiceInstanceListener.Instantiate(sut, context);
+    public sealed class Instantiate : ServiceInstanceListenerTest
+    {
+        // Parameters
+        readonly StatelessServiceContext context = fuzzy.StatelessServiceContext();
 
-                Assert.Same(name, actual.Name);
-                var tracer = Assert.IsType<TracingCommunicationListener>(actual.Listener);
-                var original = tracer.Field<CommunicationListenerInfo>().Value;
-                Assert.Equal(new CommunicationListenerInfo(name, listener), original);
-                var trace = Assert.IsType<Trace>(tracer.Field<ITrace>().Value);
-                Assert.Equal(new Trace(typeof(ServiceInstanceListener), context, ServiceEventSource.Instance), trace);
-            }
+        // Fixture
+        readonly ICommunicationListener listener = Mock.Of<ICommunicationListener>();
 
-            [Fact]
-            public void ReturnsTracingListenerWithDefaultName()
-            {
-                var sut = new ServiceInstanceListener(createCommunicationListener);
+        public Instantiate() =>
+            _ = Mock.Get(createCommunicationListener).Setup(_ => _.Invoke(context)).Returns(listener);
 
-                CommunicationListenerInfo actual = ServiceInstanceListener.Instantiate(sut, context);
+        [Fact]
+        public void ReturnsTracingListener()
+        {
+            CommunicationListenerInfo actual = ServiceInstanceListener.Instantiate(sut, context);
 
-                string expectedName = "default";
-                Assert.Same(expectedName, actual.Name);
-                var tracer = Assert.IsType<TracingCommunicationListener>(actual.Listener);
-                var original = tracer.Field<CommunicationListenerInfo>().Value;
-                Assert.Equal(new CommunicationListenerInfo(expectedName, listener), original);
-                var trace = Assert.IsType<Trace>(tracer.Field<ITrace>().Value);
-                Assert.Equal(new Trace(typeof(ServiceInstanceListener), context, ServiceEventSource.Instance), trace);
-            }
+            Assert.Same(name, actual.Name);
+            var tracer = Assert.IsType<TracingCommunicationListener>(actual.Listener);
+            var original = tracer.Field<CommunicationListenerInfo>().Value;
+            Assert.Equal(new CommunicationListenerInfo(name, listener), original);
+            var trace = Assert.IsType<Trace>(tracer.Field<ITrace>().Value);
+            Assert.Equal(new Trace(typeof(ServiceInstanceListener), context, ServiceEventSource.Instance), trace);
+        }
 
-            [Fact]
-            public void ReturnsNullWhenCreateCommunicationListenerReturnsNull()
-            {
-                Mock.Get(createCommunicationListener).Setup(_ => _.Invoke(context)).Returns(default(ICommunicationListener));
-                Assert.Null(ServiceInstanceListener.Instantiate(sut, context));
-            }
+        [Fact]
+        public void ReturnsTracingListenerWithDefaultName()
+        {
+            var sut = new ServiceInstanceListener(createCommunicationListener);
 
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenListenerIsNull()
-            {
-                var exception = Assert.Throws<ArgumentNullException>(() => ServiceInstanceListener.Instantiate(null, context));
-                Assert.Equal("listener", exception.ParamName);
-            }
+            CommunicationListenerInfo actual = ServiceInstanceListener.Instantiate(sut, context);
+
+            string expectedName = "default";
+            Assert.Same(expectedName, actual.Name);
+            var tracer = Assert.IsType<TracingCommunicationListener>(actual.Listener);
+            var original = tracer.Field<CommunicationListenerInfo>().Value;
+            Assert.Equal(new CommunicationListenerInfo(expectedName, listener), original);
+            var trace = Assert.IsType<Trace>(tracer.Field<ITrace>().Value);
+            Assert.Equal(new Trace(typeof(ServiceInstanceListener), context, ServiceEventSource.Instance), trace);
+        }
+
+        [Fact]
+        public void ReturnsNullWhenCreateCommunicationListenerReturnsNull()
+        {
+            _ = Mock.Get(createCommunicationListener).Setup(_ => _.Invoke(context)).Returns(default(ICommunicationListener));
+            Assert.Null(ServiceInstanceListener.Instantiate(sut, context));
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenListenerIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => ServiceInstanceListener.Instantiate(null, context));
+            Assert.Equal("listener", exception.ParamName);
         }
     }
 }
