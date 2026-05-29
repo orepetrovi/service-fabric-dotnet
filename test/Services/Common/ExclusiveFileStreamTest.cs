@@ -18,7 +18,9 @@ public abstract class ExclusiveFileStreamTest : IDisposable
 
     readonly string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-    void IDisposable.Dispose()
+    void IDisposable.Dispose() => DeleteTempFile();
+
+    protected void DeleteTempFile()
     {
         if (File.Exists(path))
             File.Delete(path);
@@ -86,12 +88,18 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         }
     }
 
-    public sealed class Dispose : ExclusiveFileStreamTest
+    public sealed class Dispose : ExclusiveFileStreamTest, IDisposable
     {
         readonly ExclusiveFileStream sut;
 
         public Dispose() =>
             sut = ExclusiveFileStream.Acquire(path, FileMode.CreateNew, FileShare.None, FileAccess.ReadWrite);
+
+        void IDisposable.Dispose()
+        {
+            sut.Dispose();
+            DeleteTempFile();
+        }
 
         [Fact]
         public void DisposesUnderlyingFileStream()
