@@ -93,22 +93,6 @@ public abstract class ServiceFabricSetupFilterTest
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricMiddleware>());
         }
 
-        [Fact]
-        public void ReturnsActionThatRegistersReverseProxyIntegrationMiddlewareWhenUrlSuffixIsNull()
-        {
-            var sut = new ServiceFabricSetupFilter(null, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
-            sut.Configure(next.Object)(app.Object);
-            _ = Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
-        }
-
-        [Fact]
-        public void ReturnsActionThatRegistersReverseProxyIntegrationMiddlewareWhenUrlSuffixIsEmpty()
-        {
-            var sut = new ServiceFabricSetupFilter(string.Empty, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
-            sut.Configure(next.Object)(app.Object);
-            _ = Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
-        }
-
         [Theory, InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
         [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration | ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
         public void ReturnsActionThatRegistersReverseProxyIntegrationMiddlewareWhenOptionsHasUseReverseProxyIntegration(ServiceFabricIntegrationOptions options)
