@@ -15,6 +15,8 @@ namespace Microsoft.ServiceFabric.Services.Common;
 public abstract class ExclusiveFileStreamTest : IDisposable
 {
     readonly ExclusiveFileStream sut;
+
+    // Constructor parameters
     readonly string sutPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
