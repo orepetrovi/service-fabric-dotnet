@@ -168,6 +168,7 @@ public abstract class ServiceFabricMiddlewareTest
             Assert.Same(expected, actual);
             Assert.Equal(originalPath, context.Request.Path);
             Assert.Equal(originalPathBase, context.Request.PathBase);
+            next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
         }
     }
 }
