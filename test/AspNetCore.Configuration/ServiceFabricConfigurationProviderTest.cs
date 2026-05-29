@@ -58,7 +58,42 @@ public abstract class ServiceFabricConfigurationProviderTest
         }
 
         [Fact]
-        public void LoadsPackageAndNotifiesChangeWhenAddedPackageNameMatches()
+        public void LoadsPackageAndNotifiesChangeWhenAddedPackageNameMatches() =>
+            VerifyLoadsPackageAndNotifiesChange(RaiseAdded);
+
+        [Fact]
+        public void LoadsPackageAndNotifiesChangeWhenModifiedPackageNameMatches() =>
+            VerifyLoadsPackageAndNotifiesChange(RaiseModified);
+
+        [Fact]
+        public void IgnoresAddedPackageWhenNameDoesNotMatch() =>
+            VerifyIgnoresPackageWhenNameDoesNotMatch(RaiseAdded);
+
+        [Fact]
+        public void IgnoresModifiedPackageWhenNameDoesNotMatch() =>
+            VerifyIgnoresPackageWhenNameDoesNotMatch(RaiseModified);
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenAddedPackageDescriptionIsNull() =>
+            VerifyThrowsArgumentNullExceptionWhenPackageDescriptionIsNull(RaiseAdded);
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenModifiedPackageDescriptionIsNull() =>
+            VerifyThrowsArgumentNullExceptionWhenPackageDescriptionIsNull(RaiseModified);
+
+        [Fact(Explicit = true)] // TODO: SUT bug. HandleNewPackage dereferences package without a null check.
+        public void ThrowsArgumentNullExceptionWhenAddedPackageIsNull() =>
+            // HandleNewPackage accesses package.Description immediately, throwing NullReferenceException
+            // instead of an ArgumentNullException naming the offending parameter.
+            VerifyThrowsArgumentNullExceptionWhenPackageIsNull(RaiseAdded);
+
+        [Fact(Explicit = true)] // TODO: SUT bug. HandleNewPackage dereferences package without a null check.
+        public void ThrowsArgumentNullExceptionWhenModifiedPackageIsNull() =>
+            // HandleNewPackage accesses package.Description immediately, throwing NullReferenceException
+            // instead of an ArgumentNullException naming the offending parameter.
+            VerifyThrowsArgumentNullExceptionWhenPackageIsNull(RaiseModified);
+
+        void VerifyLoadsPackageAndNotifiesChange(Action<ConfigurationPackage> raiseEvent)
         {
             string staleKey = fuzzy.String();
             sut.Set(staleKey, fuzzy.String());
@@ -68,7 +103,7 @@ public abstract class ServiceFabricConfigurationProviderTest
                 .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
             IChangeToken token = sut.GetReloadToken();
 
-            RaiseAdded(matching);
+            raiseEvent(matching);
 
             configAction.Verify(_ => _(matching, It.IsAny<IDictionary<string, string>>()), Times.Once);
             configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
@@ -78,8 +113,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             Assert.True(token.HasChanged);
         }
 
-        [Fact]
-        public void IgnoresAddedPackageWhenNameDoesNotMatch()
+        void VerifyIgnoresPackageWhenNameDoesNotMatch(Action<ConfigurationPackage> raiseEvent)
         {
             ConfigurationPackage other = Package(packageName + fuzzy.String());
             string existingKey = fuzzy.String();
@@ -87,7 +121,7 @@ public abstract class ServiceFabricConfigurationProviderTest
             sut.Set(existingKey, existingValue);
             IChangeToken token = sut.GetReloadToken();
 
-            RaiseAdded(other);
+            raiseEvent(other);
 
             configAction.Verify(
                 _ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()),
@@ -97,79 +131,17 @@ public abstract class ServiceFabricConfigurationProviderTest
             Assert.Equal(existingValue, actual);
         }
 
-        [Fact]
-        public void ThrowsArgumentNullExceptionWhenAddedPackageDescriptionIsNull()
+        void VerifyThrowsArgumentNullExceptionWhenPackageDescriptionIsNull(Action<ConfigurationPackage> raiseEvent)
         {
             var package = Type<ConfigurationPackage>.Uninitialized();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => RaiseAdded(package));
+            var exception = Assert.Throws<ArgumentNullException>(() => raiseEvent(package));
             Assert.Equal($"package.{nameof(ConfigurationPackage.Description)}", exception.ParamName);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. HandleNewPackage dereferences package without a null check.
-        public void ThrowsArgumentNullExceptionWhenAddedPackageIsNull()
+        void VerifyThrowsArgumentNullExceptionWhenPackageIsNull(Action<ConfigurationPackage> raiseEvent)
         {
-            // HandleNewPackage accesses package.Description immediately, throwing NullReferenceException
-            // instead of an ArgumentNullException naming the offending parameter.
-            var exception = Assert.Throws<ArgumentNullException>(() => RaiseAdded(null));
-            Assert.Equal("package", exception.ParamName);
-        }
-
-        [Fact]
-        public void LoadsPackageAndNotifiesChangeWhenModifiedPackageNameMatches()
-        {
-            string staleKey = fuzzy.String();
-            sut.Set(staleKey, fuzzy.String());
-            string key = staleKey + fuzzy.String();
-            string value = fuzzy.String();
-            _ = configAction.Setup(_ => _(matching, It.IsAny<IDictionary<string, string>>()))
-                .Callback((ConfigurationPackage _, IDictionary<string, string> data) => data[key] = value);
-            IChangeToken token = sut.GetReloadToken();
-
-            RaiseModified(matching);
-
-            configAction.Verify(_ => _(matching, It.IsAny<IDictionary<string, string>>()), Times.Once);
-            configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
-            Assert.False(sut.TryGet(staleKey, out _));
-            Assert.True(sut.TryGet(key, out string actual));
-            Assert.Same(value, actual);
-            Assert.True(token.HasChanged);
-        }
-
-        [Fact]
-        public void IgnoresModifiedPackageWhenNameDoesNotMatch()
-        {
-            ConfigurationPackage other = Package(packageName + fuzzy.String());
-            string existingKey = fuzzy.String();
-            string existingValue = fuzzy.String();
-            sut.Set(existingKey, existingValue);
-            IChangeToken token = sut.GetReloadToken();
-
-            RaiseModified(other);
-
-            configAction.Verify(
-                _ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()),
-                Times.Never);
-            Assert.False(token.HasChanged);
-            Assert.True(sut.TryGet(existingKey, out string actual));
-            Assert.Equal(existingValue, actual);
-        }
-
-        [Fact]
-        public void ThrowsArgumentNullExceptionWhenModifiedPackageDescriptionIsNull()
-        {
-            var package = Type<ConfigurationPackage>.Uninitialized();
-
-            var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(package));
-            Assert.Equal($"package.{nameof(ConfigurationPackage.Description)}", exception.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. HandleNewPackage dereferences package without a null check.
-        public void ThrowsArgumentNullExceptionWhenModifiedPackageIsNull()
-        {
-            // HandleNewPackage accesses package.Description immediately, throwing NullReferenceException
-            // instead of an ArgumentNullException naming the offending parameter.
-            var exception = Assert.Throws<ArgumentNullException>(() => RaiseModified(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => raiseEvent(null));
             Assert.Equal("package", exception.ParamName);
         }
 
