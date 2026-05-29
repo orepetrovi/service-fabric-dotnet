@@ -31,30 +31,6 @@ public abstract class TracingCommunicationListenerTest
         sut = new TracingCommunicationListener(original, trace.Object);
     }
 
-    public sealed class Constructor : TracingCommunicationListenerTest
-    {
-        [Fact]
-        public void ThrowsArgumentNullExceptionWhenOriginalIsNull()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(() => new TracingCommunicationListener(null, trace.Object));
-            Assert.Equal(nameof(original), exception.ParamName);
-        }
-
-        [Fact]
-        public void ThrowsArgumentNullExceptionWhenTraceIsNull()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(() => new TracingCommunicationListener(original, null));
-            Assert.Equal(nameof(trace), exception.ParamName);
-        }
-
-        [Fact]
-        public void TracesCreationInfo()
-        {
-            trace.Verify(_ => _.Info($"Created {original} of type '{original.Listener.GetType().AssemblyQualifiedName}'."), Times.Once);
-            trace.Verify(_ => _.Info(It.IsAny<string>()), Times.Once);
-        }
-    }
-
     public sealed class Abort : TracingCommunicationListenerTest
     {
         [Fact]
@@ -66,7 +42,7 @@ public abstract class TracingCommunicationListenerTest
             listener.Verify(_ => _.Abort(), Times.Once);
             trace.Verify(_ => _.Info($"Aborted {original}."), Times.Once);
             trace.Verify(_ => _.Info(It.IsAny<string>()), Times.Exactly(3));
-        }   
+        }
 
         [Fact]
         public void TracesErrorWhenMethodThrowsException()
@@ -128,6 +104,30 @@ public abstract class TracingCommunicationListenerTest
             listener.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
             trace.Verify(_ => _.Warning(It.IsAny<string>()), Times.Once);
             Assert.Equal(expectedWarning, actualWarning);
+        }
+    }
+
+    public sealed class Constructor : TracingCommunicationListenerTest
+    {
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenOriginalIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new TracingCommunicationListener(null, trace.Object));
+            Assert.Equal(nameof(original), exception.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionWhenTraceIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new TracingCommunicationListener(original, null));
+            Assert.Equal(nameof(trace), exception.ParamName);
+        }
+
+        [Fact]
+        public void TracesCreationInfo()
+        {
+            trace.Verify(_ => _.Info($"Created {original} of type '{original.Listener.GetType().AssemblyQualifiedName}'."), Times.Once);
+            trace.Verify(_ => _.Info(It.IsAny<string>()), Times.Once);
         }
     }
 
