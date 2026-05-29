@@ -150,26 +150,26 @@ public abstract class ServiceFabricConfigurationExtensionsTest
                 () => ServiceFabricConfigurationExtensions.AddServiceFabricConfiguration(builder, null, optionsDelegate));
             Assert.Equal(nameof(context), exception.ParamName);
         }
-    }
 
-    static void AssertSources(IList<IConfigurationSource> sources, ICodePackageActivationContext expectedContext)
-    {
-        Assert.All(sources, source => Assert.Same(expectedContext, ((ServiceFabricConfigurationSource)source).ActivationContext));
-        IEnumerable<string> actual = sources.Select(source => source.Field<ServiceFabricConfigurationOptions>().Value.PackageName);
-        Assert.Equal(expectedContext.GetConfigurationPackageNames(), actual);
-    }
-
-    static TestCodePackageActivationContext CreateMultiPackageContext()
-    {
-        string name1 = fuzzy.String();
-        string name2 = name1 + fuzzy.String();
-        IConfiguration empty = new ConfigurationBuilder().Build();
-        return new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>
+        static void AssertSources(IList<IConfigurationSource> sources, ICodePackageActivationContext expectedContext)
         {
-            { name1, empty },
-            { name2, empty },
-        });
-    }
+            Assert.All(sources, source => Assert.Same(expectedContext, ((ServiceFabricConfigurationSource)source).ActivationContext));
+            IEnumerable<string> actual = sources.Select(source => source.Field<ServiceFabricConfigurationOptions>().Value.PackageName);
+            Assert.Equal(expectedContext.GetConfigurationPackageNames(), actual);
+        }
 
-    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+        static TestCodePackageActivationContext CreateMultiPackageContext()
+        {
+            string name1 = fuzzy.String();
+            string name2 = name1 + fuzzy.String();
+            IConfiguration empty = new ConfigurationBuilder().Build();
+            return new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>
+            {
+                { name1, empty },
+                { name2, empty },
+            });
+        }
+
+        static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+    }
 }
