@@ -18,7 +18,6 @@ public abstract class ExclusiveFileStreamTest : IDisposable
 
     readonly ExclusiveFileStream sut;
     readonly string sutPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-    readonly string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
     ExclusiveFileStreamTest() =>
         sut = ExclusiveFileStream.Acquire(sutPath, FileMode.CreateNew, FileShare.None, FileAccess.ReadWrite);
@@ -28,15 +27,23 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         sut.Dispose();
         if (File.Exists(sutPath))
             File.Delete(sutPath);
-        if (File.Exists(path))
-            File.Delete(path);
+        DisposeCore();
     }
+
+    private protected virtual void DisposeCore() { }
 
     public sealed class Acquire : ExclusiveFileStreamTest
     {
+        readonly string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
         readonly FileMode fileMode = FileMode.Open;
         readonly FileShare fileShare = FileShare.None;
         readonly FileAccess fileAccess = FileAccess.ReadWrite;
+
+        private protected override void DisposeCore()
+        {
+            if (File.Exists(path))
+                File.Delete(path);
+        }
 
         [Fact]
         public void OpensFileAtGivenPathWithGivenModeShareAndAccess()
@@ -73,16 +80,16 @@ public abstract class ExclusiveFileStreamTest : IDisposable
             CancellationToken cancellation = TestContext.Current.CancellationToken;
             using FileStream locked = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
 
-            Task<ExclusiveFileStream> acquireTask = Task.Run(
+            Task<ExclusiveFileStream> acquire = Task.Run(
                 () => ExclusiveFileStream.Acquire(path, fileMode, fileShare, fileAccess),
                 cancellation);
 
-            while (acquireTask.Status < TaskStatus.Running)
+            while (acquire.Status < TaskStatus.Running)
                 await Task.Yield();
             await Task.Delay(250, cancellation);
             locked.Dispose();
 
-            using ExclusiveFileStream sut = await acquireTask;
+            using ExclusiveFileStream sut = await acquire;
             Assert.Equal(path, sut.Value.Name);
         }
 
