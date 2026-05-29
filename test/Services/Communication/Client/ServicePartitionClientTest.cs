@@ -287,13 +287,15 @@ public abstract class ServicePartitionClientTest
             // Utility.ShouldRetryOperation resets the retry counter whenever ExceptionId differs from the previous
             // iteration. Verify the SUT forwards ExceptionId so distinct ids cause more than MaxRetryCount retries.
             const int maxRetryCount = 2;
+            string id = fuzzy.String();
+            string differentId = id + fuzzy.String();
             var controls = new Queue<OperationRetryControl>(new[]
             {
-                Retry("a"), // count: null→"a", 1
-                Retry("a"), // count: 2
-                Retry("b"), // reset: "a"→"b", 1
-                Retry("b"), // count: 2
-                Retry("b"), // 2 >= max → throws
+                Retry(id),          // count: null→id, 1
+                Retry(id),          // count: 2
+                Retry(differentId), // reset: id→differentId, 1
+                Retry(differentId), // count: 2
+                Retry(differentId), // 2 >= max → throws
             });
             _ = communicationClientFactory
                 .Setup(_ => _.ReportOperationExceptionAsync(
@@ -354,11 +356,10 @@ public abstract class ServicePartitionClientTest
             // After a non-transient exception the SUT re-resolves via the rsp-based GetClientAsync overload. The
             // second client carries a distinct ResolvedServicePartition, and the SUT must adopt it as the new lastRsp.
             var newRsp = Type<ResolvedServicePartition>.Uninitialized();
-            var newCommunicationClient = new Mock<ICommunicationClient>();
-            _ = newCommunicationClient.SetupGet(_ => _.ResolvedServicePartition).Returns(newRsp);
+            ICommunicationClient newCommunicationClient = Mock.Of<ICommunicationClient>(_ => _.ResolvedServicePartition == newRsp);
             _ = communicationClientFactory
                 .Setup(_ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(newCommunicationClient.Object);
+                .ReturnsAsync(newCommunicationClient);
             SetupReportOperationException(NonTransientRetry());
             int calls = 0;
 
@@ -1163,15 +1164,14 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
-        public async Task ReturnsTrueAndLastRspWhenSet()
+        public async Task ReturnsTrueAndResolvedServicePartitionWhenSet()
         {
             // Drive InvokeWithRetryAsync so the SUT assigns lastRsp from communicationClient.ResolvedServicePartition.
             var rsp = Type<ResolvedServicePartition>.Uninitialized();
-            var communicationClient = new Mock<ICommunicationClient>();
-            _ = communicationClient.SetupGet(_ => _.ResolvedServicePartition).Returns(rsp);
+            ICommunicationClient communicationClient = Mock.Of<ICommunicationClient>(_ => _.ResolvedServicePartition == rsp);
             _ = communicationClientFactory
                 .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(communicationClient.Object);
+                .ReturnsAsync(communicationClient);
             _ = await sut.InvokeWithRetryAsync<object>(_ => Task.FromResult(new object()), TestContext.Current.CancellationToken);
 
             bool actual = sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition resolvedServicePartition);
