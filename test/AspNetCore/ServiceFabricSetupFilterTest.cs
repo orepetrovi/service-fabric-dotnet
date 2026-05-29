@@ -30,7 +30,7 @@ public abstract class ServiceFabricSetupFilterTest
     public sealed class Configure : ServiceFabricSetupFilterTest
     {
         // Method parameters
-        readonly Mock<Action<IApplicationBuilder>> next = new();
+        readonly Action<IApplicationBuilder> next = Mock.Of<Action<IApplicationBuilder>>();
 
         readonly Mock<IApplicationBuilder> app = new();
         readonly List<Func<RequestDelegate, RequestDelegate>> factories = [];
@@ -46,11 +46,11 @@ public abstract class ServiceFabricSetupFilterTest
         [Fact]
         public void ReturnsActionThatCallsNextWithApplicationBuilder()
         {
-            Action<IApplicationBuilder> configured = sut.Configure(next.Object);
+            Action<IApplicationBuilder> configured = sut.Configure(next);
             configured(app.Object);
 
-            next.Verify(_ => _(app.Object), Times.Once);
-            next.Verify(_ => _(It.IsAny<IApplicationBuilder>()), Times.Once);
+            Mock.Get(next).Verify(_ => _(app.Object), Times.Once);
+            Mock.Get(next).Verify(_ => _(It.IsAny<IApplicationBuilder>()), Times.Once);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing arg null validation.
@@ -68,7 +68,7 @@ public abstract class ServiceFabricSetupFilterTest
             // SUT's returned action does not validate `app`. Depending on branch it dereferences `app`
             // (NullReferenceException) or forwards null to `next` silently. Expected behavior is to fail fast.
             var sut = new ServiceFabricSetupFilter(null, ServiceFabricIntegrationOptions.None);
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.Configure(next.Object)(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.Configure(next)(null));
             Assert.Equal(nameof(app), exception.ParamName);
         }
 
@@ -80,7 +80,7 @@ public abstract class ServiceFabricSetupFilterTest
         public async Task ReturnsActionThatRegistersServiceFabricMiddlewareWithUrlSuffixWhenUrlSuffixIsNotEmpty(ServiceFabricIntegrationOptions options)
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, options);
-            sut.Configure(next.Object)(app.Object);
+            sut.Configure(next)(app.Object);
 
             // Verify SUT forwarded urlSuffix by exercising the registered middleware's observable behavior:
             // a request whose Path does not start with urlSuffix as a segment is rejected with 410 Gone.
@@ -97,7 +97,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatDoesNotRegisterServiceFabricMiddlewareWhenUrlSuffixIsNullOrEmpty(string urlSuffix)
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, options);
-            sut.Configure(next.Object)(app.Object);
+            sut.Configure(next)(app.Object);
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricMiddleware>());
         }
 
@@ -106,7 +106,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatRegistersReverseProxyIntegrationMiddlewareWhenOptionsHasUseReverseProxyIntegration(ServiceFabricIntegrationOptions options)
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, options);
-            sut.Configure(next.Object)(app.Object);
+            sut.Configure(next)(app.Object);
             _ = Assert.Single(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
@@ -114,7 +114,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatDoesNotRegisterReverseProxyIntegrationMiddlewareWhenOptionsDoesNotHaveUseReverseProxyIntegration(ServiceFabricIntegrationOptions options)
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, options);
-            sut.Configure(next.Object)(app.Object);
+            sut.Configure(next)(app.Object);
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricReverseProxyIntegrationMiddleware>());
         }
 
@@ -122,7 +122,7 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatRegistersServiceFabricMiddlewareBeforeReverseProxyIntegrationMiddleware()
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
-            sut.Configure(next.Object)(app.Object);
+            sut.Configure(next)(app.Object);
 
             Type[] middlewareTypes = [.. RegisteredMiddlewares().Select(_ => _.GetType())];
             Assert.Equal([typeof(ServiceFabricMiddleware), typeof(ServiceFabricReverseProxyIntegrationMiddleware)], middlewareTypes);
@@ -133,12 +133,12 @@ public abstract class ServiceFabricSetupFilterTest
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
             List<int> middlewareCountsWhenNextCalled = [];
-            _ = next.Setup(_ => _(app.Object)).Callback(() => middlewareCountsWhenNextCalled.Add(factories.Count));
+            _ = Mock.Get(next).Setup(_ => _(app.Object)).Callback(() => middlewareCountsWhenNextCalled.Add(factories.Count));
 
-            sut.Configure(next.Object)(app.Object);
+            sut.Configure(next)(app.Object);
 
             Assert.Equal([factories.Count], middlewareCountsWhenNextCalled);
-            next.Verify(_ => _(It.IsAny<IApplicationBuilder>()), Times.Once);
+            Mock.Get(next).Verify(_ => _(It.IsAny<IApplicationBuilder>()), Times.Once);
         }
 
         IReadOnlyList<object> RegisteredMiddlewares() =>
