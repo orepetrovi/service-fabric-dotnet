@@ -83,14 +83,26 @@ public abstract class ServiceFabricSetupFilterTest
             sut.Configure(next)(app.Object);
 
             // Verify SUT forwarded urlSuffix by exercising the registered middleware's observable behavior:
-            // a request whose Path does not start with urlSuffix as a segment is rejected with 410 Gone.
+            // for a request whose Path starts with urlSuffix as a segment, the middleware strips urlSuffix
+            // into PathBase before invoking the inner delegate. A wrong suffix would not rewrite Path/PathBase.
             Func<RequestDelegate, RequestDelegate> factory = factories
                 .Single(f => f(_ => Task.CompletedTask).Target is ServiceFabricMiddleware);
-            RequestDelegate pipeline = factory(_ => Task.CompletedTask);
+            PathString observedPathBase = default, observedPath = default;
+            var nextCalled = false;
+            RequestDelegate pipeline = factory(ctx =>
+            {
+                nextCalled = true;
+                observedPathBase = ctx.Request.PathBase;
+                observedPath = ctx.Request.Path;
+                return Task.CompletedTask;
+            });
+            var remainingPath = fuzzy.String().LettersOrDigits();
             var context = new DefaultHttpContext();
-            context.Request.Path = urlSuffix + fuzzy.String().LettersOrDigits(); // appended without '/' so not a segment match
+            context.Request.Path = urlSuffix + "/" + remainingPath;
             await pipeline(context);
-            Assert.Equal(StatusCodes.Status410Gone, context.Response.StatusCode);
+            Assert.True(nextCalled);
+            Assert.Equal(urlSuffix, observedPathBase);
+            Assert.Equal("/" + remainingPath, observedPath);
         }
 
         [Theory, InlineData(null), InlineData("")]
