@@ -72,7 +72,7 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
             readonly ICommunicationListener listener = Mock.Of<ICommunicationListener>();
 
             public Instantiate() =>
-                Mock.Get(createCommunicationListener).Setup(_ => _.Invoke(context)).Returns(listener);
+                _ = Mock.Get(createCommunicationListener).Setup(_ => _(context)).Returns(listener);
 
             [Fact]
             public void ReturnsTracingListener()
@@ -106,7 +106,7 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
             [Fact]
             public void ReturnsNullWhenCreateCommunicationListenerReturnsNull()
             {
-                Mock.Get(createCommunicationListener).Setup(_ => _.Invoke(context)).Returns(default(ICommunicationListener));
+                _ = Mock.Get(createCommunicationListener).Setup(_ => _(context)).Returns(default(ICommunicationListener));
                 Assert.Null(ServiceReplicaListener.Instantiate(sut, context));
             }
 
