@@ -98,6 +98,14 @@ public abstract class ServiceFabricConfigurationOptionsTest
             extractValue.Verify(_ => _(It.IsAny<ConfigurationSection>(), It.IsAny<ConfigurationProperty>()), Times.Exactly(3));
         }
 
+        [Fact]
+        public void IsSetToGivenValue()
+        {
+            Action<ConfigurationPackage, IDictionary<string, string>> expected = (_, _) => { };
+            sut.ConfigAction = expected;
+            Assert.Same(expected, sut.ConfigAction);
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug. Missing config argument validation.
         public void ThrowsArgumentNullExceptionWhenConfigIsNull()
         {
@@ -146,10 +154,30 @@ public abstract class ServiceFabricConfigurationOptionsTest
         }
     }
 
+    public sealed class DecryptValue : ServiceFabricConfigurationOptionsTest
+    {
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void IsSetToGivenValue(bool expected)
+        {
+            sut.DecryptValue = expected;
+            Assert.Equal(expected, sut.DecryptValue);
+        }
+    }
+
     public sealed class ExtractKeyFunc : ServiceFabricConfigurationOptionsTest
     {
         readonly ConfigurationSection section = Section();
         readonly ConfigurationProperty property = Property();
+
+        [Fact]
+        public void IsSetToGivenValue()
+        {
+            Func<ConfigurationSection, ConfigurationProperty, string> expected = (_, _) => null;
+            sut.ExtractKeyFunc = expected;
+            Assert.Same(expected, sut.ExtractKeyFunc);
+        }
 
         [Fact]
         public void IncludesPackageNameWhenIncludePackageNameIsTrue()
@@ -200,6 +228,14 @@ public abstract class ServiceFabricConfigurationOptionsTest
         readonly ConfigurationProperty property = Property();
 
         [Fact]
+        public void IsSetToGivenValue()
+        {
+            Func<ConfigurationSection, ConfigurationProperty, string> expected = (_, _) => null;
+            sut.ExtractValueFunc = expected;
+            Assert.Same(expected, sut.ExtractValueFunc);
+        }
+
+        [Fact]
         public void ReturnsPropertyValueWhenPropertyIsNotEncrypted()
         {
             string actual = sut.ExtractValueFunc(section, property);
@@ -240,6 +276,18 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractValueFunc(section, null));
             Assert.Equal(sut.ExtractValueFunc.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
+        }
+    }
+
+    public sealed class IncludePackageName : ServiceFabricConfigurationOptionsTest
+    {
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void IsSetToGivenValue(bool expected)
+        {
+            sut.IncludePackageName = expected;
+            Assert.Equal(expected, sut.IncludePackageName);
         }
     }
 
