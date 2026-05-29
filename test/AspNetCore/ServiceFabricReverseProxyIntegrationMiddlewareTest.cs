@@ -38,8 +38,8 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
         readonly Mock<HttpContext> context = new();
 
         readonly Mock<HttpResponse> response = new();
-        Func<object, Task> capturedCallback;
-        object capturedState;
+        Func<object, Task> actualCallback;
+        object actualState;
 
         public Invoke()
         {
@@ -47,8 +47,8 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
             _ = response.Setup(_ => _.OnStarting(It.IsAny<Func<object, Task>>(), response.Object))
                 .Callback<Func<object, Task>, object>((callback, state) =>
                 {
-                    capturedCallback = callback;
-                    capturedState = state;
+                    actualCallback = callback;
+                    actualState = state;
                 });
         }
 
@@ -76,7 +76,7 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
         {
             _ = sut.Invoke(context.Object);
 
-            Assert.Same(response.Object, capturedState);
+            Assert.Same(response.Object, actualState);
             response.Verify(_ => _.OnStarting(It.IsAny<Func<object, Task>>(), It.IsAny<object>()), Times.Once);
         }
 
@@ -84,7 +84,7 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
         public void RegistersOnStartingCallbackBeforeInvokingNext()
         {
             _ = next.Setup(_ => _(context.Object))
-                .Callback(() => Assert.NotNull(capturedCallback))
+                .Callback(() => Assert.NotNull(actualCallback))
                 .Returns(Task.FromResult(fuzzy.Int32()));
 
             _ = sut.Invoke(context.Object);
@@ -100,7 +100,7 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
             _ = response.SetupGet(_ => _.StatusCode).Returns(StatusCodes.Status404NotFound);
             _ = sut.Invoke(context.Object);
 
-            await capturedCallback(capturedState);
+            await actualCallback(actualState);
 
             Assert.Equal("ResourceNotFound", headers["X-ServiceFabric"]);
         }
@@ -118,7 +118,7 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
             _ = sut.Invoke(context.Object);
 
             _ = response.SetupGet(_ => _.StatusCode).Returns(statusCode);
-            await capturedCallback(capturedState);
+            await actualCallback(actualState);
 
             Assert.False(headers.ContainsKey("X-ServiceFabric"));
         }
