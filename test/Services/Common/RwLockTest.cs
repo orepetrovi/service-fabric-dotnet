@@ -31,7 +31,7 @@ public abstract class RwLockTest
         [Fact]
         public async Task AllowsConcurrentReadLocks()
         {
-            TaskCompletionSource<object> release = await HoldAsync(sut.AcquireReadLock);
+            TaskCompletionSource<object> release = await Hold(sut.AcquireReadLock);
 
             Task second = Task.Run(() => sut.AcquireReadLock().Dispose(), cancellation);
 
@@ -42,8 +42,8 @@ public abstract class RwLockTest
         [Fact]
         public async Task BlocksConcurrentWriteLockUntilDisposed()
         {
-            TaskCompletionSource<object> release = await HoldAsync(sut.AcquireReadLock);
-            Task write = await StartAcquireAsync(sut.AcquireWriteLock);
+            TaskCompletionSource<object> release = await Hold(sut.AcquireReadLock);
+            Task write = await StartAcquire(sut.AcquireWriteLock);
 
             await AssertDoesNotComplete(write);
             release.SetResult(null);
@@ -81,8 +81,8 @@ public abstract class RwLockTest
         [Fact]
         public async Task BlocksConcurrentReadLockUntilDisposed()
         {
-            TaskCompletionSource<object> release = await HoldAsync(sut.AcquireWriteLock);
-            Task read = await StartAcquireAsync(sut.AcquireReadLock);
+            TaskCompletionSource<object> release = await Hold(sut.AcquireWriteLock);
+            Task read = await StartAcquire(sut.AcquireReadLock);
 
             await AssertDoesNotComplete(read);
             release.SetResult(null);
@@ -93,8 +93,8 @@ public abstract class RwLockTest
         [Fact]
         public async Task BlocksConcurrentWriteLockUntilDisposed()
         {
-            TaskCompletionSource<object> release = await HoldAsync(sut.AcquireWriteLock);
-            Task second = await StartAcquireAsync(sut.AcquireWriteLock);
+            TaskCompletionSource<object> release = await Hold(sut.AcquireWriteLock);
+            Task second = await StartAcquire(sut.AcquireWriteLock);
 
             await AssertDoesNotComplete(second);
             release.SetResult(null);
@@ -121,8 +121,8 @@ public abstract class RwLockTest
     }
 
     // ReaderWriterLockSlim is thread-affine: a lock must be released on the thread that acquired it.
-    // HoldAsync acquires the lock on a dedicated worker thread and keeps it held until the returned source is signaled.
-    async Task<TaskCompletionSource<object>> HoldAsync(Func<IDisposable> acquire)
+    // Hold acquires the lock on a dedicated worker thread and keeps it held until the returned source is signaled.
+    async Task<TaskCompletionSource<object>> Hold(Func<IDisposable> acquire)
     {
         var acquired = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
         var release = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -139,9 +139,9 @@ public abstract class RwLockTest
     // Signals readiness from inside the worker immediately before the acquire call so the caller can wait until the
     // competing task is about to attempt the acquire. Without this, AssertDoesNotComplete could observe the BlockedWait
     // elapse before the thread pool ever scheduled the worker, yielding a false positive.
-    async Task<Task> StartAcquireAsync(Func<IDisposable> acquire)
+    async Task<Task> StartAcquire(Func<IDisposable> acquire)
     {
-        var ready = new TaskCompletionSource<object>();
+        var ready = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
         Task task = Task.Run(() =>
         {
             ready.SetResult(null);
