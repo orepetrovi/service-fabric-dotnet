@@ -39,6 +39,17 @@ public abstract class UtilityTest
         }
 
         [Fact]
+        public void ReturnsTrueAndUpdatesLastSeenExceptionIdAndResetsCurrentRetryCountToOneWhenCurrentExceptionIdDiffersFromLastSeenExceptionId()
+        {
+            bool result = Utility.ShouldRetryOperation(
+                currentExceptionId, maxRetryCount, ref lastSeenExceptionId, ref currentRetryCount);
+
+            Assert.True(result);
+            Assert.Equal(currentExceptionId, lastSeenExceptionId);
+            Assert.Equal(1, currentRetryCount);
+        }
+
+        [Fact]
         public void ReturnsFalseWithoutModifyingRefsWhenMaxRetryCountIsZero()
         {
             string lastSeenExceptionIdBefore = lastSeenExceptionId;
@@ -78,17 +89,6 @@ public abstract class UtilityTest
             Assert.False(result);
             Assert.Equal(currentExceptionId, lastSeenExceptionId);
             Assert.Equal(maxRetryCount + 1, currentRetryCount);
-        }
-
-        [Fact]
-        public void ReturnsTrueAndUpdatesLastSeenExceptionIdAndResetsCurrentRetryCountToOneWhenCurrentExceptionIdDiffersFromLastSeenExceptionId()
-        {
-            bool result = Utility.ShouldRetryOperation(
-                currentExceptionId, maxRetryCount, ref lastSeenExceptionId, ref currentRetryCount);
-
-            Assert.True(result);
-            Assert.Equal(currentExceptionId, lastSeenExceptionId);
-            Assert.Equal(1, currentRetryCount);
         }
     }
 }
