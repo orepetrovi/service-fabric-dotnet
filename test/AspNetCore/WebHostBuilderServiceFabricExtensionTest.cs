@@ -109,24 +109,12 @@ public abstract class WebHostBuilderServiceFabricExtensionTest
         [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
         [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
         [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl | ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
-        public void RegistersServiceFabricSetupFilterWithListenerUrlSuffix(ServiceFabricIntegrationOptions options)
+        public void RegistersServiceFabricSetupFilterWithListenerUrlSuffixAndOptions(ServiceFabricIntegrationOptions options)
         {
             ServiceDescriptor descriptor = InvokeAndCaptureStartupFilterDescriptor(options);
 
             var filter = (ServiceFabricSetupFilter)descriptor.ImplementationInstance;
             Assert.Same(listener.UrlSuffix, filter.Field<string>().Value);
-        }
-
-        [Theory]
-        [InlineData(ServiceFabricIntegrationOptions.None)]
-        [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
-        [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
-        [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl | ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
-        public void StoresOptionsInServiceFabricSetupFilter(ServiceFabricIntegrationOptions options)
-        {
-            ServiceDescriptor descriptor = InvokeAndCaptureStartupFilterDescriptor(options);
-
-            var filter = (ServiceFabricSetupFilter)descriptor.ImplementationInstance;
             Assert.Equal(options, filter.Field<ServiceFabricIntegrationOptions>().Value);
         }
 
