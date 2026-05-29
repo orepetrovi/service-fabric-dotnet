@@ -399,18 +399,21 @@ public abstract class ServicePartitionClientTest
                 .ReturnsAsync(newCommunicationClient);
             SetupReportOperationException(NonTransientRetry());
             int calls = 0;
+            ICommunicationClient captured = null;
 
             _ = await sut.InvokeWithRetryAsync<object>(
-                _ =>
+                client =>
                 {
                     calls++;
                     if (calls == 1) throw clientException;
+                    captured = client;
                     return Task.FromResult<object>(calls);
                 },
                 cancellationToken);
 
             Assert.True(sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition actual));
             Assert.Same(newRsp, actual);
+            Assert.Same(newCommunicationClient, captured);
         }
 
         [Fact]
@@ -872,17 +875,20 @@ public abstract class ServicePartitionClientTest
                 .ReturnsAsync(newCommunicationClient);
             SetupReportOperationException(NonTransientRetry());
             int calls = 0;
+            ICommunicationClient captured = null;
 
             _ = await sut.InvokeWithRetryAsync<object>(
-                _ =>
+                client =>
                 {
                     calls++;
                     if (calls == 1) throw clientException;
+                    captured = client;
                     return Task.FromResult<object>(calls);
                 });
 
             Assert.True(sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition actual));
             Assert.Same(newRsp, actual);
+            Assert.Same(newCommunicationClient, captured);
         }
 
         [Fact]
@@ -1283,18 +1289,21 @@ public abstract class ServicePartitionClientTest
                 .ReturnsAsync(newCommunicationClient);
             SetupReportOperationException(NonTransientRetry());
             int calls = 0;
+            ICommunicationClient captured = null;
 
             await sut.InvokeWithRetryAsync(
-                _ =>
+                client =>
                 {
                     calls++;
                     if (calls == 1) throw clientException;
+                    captured = client;
                     return Task.CompletedTask;
                 },
                 cancellationToken);
 
             Assert.True(sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition actual));
             Assert.Same(newRsp, actual);
+            Assert.Same(newCommunicationClient, captured);
         }
 
         [Fact]
@@ -1660,17 +1669,20 @@ public abstract class ServicePartitionClientTest
                 .ReturnsAsync(newCommunicationClient);
             SetupReportOperationException(NonTransientRetry());
             int calls = 0;
+            ICommunicationClient captured = null;
 
             await sut.InvokeWithRetryAsync(
-                _ =>
+                client =>
                 {
                     calls++;
                     if (calls == 1) throw clientException;
+                    captured = client;
                     return Task.CompletedTask;
                 });
 
             Assert.True(sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition actual));
             Assert.Same(newRsp, actual);
+            Assert.Same(newCommunicationClient, captured);
         }
 
         [Fact]
