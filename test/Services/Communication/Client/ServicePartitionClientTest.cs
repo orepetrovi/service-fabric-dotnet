@@ -163,6 +163,22 @@ public abstract class ServicePartitionClientTest
                 Times.Once);
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
+        public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
+        {
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.InvokeWithRetryAsync<object>((Func<ICommunicationClient, Task<object>>)null, cancellation));
+            Assert.Equal(method.Parameter<Func<ICommunicationClient, Task<object>>>().Name, actual.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for doNotRetryExceptionTypes.
+        public async Task ThrowsArgumentNullExceptionWhenDoNotRetryExceptionTypesIsNull()
+        {
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, cancellation, (Type[])null));
+            Assert.Equal(method.Parameter<Type[]>().Name, actual.ParamName);
+        }
+
         [Fact]
         public async Task RetriesAfterTransientException()
         {
@@ -579,21 +595,6 @@ public abstract class ServicePartitionClientTest
             }
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
-        public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
-        {
-            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.InvokeWithRetryAsync<object>((Func<ICommunicationClient, Task<object>>)null, cancellation));
-            Assert.Equal(method.Parameter<Func<ICommunicationClient, Task<object>>>().Name, actual.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for doNotRetryExceptionTypes.
-        public async Task ThrowsArgumentNullExceptionWhenDoNotRetryExceptionTypesIsNull()
-        {
-            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, cancellation, (Type[])null));
-            Assert.Equal(method.Parameter<Type[]>().Name, actual.ParamName);
-        }
     }
 
     public sealed class InvokeWithRetryAsync_FuncOfICommunicationClientTaskOfObject_TypeArray : InvokeWithRetryAsyncBase
@@ -623,6 +624,22 @@ public abstract class ServicePartitionClientTest
             communicationClientFactory.Verify(
                 _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, CancellationToken.None),
                 Times.Once);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
+        public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
+        {
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.InvokeWithRetryAsync<object>((Func<ICommunicationClient, Task<object>>)null));
+            Assert.Equal(method.Parameter<Func<ICommunicationClient, Task<object>>>().Name, actual.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for doNotRetryExceptionTypes.
+        public async Task ThrowsArgumentNullExceptionWhenDoNotRetryExceptionTypesIsNull()
+        {
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, (Type[])null));
+            Assert.Equal(method.Parameter<Type[]>().Name, actual.ParamName);
         }
 
         [Fact]
@@ -733,21 +750,6 @@ public abstract class ServicePartitionClientTest
             Assert.True(stopwatch.ElapsedMilliseconds >= timeout.TotalMilliseconds - 25, $"Elapsed {stopwatch.ElapsedMilliseconds}ms < {timeout.TotalMilliseconds}ms");
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
-        public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
-        {
-            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.InvokeWithRetryAsync<object>((Func<ICommunicationClient, Task<object>>)null));
-            Assert.Equal(method.Parameter<Func<ICommunicationClient, Task<object>>>().Name, actual.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for doNotRetryExceptionTypes.
-        public async Task ThrowsArgumentNullExceptionWhenDoNotRetryExceptionTypesIsNull()
-        {
-            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException, (Type[])null));
-            Assert.Equal(method.Parameter<Type[]>().Name, actual.ParamName);
-        }
     }
 
     public sealed class InvokeWithRetryAsync_FuncOfICommunicationClientTask_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
@@ -778,6 +780,22 @@ public abstract class ServicePartitionClientTest
             communicationClientFactory.Verify(
                 _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, cancellation),
                 Times.Once);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
+        public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
+        {
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.InvokeWithRetryAsync((Func<ICommunicationClient, Task>)null, cancellation));
+            Assert.Equal(method.Parameter<Func<ICommunicationClient, Task>>().Name, actual.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for doNotRetryExceptionTypes.
+        public async Task ThrowsArgumentNullExceptionWhenDoNotRetryExceptionTypesIsNull()
+        {
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.InvokeWithRetryAsync(_ => throw clientException, cancellation, (Type[])null));
+            Assert.Equal(method.Parameter<Type[]>().Name, actual.ParamName);
         }
 
         [Fact]
@@ -982,21 +1000,6 @@ public abstract class ServicePartitionClientTest
             Assert.True(stopwatch.ElapsedMilliseconds >= timeout.TotalMilliseconds - 25, $"Elapsed {stopwatch.ElapsedMilliseconds}ms < {timeout.TotalMilliseconds}ms");
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
-        public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
-        {
-            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.InvokeWithRetryAsync((Func<ICommunicationClient, Task>)null, cancellation));
-            Assert.Equal(method.Parameter<Func<ICommunicationClient, Task>>().Name, actual.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for doNotRetryExceptionTypes.
-        public async Task ThrowsArgumentNullExceptionWhenDoNotRetryExceptionTypesIsNull()
-        {
-            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.InvokeWithRetryAsync(_ => throw clientException, cancellation, (Type[])null));
-            Assert.Equal(method.Parameter<Type[]>().Name, actual.ParamName);
-        }
     }
 
     public sealed class InvokeWithRetryAsync_FuncOfICommunicationClientTask_TypeArray : InvokeWithRetryAsyncBase
@@ -1026,6 +1029,22 @@ public abstract class ServicePartitionClientTest
             communicationClientFactory.Verify(
                 _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, CancellationToken.None),
                 Times.Once);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
+        public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
+        {
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.InvokeWithRetryAsync((Func<ICommunicationClient, Task>)null));
+            Assert.Equal(method.Parameter<Func<ICommunicationClient, Task>>().Name, actual.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for doNotRetryExceptionTypes.
+        public async Task ThrowsArgumentNullExceptionWhenDoNotRetryExceptionTypesIsNull()
+        {
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.InvokeWithRetryAsync(_ => throw clientException, (Type[])null));
+            Assert.Equal(method.Parameter<Type[]>().Name, actual.ParamName);
         }
 
         [Fact]
@@ -1144,21 +1163,6 @@ public abstract class ServicePartitionClientTest
             Assert.True(stopwatch.ElapsedMilliseconds >= timeout.TotalMilliseconds - 25, $"Elapsed {stopwatch.ElapsedMilliseconds}ms < {timeout.TotalMilliseconds}ms");
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
-        public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
-        {
-            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.InvokeWithRetryAsync((Func<ICommunicationClient, Task>)null));
-            Assert.Equal(method.Parameter<Func<ICommunicationClient, Task>>().Name, actual.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for doNotRetryExceptionTypes.
-        public async Task ThrowsArgumentNullExceptionWhenDoNotRetryExceptionTypesIsNull()
-        {
-            var actual = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.InvokeWithRetryAsync(_ => throw clientException, (Type[])null));
-            Assert.Equal(method.Parameter<Type[]>().Name, actual.ParamName);
-        }
     }
 
     public sealed class TryGetLastResolvedServicePartition : ServicePartitionClientTest
