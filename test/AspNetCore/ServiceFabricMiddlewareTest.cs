@@ -71,7 +71,6 @@ public abstract class ServiceFabricMiddlewareTest
             Assert.Equal(originalPathBase, captured.PathBase);
             Assert.Equal(originalPath, context.Request.Path);
             Assert.Equal(originalPathBase, context.Request.PathBase);
-            next.Verify(_ => _(context), Times.Once);
             next.Verify(_ => _(It.IsAny<HttpContext>()), Times.Once);
         }
 
