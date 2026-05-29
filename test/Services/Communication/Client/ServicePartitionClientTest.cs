@@ -652,6 +652,82 @@ public abstract class ServicePartitionClientTest
             Assert.Equal(2, calls);
             Assert.Equal(2, actual);
         }
+
+        [Fact]
+        public async Task ThrowsExceptionFromReportResultWhenShouldRetryIsFalseAndReportExceptionIsSet()
+        {
+            // Cover the callee's report-exception branch through the no-token delegation.
+            var transformed = new ApplicationException();
+            SetupReportOperationException(new OperationRetryControl { ShouldRetry = false, Exception = transformed });
+
+            ApplicationException actual = await Assert.ThrowsAsync<ApplicationException>(
+                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException));
+
+            Assert.Same(transformed, actual);
+        }
+
+        [Fact]
+        public async Task ThrowsAfterMaxRetryCountReached()
+        {
+            // Cover the callee's retry-count exhaustion branch through the no-token delegation.
+            SetupReportOperationException(TransientRetry(maxRetryCount: 2));
+            int calls = 0;
+
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.InvokeWithRetryAsync<object>(_ => { calls++; throw clientException; }));
+
+            Assert.Same(clientException, actual);
+            Assert.Equal(3, calls);
+        }
+
+        [Fact]
+        public async Task ResetsCommunicationClientWhenExceptionIsNotTransient()
+        {
+            // Cover the callee's non-transient client-reset branch through the no-token delegation.
+            SetupReportOperationException(NonTransientRetry());
+            int calls = 0;
+
+            _ = await sut.InvokeWithRetryAsync<object>(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.FromResult<object>(calls);
+                });
+
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task CancelsWhenClientRetryTimeoutElapses()
+        {
+            // Cover the callee's timeout setup/disposal branch through the no-token delegation.
+            var timeout = TimeSpan.FromMilliseconds(500);
+            var policy = new Mock<IRetryPolicy>();
+            _ = policy.SetupGet(_ => _.ClientRetryTimeout).Returns(timeout);
+            var retrySettings = new OperationRetrySettings(policy.Object);
+            var sut = new ServicePartitionClient<ICommunicationClient>(
+                communicationClientFactory.Object, serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings);
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(client);
+            _ = communicationClientFactory
+                .Setup(_ => _.ReportOperationExceptionAsync(
+                    client,
+                    It.Is<ExceptionInformation>(i => i.Exception == clientException && i.TargetReplica == targetReplicaSelector),
+                    retrySettings,
+                    CancellationToken.None))
+                .ReturnsAsync(TransientRetry(maxRetryCount: 1_000_000, delay: ShortRetryDelay));
+
+            var stopwatch = Stopwatch.StartNew();
+            _ = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException));
+            stopwatch.Stop();
+
+            Assert.True(stopwatch.ElapsedMilliseconds >= timeout.TotalMilliseconds - 25, $"Elapsed {stopwatch.ElapsedMilliseconds}ms < {timeout.TotalMilliseconds}ms");
+        }
     }
 
     public sealed class InvokeWithRetryAsync_FuncOfICommunicationClientTask_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
@@ -790,6 +866,100 @@ public abstract class ServicePartitionClientTest
             Assert.Equal(retryCount, calls);
         }
 
+        [Fact]
+        public async Task ThrowsExceptionFromReportResultWhenShouldRetryIsFalseAndReportExceptionIsSet()
+        {
+            // Cover the callee's report-exception branch through the Task-returning wrapper.
+            var transformed = new ApplicationException();
+            SetupReportOperationException(new OperationRetryControl { ShouldRetry = false, Exception = transformed });
+
+            ApplicationException actual = await Assert.ThrowsAsync<ApplicationException>(
+                () => sut.InvokeWithRetryAsync(_ => throw clientException, cancellation));
+
+            Assert.Same(transformed, actual);
+        }
+
+        [Fact]
+        public async Task ThrowsAfterMaxRetryCountReached()
+        {
+            // Cover the callee's retry-count exhaustion branch through the Task-returning wrapper.
+            SetupReportOperationException(TransientRetry(maxRetryCount: 2));
+            int calls = 0;
+
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.InvokeWithRetryAsync(
+                    _ => { calls++; throw clientException; },
+                    cancellation));
+
+            Assert.Same(clientException, actual);
+            Assert.Equal(3, calls);
+        }
+
+        [Fact]
+        public async Task ResetsRetryCountWhenExceptionIdChangesAcrossIterations()
+        {
+            // Cover the callee's exception-id reset branch through the Task-returning wrapper.
+            const int maxRetryCount = 2;
+            var controls = new Queue<OperationRetryControl>(new[]
+            {
+                Retry("a"), Retry("a"), Retry("b"), Retry("b"), Retry("b"),
+            });
+            _ = communicationClientFactory
+                .Setup(_ => _.ReportOperationExceptionAsync(
+                    client,
+                    It.Is<ExceptionInformation>(i => i.Exception == clientException && i.TargetReplica == targetReplicaSelector),
+                    retrySettings,
+                    CancellationToken.None))
+                .ReturnsAsync(controls.Dequeue);
+            int calls = 0;
+
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.InvokeWithRetryAsync(
+                    _ => { calls++; throw clientException; },
+                    cancellation));
+
+            Assert.Same(clientException, actual);
+            Assert.Equal(5, calls);
+
+            static OperationRetryControl Retry(string id) => new()
+            {
+                ShouldRetry = true,
+                IsTransient = true,
+                MaxRetryCount = maxRetryCount,
+                ExceptionId = id,
+                GetRetryDelay = _ => ShortRetryDelay,
+            };
+        }
+
+        [Fact]
+        public async Task CancelsWhenClientRetryTimeoutElapses()
+        {
+            // Cover the callee's timeout setup/disposal branch through the Task-returning wrapper.
+            var timeout = TimeSpan.FromMilliseconds(500);
+            var policy = new Mock<IRetryPolicy>();
+            _ = policy.SetupGet(_ => _.ClientRetryTimeout).Returns(timeout);
+            var retrySettings = new OperationRetrySettings(policy.Object);
+            var sut = new ServicePartitionClient<ICommunicationClient>(
+                communicationClientFactory.Object, serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings);
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(client);
+            _ = communicationClientFactory
+                .Setup(_ => _.ReportOperationExceptionAsync(
+                    client,
+                    It.Is<ExceptionInformation>(i => i.Exception == clientException && i.TargetReplica == targetReplicaSelector),
+                    retrySettings,
+                    CancellationToken.None))
+                .ReturnsAsync(TransientRetry(maxRetryCount: 1_000_000, delay: ShortRetryDelay));
+
+            var stopwatch = Stopwatch.StartNew();
+            _ = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => sut.InvokeWithRetryAsync(_ => throw clientException, TestContext.Current.CancellationToken));
+            stopwatch.Stop();
+
+            Assert.True(stopwatch.ElapsedMilliseconds >= timeout.TotalMilliseconds - 25, $"Elapsed {stopwatch.ElapsedMilliseconds}ms < {timeout.TotalMilliseconds}ms");
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
         public async Task ThrowsArgumentNullExceptionWhenFuncIsNull()
         {
@@ -871,6 +1041,82 @@ public abstract class ServicePartitionClientTest
                 });
 
             Assert.Equal(2, calls);
+        }
+
+        [Fact]
+        public async Task ThrowsExceptionFromReportResultWhenShouldRetryIsFalseAndReportExceptionIsSet()
+        {
+            // Cover the callee's report-exception branch through the composed no-token + Task wrapper delegation.
+            var transformed = new ApplicationException();
+            SetupReportOperationException(new OperationRetryControl { ShouldRetry = false, Exception = transformed });
+
+            ApplicationException actual = await Assert.ThrowsAsync<ApplicationException>(
+                () => sut.InvokeWithRetryAsync(_ => throw clientException));
+
+            Assert.Same(transformed, actual);
+        }
+
+        [Fact]
+        public async Task ThrowsAfterMaxRetryCountReached()
+        {
+            // Cover the callee's retry-count exhaustion branch through the composed delegation.
+            SetupReportOperationException(TransientRetry(maxRetryCount: 2));
+            int calls = 0;
+
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.InvokeWithRetryAsync(_ => { calls++; throw clientException; }));
+
+            Assert.Same(clientException, actual);
+            Assert.Equal(3, calls);
+        }
+
+        [Fact]
+        public async Task ResetsCommunicationClientWhenExceptionIsNotTransient()
+        {
+            // Cover the callee's non-transient client-reset branch through the composed delegation.
+            SetupReportOperationException(NonTransientRetry());
+            int calls = 0;
+
+            await sut.InvokeWithRetryAsync(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.CompletedTask;
+                });
+
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task CancelsWhenClientRetryTimeoutElapses()
+        {
+            // Cover the callee's timeout setup/disposal branch through the composed delegation.
+            var timeout = TimeSpan.FromMilliseconds(500);
+            var policy = new Mock<IRetryPolicy>();
+            _ = policy.SetupGet(_ => _.ClientRetryTimeout).Returns(timeout);
+            var retrySettings = new OperationRetrySettings(policy.Object);
+            var sut = new ServicePartitionClient<ICommunicationClient>(
+                communicationClientFactory.Object, serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings);
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(client);
+            _ = communicationClientFactory
+                .Setup(_ => _.ReportOperationExceptionAsync(
+                    client,
+                    It.Is<ExceptionInformation>(i => i.Exception == clientException && i.TargetReplica == targetReplicaSelector),
+                    retrySettings,
+                    CancellationToken.None))
+                .ReturnsAsync(TransientRetry(maxRetryCount: 1_000_000, delay: ShortRetryDelay));
+
+            var stopwatch = Stopwatch.StartNew();
+            _ = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => sut.InvokeWithRetryAsync(_ => throw clientException));
+            stopwatch.Stop();
+
+            Assert.True(stopwatch.ElapsedMilliseconds >= timeout.TotalMilliseconds - 25, $"Elapsed {stopwatch.ElapsedMilliseconds}ms < {timeout.TotalMilliseconds}ms");
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for func.
