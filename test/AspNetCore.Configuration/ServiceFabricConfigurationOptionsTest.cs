@@ -184,8 +184,8 @@ public abstract class ServiceFabricConfigurationOptionsTest
         {
             string actual = sut.DefaultExtractKeyFunc(section, property);
 
-            string d = ConfigurationPath.KeyDelimiter;
-            Assert.Equal($"{packageName}{d}{section.Name}{d}{property.Name}", actual);
+            string delimiter = ConfigurationPath.KeyDelimiter;
+            Assert.Equal($"{packageName}{delimiter}{section.Name}{delimiter}{property.Name}", actual);
         }
 
         [Fact]
@@ -195,8 +195,8 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
             string actual = sut.DefaultExtractKeyFunc(section, property);
 
-            string d = ConfigurationPath.KeyDelimiter;
-            Assert.Equal($"{section.Name}{d}{property.Name}", actual);
+            string delimiter = ConfigurationPath.KeyDelimiter;
+            Assert.Equal($"{section.Name}{delimiter}{property.Name}", actual);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing section argument validation.
