@@ -35,7 +35,7 @@ public abstract class TracingCommunicationListenerTest
     public sealed class Constructor : TracingCommunicationListenerTest
     {
         [Fact]
-        public void ThrowsArgumentNullExceptionWhenListenerInfoIsNull()
+        public void ThrowsArgumentNullExceptionWhenOriginalIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new TracingCommunicationListener(null, trace.Object));
             Assert.Equal(nameof(original), exception.ParamName);
