@@ -28,6 +28,54 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
     public sealed class ConfigAction : ServiceFabricConfigurationOptionsTest
     {
+        [Fact]
+        public void IsSetToGivenValue()
+        {
+            Action<ConfigurationPackage, IDictionary<string, string>> expected = (_, _) => { };
+            sut.ConfigAction = expected;
+            Assert.Same(expected, sut.ConfigAction);
+        }
+    }
+
+    public sealed class Constructor : ServiceFabricConfigurationOptionsTest
+    {
+        [Fact]
+        public void InitializesProperties()
+        {
+            Assert.Equal(packageName, sut.PackageName);
+            Assert.True(sut.IncludePackageName);
+            Assert.False(sut.DecryptValue);
+            Assert.Equal(sut.Method<Action<ConfigurationPackage, IDictionary<string, string>>>(), sut.ConfigAction);
+            Assert.Equal(sut.Method<Func<ConfigurationSection, ConfigurationProperty, string>>("DefaultExtractKeyFunc"), sut.ExtractKeyFunc);
+            Assert.Equal(sut.Method<Func<ConfigurationSection, ConfigurationProperty, string>>("DefaultExtractValueFunc"), sut.ExtractValueFunc);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing packageName argument validation.
+        public void ThrowsArgumentNullExceptionWhenPackageNameIsNull()
+        {
+            // The constructor throws `new ArgumentNullException(packageName)`, passing the (null) value as the
+            // paramName argument instead of `nameof(packageName)`. As a result, the resulting exception's ParamName is
+            // null and gives callers no indication which argument was invalid. This test asserts the correct paramName
+            // and will fail until the SUT is fixed. Fixing the SUT is out of scope for the current change.
+            var exception = Assert.Throws<ArgumentNullException>(() => new ServiceFabricConfigurationOptions(null));
+            Assert.Equal(sut.Constructor().Parameter<string>().Name, exception.ParamName);
+        }
+    }
+
+    public sealed class DecryptValue : ServiceFabricConfigurationOptionsTest
+    {
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void IsSetToGivenValue(bool expected)
+        {
+            sut.DecryptValue = expected;
+            Assert.Equal(expected, sut.DecryptValue);
+        }
+    }
+
+    public sealed class DefaultConfigAction : ServiceFabricConfigurationOptionsTest
+    {
         // Method parameters
         readonly ConfigurationPackage config;
         readonly IDictionary<string, string> data = new Dictionary<string, string>();
@@ -42,7 +90,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
         // so the actual parameter values are never read.
         const string unused = "";
 
-        public ConfigAction()
+        public DefaultConfigAction()
         {
             param1b = param1a + fuzzy.String().LettersOrDigits();
             section2 = section1 + fuzzy.String().LettersOrDigits();
@@ -86,7 +134,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             sut.ExtractValueFunc = extractValue.Object;
 
             // Act
-            sut.ConfigAction(config, data);
+            sut.DefaultConfigAction(config, data);
 
             // Assert
             Dictionary<string, string> expected = new()
@@ -101,14 +149,6 @@ public abstract class ServiceFabricConfigurationOptionsTest
             extractValue.Verify(_ => _(It.IsAny<ConfigurationSection>(), It.IsAny<ConfigurationProperty>()), Times.Exactly(3));
         }
 
-        [Fact]
-        public void IsSetToGivenValue()
-        {
-            Action<ConfigurationPackage, IDictionary<string, string>> expected = (_, _) => { };
-            sut.ConfigAction = expected;
-            Assert.Same(expected, sut.ConfigAction);
-        }
-
         [Fact(Explicit = true)] // TODO: SUT bug. Missing config argument validation.
         public void ThrowsArgumentNullExceptionWhenConfigIsNull()
         {
@@ -116,8 +156,9 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // NullReferenceException instead of the ArgumentNullException expected for a public-facing delegate. This
             // test asserts the correct behavior and will fail until the SUT validates the argument. Fixing the SUT is
             // out of scope for the current change.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(null, data));
-            Assert.Equal(sut.ConfigAction.Method.Parameter<ConfigurationPackage>().Name, exception.ParamName);
+            Action<ConfigurationPackage, IDictionary<string, string>> method = sut.DefaultConfigAction;
+            var exception = Assert.Throws<ArgumentNullException>(() => method(null, data));
+            Assert.Equal(method.Method.Parameter<ConfigurationPackage>().Name, exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing data argument validation.
@@ -127,65 +168,21 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // NullReferenceException instead of the ArgumentNullException expected for a public-facing delegate. This
             // test asserts the correct behavior and will fail until the SUT validates the argument. Fixing the SUT is
             // out of scope for the current change.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.ConfigAction(config, null));
-            Assert.Equal(sut.ConfigAction.Method.Parameter<IDictionary<string, string>>().Name, exception.ParamName);
+            Action<ConfigurationPackage, IDictionary<string, string>> method = sut.DefaultConfigAction;
+            var exception = Assert.Throws<ArgumentNullException>(() => method(config, null));
+            Assert.Equal(method.Method.Parameter<IDictionary<string, string>>().Name, exception.ParamName);
         }
     }
 
-    public sealed class Constructor : ServiceFabricConfigurationOptionsTest
-    {
-        [Fact]
-        public void InitializesProperties()
-        {
-            Assert.Equal(packageName, sut.PackageName);
-            Assert.True(sut.IncludePackageName);
-            Assert.False(sut.DecryptValue);
-            Assert.Equal(sut.Method<Action<ConfigurationPackage, IDictionary<string, string>>>(), sut.ConfigAction);
-            Assert.Equal(sut.Method<Func<ConfigurationSection, ConfigurationProperty, string>>("DefaultExtractKeyFunc"), sut.ExtractKeyFunc);
-            Assert.Equal(sut.Method<Func<ConfigurationSection, ConfigurationProperty, string>>("DefaultExtractValueFunc"), sut.ExtractValueFunc);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing packageName argument validation.
-        public void ThrowsArgumentNullExceptionWhenPackageNameIsNull()
-        {
-            // The constructor throws `new ArgumentNullException(packageName)`, passing the (null) value as the
-            // paramName argument instead of `nameof(packageName)`. As a result, the resulting exception's ParamName is
-            // null and gives callers no indication which argument was invalid. This test asserts the correct paramName
-            // and will fail until the SUT is fixed. Fixing the SUT is out of scope for the current change.
-            var exception = Assert.Throws<ArgumentNullException>(() => new ServiceFabricConfigurationOptions(null));
-            Assert.Equal(sut.Constructor().Parameter<string>().Name, exception.ParamName);
-        }
-    }
-
-    public sealed class DecryptValue : ServiceFabricConfigurationOptionsTest
-    {
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void IsSetToGivenValue(bool expected)
-        {
-            sut.DecryptValue = expected;
-            Assert.Equal(expected, sut.DecryptValue);
-        }
-    }
-
-    public sealed class ExtractKeyFunc : ServiceFabricConfigurationOptionsTest
+    public sealed class DefaultExtractKeyFunc : ServiceFabricConfigurationOptionsTest
     {
         readonly ConfigurationSection section = Section();
         readonly ConfigurationProperty property = Property();
 
         [Fact]
-        public void IsSetToGivenValue()
-        {
-            Func<ConfigurationSection, ConfigurationProperty, string> expected = (_, _) => null;
-            sut.ExtractKeyFunc = expected;
-            Assert.Same(expected, sut.ExtractKeyFunc);
-        }
-
-        [Fact]
         public void IncludesPackageNameWhenIncludePackageNameIsTrue()
         {
-            string actual = sut.ExtractKeyFunc(section, property);
+            string actual = sut.DefaultExtractKeyFunc(section, property);
 
             string d = ConfigurationPath.KeyDelimiter;
             Assert.Equal($"{packageName}{d}{section.Name}{d}{property.Name}", actual);
@@ -196,7 +193,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
         {
             sut.IncludePackageName = false;
 
-            string actual = sut.ExtractKeyFunc(section, property);
+            string actual = sut.DefaultExtractKeyFunc(section, property);
 
             string d = ConfigurationPath.KeyDelimiter;
             Assert.Equal($"{section.Name}{d}{property.Name}", actual);
@@ -209,8 +206,9 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // a NullReferenceException instead of the ArgumentNullException expected for a public-facing delegate. This
             // test asserts the correct behavior and will fail until the SUT validates the argument. Fixing the SUT is
             // out of scope for the current change.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractKeyFunc(null, property));
-            Assert.Equal(sut.ExtractKeyFunc.Method.Parameter<ConfigurationSection>().Name, exception.ParamName);
+            Func<ConfigurationSection, ConfigurationProperty, string> method = sut.DefaultExtractKeyFunc;
+            var exception = Assert.Throws<ArgumentNullException>(() => method(null, property));
+            Assert.Equal(method.Method.Parameter<ConfigurationSection>().Name, exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing property argument validation.
@@ -220,28 +218,21 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // produces a NullReferenceException instead of the ArgumentNullException expected for a public-facing
             // delegate. This test asserts the correct behavior and will fail until the SUT validates the argument.
             // Fixing the SUT is out of scope for the current change.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractKeyFunc(section, null));
-            Assert.Equal(sut.ExtractKeyFunc.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
+            Func<ConfigurationSection, ConfigurationProperty, string> method = sut.DefaultExtractKeyFunc;
+            var exception = Assert.Throws<ArgumentNullException>(() => method(section, null));
+            Assert.Equal(method.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
         }
     }
 
-    public sealed class ExtractValueFunc : ServiceFabricConfigurationOptionsTest
+    public sealed class DefaultExtractValueFunc : ServiceFabricConfigurationOptionsTest
     {
         readonly ConfigurationSection section = Section();
         readonly ConfigurationProperty property = Property();
 
         [Fact]
-        public void IsSetToGivenValue()
-        {
-            Func<ConfigurationSection, ConfigurationProperty, string> expected = (_, _) => null;
-            sut.ExtractValueFunc = expected;
-            Assert.Same(expected, sut.ExtractValueFunc);
-        }
-
-        [Fact]
         public void ReturnsPropertyValueWhenPropertyIsNotEncrypted()
         {
-            string actual = sut.ExtractValueFunc(section, property);
+            string actual = sut.DefaultExtractValueFunc(section, property);
             Assert.Same(property.Value, actual);
         }
 
@@ -250,7 +241,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
         {
             ConfigurationProperty encryptedProperty = Property(value: fuzzy.String(), isEncrypted: true);
             sut.DecryptValue = false;
-            string actual = sut.ExtractValueFunc(section, encryptedProperty);
+            string actual = sut.DefaultExtractValueFunc(section, encryptedProperty);
             Assert.Same(encryptedProperty.Value, actual);
         }
 
@@ -258,7 +249,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
         public void ReturnsPropertyValueWhenPropertyIsNotEncryptedAndDecryptValueIsTrue()
         {
             sut.DecryptValue = true;
-            string actual = sut.ExtractValueFunc(section, property);
+            string actual = sut.DefaultExtractValueFunc(section, property);
             Assert.Same(property.Value, actual);
         }
 
@@ -277,8 +268,31 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // produces a NullReferenceException instead of the ArgumentNullException expected for a public-facing
             // delegate. This test asserts the correct behavior and will fail until the SUT validates the argument.
             // Fixing the SUT is out of scope for the current change.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.ExtractValueFunc(section, null));
-            Assert.Equal(sut.ExtractValueFunc.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
+            Func<ConfigurationSection, ConfigurationProperty, string> method = sut.DefaultExtractValueFunc;
+            var exception = Assert.Throws<ArgumentNullException>(() => method(section, null));
+            Assert.Equal(method.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
+        }
+    }
+
+    public sealed class ExtractKeyFunc : ServiceFabricConfigurationOptionsTest
+    {
+        [Fact]
+        public void IsSetToGivenValue()
+        {
+            Func<ConfigurationSection, ConfigurationProperty, string> expected = (_, _) => null;
+            sut.ExtractKeyFunc = expected;
+            Assert.Same(expected, sut.ExtractKeyFunc);
+        }
+    }
+
+    public sealed class ExtractValueFunc : ServiceFabricConfigurationOptionsTest
+    {
+        [Fact]
+        public void IsSetToGivenValue()
+        {
+            Func<ConfigurationSection, ConfigurationProperty, string> expected = (_, _) => null;
+            sut.ExtractValueFunc = expected;
+            Assert.Same(expected, sut.ExtractValueFunc);
         }
     }
 
