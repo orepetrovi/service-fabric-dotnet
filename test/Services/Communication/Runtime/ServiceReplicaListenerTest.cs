@@ -29,20 +29,6 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
 
         public sealed class Constructor : ServiceReplicaListenerTest
         {
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenCreateCommunicationListenerIsNull()
-            {
-                var exception = Assert.Throws<ArgumentNullException>(() => new ServiceReplicaListener(null, name, listenOnSecondary));
-                Assert.Equal(nameof(createCommunicationListener), exception.ParamName);
-            }
-
-            [Fact]
-            public void ThrowsArgumentNullExceptionWhenNameIsNull()
-            {
-                var exception = Assert.Throws<ArgumentNullException>(() => new ServiceReplicaListener(createCommunicationListener, null, listenOnSecondary));
-                Assert.Equal(nameof(name), exception.ParamName);
-            }
-
             [Theory]
             [InlineData(true)]
             [InlineData(false)]
@@ -60,6 +46,20 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
                 var sut = new ServiceReplicaListener(createCommunicationListener);
                 Assert.Same(ServiceReplicaListener.DefaultName, sut.Name);
                 Assert.False(sut.ListenOnSecondary);
+            }
+
+            [Fact]
+            public void ThrowsArgumentNullExceptionWhenCreateCommunicationListenerIsNull()
+            {
+                var exception = Assert.Throws<ArgumentNullException>(() => new ServiceReplicaListener(null, name, listenOnSecondary));
+                Assert.Equal(nameof(createCommunicationListener), exception.ParamName);
+            }
+
+            [Fact]
+            public void ThrowsArgumentNullExceptionWhenNameIsNull()
+            {
+                var exception = Assert.Throws<ArgumentNullException>(() => new ServiceReplicaListener(createCommunicationListener, null, listenOnSecondary));
+                Assert.Equal(nameof(name), exception.ParamName);
             }
         }
 
