@@ -28,13 +28,17 @@ public abstract class ExclusiveFileStreamTest : IDisposable
 
     public sealed class Acquire : ExclusiveFileStreamTest
     {
+        FileMode fileMode = FileMode.Open;
+        FileShare fileShare = FileShare.None;
+        FileAccess fileAccess = FileAccess.ReadWrite;
+
         [Fact]
         public void OpensFileAtGivenPathWithGivenModeShareAndAccess()
         {
             byte[] expected = fuzzy.Array(fuzzy.Byte);
             File.WriteAllBytes(path, expected);
 
-            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, FileMode.Open, FileShare.None, FileAccess.ReadWrite);
+            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, fileMode, fileShare, fileAccess);
 
             Assert.Equal(path, sut.Value.Name);
             Assert.True(sut.Value.CanRead);
@@ -59,11 +63,12 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         [Fact(Explicit = true)]
         public async Task RetriesUntilFileBecomesAvailable()
         {
+            fileAccess = FileAccess.Read;
             CancellationToken cancellation = TestContext.Current.CancellationToken;
             using FileStream locked = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None);
 
             Task<ExclusiveFileStream> acquireTask = Task.Run(
-                () => ExclusiveFileStream.Acquire(path, FileMode.Open, FileShare.None, FileAccess.Read),
+                () => ExclusiveFileStream.Acquire(path, fileMode, fileShare, fileAccess),
                 cancellation);
 
             while (acquireTask.Status < TaskStatus.Running)
