@@ -317,7 +317,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
 
     static ConfigurationProperty Property(string value = null, bool isEncrypted = false)
     {
-        var property = Type<ConfigurationProperty>.Uninitialized();
+        var property = Type<ConfigurationProperty>.New();
         property.Property<string>(nameof(ConfigurationProperty.Name)).Set(fuzzy.String());
         property.Property<string>(nameof(ConfigurationProperty.Value)).Set(value ?? fuzzy.String());
         property.Property<bool>(nameof(ConfigurationProperty.IsEncrypted)).Set(isEncrypted);
