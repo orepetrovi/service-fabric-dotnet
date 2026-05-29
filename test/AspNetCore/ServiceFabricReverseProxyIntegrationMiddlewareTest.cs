@@ -115,9 +115,9 @@ public abstract class ServiceFabricReverseProxyIntegrationMiddlewareTest
         {
             var headers = new HeaderDictionary();
             _ = response.SetupGet(_ => _.Headers).Returns(headers);
+            _ = response.SetupGet(_ => _.StatusCode).Returns(statusCode);
             _ = sut.Invoke(context.Object);
 
-            _ = response.SetupGet(_ => _.StatusCode).Returns(statusCode);
             await actualCallback(actualState);
 
             Assert.False(headers.ContainsKey("X-ServiceFabric"));
