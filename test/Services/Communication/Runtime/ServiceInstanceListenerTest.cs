@@ -21,7 +21,6 @@ public abstract class ServiceInstanceListenerTest
     readonly Func<StatelessServiceContext, ICommunicationListener> createCommunicationListener = Mock.Of<Func<StatelessServiceContext, ICommunicationListener>>();
     readonly string name = fuzzy.String();
 
-    // Test fixture
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
     ServiceInstanceListenerTest() =>
