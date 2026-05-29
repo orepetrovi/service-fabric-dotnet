@@ -169,8 +169,8 @@ public abstract class ServiceFabricMiddlewareTest
 
         sealed class CapturedRequest
         {
-            public PathString Path;
-            public PathString PathBase;
+            internal PathString Path;
+            internal PathString PathBase;
         }
     }
 }
