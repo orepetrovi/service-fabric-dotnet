@@ -699,6 +699,9 @@ public abstract class ServicePartitionClientTest
             communicationClientFactory.Verify(
                 _ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
                 Times.Once);
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Fact]
@@ -1104,6 +1107,9 @@ public abstract class ServicePartitionClientTest
 
             communicationClientFactory.Verify(
                 _ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Once);
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
