@@ -84,6 +84,7 @@ public abstract class TracingCommunicationListenerTest
 
             trace.Verify(_ => _.Info($"Aborting {original}..."), Times.Once);
             Assert.Same(expectedException, actualException);
+            trace.Verify(_ => _.Error(It.IsAny<string>()), Times.Once);
             Assert.Equal(expectedError, actualError);
         }
     }
@@ -119,6 +120,7 @@ public abstract class TracingCommunicationListenerTest
 
             trace.Verify(_ => _.Info($"Closing {original}..."), Times.Once);
             Assert.Same(expectedException, actualException);
+            trace.Verify(_ => _.Warning(It.IsAny<string>()), Times.Once);
             Assert.Equal(expectedWarning, actualWarning);
         }
     }
@@ -157,6 +159,7 @@ public abstract class TracingCommunicationListenerTest
 
             trace.Verify(_ => _.Info($"Opening {original}..."), Times.Once);
             Assert.Same(expectedException, actualException);
+            trace.Verify(_ => _.Warning(It.IsAny<string>()), Times.Once);
             Assert.Equal(expectedWarning, actualWarning);
         }
     }
