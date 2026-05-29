@@ -121,6 +121,7 @@ public abstract class TracingCommunicationListenerTest
 
             trace.Verify(_ => _.Info($"Closing {original}..."), Times.Once);
             Assert.Same(expectedException, actualException);
+            listener.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
             trace.Verify(_ => _.Warning(It.IsAny<string>()), Times.Once);
             Assert.Equal(expectedWarning, actualWarning);
         }
@@ -161,6 +162,7 @@ public abstract class TracingCommunicationListenerTest
 
             trace.Verify(_ => _.Info($"Opening {original}..."), Times.Once);
             Assert.Same(expectedException, actualException);
+            listener.Verify(_ => _.OpenAsync(It.IsAny<CancellationToken>()), Times.Once);
             trace.Verify(_ => _.Warning(It.IsAny<string>()), Times.Once);
             Assert.Equal(expectedWarning, actualWarning);
         }
