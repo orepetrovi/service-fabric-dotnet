@@ -39,7 +39,7 @@ public abstract class CRC64Test
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
         public void ThrowsArgumentNullExceptionWhenValueIsNull() =>
-            Assert.Equal("value", Assert.Throws<ArgumentNullException>(() => CRC64.ToCRC64((byte[])null)).ParamName);
+            Assert.Equal(nameof(value), Assert.Throws<ArgumentNullException>(() => CRC64.ToCRC64((byte[])null)).ParamName);
     }
 
     public sealed class ToCRC64_ByteArrayArray : CRC64Test
@@ -64,11 +64,11 @@ public abstract class CRC64Test
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
         public void ThrowsArgumentNullExceptionWhenValuesIsNull() =>
-            Assert.Equal("values", Assert.Throws<ArgumentNullException>(() => CRC64.ToCRC64((byte[][])null)).ParamName);
+            Assert.Equal(nameof(values), Assert.Throws<ArgumentNullException>(() => CRC64.ToCRC64((byte[][])null)).ParamName);
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
         public void ThrowsArgumentNullExceptionWhenAnyArrayIsNull() =>
-            Assert.Equal("values", Assert.Throws<ArgumentNullException>(() => CRC64.ToCRC64(new byte[][] { null })).ParamName);
+            Assert.Equal(nameof(values), Assert.Throws<ArgumentNullException>(() => CRC64.ToCRC64(new byte[][] { null })).ParamName);
     }
 
     public sealed class ToCrc64String : CRC64Test
@@ -85,6 +85,6 @@ public abstract class CRC64Test
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
         public void ThrowsArgumentNullExceptionWhenValueIsNull() =>
-            Assert.Equal("value", Assert.Throws<ArgumentNullException>(() => CRC64.ToCrc64String(null)).ParamName);
+            Assert.Equal(nameof(value), Assert.Throws<ArgumentNullException>(() => CRC64.ToCrc64String(null)).ParamName);
     }
 }
