@@ -46,18 +46,11 @@ public abstract class WebHostCommunicationListenerTest
         public Abort() => SetupServer($"http://+:{fuzzy.UInt16()}");
 
         [Fact]
-        public async Task DisposesHostAfterOpenAsync()
+        public async Task DisposesHostWithoutStoppingAfterOpenAsync()
         {
             _ = await sut.OpenAsync(CancellationToken.None);
             sut.Abort();
             host.Verify(_ => _.Dispose(), Times.Once());
-        }
-
-        [Fact]
-        public async Task DoesNotInvokeStopAsync()
-        {
-            _ = await sut.OpenAsync(CancellationToken.None);
-            sut.Abort();
             host.Verify(_ => _.StopAsync(It.IsAny<CancellationToken>()), Times.Never());
         }
 
