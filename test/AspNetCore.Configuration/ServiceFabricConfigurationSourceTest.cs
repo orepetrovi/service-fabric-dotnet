@@ -4,7 +4,6 @@
 using System;
 using System.Fabric;
 using Fuzzy;
-using Inspector;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
@@ -29,11 +28,12 @@ public abstract class ServiceFabricConfigurationSourceTest
         readonly IConfigurationBuilder builder = Mock.Of<IConfigurationBuilder>();
 
         [Fact]
-        public void ReturnsServiceFabricConfigurationProviderInitializedFromSource()
+        public void ReturnsConfigurationProviderInitializedFromSource()
         {
-            var provider = (ServiceFabricConfigurationProvider)sut.Build(builder);
-            Assert.Same(activationContext, provider.Field<ICodePackageActivationContext>().Value);
-            Assert.Same(options, provider.Field<ServiceFabricConfigurationOptions>().Value);
+            options.ConfigAction = (_, _) => { };
+            IConfigurationProvider provider = sut.Build(builder);
+            provider.Load();
+            Mock.Get(activationContext).Verify(_ => _.GetConfigurationPackageObject(options.PackageName), Times.Once);
         }
     }
 
