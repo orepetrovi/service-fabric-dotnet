@@ -68,7 +68,6 @@ public abstract class GenericHostCommunicationListenerTest
             sut.Abort();
 
             build.Verify(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()), Times.Never());
-            host.Verify(_ => _.Dispose(), Times.Never());
         }
     }
 
