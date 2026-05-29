@@ -22,7 +22,6 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
         readonly string name = fuzzy.String();
         readonly bool listenOnSecondary = fuzzy.Boolean();
 
-        // Test fixture
         static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
         ServiceReplicaListenerTest() =>
