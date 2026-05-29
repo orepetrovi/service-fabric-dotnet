@@ -18,14 +18,12 @@ public abstract class PathStringExtensionsTest
         readonly PathString pathString;
         readonly PathString other;
 
-        readonly PathString different;
         readonly string segment = "/" + fuzzy.String().LettersOrDigits();
 
         public StartsWithSegments()
         {
             other = new PathString(segment);
             pathString = new PathString(segment + "/" + fuzzy.String().LettersOrDigits());
-            different = new PathString("/_" + segment);
         }
 
         [Fact]
@@ -67,6 +65,8 @@ public abstract class PathStringExtensionsTest
         [Fact]
         public void ReturnsFalseAndAssignsMatchedAndRemainingToEmptyWhenPathStringDoesNotStartWithOther()
         {
+            var different = new PathString("/_" + segment);
+
             Assert.False(PathStringExtensions.StartsWithSegments(different, other, out PathString matched, out PathString remaining));
             Assert.Equal(PathString.Empty, matched);
             Assert.Equal(PathString.Empty, remaining);
