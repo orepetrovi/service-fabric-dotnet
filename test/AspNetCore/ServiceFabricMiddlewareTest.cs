@@ -64,7 +64,7 @@ public abstract class ServiceFabricMiddlewareTest
             context.Request.Path = originalPath;
 
             var middleware = new ServiceFabricMiddleware(next.Object, string.Empty);
-            var captured = SetupNextToCaptureRequest();
+            CapturedRequest captured = SetupNextToCaptureRequest();
 
             // Act
             await middleware.Invoke(context);
@@ -99,7 +99,7 @@ public abstract class ServiceFabricMiddlewareTest
             PathString originalPath = urlSuffix + remainingPath;
             context.Request.Path = originalPath;
 
-            var captured = SetupNextToCaptureRequest();
+            CapturedRequest captured = SetupNextToCaptureRequest();
 
             // Act
             await sut.Invoke(context);
@@ -119,7 +119,7 @@ public abstract class ServiceFabricMiddlewareTest
             PathString originalPath = urlSuffix;
             context.Request.Path = originalPath;
 
-            var captured = SetupNextToCaptureRequest();
+            CapturedRequest captured = SetupNextToCaptureRequest();
 
             // Act
             await sut.Invoke(context);
