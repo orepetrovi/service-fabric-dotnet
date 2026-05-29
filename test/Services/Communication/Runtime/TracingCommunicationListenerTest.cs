@@ -34,9 +34,9 @@ public abstract class TracingCommunicationListenerTest
 
         // Record post-construction trace calls in order to prove that the start trace happens before the
         // listener call and the completion/failure trace happens after.
-        _ = trace.Setup(_ => _.Info(It.IsAny<string>())).Callback((string m) => events.Add($"info:{m}"));
-        _ = trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string m) => events.Add($"warning:{m}"));
-        _ = trace.Setup(_ => _.Error(It.IsAny<string>())).Callback((string m) => events.Add($"error:{m}"));
+        _ = trace.Setup(_ => _.Info(It.IsAny<string>())).Callback((string message) => events.Add($"info:{message}"));
+        _ = trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string message) => events.Add($"warning:{message}"));
+        _ = trace.Setup(_ => _.Error(It.IsAny<string>())).Callback((string message) => events.Add($"error:{message}"));
     }
 
     public sealed class Abort : TracingCommunicationListenerTest
