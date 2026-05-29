@@ -124,7 +124,8 @@ public abstract class ServiceFabricConfigurationExtensionsTest
             _ = builder.AddServiceFabricConfiguration(context, optionsDelegate: null);
 
             IConfigurationSource source = Assert.Single(builder.Sources);
-            Assert.Same(context, source.Property<ICodePackageActivationContext>().Value);
+            var typed = Assert.IsType<ServiceFabricConfigurationSource>(source);
+            Assert.Same(context, typed.ActivationContext);
         }
 
         [Fact]
@@ -153,7 +154,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
 
     static void AssertSources(IList<IConfigurationSource> sources, ICodePackageActivationContext expectedContext)
     {
-        Assert.All(sources, source => Assert.Same(expectedContext, source.Property<ICodePackageActivationContext>().Value));
+        Assert.All(sources, source => Assert.Same(expectedContext, ((ServiceFabricConfigurationSource)source).ActivationContext));
         IEnumerable<string> actual = sources.Select(source => source.Field<ServiceFabricConfigurationOptions>().Value.PackageName);
         Assert.Equal(expectedContext.GetConfigurationPackageNames(), actual);
     }
