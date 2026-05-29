@@ -48,7 +48,6 @@ public abstract class PathStringExtensionsTest
         {
             string casedSegment = segment + fuzzy.Char().Between('a', 'z');
             string upperSegment = casedSegment.ToUpperInvariant();
-            string suffix = "/" + fuzzy.String().LettersOrDigits();
             var upper = new PathString(upperSegment + suffix);
             var lower = new PathString(casedSegment.ToLowerInvariant());
 
