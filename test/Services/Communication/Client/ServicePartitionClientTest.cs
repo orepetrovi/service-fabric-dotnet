@@ -281,6 +281,29 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
+        public async Task ThrowsExceptionFromReportResultWhenMaxRetryCountReachedAndReportExceptionIsSet()
+        {
+            // Cover the callee's retry-exhaustion path when the report result supplies a transformed exception.
+            var transformed = new ApplicationException();
+            SetupReportOperationException(new OperationRetryControl
+            {
+                ShouldRetry = true,
+                IsTransient = true,
+                MaxRetryCount = 2,
+                ExceptionId = "exception",
+                GetRetryDelay = _ => ShortRetryDelay,
+                Exception = transformed,
+            });
+
+            ApplicationException actual = await Assert.ThrowsAsync<ApplicationException>(
+                () => sut.InvokeWithRetryAsync<object>(
+                    _ => throw clientException,
+                    cancellation));
+
+            Assert.Same(transformed, actual);
+        }
+
+        [Fact]
         public async Task ThrowsAfterZeroMaxRetryCount()
         {
             SetupReportOperationException(new OperationRetryControl { ShouldRetry = true, IsTransient = true, MaxRetryCount = 0, ExceptionId = "ex", GetRetryDelay = _ => ShortRetryDelay });
@@ -696,6 +719,27 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
+        public async Task ThrowsExceptionFromReportResultWhenMaxRetryCountReachedAndReportExceptionIsSet()
+        {
+            // Cover the callee's retry-exhaustion + transformed-exception path through the no-token delegation.
+            var transformed = new ApplicationException();
+            SetupReportOperationException(new OperationRetryControl
+            {
+                ShouldRetry = true,
+                IsTransient = true,
+                MaxRetryCount = 2,
+                ExceptionId = "exception",
+                GetRetryDelay = _ => ShortRetryDelay,
+                Exception = transformed,
+            });
+
+            ApplicationException actual = await Assert.ThrowsAsync<ApplicationException>(
+                () => sut.InvokeWithRetryAsync<object>(_ => throw clientException));
+
+            Assert.Same(transformed, actual);
+        }
+
+        [Fact]
         public async Task ResetsCommunicationClientWhenExceptionIsNotTransient()
         {
             // Cover the callee's non-transient client-reset branch through the no-token delegation.
@@ -931,6 +975,29 @@ public abstract class ServicePartitionClientTest
         }
 
         [Fact]
+        public async Task ThrowsExceptionFromReportResultWhenMaxRetryCountReachedAndReportExceptionIsSet()
+        {
+            // Cover the callee's retry-exhaustion + transformed-exception path through the Task-returning wrapper.
+            var transformed = new ApplicationException();
+            SetupReportOperationException(new OperationRetryControl
+            {
+                ShouldRetry = true,
+                IsTransient = true,
+                MaxRetryCount = 2,
+                ExceptionId = "exception",
+                GetRetryDelay = _ => ShortRetryDelay,
+                Exception = transformed,
+            });
+
+            ApplicationException actual = await Assert.ThrowsAsync<ApplicationException>(
+                () => sut.InvokeWithRetryAsync(
+                    _ => throw clientException,
+                    cancellation));
+
+            Assert.Same(transformed, actual);
+        }
+
+        [Fact]
         public async Task ResetsRetryCountWhenExceptionIdChangesAcrossIterations()
         {
             // Cover the callee's exception-id reset branch through the Task-returning wrapper.
@@ -1106,6 +1173,27 @@ public abstract class ServicePartitionClientTest
 
             Assert.Same(clientException, actual);
             Assert.Equal(3, calls);
+        }
+
+        [Fact]
+        public async Task ThrowsExceptionFromReportResultWhenMaxRetryCountReachedAndReportExceptionIsSet()
+        {
+            // Cover the callee's retry-exhaustion + transformed-exception path through the composed delegation.
+            var transformed = new ApplicationException();
+            SetupReportOperationException(new OperationRetryControl
+            {
+                ShouldRetry = true,
+                IsTransient = true,
+                MaxRetryCount = 2,
+                ExceptionId = "exception",
+                GetRetryDelay = _ => ShortRetryDelay,
+                Exception = transformed,
+            });
+
+            ApplicationException actual = await Assert.ThrowsAsync<ApplicationException>(
+                () => sut.InvokeWithRetryAsync(_ => throw clientException));
+
+            Assert.Same(transformed, actual);
         }
 
         [Fact]
