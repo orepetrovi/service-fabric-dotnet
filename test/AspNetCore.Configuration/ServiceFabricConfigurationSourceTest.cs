@@ -34,6 +34,7 @@ public abstract class ServiceFabricConfigurationSourceTest
             IConfigurationProvider provider = sut.Build(builder);
             provider.Load();
             Mock.Get(activationContext).Verify(_ => _.GetConfigurationPackageObject(options.PackageName), Times.Once);
+            Mock.Get(activationContext).Verify(_ => _.GetConfigurationPackageObject(It.IsAny<string>()), Times.Once);
         }
     }
 
