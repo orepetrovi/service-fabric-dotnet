@@ -2,8 +2,10 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Fabric;
 using Fuzzy;
+using Inspector;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
@@ -30,11 +32,18 @@ public abstract class ServiceFabricConfigurationSourceTest
         [Fact]
         public void ReturnsConfigurationProviderInitializedFromSource()
         {
-            options.ConfigAction = (_, _) => { };
+            var package = Type<ConfigurationPackage>.Uninitialized();
+            _ = Mock.Get(activationContext).Setup(_ => _.GetConfigurationPackageObject(options.PackageName)).Returns(package);
+            Mock<Action<ConfigurationPackage, IDictionary<string, string>>> configAction = new();
+            options.ConfigAction = configAction.Object;
+
             IConfigurationProvider provider = sut.Build(builder);
             provider.Load();
+
             Mock.Get(activationContext).Verify(_ => _.GetConfigurationPackageObject(options.PackageName), Times.Once);
             Mock.Get(activationContext).Verify(_ => _.GetConfigurationPackageObject(It.IsAny<string>()), Times.Once);
+            configAction.Verify(_ => _(package, It.IsAny<IDictionary<string, string>>()), Times.Once);
+            configAction.Verify(_ => _(It.IsAny<ConfigurationPackage>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
         }
     }
 
