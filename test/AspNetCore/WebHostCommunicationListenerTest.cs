@@ -39,12 +39,11 @@ public abstract class WebHostCommunicationListenerTest
 
         listener = new TestListener(serviceContext, build.Object, listenerUrl);
         sut = new WebHostCommunicationListener(build.Object, listener);
+        SetupServer(listenerUrl);
     }
 
     public sealed class Abort : WebHostCommunicationListenerTest
     {
-        public Abort() => SetupServer($"http://+:{fuzzy.UInt16()}");
-
         [Fact]
         public async Task DisposesHostWithoutStoppingAfterOpenAsync()
         {
@@ -66,8 +65,6 @@ public abstract class WebHostCommunicationListenerTest
     public sealed class CloseAsync : WebHostCommunicationListenerTest
     {
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
-
-        public CloseAsync() => SetupServer($"http://+:{fuzzy.UInt16()}");
 
         [Fact]
         public async Task PassesCancellationTokenToHostStopAsync()
@@ -142,8 +139,6 @@ public abstract class WebHostCommunicationListenerTest
     public sealed class OpenAsync : WebHostCommunicationListenerTest
     {
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
-
-        public OpenAsync() => SetupServer($"http://+:{fuzzy.UInt16()}");
 
         [Fact]
         public async Task InvokesBuildWithListenerUrlAndListener()
