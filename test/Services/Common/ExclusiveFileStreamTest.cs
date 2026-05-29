@@ -20,7 +20,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
     readonly string sutPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
     readonly string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-    protected ExclusiveFileStreamTest() =>
+    ExclusiveFileStreamTest() =>
         sut = ExclusiveFileStream.Acquire(sutPath, FileMode.CreateNew, FileShare.None, FileAccess.ReadWrite);
 
     void IDisposable.Dispose()
