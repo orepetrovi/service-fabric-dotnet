@@ -166,7 +166,7 @@ public abstract class TracingCommunicationListenerTest
         }
     }
 
-    class TestException : Exception
+    sealed class TestException : Exception
     {
         internal TestException(string message) : base(message) { }
     }
