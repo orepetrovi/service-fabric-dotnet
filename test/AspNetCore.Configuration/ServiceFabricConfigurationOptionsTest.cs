@@ -45,9 +45,12 @@ public abstract class ServiceFabricConfigurationOptionsTest
             Assert.Equal(packageName, sut.PackageName);
             Assert.True(sut.IncludePackageName);
             Assert.False(sut.DecryptValue);
-            Assert.Equal(sut.Method<Action<ConfigurationPackage, IDictionary<string, string>>>(), sut.ConfigAction);
-            Assert.Equal(sut.Method<Func<ConfigurationSection, ConfigurationProperty, string>>("DefaultExtractKeyFunc"), sut.ExtractKeyFunc);
-            Assert.Equal(sut.Method<Func<ConfigurationSection, ConfigurationProperty, string>>("DefaultExtractValueFunc"), sut.ExtractValueFunc);
+            Action<ConfigurationPackage, IDictionary<string, string>> expectedConfigAction = sut.DefaultConfigAction;
+            Func<ConfigurationSection, ConfigurationProperty, string> expectedExtractKeyFunc = sut.DefaultExtractKeyFunc;
+            Func<ConfigurationSection, ConfigurationProperty, string> expectedExtractValueFunc = sut.DefaultExtractValueFunc;
+            Assert.Equal(expectedConfigAction, sut.ConfigAction);
+            Assert.Equal(expectedExtractKeyFunc, sut.ExtractKeyFunc);
+            Assert.Equal(expectedExtractValueFunc, sut.ExtractValueFunc);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Incorrect packageName argument exception ParamName.
