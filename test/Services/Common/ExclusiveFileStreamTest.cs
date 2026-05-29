@@ -46,27 +46,72 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         }
 
         [Fact]
-        public void OpensFileAtGivenPathWithGivenModeShareAndAccess()
+        public void ForwardsPathAndOpensExistingFileWhenFileModeIsOpen()
         {
             byte[] expected = fuzzy.Array(fuzzy.Byte);
             File.WriteAllBytes(path, expected);
 
-            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, fileMode, fileShare, fileAccess);
+            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, FileMode.Open, fileShare, fileAccess);
 
             Assert.Equal(path, sut.Value.Name);
-            Assert.True(sut.Value.CanRead);
-            Assert.True(sut.Value.CanWrite);
 
             // FileMode.Open preserves existing content; pins SUT against Create/CreateNew/Truncate.
             byte[] actual = new byte[expected.Length];
             Assert.Equal(expected.Length, sut.Value.Read(actual, 0, actual.Length));
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void CreatesFileWhenFileModeIsOpenOrCreateAndFileIsMissing()
+        {
+            Assert.False(File.Exists(path));
+
+            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(
+                path, FileMode.OpenOrCreate, fileShare, fileAccess);
+
+            // FileMode.OpenOrCreate creates a missing file; pins SUT against FileMode.Open.
+            Assert.True(File.Exists(path));
+            Assert.Equal(path, sut.Value.Name);
+        }
+
+        [Theory]
+        [InlineData(FileAccess.Read, true, false)]
+        [InlineData(FileAccess.Write, false, true)]
+        [InlineData(FileAccess.ReadWrite, true, true)]
+        public void ForwardsFileAccessToFileOpen(FileAccess access, bool canRead, bool canWrite)
+        {
+            File.WriteAllBytes(path, fuzzy.Array(fuzzy.Byte));
+
+            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, fileMode, fileShare, access);
+
+            Assert.Equal(canRead, sut.Value.CanRead);
+            Assert.Equal(canWrite, sut.Value.CanWrite);
+        }
+
+        [Fact]
+        public void BlocksConcurrentOpenWhenFileShareIsNone()
+        {
+            File.WriteAllBytes(path, fuzzy.Array(fuzzy.Byte));
+
+            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, fileMode, FileShare.None, fileAccess);
 
             // FileShare.None prevents any concurrent open; pins SUT against more permissive shares.
             _ = Assert.Throws<IOException>(() =>
             {
                 using FileStream _ = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             });
+        }
+
+        [Fact]
+        public void AllowsConcurrentReadWhenFileShareIsRead()
+        {
+            File.WriteAllBytes(path, fuzzy.Array(fuzzy.Byte));
+
+            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, fileMode, FileShare.Read, FileAccess.Read);
+
+            // FileShare.Read allows concurrent readers; pins SUT against FileShare.None.
+            using FileStream concurrent = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            Assert.Equal(path, concurrent.Name);
         }
 
         [Fact(Explicit = true)] // TODO: Flaky test.
