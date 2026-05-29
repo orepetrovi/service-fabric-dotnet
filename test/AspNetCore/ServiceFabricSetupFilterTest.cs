@@ -72,8 +72,7 @@ public abstract class ServiceFabricSetupFilterTest
             Assert.Equal(nameof(app), exception.ParamName);
         }
 
-        [Theory]
-        [InlineData(ServiceFabricIntegrationOptions.None)]
+        [Theory, InlineData(ServiceFabricIntegrationOptions.None)]
         [InlineData(ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
         [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration)]
         [InlineData(ServiceFabricIntegrationOptions.UseReverseProxyIntegration | ServiceFabricIntegrationOptions.UseUniqueServiceUrl)]
