@@ -107,6 +107,12 @@ public abstract class ExclusiveFileStreamTest : IDisposable
             // FileShare.Read allows concurrent readers; pins SUT against FileShare.None.
             using FileStream concurrent = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             Assert.Equal(path, concurrent.Name);
+
+            // Concurrent write must fail; pins SUT against the more permissive FileShare.ReadWrite.
+            _ = Assert.Throws<IOException>(() =>
+            {
+                using FileStream _ = File.Open(path, FileMode.Open, FileAccess.Write, FileShare.ReadWrite);
+            });
         }
 
         [Fact(Explicit = true)] // TODO: Flaky test.
