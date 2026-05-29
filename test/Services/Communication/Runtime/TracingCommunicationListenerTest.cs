@@ -77,9 +77,16 @@ public abstract class TracingCommunicationListenerTest
         [Fact]
         public async Task TracesInfoWhenListenerCompletes()
         {
-            _ = listener.Setup(_ => _.CloseAsync(cancellation)).Callback(() => events.Add("listener")).Returns(Task.CompletedTask);
+            var listenerClose = new TaskCompletionSource<bool>();
+            _ = listener.Setup(_ => _.CloseAsync(cancellation)).Callback(() => events.Add("listener")).Returns(listenerClose.Task);
 
-            await sut.CloseAsync(cancellation);
+            var sutTask = sut.CloseAsync(cancellation);
+
+            Assert.False(sutTask.IsCompleted);
+            Assert.Equal(new[] { $"info:Closing {original}...", "listener" }, events);
+
+            listenerClose.SetResult(true);
+            await sutTask;
 
             Assert.Equal(
                 new[] { $"info:Closing {original}...", "listener", $"info:Closed {original}." },
@@ -135,9 +142,16 @@ public abstract class TracingCommunicationListenerTest
         public async Task TracesInfoWhenListenerCompletes()
         {
             string expectedEndpoint = fuzzy.String();
-            _ = listener.Setup(_ => _.OpenAsync(cancellation)).Callback(() => events.Add("listener")).Returns(Task.FromResult(expectedEndpoint));
+            var listenerOpen = new TaskCompletionSource<string>();
+            _ = listener.Setup(_ => _.OpenAsync(cancellation)).Callback(() => events.Add("listener")).Returns(listenerOpen.Task);
 
-            string actualEndpoint = await sut.OpenAsync(cancellation);
+            var sutTask = sut.OpenAsync(cancellation);
+
+            Assert.False(sutTask.IsCompleted);
+            Assert.Equal(new[] { $"info:Opening {original}...", "listener" }, events);
+
+            listenerOpen.SetResult(expectedEndpoint);
+            string actualEndpoint = await sutTask;
 
             Assert.Same(expectedEndpoint, actualEndpoint);
             Assert.Equal(
