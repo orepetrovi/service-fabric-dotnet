@@ -42,6 +42,16 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         readonly ICodePackageActivationContext context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
 
         [Fact]
+        public void AddsSource()
+        {
+            _ = builder.AddServiceFabricConfiguration(context);
+
+            IConfigurationSource source = Assert.Single(builder.Sources);
+            var typed = Assert.IsType<ServiceFabricConfigurationSource>(source);
+            Assert.Same(context, typed.ActivationContext);
+        }
+
+        [Fact]
         public void ReturnsBuilder()
         {
             IConfigurationBuilder actual = builder.AddServiceFabricConfiguration(context);
