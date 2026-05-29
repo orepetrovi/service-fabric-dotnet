@@ -85,18 +85,10 @@ public abstract class ServiceFabricSetupFilterTest
             Assert.Same(urlSuffix, middleware.Field<string>().Value);
         }
 
-        [Fact]
-        public void ReturnsActionThatDoesNotRegisterServiceFabricMiddlewareWhenUrlSuffixIsNull()
+        [Theory, InlineData(null), InlineData("")]
+        public void ReturnsActionThatDoesNotRegisterServiceFabricMiddlewareWhenUrlSuffixIsNullOrEmpty(string urlSuffix)
         {
-            var sut = new ServiceFabricSetupFilter(null, options);
-            sut.Configure(next.Object)(app.Object);
-            Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricMiddleware>());
-        }
-
-        [Fact]
-        public void ReturnsActionThatDoesNotRegisterServiceFabricMiddlewareWhenUrlSuffixIsEmpty()
-        {
-            var sut = new ServiceFabricSetupFilter(string.Empty, options);
+            var sut = new ServiceFabricSetupFilter(urlSuffix, options);
             sut.Configure(next.Object)(app.Object);
             Assert.Empty(RegisteredMiddlewares().OfType<ServiceFabricMiddleware>());
         }
