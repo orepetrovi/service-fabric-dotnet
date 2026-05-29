@@ -26,8 +26,13 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : KestrelCommunicationListenerTest
     {
-        static readonly Constructor ctor = Type<KestrelCommunicationListener>.Uninitialized()
-            .Constructor<Action<ServiceContext, Func<string, AspNetCoreCommunicationListener, IHost>>>();
+        // TODO: Inspector 0.3.12 `Constructor<TSignature>()` ignores the delegate parameter's return type, so both
+        // 2-arg ctor overloads (which differ only by `Func<..., IHost>` vs `Func<..., IWebHost>`) match and `.Single()`
+        // throws. Wrap the `ConstructorInfo` directly until a fixed Inspector version is available.
+        // File an issue at https://github.com/olegsych/inspector/issues and remove this workaround once resolved.
+        static readonly Constructor ctor = new Constructor(
+            typeof(KestrelCommunicationListener).GetConstructor(new[] { typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IHost>) })!,
+            Type<KestrelCommunicationListener>.Uninitialized());
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
@@ -58,8 +63,13 @@ public abstract class KestrelCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : KestrelCommunicationListenerTest
     {
-        static readonly Constructor ctor = Type<KestrelCommunicationListener>.Uninitialized()
-            .Constructor<Action<ServiceContext, Func<string, AspNetCoreCommunicationListener, IWebHost>>>();
+        // TODO: Inspector 0.3.12 `Constructor<TSignature>()` ignores the delegate parameter's return type, so both
+        // 2-arg ctor overloads (which differ only by `Func<..., IHost>` vs `Func<..., IWebHost>`) match and `.Single()`
+        // throws. Wrap the `ConstructorInfo` directly until a fixed Inspector version is available.
+        // File an issue at https://github.com/olegsych/inspector/issues and remove this workaround once resolved.
+        static readonly Constructor ctor = new Constructor(
+            typeof(KestrelCommunicationListener).GetConstructor(new[] { typeof(ServiceContext), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>) })!,
+            Type<KestrelCommunicationListener>.Uninitialized());
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
