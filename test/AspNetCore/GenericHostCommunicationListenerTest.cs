@@ -311,6 +311,7 @@ public abstract class GenericHostCommunicationListenerTest
             string actual = await sut.OpenAsync(cancellation);
 
             build.Verify(_ => _(listenerUrl, listener), Times.Once());
+            build.Verify(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()), Times.Once());
             Assert.Equal($"http://{serviceContext.PublishAddress}:{port}{listener.UrlSuffix}", actual);
         }
 
