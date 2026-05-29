@@ -189,22 +189,15 @@ public abstract class HttpSysCommunicationListenerTest
             var exception = Assert.Throws<InvalidOperationException>(sut.GetListenerUrl);
             Assert.Equal($"{endpointName} not found in Service Manifest.", exception.Message);
         }
-    }
 
-    // The IHost constructor overload independently re-implements the endpointName assignment
-    // performed by the IWebHost overload. This fixture proves that branch is exercised end-to-end
-    // by constructing the SUT via the IHost overload and observing GetListenerUrl resolves the
-    // endpoint stored by that constructor.
-    public sealed class GetListenerUrlWhenBuiltWithIHostDelegate : HttpSysCommunicationListenerTest
-    {
-        new readonly HttpSysCommunicationListener sut;
-
-        public GetListenerUrlWhenBuiltWithIHostDelegate() =>
-            sut = new HttpSysCommunicationListener(serviceContext, endpointName, (_, _) => Mock.Of<IHost>());
-
+        // The IHost constructor overload independently re-implements the endpointName assignment
+        // performed by the IWebHost overload. This test proves that branch is exercised end-to-end
+        // by constructing the SUT via the IHost overload and observing GetListenerUrl resolves the
+        // endpoint stored by that constructor.
         [Fact]
-        public void ReturnsUrlWithProtocolLowercaseAndPortFromEndpoint()
+        public void ReturnsUrlForListenerBuiltWithIHostDelegate()
         {
+            var sut = new HttpSysCommunicationListener(serviceContext, endpointName, (_, _) => Mock.Of<IHost>());
             var endpoint = new EndpointResourceDescription
             {
                 Name = endpointName,
@@ -214,9 +207,7 @@ public abstract class HttpSysCommunicationListenerTest
             endpoint.Property<int>().Set(port);
             serviceContext.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
-            string actual = sut.GetListenerUrl();
-
-            Assert.Equal($"http://+:{port}", actual);
+            Assert.Equal($"http://+:{port}", sut.GetListenerUrl());
         }
     }
 }
