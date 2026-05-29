@@ -51,7 +51,7 @@ public abstract class TracingCommunicationListenerTest
         [Fact]
         public void TracesListenerTypeNameAndHashCode()
         {
-            trace.Verify(_ => _.Info($"Created {original} of type '{original.Listener.GetType().AssemblyQualifiedName}'."));
+            trace.Verify(_ => _.Info($"Created {original} of type '{original.Listener.GetType().AssemblyQualifiedName}'."), Times.Once);
         }
     }
 
@@ -62,9 +62,9 @@ public abstract class TracingCommunicationListenerTest
         {
             sut.Abort();
 
-            trace.Verify(_ => _.Info($"Aborting {original}..."));
-            listener.Verify(_ => _.Abort());
-            trace.Verify(_ => _.Info($"Aborted {original}."));
+            trace.Verify(_ => _.Info($"Aborting {original}..."), Times.Once);
+            listener.Verify(_ => _.Abort(), Times.Once);
+            trace.Verify(_ => _.Info($"Aborted {original}."), Times.Once);
         }   
 
         [Fact]
@@ -77,7 +77,7 @@ public abstract class TracingCommunicationListenerTest
 
             var actualException = Assert.Throws<TestException>(() => sut.Abort());
 
-            trace.Verify(_ => _.Info($"Aborting {original}..."));
+            trace.Verify(_ => _.Info($"Aborting {original}..."), Times.Once);
             Assert.Same(expectedException, actualException);
             string expectedError = $"Abort of {original} failed: ";
             Assert.StartsWith(expectedError, actualError);
@@ -93,9 +93,9 @@ public abstract class TracingCommunicationListenerTest
         {
             await sut.CloseAsync(cancellation);
 
-            trace.Verify(_ => _.Info($"Closing {original}..."));
-            listener.Verify(_ => _.CloseAsync(cancellation));
-            trace.Verify(_ => _.Info($"Closed {original}."));
+            trace.Verify(_ => _.Info($"Closing {original}..."), Times.Once);
+            listener.Verify(_ => _.CloseAsync(cancellation), Times.Once);
+            trace.Verify(_ => _.Info($"Closed {original}."), Times.Once);
         }
 
         [Fact]
@@ -108,7 +108,7 @@ public abstract class TracingCommunicationListenerTest
 
             var actualException = await Assert.ThrowsAsync<TestException>(() => sut.CloseAsync(cancellation));
 
-            trace.Verify(_ => _.Info($"Closing {original}..."));
+            trace.Verify(_ => _.Info($"Closing {original}..."), Times.Once);
             Assert.Same(expectedException, actualException);
             string expectedWarning = $"Closing of {original} failed: ";
             Assert.StartsWith(expectedWarning, actualWarning);
@@ -127,9 +127,9 @@ public abstract class TracingCommunicationListenerTest
 
             string actualEndpoint = await sut.OpenAsync(cancellation);
 
-            trace.Verify(_ => _.Info($"Opening {original}..."));
+            trace.Verify(_ => _.Info($"Opening {original}..."), Times.Once);
             Assert.Equal(expectedEndpoint, actualEndpoint);
-            trace.Verify(_ => _.Info($"Opened {original} on endpoint '{expectedEndpoint}'."));
+            trace.Verify(_ => _.Info($"Opened {original} on endpoint '{expectedEndpoint}'."), Times.Once);
         }
 
         [Fact]
@@ -142,7 +142,7 @@ public abstract class TracingCommunicationListenerTest
 
             var actualException = await Assert.ThrowsAsync<TestException>(() => sut.OpenAsync(cancellation));
 
-            trace.Verify(_ => _.Info($"Opening {original}..."));
+            trace.Verify(_ => _.Info($"Opening {original}..."), Times.Once);
             Assert.Same(expectedException, actualException);
             string expectedWarning = $"Opening of {original} failed: ";
             Assert.StartsWith(expectedWarning, actualWarning);
