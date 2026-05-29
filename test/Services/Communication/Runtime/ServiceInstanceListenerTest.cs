@@ -61,10 +61,9 @@ public abstract class ServiceInstanceListenerTest
 
     public sealed class Instantiate : ServiceInstanceListenerTest
     {
-        // Parameters
+        // Method parameters
         readonly StatelessServiceContext context = fuzzy.StatelessServiceContext();
 
-        // Fixture
         readonly ICommunicationListener listener = Mock.Of<ICommunicationListener>();
 
         public Instantiate() =>
