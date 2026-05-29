@@ -46,7 +46,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
             byte[] expected = fuzzy.Array(fuzzy.Byte);
             File.WriteAllBytes(path, expected);
 
-            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, FileMode.Open, fileShare, fileAccess);
+            using var sut = ExclusiveFileStream.Acquire(path, FileMode.Open, fileShare, fileAccess);
 
             Assert.Equal(path, sut.Value.Name);
 
@@ -61,7 +61,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         {
             Assert.False(File.Exists(path));
 
-            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(
+            using var sut = ExclusiveFileStream.Acquire(
                 path, FileMode.OpenOrCreate, fileShare, fileAccess);
 
             // FileMode.OpenOrCreate creates a missing file; pins SUT against FileMode.Open.
@@ -77,7 +77,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         {
             File.WriteAllBytes(path, fuzzy.Array(fuzzy.Byte));
 
-            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, fileMode, fileShare, access);
+            using var sut = ExclusiveFileStream.Acquire(path, fileMode, fileShare, access);
 
             Assert.Equal(canRead, sut.Value.CanRead);
             Assert.Equal(canWrite, sut.Value.CanWrite);
@@ -88,7 +88,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         {
             File.WriteAllBytes(path, fuzzy.Array(fuzzy.Byte));
 
-            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, fileMode, FileShare.None, fileAccess);
+            using var sut = ExclusiveFileStream.Acquire(path, fileMode, FileShare.None, fileAccess);
 
             // FileShare.None prevents any concurrent open; pins SUT against more permissive shares.
             _ = Assert.Throws<IOException>(() =>
@@ -102,7 +102,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         {
             File.WriteAllBytes(path, fuzzy.Array(fuzzy.Byte));
 
-            using ExclusiveFileStream sut = ExclusiveFileStream.Acquire(path, fileMode, FileShare.Read, FileAccess.Read);
+            using var sut = ExclusiveFileStream.Acquire(path, fileMode, FileShare.Read, FileAccess.Read);
 
             // FileShare.Read allows concurrent readers; pins SUT against FileShare.None.
             using FileStream concurrent = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
