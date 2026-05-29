@@ -62,8 +62,8 @@ public abstract class PathStringExtensionsTest
             var extended = new PathString(segment + fuzzy.Char().Between('a', 'z') + fuzzy.String().LettersOrDigits());
 
             Assert.False(PathStringExtensions.StartsWithSegments(extended, other, out PathString matched, out PathString remaining));
-            Assert.Equal(PathString.Empty, matched);
-            Assert.Equal(PathString.Empty, remaining);
+            Assert.Equal(string.Empty, matched.Value);
+            Assert.Equal(string.Empty, remaining.Value);
         }
 
         [Fact]
@@ -72,24 +72,24 @@ public abstract class PathStringExtensionsTest
             var different = new PathString("/_" + segment);
 
             Assert.False(PathStringExtensions.StartsWithSegments(different, other, out PathString matched, out PathString remaining));
-            Assert.Equal(PathString.Empty, matched);
-            Assert.Equal(PathString.Empty, remaining);
+            Assert.Equal(string.Empty, matched.Value);
+            Assert.Equal(string.Empty, remaining.Value);
         }
 
         [Fact]
         public void ReturnsTrueAndAssignsMatchedAndRemainingToEmptyWhenPathStringAndOtherAreBothEmpty()
         {
             Assert.True(PathStringExtensions.StartsWithSegments(default, default, out PathString matched, out PathString remaining));
-            Assert.Equal(PathString.Empty, matched);
-            Assert.Equal(PathString.Empty, remaining);
+            Assert.Equal(string.Empty, matched.Value);
+            Assert.Equal(string.Empty, remaining.Value);
         }
 
         [Fact]
         public void ReturnsFalseAndAssignsMatchedAndRemainingToEmptyWhenPathStringIsEmptyAndOtherIsNonEmpty()
         {
             Assert.False(PathStringExtensions.StartsWithSegments(default, other, out PathString matched, out PathString remaining));
-            Assert.Equal(PathString.Empty, matched);
-            Assert.Equal(PathString.Empty, remaining);
+            Assert.Equal(string.Empty, matched.Value);
+            Assert.Equal(string.Empty, remaining.Value);
         }
 
         [Fact]
