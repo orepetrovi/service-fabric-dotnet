@@ -25,7 +25,7 @@ public abstract class TracingCommunicationListenerTest
     readonly static IFuzz fuzzy = new RandomFuzz();
     readonly Mock<ICommunicationListener> listener = new Mock<ICommunicationListener>();
 
-    protected TracingCommunicationListenerTest()
+    TracingCommunicationListenerTest()
     {
         string name = fuzzy.String();
         original = new CommunicationListenerInfo(name, listener.Object);
