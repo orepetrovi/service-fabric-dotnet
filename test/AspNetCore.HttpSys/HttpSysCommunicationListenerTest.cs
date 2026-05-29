@@ -58,13 +58,6 @@ public abstract class HttpSysCommunicationListenerTest
             Assert.Equal("endpointName cannot be null or empty string.", exception.Message);
         }
 
-        [Fact]
-        public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
-        {
-            var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, string.Empty, build));
-            Assert.Equal("endpointName cannot be null or empty string.", exception.Message);
-        }
-
         [Fact(Explicit = true)] // TODO: SUT bug. Missing paramName argument to ArgumentException.
         public void SetsParamNameToEndpointNameOnArgumentException()
         {
@@ -101,13 +94,6 @@ public abstract class HttpSysCommunicationListenerTest
         public void ThrowsArgumentExceptionWhenEndpointNameIsNull()
         {
             var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, null, build));
-            Assert.Equal("endpointName cannot be null or empty string.", exception.Message);
-        }
-
-        [Fact]
-        public void ThrowsArgumentExceptionWhenEndpointNameIsEmpty()
-        {
-            var exception = Assert.Throws<ArgumentException>(() => new HttpSysCommunicationListener(serviceContext, string.Empty, build));
             Assert.Equal("endpointName cannot be null or empty string.", exception.Message);
         }
 
