@@ -54,7 +54,7 @@ public abstract class WebHostCommunicationListenerTest
         }
 
         [Fact]
-        public void DoesNotInvokeHostBeforeOpenAsync()
+        public void DoesNotBuildHostBeforeOpenAsync()
         {
             sut.Abort();
 
@@ -94,7 +94,7 @@ public abstract class WebHostCommunicationListenerTest
         }
 
         [Fact]
-        public async Task DoesNotInvokeHostBeforeOpenAsync()
+        public async Task DoesNotBuildHostBeforeOpenAsync()
         {
             await sut.CloseAsync(cancellation);
 
