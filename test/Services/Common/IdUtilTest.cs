@@ -134,9 +134,11 @@ public abstract class IdUtilTest
 
     public sealed class ComputeIdWithCRC_String : IdUtilTest
     {
+        // Method parameters
         // "café" encodes to UTF-8 bytes 63-61-66-C3-A9 (ASCII would drop the 'é'); pinning the expected id anchors both
         // the encoding choice and the ulong-to-int conversion independently of the SUT's collaborators.
         readonly string typeName = "café";
+
         const int ExpectedId = unchecked((int)0xA56ADE9A);
 
         [Fact]
@@ -188,7 +190,7 @@ public abstract class IdUtilTest
     static int Crc(string s) => (int)CRC64.ToCRC64(Encoding.UTF8.GetBytes(s));
 
     static MethodInfo NewDynamicMethod() =>
-        new DynamicMethod("DynMethod_" + fuzzy.String().LettersOrDigits(), typeof(void), Type.EmptyTypes);
+        new DynamicMethod("DynMethod_" + fuzzy.String(), typeof(void), Type.EmptyTypes);
 
     sealed class SampleType
     {
