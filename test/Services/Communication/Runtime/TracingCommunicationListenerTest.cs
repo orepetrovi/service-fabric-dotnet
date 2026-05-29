@@ -23,7 +23,7 @@ public abstract class TracingCommunicationListenerTest
     readonly Mock<ITrace> trace = new();
 
     // Test fixture
-    static readonly IFuzz fuzzy = new RandomFuzz();
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
     readonly Mock<ICommunicationListener> listener = new();
     readonly List<string> events = new();
 
