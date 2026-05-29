@@ -17,12 +17,17 @@ namespace Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 
 public abstract class HttpSysCommunicationListenerTest
 {
+    readonly HttpSysCommunicationListener sut;
+
     // Constructor parameters
     readonly ServiceContext serviceContext = fuzzy.ServiceContext();
     readonly string endpointName = fuzzy.String();
     readonly Func<string, AspNetCoreCommunicationListener, IWebHost> build = (_, _) => Mock.Of<IWebHost>();
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+    HttpSysCommunicationListenerTest() =>
+        sut = new HttpSysCommunicationListener(serviceContext, endpointName, build);
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : HttpSysCommunicationListenerTest
     {
@@ -90,12 +95,6 @@ public abstract class HttpSysCommunicationListenerTest
 
     public sealed class GetListenerUrl : HttpSysCommunicationListenerTest
     {
-        readonly StatelessServiceContext context = fuzzy.StatelessServiceContext();
-        readonly AspNetCoreCommunicationListener sut;
-
-        public GetListenerUrl() =>
-            sut = new HttpSysCommunicationListener(context, endpointName, build);
-
         [Theory]
         [InlineData(EndpointProtocol.Tcp, "tcp")]
         [InlineData(EndpointProtocol.Http, "http")]
@@ -110,7 +109,7 @@ public abstract class HttpSysCommunicationListenerTest
             };
             int port = fuzzy.UInt16();
             endpoint.Property<int>().Set(port);
-            context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
+            serviceContext.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
             string actual = sut.GetListenerUrl();
 
@@ -127,7 +126,7 @@ public abstract class HttpSysCommunicationListenerTest
                 Protocol = EndpointProtocol.Https,
             };
             other.Property<int>().Set(fuzzy.UInt16());
-            context.CodePackageActivationContext.GetEndpoints().Add(other);
+            serviceContext.CodePackageActivationContext.GetEndpoints().Add(other);
 
             var endpoint = new EndpointResourceDescription
             {
@@ -136,7 +135,7 @@ public abstract class HttpSysCommunicationListenerTest
             };
             int port = fuzzy.UInt16();
             endpoint.Property<int>().Set(port);
-            context.CodePackageActivationContext.GetEndpoints().Add(endpoint);
+            serviceContext.CodePackageActivationContext.GetEndpoints().Add(endpoint);
 
             string actual = sut.GetListenerUrl();
 
