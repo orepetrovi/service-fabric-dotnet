@@ -28,11 +28,6 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         sut.Dispose();
         if (File.Exists(sutPath))
             File.Delete(sutPath);
-        DeleteTempFile();
-    }
-
-    void DeleteTempFile()
-    {
         if (File.Exists(path))
             File.Delete(path);
     }
