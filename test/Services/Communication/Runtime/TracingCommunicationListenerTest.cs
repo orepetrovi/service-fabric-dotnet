@@ -128,7 +128,7 @@ public abstract class TracingCommunicationListenerTest
             string actualEndpoint = await sut.OpenAsync(cancellation);
 
             trace.Verify(_ => _.Info($"Opening {original}..."), Times.Once);
-            Assert.Equal(expectedEndpoint, actualEndpoint);
+            Assert.Same(expectedEndpoint, actualEndpoint);
             trace.Verify(_ => _.Info($"Opened {original} on endpoint '{expectedEndpoint}'."), Times.Once);
         }
 
