@@ -791,6 +791,178 @@ public abstract class ServicePartitionClientTest
             Assert.True(stopwatch.ElapsedMilliseconds >= timeout.TotalMilliseconds - 25, $"Elapsed {stopwatch.ElapsedMilliseconds}ms < {timeout.TotalMilliseconds}ms");
         }
 
+        [Fact]
+        public async Task RetriesAfterAggregateExceptionWhenNoInnerExceptionIsInDoNotRetryExceptionTypes()
+        {
+            // Cover the callee's AggregateException retry branch through the no-token delegation.
+            var aggregate = new AggregateException(clientException);
+            SetupReportOperationException(TransientRetry(), aggregate);
+            int calls = 0;
+
+            object actual = await sut.InvokeWithRetryAsync<object>(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw aggregate;
+                    return Task.FromResult<object>(calls);
+                });
+
+            Assert.Equal(2, calls);
+            Assert.Equal(2, actual);
+        }
+
+        [Fact]
+        public async Task ResetsRetryCountWhenExceptionIdChangesAcrossIterations()
+        {
+            // Cover the callee's exception-id reset branch through the no-token delegation.
+            const int maxRetryCount = 2;
+            string id = fuzzy.String();
+            string differentId = id + fuzzy.String();
+            var controls = new Queue<OperationRetryControl>(new[]
+            {
+                Retry(id), Retry(id), Retry(differentId), Retry(differentId), Retry(differentId),
+            });
+            _ = communicationClientFactory
+                .Setup(_ => _.ReportOperationExceptionAsync(
+                    client,
+                    It.Is<ExceptionInformation>(i => i.Exception == clientException && i.TargetReplica == targetReplicaSelector),
+                    retrySettings,
+                    CancellationToken.None))
+                .ReturnsAsync(controls.Dequeue);
+            int calls = 0;
+
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.InvokeWithRetryAsync<object>(_ => { calls++; throw clientException; }));
+
+            Assert.Same(clientException, actual);
+            Assert.Equal(5, calls);
+
+            static OperationRetryControl Retry(string id) => new()
+            {
+                ShouldRetry = true,
+                IsTransient = true,
+                MaxRetryCount = maxRetryCount,
+                ExceptionId = id,
+                GetRetryDelay = _ => ShortRetryDelay,
+            };
+        }
+
+        [Fact]
+        public async Task ThrowsAfterZeroMaxRetryCount()
+        {
+            // Cover the callee's MaxRetryCount=0 boundary through the no-token delegation.
+            SetupReportOperationException(new OperationRetryControl { ShouldRetry = true, IsTransient = true, MaxRetryCount = 0, ExceptionId = "ex", GetRetryDelay = _ => ShortRetryDelay });
+            int calls = 0;
+
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.InvokeWithRetryAsync<object>(_ => { calls++; throw clientException; }));
+
+            Assert.Same(clientException, actual);
+            Assert.Equal(1, calls);
+        }
+
+        [Fact]
+        public async Task UpdatesLastRspFromReResolvedClientAfterNonTransientException()
+        {
+            // Cover the callee's GetCommunicationClientAsync re-resolution branch through the no-token delegation.
+            var newRsp = Type<ResolvedServicePartition>.Uninitialized();
+            ICommunicationClient newCommunicationClient = Mock.Of<ICommunicationClient>(_ => _.ResolvedServicePartition == newRsp);
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(newCommunicationClient);
+            SetupReportOperationException(NonTransientRetry());
+            int calls = 0;
+
+            _ = await sut.InvokeWithRetryAsync<object>(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.FromResult<object>(calls);
+                });
+
+            Assert.True(sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition actual));
+            Assert.Same(newRsp, actual);
+        }
+
+        [Fact]
+        public async Task DoesNotResetCommunicationClientWhenExceptionIsTransient()
+        {
+            // Cover the callee's transient-exception path (no client reset) through the no-token delegation.
+            SetupReportOperationException(TransientRetry());
+            int calls = 0;
+
+            _ = await sut.InvokeWithRetryAsync<object>(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.FromResult<object>(calls);
+                });
+
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Never);
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task SetsClientRequestTrackerToLogContextRequestIdWhenPresent()
+        {
+            // Cover the callee's ClientRequestTracker present-id arm through the no-token delegation.
+            LogContext.Clear();
+            ClientRequestTracker.Set(null);
+            try
+            {
+                var requestId = fuzzy.Guid();
+                LogContext.Set(new LogContext { RequestId = requestId });
+                string actual = null;
+
+                _ = await sut.InvokeWithRetryAsync<object>(
+                    _ =>
+                    {
+                        ClientRequestTracker.TryGet(out actual);
+                        return Task.FromResult(new object());
+                    });
+
+                Assert.Equal(requestId.ToString(), actual);
+            }
+            finally
+            {
+                LogContext.Clear();
+                ClientRequestTracker.Set(null);
+            }
+        }
+
+        [Fact]
+        public async Task SetsClientRequestTrackerToGeneratedGuidWhenLogContextIsAbsent()
+        {
+            // Cover the callee's ClientRequestTracker default(Guid) arm through the no-token delegation.
+            LogContext.Clear();
+            ClientRequestTracker.Set(null);
+            try
+            {
+                string actual = null;
+
+                _ = await sut.InvokeWithRetryAsync<object>(
+                    _ =>
+                    {
+                        ClientRequestTracker.TryGet(out actual);
+                        return Task.FromResult(new object());
+                    });
+
+                Assert.True(Guid.TryParse(actual, out Guid parsed));
+                Assert.NotEqual(Guid.Empty, parsed);
+            }
+            finally
+            {
+                LogContext.Clear();
+                ClientRequestTracker.Set(null);
+            }
+        }
+
     }
 
     public sealed class InvokeWithRetryAsync_FuncOfICommunicationClientTask_CancellationToken_TypeArray : InvokeWithRetryAsyncBase
@@ -1064,6 +1236,166 @@ public abstract class ServicePartitionClientTest
             Assert.True(stopwatch.ElapsedMilliseconds >= timeout.TotalMilliseconds - 25, $"Elapsed {stopwatch.ElapsedMilliseconds}ms < {timeout.TotalMilliseconds}ms");
         }
 
+        [Fact]
+        public async Task RetriesAfterAggregateExceptionWhenNoInnerExceptionIsInDoNotRetryExceptionTypes()
+        {
+            // Cover the callee's AggregateException retry branch through the Task-returning wrapper.
+            var aggregate = new AggregateException(clientException);
+            SetupReportOperationException(TransientRetry(), aggregate);
+            int calls = 0;
+
+            await sut.InvokeWithRetryAsync(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw aggregate;
+                    return Task.CompletedTask;
+                },
+                cancellationToken);
+
+            Assert.Equal(2, calls);
+        }
+
+        [Fact]
+        public async Task ThrowsAfterZeroMaxRetryCount()
+        {
+            // Cover the callee's MaxRetryCount=0 boundary through the Task-returning wrapper.
+            SetupReportOperationException(new OperationRetryControl { ShouldRetry = true, IsTransient = true, MaxRetryCount = 0, ExceptionId = "ex", GetRetryDelay = _ => ShortRetryDelay });
+            int calls = 0;
+
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.InvokeWithRetryAsync(
+                    _ => { calls++; throw clientException; },
+                    cancellationToken));
+
+            Assert.Same(clientException, actual);
+            Assert.Equal(1, calls);
+        }
+
+        [Fact]
+        public async Task UpdatesLastRspFromReResolvedClientAfterNonTransientException()
+        {
+            // Cover the callee's GetCommunicationClientAsync re-resolution branch through the Task-returning wrapper.
+            var newRsp = Type<ResolvedServicePartition>.Uninitialized();
+            ICommunicationClient newCommunicationClient = Mock.Of<ICommunicationClient>(_ => _.ResolvedServicePartition == newRsp);
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(newCommunicationClient);
+            SetupReportOperationException(NonTransientRetry());
+            int calls = 0;
+
+            await sut.InvokeWithRetryAsync(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.CompletedTask;
+                },
+                cancellationToken);
+
+            Assert.True(sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition actual));
+            Assert.Same(newRsp, actual);
+        }
+
+        [Fact]
+        public async Task DoesNotResetCommunicationClientWhenExceptionIsTransient()
+        {
+            // Cover the callee's transient-exception path (no client reset) through the Task-returning wrapper.
+            SetupReportOperationException(TransientRetry());
+            int calls = 0;
+
+            await sut.InvokeWithRetryAsync(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.CompletedTask;
+                },
+                cancellationToken);
+
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Never);
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task ThrowsOperationCanceledExceptionWhenTokenIsCanceledBeforeFunc()
+        {
+            // Cover the callee's pre-func ThrowIfCancellationRequested branch through the Task-returning wrapper.
+            using var cts = new CancellationTokenSource();
+            cts.Cancel();
+
+            _ = await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => sut.InvokeWithRetryAsync(_ => Task.CompletedTask, cts.Token));
+
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Never);
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Fact]
+        public async Task SetsClientRequestTrackerToLogContextRequestIdWhenPresent()
+        {
+            // Cover the callee's ClientRequestTracker present-id arm through the Task-returning wrapper.
+            LogContext.Clear();
+            ClientRequestTracker.Set(null);
+            try
+            {
+                var requestId = fuzzy.Guid();
+                LogContext.Set(new LogContext { RequestId = requestId });
+                string actual = null;
+
+                await sut.InvokeWithRetryAsync(
+                    _ =>
+                    {
+                        ClientRequestTracker.TryGet(out actual);
+                        return Task.CompletedTask;
+                    },
+                    cancellationToken);
+
+                Assert.Equal(requestId.ToString(), actual);
+            }
+            finally
+            {
+                LogContext.Clear();
+                ClientRequestTracker.Set(null);
+            }
+        }
+
+        [Fact]
+        public async Task SetsClientRequestTrackerToGeneratedGuidWhenLogContextIsAbsent()
+        {
+            // Cover the callee's ClientRequestTracker default(Guid) arm through the Task-returning wrapper.
+            LogContext.Clear();
+            ClientRequestTracker.Set(null);
+            try
+            {
+                string actual = null;
+
+                await sut.InvokeWithRetryAsync(
+                    _ =>
+                    {
+                        ClientRequestTracker.TryGet(out actual);
+                        return Task.CompletedTask;
+                    },
+                    cancellationToken);
+
+                Assert.True(Guid.TryParse(actual, out Guid parsed));
+                Assert.NotEqual(Guid.Empty, parsed);
+            }
+            finally
+            {
+                LogContext.Clear();
+                ClientRequestTracker.Set(null);
+            }
+        }
+
     }
 
     public sealed class InvokeWithRetryAsync_FuncOfICommunicationClientTask_TypeArray : InvokeWithRetryAsyncBase
@@ -1246,6 +1578,177 @@ public abstract class ServicePartitionClientTest
             stopwatch.Stop();
 
             Assert.True(stopwatch.ElapsedMilliseconds >= timeout.TotalMilliseconds - 25, $"Elapsed {stopwatch.ElapsedMilliseconds}ms < {timeout.TotalMilliseconds}ms");
+        }
+
+        [Fact]
+        public async Task RetriesAfterAggregateExceptionWhenNoInnerExceptionIsInDoNotRetryExceptionTypes()
+        {
+            // Cover the callee's AggregateException retry branch through the composed no-token + Task wrapper delegation.
+            var aggregate = new AggregateException(clientException);
+            SetupReportOperationException(TransientRetry(), aggregate);
+            int calls = 0;
+
+            await sut.InvokeWithRetryAsync(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw aggregate;
+                    return Task.CompletedTask;
+                });
+
+            Assert.Equal(2, calls);
+        }
+
+        [Fact]
+        public async Task ResetsRetryCountWhenExceptionIdChangesAcrossIterations()
+        {
+            // Cover the callee's exception-id reset branch through the composed delegation.
+            const int maxRetryCount = 2;
+            string id = fuzzy.String();
+            string differentId = id + fuzzy.String();
+            var controls = new Queue<OperationRetryControl>(new[]
+            {
+                Retry(id), Retry(id), Retry(differentId), Retry(differentId), Retry(differentId),
+            });
+            _ = communicationClientFactory
+                .Setup(_ => _.ReportOperationExceptionAsync(
+                    client,
+                    It.Is<ExceptionInformation>(i => i.Exception == clientException && i.TargetReplica == targetReplicaSelector),
+                    retrySettings,
+                    CancellationToken.None))
+                .ReturnsAsync(controls.Dequeue);
+            int calls = 0;
+
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.InvokeWithRetryAsync(_ => { calls++; throw clientException; }));
+
+            Assert.Same(clientException, actual);
+            Assert.Equal(5, calls);
+
+            static OperationRetryControl Retry(string id) => new()
+            {
+                ShouldRetry = true,
+                IsTransient = true,
+                MaxRetryCount = maxRetryCount,
+                ExceptionId = id,
+                GetRetryDelay = _ => ShortRetryDelay,
+            };
+        }
+
+        [Fact]
+        public async Task ThrowsAfterZeroMaxRetryCount()
+        {
+            // Cover the callee's MaxRetryCount=0 boundary through the composed delegation.
+            SetupReportOperationException(new OperationRetryControl { ShouldRetry = true, IsTransient = true, MaxRetryCount = 0, ExceptionId = "ex", GetRetryDelay = _ => ShortRetryDelay });
+            int calls = 0;
+
+            Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.InvokeWithRetryAsync(_ => { calls++; throw clientException; }));
+
+            Assert.Same(clientException, actual);
+            Assert.Equal(1, calls);
+        }
+
+        [Fact]
+        public async Task UpdatesLastRspFromReResolvedClientAfterNonTransientException()
+        {
+            // Cover the callee's GetCommunicationClientAsync re-resolution branch through the composed delegation.
+            var newRsp = Type<ResolvedServicePartition>.Uninitialized();
+            ICommunicationClient newCommunicationClient = Mock.Of<ICommunicationClient>(_ => _.ResolvedServicePartition == newRsp);
+            _ = communicationClientFactory
+                .Setup(_ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(newCommunicationClient);
+            SetupReportOperationException(NonTransientRetry());
+            int calls = 0;
+
+            await sut.InvokeWithRetryAsync(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.CompletedTask;
+                });
+
+            Assert.True(sut.TryGetLastResolvedServicePartition(out ResolvedServicePartition actual));
+            Assert.Same(newRsp, actual);
+        }
+
+        [Fact]
+        public async Task DoesNotResetCommunicationClientWhenExceptionIsTransient()
+        {
+            // Cover the callee's transient-exception path (no client reset) through the composed delegation.
+            SetupReportOperationException(TransientRetry());
+            int calls = 0;
+
+            await sut.InvokeWithRetryAsync(
+                _ =>
+                {
+                    calls++;
+                    if (calls == 1) throw clientException;
+                    return Task.CompletedTask;
+                });
+
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(rsp, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Never);
+            communicationClientFactory.Verify(
+                _ => _.GetClientAsync(serviceUri, partitionKey, targetReplicaSelector, listenerName, retrySettings, It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task SetsClientRequestTrackerToLogContextRequestIdWhenPresent()
+        {
+            // Cover the callee's ClientRequestTracker present-id arm through the composed delegation.
+            LogContext.Clear();
+            ClientRequestTracker.Set(null);
+            try
+            {
+                var requestId = fuzzy.Guid();
+                LogContext.Set(new LogContext { RequestId = requestId });
+                string actual = null;
+
+                await sut.InvokeWithRetryAsync(
+                    _ =>
+                    {
+                        ClientRequestTracker.TryGet(out actual);
+                        return Task.CompletedTask;
+                    });
+
+                Assert.Equal(requestId.ToString(), actual);
+            }
+            finally
+            {
+                LogContext.Clear();
+                ClientRequestTracker.Set(null);
+            }
+        }
+
+        [Fact]
+        public async Task SetsClientRequestTrackerToGeneratedGuidWhenLogContextIsAbsent()
+        {
+            // Cover the callee's ClientRequestTracker default(Guid) arm through the composed delegation.
+            LogContext.Clear();
+            ClientRequestTracker.Set(null);
+            try
+            {
+                string actual = null;
+
+                await sut.InvokeWithRetryAsync(
+                    _ =>
+                    {
+                        ClientRequestTracker.TryGet(out actual);
+                        return Task.CompletedTask;
+                    });
+
+                Assert.True(Guid.TryParse(actual, out Guid parsed));
+                Assert.NotEqual(Guid.Empty, parsed);
+            }
+            finally
+            {
+                LogContext.Clear();
+                ClientRequestTracker.Set(null);
+            }
         }
 
     }
