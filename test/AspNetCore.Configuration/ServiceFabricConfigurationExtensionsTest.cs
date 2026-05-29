@@ -103,6 +103,15 @@ public abstract class ServiceFabricConfigurationExtensionsTest
             _ = builder.AddServiceFabricConfiguration(empty, optionsDelegate);
 
             Assert.Empty(builder.Sources);
+        }
+
+        [Fact]
+        public void DoesNotInvokeOptionsDelegateWhenContextHasNoConfigurationPackages()
+        {
+            var empty = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>());
+
+            _ = builder.AddServiceFabricConfiguration(empty, optionsDelegate);
+
             Mock.Get(optionsDelegate).Verify(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()), Times.Never);
         }
 
