@@ -58,7 +58,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // null and gives callers no indication which argument was invalid. This test asserts the correct paramName
             // and will fail until the SUT is fixed. Fixing the SUT is out of scope for the current change.
             var exception = Assert.Throws<ArgumentNullException>(() => new ServiceFabricConfigurationOptions(null));
-            Assert.Equal(sut.Constructor().Parameter<string>().Name, exception.ParamName);
+            Assert.Equal(nameof(packageName), exception.ParamName);
         }
     }
 
@@ -158,7 +158,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // out of scope for the current change.
             Action<ConfigurationPackage, IDictionary<string, string>> method = sut.DefaultConfigAction;
             var exception = Assert.Throws<ArgumentNullException>(() => method(null, data));
-            Assert.Equal(method.Method.Parameter<ConfigurationPackage>().Name, exception.ParamName);
+            Assert.Equal(nameof(config), exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing data argument validation.
@@ -170,7 +170,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // out of scope for the current change.
             Action<ConfigurationPackage, IDictionary<string, string>> method = sut.DefaultConfigAction;
             var exception = Assert.Throws<ArgumentNullException>(() => method(config, null));
-            Assert.Equal(method.Method.Parameter<IDictionary<string, string>>().Name, exception.ParamName);
+            Assert.Equal(nameof(data), exception.ParamName);
         }
     }
 
@@ -208,7 +208,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // out of scope for the current change.
             Func<ConfigurationSection, ConfigurationProperty, string> method = sut.DefaultExtractKeyFunc;
             var exception = Assert.Throws<ArgumentNullException>(() => method(null, property));
-            Assert.Equal(method.Method.Parameter<ConfigurationSection>().Name, exception.ParamName);
+            Assert.Equal(nameof(section), exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing property argument validation.
@@ -220,7 +220,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // Fixing the SUT is out of scope for the current change.
             Func<ConfigurationSection, ConfigurationProperty, string> method = sut.DefaultExtractKeyFunc;
             var exception = Assert.Throws<ArgumentNullException>(() => method(section, null));
-            Assert.Equal(method.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
+            Assert.Equal(nameof(property), exception.ParamName);
         }
     }
 
@@ -270,7 +270,7 @@ public abstract class ServiceFabricConfigurationOptionsTest
             // Fixing the SUT is out of scope for the current change.
             Func<ConfigurationSection, ConfigurationProperty, string> method = sut.DefaultExtractValueFunc;
             var exception = Assert.Throws<ArgumentNullException>(() => method(section, null));
-            Assert.Equal(method.Method.Parameter<ConfigurationProperty>().Name, exception.ParamName);
+            Assert.Equal(nameof(property), exception.ParamName);
         }
     }
 
