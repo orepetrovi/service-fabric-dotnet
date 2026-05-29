@@ -124,12 +124,13 @@ public abstract class ServiceFabricSetupFilterTest
         public void ReturnsActionThatRegistersMiddlewaresBeforeCallingNext()
         {
             var sut = new ServiceFabricSetupFilter(urlSuffix, ServiceFabricIntegrationOptions.UseReverseProxyIntegration);
-            int middlewareCountWhenNextCalled = -1;
-            _ = next.Setup(_ => _(app.Object)).Callback(() => middlewareCountWhenNextCalled = factories.Count);
+            List<int> middlewareCountsWhenNextCalled = [];
+            _ = next.Setup(_ => _(app.Object)).Callback(() => middlewareCountsWhenNextCalled.Add(factories.Count));
 
             sut.Configure(next.Object)(app.Object);
 
-            Assert.Equal(2, middlewareCountWhenNextCalled);
+            Assert.Equal([factories.Count], middlewareCountsWhenNextCalled);
+            next.Verify(_ => _(It.IsAny<IApplicationBuilder>()), Times.Once);
         }
     }
 }
