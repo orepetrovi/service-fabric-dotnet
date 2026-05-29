@@ -73,14 +73,18 @@ public abstract class TracingCommunicationListenerTest
             var expectedException = new TestException(fuzzy.String());
             listener.Setup(_ => _.Abort()).Throws(expectedException);
             string actualError = null;
-            trace.Setup(_ => _.Error(It.IsAny<string>())).Callback((string message) => { actualError = message; });
+            string expectedError = null;
+            trace.Setup(_ => _.Error(It.IsAny<string>())).Callback((string m) =>
+            {
+                actualError = m;
+                expectedError = $"Abort of {original} failed: {expectedException}";
+            });
 
             var actualException = Assert.Throws<TestException>(() => sut.Abort());
 
             trace.Verify(_ => _.Info($"Aborting {original}..."), Times.Once);
             Assert.Same(expectedException, actualException);
-            string expectedError = $"Abort of {original} failed: ";
-            Assert.StartsWith(expectedError, actualError);
+            Assert.Equal(expectedError, actualError);
         }
     }
 
@@ -104,14 +108,18 @@ public abstract class TracingCommunicationListenerTest
             var expectedException = new TestException(fuzzy.String());
             listener.Setup(_ => _.CloseAsync(cancellation)).Throws(expectedException);
             string actualWarning = null;
-            trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string message) => { actualWarning = message; });
+            string expectedWarning = null;
+            trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string m) =>
+            {
+                actualWarning = m;
+                expectedWarning = $"Closing of {original} failed: {expectedException}";
+            });
 
             var actualException = await Assert.ThrowsAsync<TestException>(() => sut.CloseAsync(cancellation));
 
             trace.Verify(_ => _.Info($"Closing {original}..."), Times.Once);
             Assert.Same(expectedException, actualException);
-            string expectedWarning = $"Closing of {original} failed: ";
-            Assert.StartsWith(expectedWarning, actualWarning);
+            Assert.Equal(expectedWarning, actualWarning);
         }
     }
 
@@ -138,14 +146,18 @@ public abstract class TracingCommunicationListenerTest
             var expectedException = new TestException(fuzzy.String());
             listener.Setup(_ => _.OpenAsync(cancellation)).Throws(expectedException);
             string actualWarning = null;
-            trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string message) => { actualWarning = message; });
+            string expectedWarning = null;
+            trace.Setup(_ => _.Warning(It.IsAny<string>())).Callback((string m) =>
+            {
+                actualWarning = m;
+                expectedWarning = $"Opening of {original} failed: {expectedException}";
+            });
 
             var actualException = await Assert.ThrowsAsync<TestException>(() => sut.OpenAsync(cancellation));
 
             trace.Verify(_ => _.Info($"Opening {original}..."), Times.Once);
             Assert.Same(expectedException, actualException);
-            string expectedWarning = $"Opening of {original} failed: ";
-            Assert.StartsWith(expectedWarning, actualWarning);
+            Assert.Equal(expectedWarning, actualWarning);
         }
     }
 
