@@ -25,7 +25,7 @@ namespace Microsoft.ServiceFabric.Services.Communication.Runtime
         // Test fixture
         static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-        protected ServiceReplicaListenerTest() =>
+        ServiceReplicaListenerTest() =>
             sut = new ServiceReplicaListener(createCommunicationListener, name, listenOnSecondary);
 
         public sealed class Constructor : ServiceReplicaListenerTest
