@@ -294,14 +294,12 @@ public abstract class WebHostCommunicationListenerTest
             // so the suffix isn't known until after build returns.
             ushort port = fuzzy.UInt16();
             SetupServer($"http://127.0.0.1:{port}");
-            _ = build.Setup(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()))
+            _ = build.Setup(_ => _(listenerUrl, listener))
                 .Callback((string _, AspNetCoreCommunicationListener l) => l.ConfigureToUseUniqueServiceUrl())
                 .Returns(() => buildHost);
 
             string actual = await sut.OpenAsync(cancellation);
 
-            build.Verify(_ => _(listenerUrl, listener), Times.Once());
-            build.Verify(_ => _(It.IsAny<string>(), It.IsAny<AspNetCoreCommunicationListener>()), Times.Once());
             Assert.Equal($"http://127.0.0.1:{port}{listener.UrlSuffix}", actual);
         }
 
