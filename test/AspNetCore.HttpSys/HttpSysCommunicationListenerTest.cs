@@ -2,6 +2,7 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 
 using System;
+using System.Collections.ObjectModel;
 using System.Fabric;
 using System.Fabric.Description;
 using System.Globalization;
@@ -117,17 +118,13 @@ public abstract class HttpSysCommunicationListenerTest
             Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        public void ReturnsUrlForEndpointMatchingNameWhenMultipleEndpointsExist()
+        [Theory]
+        // Exercise both insertion orders so the test fails for any positional selection
+        // (e.g. .First() or .Last()) and only passes for true name-based selection.
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ReturnsUrlForEndpointMatchingNameWhenMultipleEndpointsExist(bool matchingFirst)
         {
-            var other = new EndpointResourceDescription
-            {
-                Name = endpointName + fuzzy.String(),
-                Protocol = EndpointProtocol.Https,
-            };
-            other.Property<int>().Set(fuzzy.UInt16());
-            serviceContext.CodePackageActivationContext.GetEndpoints().Add(other);
-
             var endpoint = new EndpointResourceDescription
             {
                 Name = endpointName,
@@ -135,7 +132,25 @@ public abstract class HttpSysCommunicationListenerTest
             };
             int port = fuzzy.UInt16();
             endpoint.Property<int>().Set(port);
-            serviceContext.CodePackageActivationContext.GetEndpoints().Add(endpoint);
+
+            var other = new EndpointResourceDescription
+            {
+                Name = endpointName + fuzzy.String(),
+                Protocol = EndpointProtocol.Https,
+            };
+            other.Property<int>().Set(fuzzy.UInt16());
+
+            KeyedCollection<string, EndpointResourceDescription> endpoints = serviceContext.CodePackageActivationContext.GetEndpoints();
+            if (matchingFirst)
+            {
+                endpoints.Add(endpoint);
+                endpoints.Add(other);
+            }
+            else
+            {
+                endpoints.Add(other);
+                endpoints.Add(endpoint);
+            }
 
             string actual = sut.GetListenerUrl();
 
@@ -146,6 +161,16 @@ public abstract class HttpSysCommunicationListenerTest
         [Fact]
         public void ThrowsInvalidOperationExceptionWhenEndpointIsNotInManifest()
         {
+            // Add a non-matching endpoint so the SUT must iterate and fail due to name mismatch
+            // rather than an empty collection. This proves name-based discrimination on the failure path.
+            var other = new EndpointResourceDescription
+            {
+                Name = endpointName + fuzzy.String(),
+                Protocol = EndpointProtocol.Http,
+            };
+            other.Property<int>().Set(fuzzy.UInt16());
+            serviceContext.CodePackageActivationContext.GetEndpoints().Add(other);
+
             var exception = Assert.Throws<InvalidOperationException>(sut.GetListenerUrl);
             Assert.Equal($"{endpointName} not found in Service Manifest.", exception.Message);
         }
