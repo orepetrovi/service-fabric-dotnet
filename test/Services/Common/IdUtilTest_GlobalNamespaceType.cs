@@ -4,7 +4,7 @@
 // ------------------------------------------------------------
 
 // Declared in the global namespace to exercise IdUtil branches that handle Type.Namespace == null.
-internal class IdUtilTest_GlobalNamespaceType
+class IdUtilTest_GlobalNamespaceType
 {
-    public void Method() { }
+    internal void Method() { }
 }
