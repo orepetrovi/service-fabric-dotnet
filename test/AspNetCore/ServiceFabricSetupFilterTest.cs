@@ -44,7 +44,7 @@ public abstract class ServiceFabricSetupFilterTest
         }
 
         [Fact]
-        public void ReturnsActionThatCallsNextWithApplicationBuilder()
+        public void ReturnsActionThatCallsNextWithApp()
         {
             Action<IApplicationBuilder> configured = sut.Configure(next);
             configured(app.Object);
