@@ -230,6 +230,30 @@ public abstract class WebHostCommunicationListenerTest
             Assert.Equal(SR.ErrorNoUrlFromAspNetCore, exception.Message);
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing null check on IWebHost.ServerFeatures.
+        public async Task ThrowsInvalidOperationExceptionWhenServerFeaturesIsNull()
+        {
+            // SUT currently dereferences host.ServerFeatures without a null check,
+            // throwing NullReferenceException instead of InvalidOperationException with SR.ErrorNoUrlFromAspNetCore.
+            _ = host.Setup(_ => _.ServerFeatures).Returns((IFeatureCollection)null);
+
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
+            Assert.Equal(SR.ErrorNoUrlFromAspNetCore, exception.Message);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing null check on IServerAddressesFeature.Addresses.
+        public async Task ThrowsInvalidOperationExceptionWhenServerAddressesIsNull()
+        {
+            // SUT currently passes IServerAddressesFeature.Addresses to LINQ FirstOrDefault without a null check,
+            // throwing ArgumentNullException instead of InvalidOperationException with SR.ErrorNoUrlFromAspNetCore.
+            var features = new FeatureCollection();
+            features.Set(Mock.Of<IServerAddressesFeature>(_ => _.Addresses == null));
+            _ = host.Setup(_ => _.ServerFeatures).Returns(features);
+
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
+            Assert.Equal(SR.ErrorNoUrlFromAspNetCore, exception.Message);
+        }
+
         [Fact]
         public async Task ReplacesPlusWildcardWithPublishAddress()
         {
