@@ -8,7 +8,6 @@ using System.Linq;
 using Fuzzy;
 using Inspector;
 using Microsoft.Extensions.Configuration;
-using Moq;
 using Xunit;
 
 namespace Microsoft.ServiceFabric.AspNetCore.Configuration;
@@ -79,7 +78,7 @@ public abstract class ServiceFabricConfigurationExtensionsTest
     {
         readonly IConfigurationBuilder builder = new ConfigurationBuilder();
         readonly ICodePackageActivationContext context = new TestCodePackageActivationContext(new ConfigurationBuilder().Build());
-        readonly Action<ServiceFabricConfigurationOptions> optionsDelegate = Mock.Of<Action<ServiceFabricConfigurationOptions>>();
+        readonly Action<ServiceFabricConfigurationOptions> optionsDelegate = _ => { };
 
         [Fact]
         public void AddsServiceFabricConfigurationSourceForEachConfigurationPackage()
@@ -116,10 +115,11 @@ public abstract class ServiceFabricConfigurationExtensionsTest
         public void DoesNotInvokeOptionsDelegateWhenContextHasNoConfigurationPackages()
         {
             var empty = new TestCodePackageActivationContext(new Dictionary<string, IConfiguration>());
+            bool invoked = false;
 
-            _ = builder.AddServiceFabricConfiguration(empty, optionsDelegate);
+            _ = builder.AddServiceFabricConfiguration(empty, _ => invoked = true);
 
-            Mock.Get(optionsDelegate).Verify(_ => _(It.IsAny<ServiceFabricConfigurationOptions>()), Times.Never);
+            Assert.False(invoked);
         }
 
         [Fact]
