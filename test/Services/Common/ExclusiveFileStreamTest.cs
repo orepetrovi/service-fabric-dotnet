@@ -31,7 +31,7 @@ public abstract class ExclusiveFileStreamTest : IDisposable
         DeleteTempFile();
     }
 
-    protected void DeleteTempFile()
+    void DeleteTempFile()
     {
         if (File.Exists(path))
             File.Delete(path);
