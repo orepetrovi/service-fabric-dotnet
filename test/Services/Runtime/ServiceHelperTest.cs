@@ -306,13 +306,6 @@ public abstract class ServiceHelperTest
 
     public sealed class ObserveExceptionIfAny : ServiceHelperTest
     {
-        // Method parameters
-        readonly Task tsk;
-
-        readonly TaskCompletionSource<int> source = new();
-
-        public ObserveExceptionIfAny() => tsk = source.Task;
-
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Only observable effect is suppressing TaskScheduler.UnobservedTaskException.
         public void ObservesFaultedTaskException() =>
             throw new NotImplementedException(
