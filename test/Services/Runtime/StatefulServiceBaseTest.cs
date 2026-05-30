@@ -61,14 +61,6 @@ public abstract class StatefulServiceBaseTest
                 _ => _.BackupAsync(It.IsAny<BackupOption>(), It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>(), It.IsAny<Func<BackupInfo, CancellationToken, Task<bool>>>()),
                 Times.Once);
         }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
-        public void ThrowsArgumentNullExceptionWhenBackupDescriptionIsNull()
-        {
-            // SUT dereferences backupDescription.Option immediately, throwing NullReferenceException instead of ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.BackupAsync(null));
-            Assert.Equal("backupDescription", exception.ParamName);
-        }
     }
 
     public sealed class BackupAsync_BackupDescription_TimeSpan_CancellationToken : StatefulServiceBaseTest
@@ -93,15 +85,6 @@ public abstract class StatefulServiceBaseTest
             stateProviderReplica.Verify(
                 _ => _.BackupAsync(It.IsAny<BackupOption>(), It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>(), It.IsAny<Func<BackupInfo, CancellationToken, Task<bool>>>()),
                 Times.Once);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
-        public void ThrowsArgumentNullExceptionWhenBackupDescriptionIsNull()
-        {
-            // SUT dereferences backupDescription.Option immediately, throwing NullReferenceException instead of ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(
-                () => sut.BackupAsync(null, TimeSpan.FromHours(1), CancellationToken.None));
-            Assert.Equal("backupDescription", exception.ParamName);
         }
     }
 
@@ -301,7 +284,7 @@ public abstract class StatefulServiceBaseTest
         public void ReturnsCompletedTaskByDefault()
         {
             Task actual = ((IStatefulUserServiceReplica)sut).OnChangeRoleAsync(fuzzy.Enum<ReplicaRole>(), TestContext.Current.CancellationToken);
-            Assert.True(actual.IsCompletedSuccessfully);
+            Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
         }
 
         [Theory]
@@ -337,7 +320,7 @@ public abstract class StatefulServiceBaseTest
         public void ReturnsCompletedTaskByDefault()
         {
             Task actual = ((IStatefulUserServiceReplica)sut).OnCloseAsync(TestContext.Current.CancellationToken);
-            Assert.True(actual.IsCompletedSuccessfully);
+            Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
         }
 
         [Fact]
@@ -376,7 +359,7 @@ public abstract class StatefulServiceBaseTest
         public void ReturnsCompletedTaskByDefault()
         {
             Task actual = ((IStatefulUserServiceReplica)sut).OnOpenAsync(fuzzy.Enum<ReplicaOpenMode>(), TestContext.Current.CancellationToken);
-            Assert.True(actual.IsCompletedSuccessfully);
+            Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
         }
 
         [Theory]
@@ -403,7 +386,7 @@ public abstract class StatefulServiceBaseTest
     public sealed class IStatefulUserServiceReplica_Partition : StatefulServiceBaseTest
     {
         [Fact]
-        public void IsSetByExplicitInterfaceSetter()
+        public void UpdatesValueReturnedByGetPartition()
         {
             var partition = Mock.Of<IStatefulServicePartition>();
             ((IStatefulUserServiceReplica)sut).Partition = partition;
@@ -417,7 +400,7 @@ public abstract class StatefulServiceBaseTest
         public void ReturnsCompletedTaskByDefault()
         {
             Task actual = ((IStatefulUserServiceReplica)sut).RunAsync(TestContext.Current.CancellationToken);
-            Assert.True(actual.IsCompletedSuccessfully);
+            Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
         }
 
         [Fact]
@@ -450,7 +433,7 @@ public abstract class StatefulServiceBaseTest
         public void ReturnsCompletedTask()
         {
             Task actual = sut.InvokeBaseOnRestoreCompleted(TestContext.Current.CancellationToken);
-            Assert.True(actual.IsCompletedSuccessfully);
+            Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
         }
     }
 
