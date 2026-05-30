@@ -16,13 +16,13 @@ public abstract class SerializationUtilityTest
 {
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    static readonly DataContractSerializer Serializer = new(typeof(Payload));
+    static readonly DataContractSerializer payloadSerializer = new(typeof(Payload));
 
     static byte[] Encode(object msg)
     {
         using var stream = new MemoryStream();
         using var writer = XmlDictionaryWriter.CreateBinaryWriter(stream);
-        Serializer.WriteObject(writer, msg);
+        payloadSerializer.WriteObject(writer, msg);
         writer.Flush();
         return stream.ToArray();
     }
@@ -30,7 +30,7 @@ public abstract class SerializationUtilityTest
     public sealed class Deserialize : SerializationUtilityTest
     {
         // Method parameters
-        readonly DataContractSerializer serializer = Serializer;
+        readonly DataContractSerializer serializer = payloadSerializer;
         readonly byte[] buffer;
 
         readonly Payload msg = new() { Name = fuzzy.String(), Value = fuzzy.Int32() };
@@ -58,7 +58,7 @@ public abstract class SerializationUtilityTest
 
     public sealed class Serialize : SerializationUtilityTest
     {
-        readonly DataContractSerializer serializer = Serializer;
+        readonly DataContractSerializer serializer = payloadSerializer;
         readonly Payload msg = new() { Name = fuzzy.String(), Value = fuzzy.Int32() };
 
         [Fact]
