@@ -22,8 +22,6 @@ public abstract class ServiceHelperTest
     readonly string traceType = fuzzy.String();
     readonly string traceId = fuzzy.String();
 
-    readonly IServicePartition partition = Mock.Of<IServicePartition>();
-
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
     ServiceHelperTest() =>
@@ -32,6 +30,7 @@ public abstract class ServiceHelperTest
     public sealed class AwaitAsyncTaskWithHealthReporting : ServiceHelperTest
     {
         // Method parameters
+        readonly IServicePartition partition = Mock.Of<IServicePartition>();
         readonly Task taskToAwait;
         readonly TimeSpan expectedCancellationTime = TimeSpan.FromMilliseconds(50);
         readonly Action reportHealthFunc = Mock.Of<Action>();
@@ -89,6 +88,7 @@ public abstract class ServiceHelperTest
     public sealed class AwaitCloseCommunicationListerWithHealthReporting : ServiceHelperTest
     {
         // Method parameters
+        readonly IServicePartition partition = Mock.Of<IServicePartition>();
         readonly Task closeCommunicationListenerTask;
         readonly string communicationListenerName = fuzzy.String();
 
@@ -131,6 +131,7 @@ public abstract class ServiceHelperTest
     public sealed class AwaitRunAsyncWithHealthReporting : ServiceHelperTest
     {
         // Method parameters
+        readonly IServicePartition partition = Mock.Of<IServicePartition>();
         readonly Task runAsyncTask;
 
         readonly TaskCompletionSource<int> source = new();
@@ -170,6 +171,8 @@ public abstract class ServiceHelperTest
 
     public sealed class HandleRunAsyncUnexpectedException : ServiceHelperTest
     {
+        // Method parameters
+        readonly IServicePartition partition = Mock.Of<IServicePartition>();
         readonly Exception ex = new(fuzzy.String());
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Calls Environment.FailFast which terminates the test process.
@@ -188,6 +191,7 @@ public abstract class ServiceHelperTest
     public sealed class HandleRunAsyncUnexpectedFabricException : ServiceHelperTest
     {
         // Method parameters
+        readonly IServicePartition partition = Mock.Of<IServicePartition>();
         readonly FabricException fex = new(fuzzy.String());
 
         HealthInformation reported;
