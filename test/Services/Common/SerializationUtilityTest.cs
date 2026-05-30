@@ -18,6 +18,7 @@ public abstract class SerializationUtilityTest
 
     public sealed class Deserialize : SerializationUtilityTest
     {
+        // Method parameters
         readonly DataContractSerializer serializer = Serializer;
         readonly byte[] buffer;
 
