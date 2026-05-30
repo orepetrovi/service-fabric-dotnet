@@ -4,7 +4,9 @@
 // ------------------------------------------------------------
 
 using System;
+using System.IO;
 using System.Runtime.Serialization;
+using System.Xml;
 using Fuzzy;
 using Xunit;
 
@@ -16,6 +18,15 @@ public abstract class SerializationUtilityTest
 
     static readonly DataContractSerializer Serializer = new(typeof(Payload));
 
+    static byte[] Encode(object msg)
+    {
+        using var stream = new MemoryStream();
+        using var writer = XmlDictionaryWriter.CreateBinaryWriter(stream);
+        Serializer.WriteObject(writer, msg);
+        writer.Flush();
+        return stream.ToArray();
+    }
+
     public sealed class Deserialize : SerializationUtilityTest
     {
         // Method parameters
@@ -25,7 +36,7 @@ public abstract class SerializationUtilityTest
         readonly Payload msg = new() { Name = fuzzy.String(), Value = fuzzy.Int32() };
 
         public Deserialize() =>
-            buffer = SerializationUtility.Serialize(serializer, msg);
+            buffer = Encode(msg);
 
         [Fact]
         public void ReturnsMsgFromBinaryXmlEncoding()
@@ -55,9 +66,7 @@ public abstract class SerializationUtilityTest
         {
             byte[] buffer = SerializationUtility.Serialize(serializer, msg);
 
-            Payload roundTripped = (Payload)SerializationUtility.Deserialize(serializer, buffer);
-            Assert.Equal(((Payload)msg).Name, roundTripped.Name);
-            Assert.Equal(((Payload)msg).Value, roundTripped.Value);
+            Assert.Equal(Encode(msg), buffer);
         }
 
         [Fact]
