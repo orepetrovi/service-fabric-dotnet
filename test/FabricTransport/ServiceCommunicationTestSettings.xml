@@ -7,6 +7,7 @@
     <Parameter Name="MaxQueueSize" Value="35" />
     <Parameter Name="OperationTimeoutInSeconds" Value="2" />
     <Parameter Name="KeepAliveTimeoutInSeconds" Value="1000" />
+    <Parameter Name="ConnectTimeoutInMilliseconds" Value="3000" />
     <Parameter Name="SecurityCredentialsType" Value="X509" />
     <Parameter Name="CertificateFindType" Value="FindBySubjectName" />
     <Parameter Name="CertificateFindValue" Value="CN=alice.server.servicefabric.azure.test" />
