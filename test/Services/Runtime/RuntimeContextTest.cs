@@ -24,12 +24,12 @@ public abstract class RuntimeContextTest
         [Fact]
         public void DisposesCodePackageContext()
         {
-            var codePackageContext = new Mock<ICodePackageActivationContext>();
-            sut.Property<ICodePackageActivationContext>().Set(codePackageContext.Object);
+            ICodePackageActivationContext codePackageContext = Mock.Of<ICodePackageActivationContext>();
+            sut.Property<ICodePackageActivationContext>().Set(codePackageContext);
 
             sut.Dispose();
 
-            codePackageContext.Verify(_ => _.Dispose(), Times.Once);
+            Mock.Get(codePackageContext).Verify(_ => _.Dispose(), Times.Once);
         }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. FabricRuntime is sealed with no mockable seam.
