@@ -158,7 +158,7 @@ public abstract class StatefulServiceBaseTest
             // provider replica by invoking RestoreAsync with unique arguments and asserting the mock receives
             // that exact call.
             var description = new RestoreDescription(fuzzy.String(), policy);
-            CancellationToken restoreToken = TestContext.Current.CancellationToken;
+            CancellationToken restoreToken = new CancellationTokenSource().Token;
             _ = actualRestoreContext.RestoreAsync(description, restoreToken);
             replica.Verify(
                 _ => _.RestoreAsync(description.BackupFolderPath, description.Policy, restoreToken),
