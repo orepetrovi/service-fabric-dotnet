@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.Tracing;
 using System.Fabric;
 using System.Linq;
@@ -243,8 +242,7 @@ public abstract class StatefulServiceBaseTest
         [Fact]
         public void UpdatesValueReturnedByGetAddresses()
         {
-            IReadOnlyDictionary<string, string> addresses = new ReadOnlyDictionary<string, string>(
-                new Dictionary<string, string> { { fuzzy.String(), fuzzy.String() } });
+            IReadOnlyDictionary<string, string> addresses = fuzzy.Dictionary(fuzzy.String, fuzzy.String);
 
             ((IStatefulUserServiceReplica)sut).Addresses = addresses;
 
