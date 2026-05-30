@@ -29,130 +29,6 @@ public abstract class ServiceHelperTest
     ServiceHelperTest() =>
         sut = new ServiceHelper(traceType, traceId);
 
-    public sealed class ObserveExceptionIfAny : ServiceHelperTest
-    {
-        // Method parameters
-        readonly Task tsk;
-
-        readonly TaskCompletionSource<int> source = new();
-
-        public ObserveExceptionIfAny() => tsk = source.Task;
-
-        [Fact]
-        public void DoesNotThrowWhenTaskCompletesSuccessfully()
-        {
-            source.SetResult(fuzzy.Int32());
-            ServiceHelper.ObserveExceptionIfAny(tsk);
-        }
-
-        [Fact]
-        public async Task DoesNotThrowWhenTaskFaults()
-        {
-            source.SetException(new InvalidOperationException(fuzzy.String()));
-
-            ServiceHelper.ObserveExceptionIfAny(tsk);
-
-            // Allow the fire-and-forget Task.Run continuation to await the faulted task.
-            await Task.Delay(TimeSpan.FromMilliseconds(50), TestContext.Current.CancellationToken);
-
-            Assert.True(tsk.IsFaulted);
-            _ = tsk.Exception; // Mark observed for this test; SUT also observes it internally.
-        }
-    }
-
-    public sealed class HandleRunAsyncUnexpectedFabricException : ServiceHelperTest
-    {
-        // Method parameters
-        readonly FabricException fex = new(fuzzy.String());
-
-        HealthInformation reported;
-
-        public HandleRunAsyncUnexpectedFabricException() =>
-            Mock.Get(partition)
-                .Setup(_ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()))
-                .Callback<HealthInformation>(hi => reported = hi);
-
-        [Fact]
-        public void ReportsRunAsyncUnhandledExceptionHealth()
-        {
-            sut.HandleRunAsyncUnexpectedFabricException(partition, fex);
-
-            Assert.NotNull(reported);
-            Assert.Equal("RunAsync", reported.SourceId);
-            Assert.Equal("RunAsyncUnhandledException", reported.Property);
-            Assert.Equal(HealthState.Warning, reported.HealthState);
-            Assert.Equal(fex.ToString(), reported.Description);
-            Assert.Equal(TimeSpan.FromMinutes(2), reported.TimeToLive);
-            Assert.True(reported.RemoveWhenExpired);
-        }
-
-        [Fact]
-        public void ReportsFaultTransient()
-        {
-            sut.HandleRunAsyncUnexpectedFabricException(partition, fex);
-
-            Mock.Get(partition).Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
-            Mock.Get(partition).Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
-        }
-
-        [Fact]
-        public void ReportsFaultTransientWhenReportPartitionHealthThrows()
-        {
-            Mock.Get(partition)
-                .Setup(_ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()))
-                .Throws(new FabricException(fuzzy.String()));
-
-            sut.HandleRunAsyncUnexpectedFabricException(partition, fex);
-
-            Mock.Get(partition).Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
-        }
-
-        [Fact]
-        public void TrimsExceptionDescriptionToMaxHealthDescriptionLength()
-        {
-            var huge = new HugeException(new string('x', (4 * 1024) + 100));
-
-            sut.HandleRunAsyncUnexpectedFabricException(partition, huge);
-
-            Assert.Equal((4 * 1024) - 1, reported.Description.Length);
-            Assert.Equal(huge.ToString().Substring(0, (4 * 1024) - 1), reported.Description);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
-        public void ThrowsArgumentNullExceptionWhenPartitionIsNull() =>
-            Assert.Equal(nameof(partition), Assert.Throws<ArgumentNullException>(
-                () => sut.HandleRunAsyncUnexpectedFabricException(null, fex)).ParamName);
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
-        public void ThrowsArgumentNullExceptionWhenFexIsNull() =>
-            Assert.Equal(nameof(fex), Assert.Throws<ArgumentNullException>(
-                () => sut.HandleRunAsyncUnexpectedFabricException(partition, null)).ParamName);
-
-        sealed class HugeException : FabricException
-        {
-            readonly string text;
-            public HugeException(string text) => this.text = text;
-            public override string ToString() => text;
-        }
-    }
-
-    public sealed class HandleRunAsyncUnexpectedException : ServiceHelperTest
-    {
-        readonly Exception ex = new(fuzzy.String());
-
-        [Fact(Explicit = true)] // TODO: SUT testability limitation. Calls Environment.FailFast which terminates the test process.
-        public void ReportsFaultAndCallsFailFast() =>
-            throw new NotImplementedException(
-                "ServiceHelper.HandleRunAsyncUnexpectedException schedules Environment.FailFast on the thread pool. " +
-                "FailFast unconditionally terminates the test host, and the SUT exposes no seam to substitute it, " +
-                "so this behavior cannot be covered without testability changes.");
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
-        public void ThrowsArgumentNullExceptionWhenPartitionIsNull() =>
-            Assert.Equal(nameof(partition), Assert.Throws<ArgumentNullException>(
-                () => sut.HandleRunAsyncUnexpectedException(null, ex)).ParamName);
-    }
-
     public sealed class AwaitAsyncTaskWithHealthReporting : ServiceHelperTest
     {
         // Method parameters
@@ -290,5 +166,129 @@ public abstract class ServiceHelperTest
                 "ServiceHelper.AwaitRunAsyncWithHealthReporting hard-codes a 15-second timeout via " +
                 "RunAsyncExpectedCancellationTimeSpan. Triggering the slow-cancellation health report would require a " +
                 "15-second wait or a testability seam that the SUT does not expose.");
+    }
+
+    public sealed class HandleRunAsyncUnexpectedException : ServiceHelperTest
+    {
+        readonly Exception ex = new(fuzzy.String());
+
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Calls Environment.FailFast which terminates the test process.
+        public void ReportsFaultAndCallsFailFast() =>
+            throw new NotImplementedException(
+                "ServiceHelper.HandleRunAsyncUnexpectedException schedules Environment.FailFast on the thread pool. " +
+                "FailFast unconditionally terminates the test host, and the SUT exposes no seam to substitute it, " +
+                "so this behavior cannot be covered without testability changes.");
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public void ThrowsArgumentNullExceptionWhenPartitionIsNull() =>
+            Assert.Equal(nameof(partition), Assert.Throws<ArgumentNullException>(
+                () => sut.HandleRunAsyncUnexpectedException(null, ex)).ParamName);
+    }
+
+    public sealed class HandleRunAsyncUnexpectedFabricException : ServiceHelperTest
+    {
+        // Method parameters
+        readonly FabricException fex = new(fuzzy.String());
+
+        HealthInformation reported;
+
+        public HandleRunAsyncUnexpectedFabricException() =>
+            Mock.Get(partition)
+                .Setup(_ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()))
+                .Callback<HealthInformation>(hi => reported = hi);
+
+        [Fact]
+        public void ReportsRunAsyncUnhandledExceptionHealth()
+        {
+            sut.HandleRunAsyncUnexpectedFabricException(partition, fex);
+
+            Assert.NotNull(reported);
+            Assert.Equal("RunAsync", reported.SourceId);
+            Assert.Equal("RunAsyncUnhandledException", reported.Property);
+            Assert.Equal(HealthState.Warning, reported.HealthState);
+            Assert.Equal(fex.ToString(), reported.Description);
+            Assert.Equal(TimeSpan.FromMinutes(2), reported.TimeToLive);
+            Assert.True(reported.RemoveWhenExpired);
+        }
+
+        [Fact]
+        public void ReportsFaultTransient()
+        {
+            sut.HandleRunAsyncUnexpectedFabricException(partition, fex);
+
+            Mock.Get(partition).Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
+            Mock.Get(partition).Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
+        }
+
+        [Fact]
+        public void ReportsFaultTransientWhenReportPartitionHealthThrows()
+        {
+            Mock.Get(partition)
+                .Setup(_ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()))
+                .Throws(new FabricException(fuzzy.String()));
+
+            sut.HandleRunAsyncUnexpectedFabricException(partition, fex);
+
+            Mock.Get(partition).Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
+        }
+
+        [Fact]
+        public void TrimsExceptionDescriptionToMaxHealthDescriptionLength()
+        {
+            var huge = new HugeException(new string('x', (4 * 1024) + 100));
+
+            sut.HandleRunAsyncUnexpectedFabricException(partition, huge);
+
+            Assert.Equal((4 * 1024) - 1, reported.Description.Length);
+            Assert.Equal(huge.ToString().Substring(0, (4 * 1024) - 1), reported.Description);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public void ThrowsArgumentNullExceptionWhenPartitionIsNull() =>
+            Assert.Equal(nameof(partition), Assert.Throws<ArgumentNullException>(
+                () => sut.HandleRunAsyncUnexpectedFabricException(null, fex)).ParamName);
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public void ThrowsArgumentNullExceptionWhenFexIsNull() =>
+            Assert.Equal(nameof(fex), Assert.Throws<ArgumentNullException>(
+                () => sut.HandleRunAsyncUnexpectedFabricException(partition, null)).ParamName);
+
+        sealed class HugeException : FabricException
+        {
+            readonly string text;
+            public HugeException(string text) => this.text = text;
+            public override string ToString() => text;
+        }
+    }
+
+    public sealed class ObserveExceptionIfAny : ServiceHelperTest
+    {
+        // Method parameters
+        readonly Task tsk;
+
+        readonly TaskCompletionSource<int> source = new();
+
+        public ObserveExceptionIfAny() => tsk = source.Task;
+
+        [Fact]
+        public void DoesNotThrowWhenTaskCompletesSuccessfully()
+        {
+            source.SetResult(fuzzy.Int32());
+            ServiceHelper.ObserveExceptionIfAny(tsk);
+        }
+
+        [Fact]
+        public async Task DoesNotThrowWhenTaskFaults()
+        {
+            source.SetException(new InvalidOperationException(fuzzy.String()));
+
+            ServiceHelper.ObserveExceptionIfAny(tsk);
+
+            // Allow the fire-and-forget Task.Run continuation to await the faulted task.
+            await Task.Delay(TimeSpan.FromMilliseconds(50), TestContext.Current.CancellationToken);
+
+            Assert.True(tsk.IsFaulted);
+            _ = tsk.Exception; // Mark observed for this test; SUT also observes it internally.
+        }
     }
 }
