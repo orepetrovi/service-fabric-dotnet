@@ -65,18 +65,18 @@ public abstract class ServiceHelperTest
         [Fact]
         public async Task InvokesReportHealthFuncForEachIterationUntilTaskToAwaitCompletes()
         {
-            int callCount = 0;
+            int actualCallCount = 0;
             _ = reportHealthFunc
                 .Setup(_ => _())
                 .Callback(() =>
                 {
-                    if (Interlocked.Increment(ref callCount) >= 2)
+                    if (Interlocked.Increment(ref actualCallCount) >= 2)
                         source.TrySetResult(fuzzy.Int32());
                 });
 
             await sut.AwaitAsyncTaskWithHealthReporting(partition, taskToAwait, expectedCancellationTime, reportHealthFunc.Object);
 
-            Assert.Equal(2, callCount);
+            Assert.Equal(2, actualCallCount);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
@@ -194,25 +194,25 @@ public abstract class ServiceHelperTest
         readonly Mock<IServicePartition> partition = new();
         readonly FabricException fex = new(fuzzy.String());
 
-        HealthInformation reported;
+        HealthInformation actualHealthInformation;
 
         public HandleRunAsyncUnexpectedFabricException() =>
             _ = partition
                 .Setup(_ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()))
-                .Callback<HealthInformation>(hi => reported = hi);
+                .Callback<HealthInformation>(hi => actualHealthInformation = hi);
 
         [Fact]
         public void ReportsRunAsyncUnhandledExceptionHealth()
         {
             sut.HandleRunAsyncUnexpectedFabricException(partition.Object, fex);
 
-            Assert.NotNull(reported);
-            Assert.Equal("RunAsync", reported.SourceId);
-            Assert.Equal("RunAsyncUnhandledException", reported.Property);
-            Assert.Equal(HealthState.Warning, reported.HealthState);
-            Assert.Equal(fex.ToString(), reported.Description);
-            Assert.Equal(TimeSpan.FromMinutes(2), reported.TimeToLive);
-            Assert.True(reported.RemoveWhenExpired);
+            Assert.NotNull(actualHealthInformation);
+            Assert.Equal("RunAsync", actualHealthInformation.SourceId);
+            Assert.Equal("RunAsyncUnhandledException", actualHealthInformation.Property);
+            Assert.Equal(HealthState.Warning, actualHealthInformation.HealthState);
+            Assert.Equal(fex.ToString(), actualHealthInformation.Description);
+            Assert.Equal(TimeSpan.FromMinutes(2), actualHealthInformation.TimeToLive);
+            Assert.True(actualHealthInformation.RemoveWhenExpired);
             partition.Verify(
                 _ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()), Times.Once);
         }
@@ -246,7 +246,7 @@ public abstract class ServiceHelperTest
 
             sut.HandleRunAsyncUnexpectedFabricException(partition.Object, huge);
 
-            Assert.Equal(huge.ToString().Substring(0, (4 * 1024) - 1), reported.Description);
+            Assert.Equal(huge.ToString().Substring(0, (4 * 1024) - 1), actualHealthInformation.Description);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
