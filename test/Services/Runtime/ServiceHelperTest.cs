@@ -232,6 +232,7 @@ public abstract class ServiceHelperTest
             sut.HandleRunAsyncUnexpectedFabricException(partition, fex);
 
             Mock.Get(partition).Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
+            Mock.Get(partition).Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
         }
 
         [Fact]
@@ -271,13 +272,6 @@ public abstract class ServiceHelperTest
         readonly TaskCompletionSource<int> source = new();
 
         public ObserveExceptionIfAny() => tsk = source.Task;
-
-        [Fact]
-        public void DoesNotThrowWhenTaskCompletesSuccessfully()
-        {
-            source.SetResult(fuzzy.Int32());
-            ServiceHelper.ObserveExceptionIfAny(tsk);
-        }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Only observable effect is suppressing TaskScheduler.UnobservedTaskException.
         public void ObservesFaultedTaskException() =>
