@@ -246,7 +246,6 @@ public abstract class ServiceHelperTest
 
             sut.HandleRunAsyncUnexpectedFabricException(partition, huge);
 
-            Assert.Equal((4 * 1024) - 1, reported.Description.Length);
             Assert.Equal(huge.ToString().Substring(0, (4 * 1024) - 1), reported.Description);
         }
 
