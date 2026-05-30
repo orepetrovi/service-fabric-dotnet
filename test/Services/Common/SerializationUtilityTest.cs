@@ -32,7 +32,7 @@ public abstract class SerializationUtilityTest
         [Fact]
         public void ReturnsMsgFromBinaryXmlEncoding()
         {
-            Payload result = (Payload)SerializationUtility.Deserialize(serializer, buffer);
+            var result = (Payload)SerializationUtility.Deserialize(serializer, buffer);
 
             Assert.Equal(msg.Name, result.Name);
             Assert.Equal(msg.Value, result.Value);
