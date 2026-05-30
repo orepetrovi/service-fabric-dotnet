@@ -1,0 +1,86 @@
+// ------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
+// ------------------------------------------------------------
+
+using System;
+using System.Fabric;
+using System.Threading;
+using System.Threading.Tasks;
+using Fuzzy;
+using Xunit;
+
+namespace Microsoft.ServiceFabric.Services.Runtime;
+
+public abstract class ServiceRuntimeTest
+{
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+    public sealed class RegisterServiceAsync_String_FuncOfStatefulServiceContextStatefulServiceBase_TimeSpan_CancellationToken : ServiceRuntimeTest
+    {
+        readonly string serviceTypeName = fuzzy.String();
+        readonly Func<StatefulServiceContext, StatefulServiceBase> serviceFactory = _ => null;
+        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
+
+        [Fact]
+        public async Task ThrowsArgumentNullExceptionWhenServiceFactoryIsNull()
+        {
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => ServiceRuntime.RegisterServiceAsync(serviceTypeName, (Func<StatefulServiceContext, StatefulServiceBase>)null, default, cancellation));
+            Assert.Equal(nameof(serviceFactory), exception.ParamName);
+        }
+
+        [Fact]
+        public async Task ThrowsArgumentNullExceptionWhenServiceTypeNameIsNull()
+        {
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => ServiceRuntime.RegisterServiceAsync(null, serviceFactory, default, cancellation));
+            Assert.Equal(nameof(serviceTypeName), exception.ParamName);
+        }
+
+        [Fact]
+        public async Task ThrowsArgumentExceptionWhenServiceTypeNameIsWhiteSpace()
+        {
+            var exception = await Assert.ThrowsAnyAsync<ArgumentException>(
+                () => ServiceRuntime.RegisterServiceAsync("   ", serviceFactory, default, cancellation));
+            Assert.Equal(nameof(serviceTypeName), exception.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. FabricRuntime is sealed with no mockable seam.
+        public void RegistersStatefulServiceFactory() =>
+            throw new NotImplementedException(
+                "ServiceRuntime.RegisterServiceAsync calls RuntimeContext.GetOrCreateAsync, which depends on " +
+                "static methods of the sealed System.Fabric.FabricRuntime. Without a mockable seam, the path " +
+                "after argument validation cannot be covered without testability changes to the SUT.");
+    }
+
+    public sealed class RegisterServiceAsync_String_FuncOfStatelessServiceContextStatelessService_TimeSpan_CancellationToken : ServiceRuntimeTest
+    {
+        readonly string serviceTypeName = fuzzy.String();
+        readonly Func<StatelessServiceContext, StatelessService> serviceFactory = _ => null;
+        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
+
+        [Fact]
+        public async Task ThrowsArgumentNullExceptionWhenServiceFactoryIsNull()
+        {
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => ServiceRuntime.RegisterServiceAsync(serviceTypeName, (Func<StatelessServiceContext, StatelessService>)null, default, cancellation));
+            Assert.Equal(nameof(serviceFactory), exception.ParamName);
+        }
+
+        [Fact]
+        public async Task ThrowsArgumentNullExceptionWhenServiceTypeNameIsNull()
+        {
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
+                () => ServiceRuntime.RegisterServiceAsync(null, serviceFactory, default, cancellation));
+            Assert.Equal(nameof(serviceTypeName), exception.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. FabricRuntime is sealed with no mockable seam.
+        public void RegistersStatelessServiceFactory() =>
+            throw new NotImplementedException(
+                "ServiceRuntime.RegisterServiceAsync calls RuntimeContext.GetOrCreateAsync, which depends on " +
+                "static methods of the sealed System.Fabric.FabricRuntime. Without a mockable seam, the path " +
+                "after argument validation cannot be covered without testability changes to the SUT.");
+    }
+}
