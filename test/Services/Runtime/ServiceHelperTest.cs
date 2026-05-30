@@ -77,7 +77,7 @@ public abstract class ServiceHelperTest
 
             await sut.AwaitAsyncTaskWithHealthReporting(partition, taskToAwait, expectedCancellationTime, reportHealthFunc);
 
-            Assert.True(callCount >= 2);
+            Assert.Equal(2, callCount);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
