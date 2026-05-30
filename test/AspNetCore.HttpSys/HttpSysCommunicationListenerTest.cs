@@ -5,7 +5,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Fabric;
 using System.Fabric.Description;
-using System.Reflection;
 using Fuzzy;
 using Inspector;
 using Microsoft.AspNetCore.Hosting;
@@ -31,8 +30,8 @@ public abstract class HttpSysCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIHost : HttpSysCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = typeof(HttpSysCommunicationListener)
-            .GetConstructor([typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IHost>)]);
+        static readonly Constructor ctor = Type<HttpSysCommunicationListener>.Uninitialized()
+            .Constructor<Action<ServiceContext, string, Func<string, AspNetCoreCommunicationListener, IHost>>>();
 
         new readonly Func<string, AspNetCoreCommunicationListener, IHost> build = (_, _) => Mock.Of<IHost>();
 
@@ -72,8 +71,8 @@ public abstract class HttpSysCommunicationListenerTest
 
     public sealed class Constructor_ServiceContext_String_FuncOfStringOfAspNetCoreCommunicationListenerOfIWebHost : HttpSysCommunicationListenerTest
     {
-        static readonly ConstructorInfo ctor = typeof(HttpSysCommunicationListener)
-            .GetConstructor([typeof(ServiceContext), typeof(string), typeof(Func<string, AspNetCoreCommunicationListener, IWebHost>)]);
+        static readonly Constructor ctor = Type<HttpSysCommunicationListener>.Uninitialized()
+            .Constructor<Action<ServiceContext, string, Func<string, AspNetCoreCommunicationListener, IWebHost>>>();
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
