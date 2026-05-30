@@ -69,9 +69,9 @@ public abstract class SerializationUtilityTest
     public sealed class Payload
     {
         [DataMember]
-        public string Name { get; set; }
+        public string Name;
 
         [DataMember]
-        public int Value { get; set; }
+        public int Value;
     }
 }
