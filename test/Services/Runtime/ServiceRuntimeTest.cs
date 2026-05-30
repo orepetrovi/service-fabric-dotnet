@@ -40,6 +40,14 @@ public abstract class ServiceRuntimeTest
         }
 
         [Fact]
+        public async Task ThrowsArgumentExceptionWhenServiceTypeNameIsEmpty()
+        {
+            var exception = await Assert.ThrowsAnyAsync<ArgumentException>(
+                () => ServiceRuntime.RegisterServiceAsync(string.Empty, serviceFactory, timeout, cancellationToken));
+            Assert.Equal(nameof(serviceTypeName), exception.ParamName);
+        }
+
+        [Fact]
         public async Task ThrowsArgumentExceptionWhenServiceTypeNameIsWhiteSpace()
         {
             var exception = await Assert.ThrowsAnyAsync<ArgumentException>(
