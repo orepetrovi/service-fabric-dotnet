@@ -5,6 +5,7 @@
 
 using System;
 using System.Fabric;
+using System.Threading;
 using Inspector;
 using Moq;
 using Xunit;
@@ -42,6 +43,9 @@ public abstract class RuntimeContextTest
 
     public sealed class GetOrCreateAsync : RuntimeContextTest
     {
+        readonly TimeSpan timeout = TimeSpan.Zero;
+        readonly CancellationToken cancellationToken = CancellationToken.None;
+
         [Fact(Explicit = true)] // TODO: SUT testability limitation. FabricRuntime is sealed with no mockable seam.
         public void ReturnsSharedContext() =>
             throw new NotImplementedException(
