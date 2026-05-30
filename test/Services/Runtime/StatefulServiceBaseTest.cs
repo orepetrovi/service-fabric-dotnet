@@ -186,7 +186,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             [Theory]
             [InlineData(BackupOption.Full)]
             [InlineData(BackupOption.Incremental)]
-            public async Task ForwardsToStateProviderReplicaWithOneHourTimeoutAndNoCancellation(BackupOption option)
+            public void ForwardsToStateProviderReplicaWithOneHourTimeoutAndNoCancellation(BackupOption option)
             {
                 Func<BackupInfo, CancellationToken, Task<bool>> callback = (_, _) => Task.FromResult(true);
                 var description = new BackupDescription(option, callback);
@@ -198,7 +198,6 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 Task actual = sut.BackupAsync(description);
 
                 Assert.Same(expected, actual);
-                await actual;
                 stateProviderReplica.Verify(
                     _ => _.BackupAsync(It.IsAny<BackupOption>(), It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>(), It.IsAny<Func<BackupInfo, CancellationToken, Task<bool>>>()),
                     Times.Once);
@@ -208,7 +207,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
         public sealed class BackupAsync_BackupDescription_TimeSpan_CancellationToken : StatefulServiceBaseTest
         {
             [Fact]
-            public async Task ForwardsArgumentsToStateProviderReplica()
+            public void ForwardsArgumentsToStateProviderReplica()
             {
                 BackupOption option = fuzzy.Enum<BackupOption>();
                 Func<BackupInfo, CancellationToken, Task<bool>> callback = (_, _) => Task.FromResult(true);
@@ -223,7 +222,6 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 Task actual = sut.BackupAsync(description, timeout, cancellation);
 
                 Assert.Same(expected, actual);
-                await actual;
                 stateProviderReplica.Verify(
                     _ => _.BackupAsync(It.IsAny<BackupOption>(), It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>(), It.IsAny<Func<BackupInfo, CancellationToken, Task<bool>>>()),
                     Times.Once);
