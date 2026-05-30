@@ -44,7 +44,7 @@ public abstract class RwLockTest
         }
 
         [Fact]
-        public async Task ReturnedDisposableIsIdempotent()
+        public async Task ReturnsIdempotentDisposable()
         {
             await Task.Run(() =>
             {
@@ -88,7 +88,7 @@ public abstract class RwLockTest
         }
 
         [Fact]
-        public async Task ReturnedDisposableIsIdempotent()
+        public async Task ReturnsIdempotentDisposable()
         {
             await Task.Run(() =>
             {
@@ -134,7 +134,7 @@ public abstract class RwLockTest
             {
                 held.Dispose();
             }
-        }, cancellation);
+        });
         await acquired.Task;
         return new Holder(release, worker);
     }
@@ -158,7 +158,7 @@ public abstract class RwLockTest
         {
             ready.SetResult(null);
             acquire().Dispose();
-        }, cancellation);
+        });
         await ready.Task;
         return task;
     }
@@ -173,6 +173,9 @@ public abstract class RwLockTest
     async Task AssertDoesNotComplete(Task task)
     {
         Task delay = Task.Delay(BlockedWait, cancellation);
-        Assert.Same(delay, await Task.WhenAny(task, delay));
+        Task finished = await Task.WhenAny(task, delay);
+        if (finished == task)
+            await task;
+        Assert.Same(delay, finished);
     }
 }
