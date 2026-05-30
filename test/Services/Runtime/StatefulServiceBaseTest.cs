@@ -31,7 +31,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
         StatefulServiceBaseTest() =>
             sut = new TestService(serviceContext, stateProviderReplica.Object);
 
-        public sealed class Constructor_StatefulServiceContext_IStateProviderReplica : StatefulServiceBaseTest
+        public sealed class Constructor : StatefulServiceBaseTest
         {
             [Fact]
             public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
@@ -145,14 +145,14 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                     "without testability changes to the SUT.");
         }
 
-        public sealed class ServiceContext_Property : StatefulServiceBaseTest
+        public sealed class ServiceContext : StatefulServiceBaseTest
         {
             [Fact]
             public void ReturnsServiceContextPassedToConstructor() =>
                 Assert.Same(serviceContext, sut.GetServiceContextForTest());
         }
 
-        public sealed class Partition_Property : StatefulServiceBaseTest
+        public sealed class Partition : StatefulServiceBaseTest
         {
             [Fact]
             public void IsInitiallyNull() =>
@@ -167,7 +167,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             }
         }
 
-        public sealed class Addresses_Setter : StatefulServiceBaseTest
+        public sealed class IStatefulUserServiceReplica_Addresses : StatefulServiceBaseTest
         {
             [Fact]
             public void UpdatesValueReturnedByGetAddresses()
@@ -386,14 +386,14 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             }
         }
 
-        public sealed class OnDataLossAsync_Protected_DefaultBehavior : StatefulServiceBaseTest
+        public sealed class OnDataLossAsync : StatefulServiceBaseTest
         {
             [Fact]
             public async Task ReturnsFalse() =>
                 Assert.False(await sut.InvokeBaseOnDataLossAsync(default, TestContext.Current.CancellationToken));
         }
 
-        public sealed class OnRestoreCompletedAsync_Protected_DefaultBehavior : StatefulServiceBaseTest
+        public sealed class OnRestoreCompletedAsync : StatefulServiceBaseTest
         {
             [Fact]
             public async Task ReturnsCompletedTask()
