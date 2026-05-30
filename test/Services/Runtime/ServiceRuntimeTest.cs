@@ -92,5 +92,27 @@ public abstract class ServiceRuntimeTest
                 () => ServiceRuntime.RegisterServiceAsync(null, serviceFactory, timeout, cancellationToken));
             Assert.Equal(nameof(serviceTypeName), exception.ParamName);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Stateless overload calls ThrowIfNull instead of ThrowIfNullOrWhiteSpace.
+        public async Task ThrowsArgumentExceptionWhenServiceTypeNameIsEmpty()
+        {
+            // The stateful overload validates serviceTypeName with Requires.ThrowIfNullOrWhiteSpace, but the
+            // stateless overload only calls Requires.ThrowIfNull, so empty strings fall through into
+            // RuntimeContext.GetOrCreateAsync instead of failing fast at the argument boundary.
+            var exception = await Assert.ThrowsAnyAsync<ArgumentException>(
+                () => ServiceRuntime.RegisterServiceAsync(string.Empty, serviceFactory, timeout, cancellationToken));
+            Assert.Equal(nameof(serviceTypeName), exception.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Stateless overload calls ThrowIfNull instead of ThrowIfNullOrWhiteSpace.
+        public async Task ThrowsArgumentExceptionWhenServiceTypeNameIsWhiteSpace()
+        {
+            // The stateful overload validates serviceTypeName with Requires.ThrowIfNullOrWhiteSpace, but the
+            // stateless overload only calls Requires.ThrowIfNull, so whitespace strings fall through into
+            // RuntimeContext.GetOrCreateAsync instead of failing fast at the argument boundary.
+            var exception = await Assert.ThrowsAnyAsync<ArgumentException>(
+                () => ServiceRuntime.RegisterServiceAsync("   ", serviceFactory, timeout, cancellationToken));
+            Assert.Equal(nameof(serviceTypeName), exception.ParamName);
+        }
     }
 }
