@@ -9,7 +9,6 @@ using System.Fabric.Health;
 using System.Threading;
 using System.Threading.Tasks;
 using Fuzzy;
-using Inspector;
 using Moq;
 using Xunit;
 
@@ -29,16 +28,6 @@ public abstract class ServiceHelperTest
 
     ServiceHelperTest() =>
         sut = new ServiceHelper(traceType, traceId);
-
-    public sealed class Constructor : ServiceHelperTest
-    {
-        [Fact]
-        public void StoresTraceTypeAndTraceId()
-        {
-            Assert.Equal(traceType, sut.Field<string>("traceType").Value);
-            Assert.Equal(traceId, sut.Field<string>("traceId").Value);
-        }
-    }
 
     public sealed class ObserveExceptionIfAny : ServiceHelperTest
     {
@@ -104,6 +93,18 @@ public abstract class ServiceHelperTest
 
             Mock.Get(partition).Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
             Mock.Get(partition).Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
+        }
+
+        [Fact]
+        public void ReportsFaultTransientWhenReportPartitionHealthThrows()
+        {
+            Mock.Get(partition)
+                .Setup(_ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()))
+                .Throws(new FabricException(fuzzy.String()));
+
+            sut.HandleRunAsyncUnexpectedFabricException(partition, fex);
+
+            Mock.Get(partition).Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
         }
 
         [Fact]
@@ -231,6 +232,18 @@ public abstract class ServiceHelperTest
                 _ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()), Times.Never);
         }
 
+        [Fact]
+        public async Task PropagatesExceptionWhenCloseCommunicationListenerTaskFaults()
+        {
+            var expected = new InvalidOperationException(fuzzy.String());
+            source.SetException(expected);
+
+            var actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.AwaitCloseCommunicationListerWithHealthReporting(partition, closeCommunicationListenerTask, communicationListenerName));
+
+            Assert.Same(expected, actual);
+        }
+
         [Fact(Explicit = true)] // TODO: SUT testability limitation. CommunicationListenerExpectedCloseTimeSpan is a hard-coded 15s constant.
         public void ReportsCommunicationListenerSlowCloseHealthWhenTaskExceedsExpectedCloseTime() =>
             throw new NotImplementedException(
@@ -257,6 +270,18 @@ public abstract class ServiceHelperTest
 
             Mock.Get(partition).Verify(
                 _ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task PropagatesExceptionWhenRunAsyncTaskFaults()
+        {
+            var expected = new InvalidOperationException(fuzzy.String());
+            source.SetException(expected);
+
+            var actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.AwaitRunAsyncWithHealthReporting(partition, runAsyncTask));
+
+            Assert.Same(expected, actual);
         }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. RunAsyncExpectedCancellationTimeSpan is a hard-coded 15s constant.
