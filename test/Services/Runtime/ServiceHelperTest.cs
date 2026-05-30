@@ -33,7 +33,7 @@ public abstract class ServiceHelperTest
         readonly IServicePartition partition = Mock.Of<IServicePartition>();
         readonly Task taskToAwait;
         readonly TimeSpan expectedCancellationTime = TimeSpan.FromMilliseconds(50);
-        readonly Action reportHealthFunc = Mock.Of<Action>();
+        readonly Mock<Action> reportHealthFunc = new();
 
         readonly TaskCompletionSource<int> source = new();
 
@@ -44,9 +44,9 @@ public abstract class ServiceHelperTest
         {
             source.SetResult(fuzzy.Int32());
 
-            await sut.AwaitAsyncTaskWithHealthReporting(partition, taskToAwait, expectedCancellationTime, reportHealthFunc);
+            await sut.AwaitAsyncTaskWithHealthReporting(partition, taskToAwait, expectedCancellationTime, reportHealthFunc.Object);
 
-            Mock.Get(reportHealthFunc).Verify(_ => _(), Times.Never);
+            reportHealthFunc.Verify(_ => _(), Times.Never);
         }
 
         [Fact]
@@ -56,17 +56,17 @@ public abstract class ServiceHelperTest
             source.SetException(expected);
 
             var actual = await Assert.ThrowsAsync<InvalidOperationException>(
-                () => sut.AwaitAsyncTaskWithHealthReporting(partition, taskToAwait, expectedCancellationTime, reportHealthFunc));
+                () => sut.AwaitAsyncTaskWithHealthReporting(partition, taskToAwait, expectedCancellationTime, reportHealthFunc.Object));
 
             Assert.Same(expected, actual);
-            Mock.Get(reportHealthFunc).Verify(_ => _(), Times.Never);
+            reportHealthFunc.Verify(_ => _(), Times.Never);
         }
 
         [Fact]
         public async Task InvokesReportHealthFuncForEachIterationUntilTaskToAwaitCompletes()
         {
             int callCount = 0;
-            _ = Mock.Get(reportHealthFunc)
+            _ = reportHealthFunc
                 .Setup(_ => _())
                 .Callback(() =>
                 {
@@ -74,7 +74,7 @@ public abstract class ServiceHelperTest
                         source.TrySetResult(fuzzy.Int32());
                 });
 
-            await sut.AwaitAsyncTaskWithHealthReporting(partition, taskToAwait, expectedCancellationTime, reportHealthFunc);
+            await sut.AwaitAsyncTaskWithHealthReporting(partition, taskToAwait, expectedCancellationTime, reportHealthFunc.Object);
 
             Assert.Equal(2, callCount);
         }
@@ -191,20 +191,20 @@ public abstract class ServiceHelperTest
     public sealed class HandleRunAsyncUnexpectedFabricException : ServiceHelperTest
     {
         // Method parameters
-        readonly IServicePartition partition = Mock.Of<IServicePartition>();
+        readonly Mock<IServicePartition> partition = new();
         readonly FabricException fex = new(fuzzy.String());
 
         HealthInformation reported;
 
         public HandleRunAsyncUnexpectedFabricException() =>
-            _ = Mock.Get(partition)
+            _ = partition
                 .Setup(_ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()))
                 .Callback<HealthInformation>(hi => reported = hi);
 
         [Fact]
         public void ReportsRunAsyncUnhandledExceptionHealth()
         {
-            sut.HandleRunAsyncUnexpectedFabricException(partition, fex);
+            sut.HandleRunAsyncUnexpectedFabricException(partition.Object, fex);
 
             Assert.NotNull(reported);
             Assert.Equal("RunAsync", reported.SourceId);
@@ -213,30 +213,30 @@ public abstract class ServiceHelperTest
             Assert.Equal(fex.ToString(), reported.Description);
             Assert.Equal(TimeSpan.FromMinutes(2), reported.TimeToLive);
             Assert.True(reported.RemoveWhenExpired);
-            Mock.Get(partition).Verify(
+            partition.Verify(
                 _ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()), Times.Once);
         }
 
         [Fact]
         public void ReportsFaultTransient()
         {
-            sut.HandleRunAsyncUnexpectedFabricException(partition, fex);
+            sut.HandleRunAsyncUnexpectedFabricException(partition.Object, fex);
 
-            Mock.Get(partition).Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
-            Mock.Get(partition).Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
+            partition.Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
+            partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
         }
 
         [Fact]
         public void ReportsFaultTransientWhenReportPartitionHealthThrows()
         {
-            _ = Mock.Get(partition)
+            _ = partition
                 .Setup(_ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()))
                 .Throws(new FabricException(fuzzy.String()));
 
-            sut.HandleRunAsyncUnexpectedFabricException(partition, fex);
+            sut.HandleRunAsyncUnexpectedFabricException(partition.Object, fex);
 
-            Mock.Get(partition).Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
-            Mock.Get(partition).Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
+            partition.Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
+            partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
         }
 
         [Fact]
@@ -244,7 +244,7 @@ public abstract class ServiceHelperTest
         {
             var huge = new HugeException(new string('x', (4 * 1024) + 100));
 
-            sut.HandleRunAsyncUnexpectedFabricException(partition, huge);
+            sut.HandleRunAsyncUnexpectedFabricException(partition.Object, huge);
 
             Assert.Equal(huge.ToString().Substring(0, (4 * 1024) - 1), reported.Description);
         }
@@ -257,7 +257,7 @@ public abstract class ServiceHelperTest
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
         public void ThrowsArgumentNullExceptionWhenFexIsNull() =>
             Assert.Equal(nameof(fex), Assert.Throws<ArgumentNullException>(
-                () => sut.HandleRunAsyncUnexpectedFabricException(partition, null)).ParamName);
+                () => sut.HandleRunAsyncUnexpectedFabricException(partition.Object, null)).ParamName);
 
         sealed class HugeException : FabricException
         {
