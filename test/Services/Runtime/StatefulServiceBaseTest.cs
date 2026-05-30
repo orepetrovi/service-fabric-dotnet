@@ -50,7 +50,7 @@ public abstract class StatefulServiceBaseTest
         {
             Func<BackupInfo, CancellationToken, Task<bool>> callback = (_, _) => Task.FromResult(true);
             var description = new BackupDescription(option, callback);
-            Task expected = Task.FromResult(fuzzy.Boolean());
+            Task expected = new TaskCompletionSource<bool>().Task;
             _ = stateProviderReplica
                 .Setup(_ => _.BackupAsync(option, TimeSpan.FromHours(1), CancellationToken.None, callback))
                 .Returns(expected);
@@ -75,7 +75,7 @@ public abstract class StatefulServiceBaseTest
             var description = new BackupDescription(option, callback);
             TimeSpan timeout = TimeSpan.FromSeconds(fuzzy.Int32().Between(1, 1000));
             CancellationToken cancellation = new(canceled: true);
-            Task expected = Task.FromResult(fuzzy.Boolean());
+            Task expected = new TaskCompletionSource<bool>().Task;
             _ = stateProviderReplica
                 .Setup(_ => _.BackupAsync(option, timeout, cancellation, callback))
                 .Returns(expected);
