@@ -23,6 +23,13 @@ public abstract class ServiceRuntimeTest
         readonly TimeSpan timeout = default;
         readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. FabricRuntime is sealed with no mockable seam.
+        public void RegistersStatefulServiceFactory() =>
+            throw new NotImplementedException(
+                "ServiceRuntime.RegisterServiceAsync calls RuntimeContext.GetOrCreateAsync, which depends on " +
+                "static methods of the sealed System.Fabric.FabricRuntime. Without a mockable seam, the path " +
+                "after argument validation cannot be covered without testability changes to the SUT.");
+
         [Fact]
         public async Task ThrowsArgumentNullExceptionWhenServiceFactoryIsNull()
         {
@@ -54,13 +61,6 @@ public abstract class ServiceRuntimeTest
                 () => ServiceRuntime.RegisterServiceAsync("   ", serviceFactory, timeout, cancellationToken));
             Assert.Equal(nameof(serviceTypeName), exception.ParamName);
         }
-
-        [Fact(Explicit = true)] // TODO: SUT testability limitation. FabricRuntime is sealed with no mockable seam.
-        public void RegistersStatefulServiceFactory() =>
-            throw new NotImplementedException(
-                "ServiceRuntime.RegisterServiceAsync calls RuntimeContext.GetOrCreateAsync, which depends on " +
-                "static methods of the sealed System.Fabric.FabricRuntime. Without a mockable seam, the path " +
-                "after argument validation cannot be covered without testability changes to the SUT.");
     }
 
     public sealed class RegisterServiceAsync_String_FuncOfStatelessServiceContextStatelessService_TimeSpan_CancellationToken : ServiceRuntimeTest
@@ -69,6 +69,13 @@ public abstract class ServiceRuntimeTest
         readonly Func<StatelessServiceContext, StatelessService> serviceFactory = _ => null;
         readonly TimeSpan timeout = default;
         readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. FabricRuntime is sealed with no mockable seam.
+        public void RegistersStatelessServiceFactory() =>
+            throw new NotImplementedException(
+                "ServiceRuntime.RegisterServiceAsync calls RuntimeContext.GetOrCreateAsync, which depends on " +
+                "static methods of the sealed System.Fabric.FabricRuntime. Without a mockable seam, the path " +
+                "after argument validation cannot be covered without testability changes to the SUT.");
 
         [Fact]
         public async Task ThrowsArgumentNullExceptionWhenServiceFactoryIsNull()
@@ -85,12 +92,5 @@ public abstract class ServiceRuntimeTest
                 () => ServiceRuntime.RegisterServiceAsync(null, serviceFactory, timeout, cancellationToken));
             Assert.Equal(nameof(serviceTypeName), exception.ParamName);
         }
-
-        [Fact(Explicit = true)] // TODO: SUT testability limitation. FabricRuntime is sealed with no mockable seam.
-        public void RegistersStatelessServiceFactory() =>
-            throw new NotImplementedException(
-                "ServiceRuntime.RegisterServiceAsync calls RuntimeContext.GetOrCreateAsync, which depends on " +
-                "static methods of the sealed System.Fabric.FabricRuntime. Without a mockable seam, the path " +
-                "after argument validation cannot be covered without testability changes to the SUT.");
     }
 }
