@@ -39,6 +39,10 @@ public abstract class StatefulServiceTest
     public sealed class Constructor_StatefulServiceContext_IReliableStateManagerReplica : StatefulServiceTest
     {
         [Fact]
+        public void InitializesContextWithServiceContext() =>
+            Assert.Same(serviceContext, sut.Context);
+
+        [Fact]
         public void InitializesStateManagerWithReliableStateManagerReplica() =>
             Assert.Same(reliableStateManagerReplica, sut.StateManager);
 
@@ -59,7 +63,7 @@ public abstract class StatefulServiceTest
 
     sealed class TestStatefulService : StatefulService
     {
-        public TestStatefulService(StatefulServiceContext serviceContext, IReliableStateManagerReplica reliableStateManagerReplica)
+        internal TestStatefulService(StatefulServiceContext serviceContext, IReliableStateManagerReplica reliableStateManagerReplica)
             : base(serviceContext, reliableStateManagerReplica) { }
     }
 }
