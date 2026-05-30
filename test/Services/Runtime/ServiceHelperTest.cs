@@ -43,9 +43,9 @@ public abstract class ServiceHelperTest
     public sealed class ObserveExceptionIfAny : ServiceHelperTest
     {
         // Method parameters
-        readonly TaskCompletionSource<int> source = new();
-
         readonly Task tsk;
+
+        readonly TaskCompletionSource<int> source = new();
 
         public ObserveExceptionIfAny() => tsk = source.Task;
 
@@ -155,10 +155,11 @@ public abstract class ServiceHelperTest
     public sealed class AwaitAsyncTaskWithHealthReporting : ServiceHelperTest
     {
         // Method parameters
-        readonly TaskCompletionSource<int> source = new();
         readonly Task taskToAwait;
         readonly TimeSpan expectedCancellationTime = TimeSpan.FromMilliseconds(50);
         readonly Action reportHealthFunc = Mock.Of<Action>();
+
+        readonly TaskCompletionSource<int> source = new();
 
         public AwaitAsyncTaskWithHealthReporting() => taskToAwait = source.Task;
 
@@ -211,9 +212,10 @@ public abstract class ServiceHelperTest
     public sealed class AwaitCloseCommunicationListerWithHealthReporting : ServiceHelperTest
     {
         // Method parameters
-        readonly TaskCompletionSource<int> source = new();
         readonly Task closeCommunicationListenerTask;
         readonly string communicationListenerName = fuzzy.String();
+
+        readonly TaskCompletionSource<int> source = new();
 
         public AwaitCloseCommunicationListerWithHealthReporting() =>
             closeCommunicationListenerTask = source.Task;
@@ -240,8 +242,9 @@ public abstract class ServiceHelperTest
     public sealed class AwaitRunAsyncWithHealthReporting : ServiceHelperTest
     {
         // Method parameters
-        readonly TaskCompletionSource<int> source = new();
         readonly Task runAsyncTask;
+
+        readonly TaskCompletionSource<int> source = new();
 
         public AwaitRunAsyncWithHealthReporting() => runAsyncTask = source.Task;
 
