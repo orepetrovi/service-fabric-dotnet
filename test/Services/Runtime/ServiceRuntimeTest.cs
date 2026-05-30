@@ -20,13 +20,14 @@ public abstract class ServiceRuntimeTest
     {
         readonly string serviceTypeName = fuzzy.String();
         readonly Func<StatefulServiceContext, StatefulServiceBase> serviceFactory = _ => null;
-        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
+        readonly TimeSpan timeout = default;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         [Fact]
         public async Task ThrowsArgumentNullExceptionWhenServiceFactoryIsNull()
         {
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => ServiceRuntime.RegisterServiceAsync(serviceTypeName, (Func<StatefulServiceContext, StatefulServiceBase>)null, default, cancellation));
+                () => ServiceRuntime.RegisterServiceAsync(serviceTypeName, (Func<StatefulServiceContext, StatefulServiceBase>)null, timeout, cancellationToken));
             Assert.Equal(nameof(serviceFactory), exception.ParamName);
         }
 
@@ -34,7 +35,7 @@ public abstract class ServiceRuntimeTest
         public async Task ThrowsArgumentNullExceptionWhenServiceTypeNameIsNull()
         {
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => ServiceRuntime.RegisterServiceAsync(null, serviceFactory, default, cancellation));
+                () => ServiceRuntime.RegisterServiceAsync(null, serviceFactory, timeout, cancellationToken));
             Assert.Equal(nameof(serviceTypeName), exception.ParamName);
         }
 
@@ -42,7 +43,7 @@ public abstract class ServiceRuntimeTest
         public async Task ThrowsArgumentExceptionWhenServiceTypeNameIsWhiteSpace()
         {
             var exception = await Assert.ThrowsAnyAsync<ArgumentException>(
-                () => ServiceRuntime.RegisterServiceAsync("   ", serviceFactory, default, cancellation));
+                () => ServiceRuntime.RegisterServiceAsync("   ", serviceFactory, timeout, cancellationToken));
             Assert.Equal(nameof(serviceTypeName), exception.ParamName);
         }
 
@@ -58,13 +59,14 @@ public abstract class ServiceRuntimeTest
     {
         readonly string serviceTypeName = fuzzy.String();
         readonly Func<StatelessServiceContext, StatelessService> serviceFactory = _ => null;
-        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
+        readonly TimeSpan timeout = default;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         [Fact]
         public async Task ThrowsArgumentNullExceptionWhenServiceFactoryIsNull()
         {
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => ServiceRuntime.RegisterServiceAsync(serviceTypeName, (Func<StatelessServiceContext, StatelessService>)null, default, cancellation));
+                () => ServiceRuntime.RegisterServiceAsync(serviceTypeName, (Func<StatelessServiceContext, StatelessService>)null, timeout, cancellationToken));
             Assert.Equal(nameof(serviceFactory), exception.ParamName);
         }
 
@@ -72,7 +74,7 @@ public abstract class ServiceRuntimeTest
         public async Task ThrowsArgumentNullExceptionWhenServiceTypeNameIsNull()
         {
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => ServiceRuntime.RegisterServiceAsync(null, serviceFactory, default, cancellation));
+                () => ServiceRuntime.RegisterServiceAsync(null, serviceFactory, timeout, cancellationToken));
             Assert.Equal(nameof(serviceTypeName), exception.ParamName);
         }
 
