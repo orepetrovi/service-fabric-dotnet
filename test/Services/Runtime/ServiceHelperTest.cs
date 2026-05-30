@@ -186,6 +186,14 @@ public abstract class ServiceHelperTest
         public void ThrowsArgumentNullExceptionWhenPartitionIsNull() =>
             Assert.Equal(nameof(partition), Assert.Throws<ArgumentNullException>(
                 () => sut.HandleRunAsyncUnexpectedException(null, ex)).ParamName);
+
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Missing argument validation lets execution reach Environment.FailFast which terminates the test process.
+        public void ThrowsArgumentNullExceptionWhenExIsNull() =>
+            throw new NotImplementedException(
+                "ServiceHelper.HandleRunAsyncUnexpectedException does not validate ex, and the only dereference of ex " +
+                "before Environment.FailFast is inside a swallowing try/catch. With a valid partition the method " +
+                "proceeds to schedule Environment.FailFast, which terminates the test host, so this behavior cannot " +
+                "be covered without testability changes.");
     }
 
     public sealed class HandleRunAsyncUnexpectedFabricException : ServiceHelperTest
@@ -235,6 +243,8 @@ public abstract class ServiceHelperTest
 
             sut.HandleRunAsyncUnexpectedFabricException(partition.Object, fex);
 
+            partition.Verify(
+                _ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()), Times.Once);
             partition.Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
             partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
         }
@@ -247,6 +257,8 @@ public abstract class ServiceHelperTest
             sut.HandleRunAsyncUnexpectedFabricException(partition.Object, huge);
 
             Assert.Equal(huge.ToString().Substring(0, (4 * 1024) - 1), actualHealthInformation.Description);
+            partition.Verify(
+                _ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()), Times.Once);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
