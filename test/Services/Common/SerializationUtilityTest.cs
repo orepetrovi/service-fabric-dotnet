@@ -18,15 +18,6 @@ public abstract class SerializationUtilityTest
 
     static readonly DataContractSerializer payloadSerializer = new(typeof(Payload));
 
-    static byte[] Encode(object msg)
-    {
-        using var stream = new MemoryStream();
-        using var writer = XmlDictionaryWriter.CreateBinaryWriter(stream);
-        payloadSerializer.WriteObject(writer, msg);
-        writer.Flush();
-        return stream.ToArray();
-    }
-
     public sealed class Deserialize : SerializationUtilityTest
     {
         // Method parameters
@@ -72,6 +63,15 @@ public abstract class SerializationUtilityTest
         [Fact]
         public void ReturnsNullWhenMsgIsNull() =>
             Assert.Null(SerializationUtility.Serialize(serializer, null));
+    }
+
+    static byte[] Encode(object msg)
+    {
+        using var stream = new MemoryStream();
+        using var writer = XmlDictionaryWriter.CreateBinaryWriter(stream);
+        payloadSerializer.WriteObject(writer, msg);
+        writer.Flush();
+        return stream.ToArray();
     }
 
     [DataContract]
