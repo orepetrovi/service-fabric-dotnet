@@ -209,6 +209,8 @@ public abstract class ServiceHelperTest
             Assert.Equal(fex.ToString(), reported.Description);
             Assert.Equal(TimeSpan.FromMinutes(2), reported.TimeToLive);
             Assert.True(reported.RemoveWhenExpired);
+            Mock.Get(partition).Verify(
+                _ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()), Times.Once);
         }
 
         [Fact]
