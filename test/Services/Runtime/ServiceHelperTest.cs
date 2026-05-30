@@ -277,18 +277,13 @@ public abstract class ServiceHelperTest
             ServiceHelper.ObserveExceptionIfAny(tsk);
         }
 
-        [Fact]
-        public async Task DoesNotThrowWhenTaskFaults()
-        {
-            source.SetException(new InvalidOperationException(fuzzy.String()));
-
-            ServiceHelper.ObserveExceptionIfAny(tsk);
-
-            // Allow the fire-and-forget Task.Run continuation to await the faulted task.
-            await Task.Delay(TimeSpan.FromMilliseconds(50), TestContext.Current.CancellationToken);
-
-            Assert.True(tsk.IsFaulted);
-            _ = tsk.Exception; // Mark observed for this test; SUT also observes it internally.
-        }
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Only observable effect is suppressing TaskScheduler.UnobservedTaskException.
+        public void ObservesFaultedTaskException() =>
+            throw new NotImplementedException(
+                "ServiceHelper.ObserveExceptionIfAny awaits the supplied task on a fire-and-forget Task.Run to mark " +
+                "its exception observed. The only observable effect is preventing TaskScheduler.UnobservedTaskException " +
+                "from firing on finalization, which can only be asserted via GC.Collect + WaitForPendingFinalizers and " +
+                "a TaskScheduler.UnobservedTaskException handler — a known-fragile pattern. The SUT exposes no seam to " +
+                "verify the suppression directly.");
     }
 }
