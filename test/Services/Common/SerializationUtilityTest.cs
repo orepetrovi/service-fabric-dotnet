@@ -59,7 +59,7 @@ public abstract class SerializationUtilityTest
     public sealed class Serialize : SerializationUtilityTest
     {
         readonly DataContractSerializer serializer = Serializer;
-        readonly object msg = new Payload { Name = fuzzy.String(), Value = fuzzy.Int32() };
+        readonly Payload msg = new() { Name = fuzzy.String(), Value = fuzzy.Int32() };
 
         [Fact]
         public void ReturnsBinaryXmlEncodingOfMsg()
