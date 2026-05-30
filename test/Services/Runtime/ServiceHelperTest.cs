@@ -67,7 +67,7 @@ public abstract class ServiceHelperTest
         public async Task InvokesReportHealthFuncForEachIterationUntilTaskToAwaitCompletes()
         {
             int callCount = 0;
-            Mock.Get(reportHealthFunc)
+            _ = Mock.Get(reportHealthFunc)
                 .Setup(_ => _())
                 .Callback(() =>
                 {
@@ -193,7 +193,7 @@ public abstract class ServiceHelperTest
         HealthInformation reported;
 
         public HandleRunAsyncUnexpectedFabricException() =>
-            Mock.Get(partition)
+            _ = Mock.Get(partition)
                 .Setup(_ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()))
                 .Callback<HealthInformation>(hi => reported = hi);
 
@@ -223,7 +223,7 @@ public abstract class ServiceHelperTest
         [Fact]
         public void ReportsFaultTransientWhenReportPartitionHealthThrows()
         {
-            Mock.Get(partition)
+            _ = Mock.Get(partition)
                 .Setup(_ => _.ReportPartitionHealth(It.IsAny<HealthInformation>()))
                 .Throws(new FabricException(fuzzy.String()));
 
