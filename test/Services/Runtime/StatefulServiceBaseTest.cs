@@ -90,15 +90,31 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
                 CancellationToken expectedToken = new(canceled: true);
                 CancellationToken actualToken = default;
+                RestoreContext actualRestoreContext = default;
                 var service = new TestService(serviceContext, replica.Object)
                 {
-                    OnDataLossAsyncHandler = (_, ct) => { actualToken = ct; return Task.FromResult(true); },
+                    OnDataLossAsyncHandler = (rc, ct) =>
+                    {
+                        actualRestoreContext = rc;
+                        actualToken = ct;
+                        return Task.FromResult(true);
+                    },
                 };
 
                 bool result = await captured(expectedToken);
 
                 Assert.True(result);
                 Assert.Equal(expectedToken, actualToken);
+
+                // RestoreContext is a struct without observable identity, so verify it routes to the same state
+                // provider replica by invoking RestoreAsync with unique arguments and asserting the mock receives
+                // that exact call.
+                var description = new RestoreDescription(fuzzy.String(), RestorePolicy.Force);
+                CancellationToken restoreToken = new(canceled: true);
+                await actualRestoreContext.RestoreAsync(description, restoreToken);
+                replica.Verify(
+                    _ => _.RestoreAsync(description.BackupFolderPath, description.Policy, restoreToken),
+                    Times.Once);
             }
 
             [Fact]
