@@ -62,6 +62,14 @@ public abstract class StatefulServiceBaseTest
                 _ => _.BackupAsync(It.IsAny<BackupOption>(), It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>(), It.IsAny<Func<BackupInfo, CancellationToken, Task<bool>>>()),
                 Times.Once);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public void ThrowsArgumentNullExceptionWhenBackupDescriptionIsNull()
+        {
+            // SUT dereferences backupDescription.Option immediately, throwing NullReferenceException instead of ArgumentNullException.
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.BackupAsync(null));
+            Assert.Equal("backupDescription", exception.ParamName);
+        }
     }
 
     public sealed class BackupAsync_BackupDescription_TimeSpan_CancellationToken : StatefulServiceBaseTest
@@ -73,8 +81,8 @@ public abstract class StatefulServiceBaseTest
         {
             Func<BackupInfo, CancellationToken, Task<bool>> callback = (_, _) => Task.FromResult(true);
             var description = new BackupDescription(option, callback);
-            TimeSpan timeout = TimeSpan.FromSeconds(fuzzy.Int32().Between(1, 1000));
-            CancellationToken cancellation = new(canceled: true);
+            TimeSpan timeout = fuzzy.TimeSpan();
+            CancellationToken cancellation = TestContext.Current.CancellationToken;
             Task expected = new TaskCompletionSource<bool>().Task;
             _ = stateProviderReplica
                 .Setup(_ => _.BackupAsync(option, timeout, cancellation, callback))
@@ -86,6 +94,15 @@ public abstract class StatefulServiceBaseTest
             stateProviderReplica.Verify(
                 _ => _.BackupAsync(It.IsAny<BackupOption>(), It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>(), It.IsAny<Func<BackupInfo, CancellationToken, Task<bool>>>()),
                 Times.Once);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public void ThrowsArgumentNullExceptionWhenBackupDescriptionIsNull()
+        {
+            // SUT dereferences backupDescription.Option immediately, throwing NullReferenceException instead of ArgumentNullException.
+            var exception = Assert.Throws<ArgumentNullException>(
+                () => sut.BackupAsync(null, TimeSpan.FromHours(1), CancellationToken.None));
+            Assert.Equal("backupDescription", exception.ParamName);
         }
     }
 
@@ -127,6 +144,10 @@ public abstract class StatefulServiceBaseTest
         }
 
         [Fact]
+        public void InitializesPartitionToNull() =>
+            Assert.Null(sut.GetPartitionForTest());
+
+        [Fact]
         public void SetsOnDataLossAsyncOnStateProviderReplica() =>
             stateProviderReplica.VerifySet(_ => _.OnDataLossAsync = It.IsAny<Func<CancellationToken, Task<bool>>>(), Times.Once);
 
@@ -150,7 +171,7 @@ public abstract class StatefulServiceBaseTest
             _ = replica.SetupSet(_ => _.OnDataLossAsync = It.IsAny<Func<CancellationToken, Task<bool>>>())
                 .Callback<Func<CancellationToken, Task<bool>>>(f => captured = f);
 
-            CancellationToken expectedToken = new(canceled: true);
+            CancellationToken expectedToken = TestContext.Current.CancellationToken;
             CancellationToken actualToken = default;
             RestoreContext actualRestoreContext = default;
             Task<bool> expected = new TaskCompletionSource<bool>().Task;
@@ -173,10 +194,13 @@ public abstract class StatefulServiceBaseTest
             // provider replica by invoking RestoreAsync with unique arguments and asserting the mock receives
             // that exact call.
             var description = new RestoreDescription(fuzzy.String(), RestorePolicy.Force);
-            CancellationToken restoreToken = new(canceled: true);
+            CancellationToken restoreToken = TestContext.Current.CancellationToken;
             await actualRestoreContext.RestoreAsync(description, restoreToken);
             replica.Verify(
                 _ => _.RestoreAsync(description.BackupFolderPath, description.Policy, restoreToken),
+                Times.Once);
+            replica.Verify(
+                _ => _.RestoreAsync(It.IsAny<string>(), It.IsAny<RestorePolicy>(), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -188,7 +212,7 @@ public abstract class StatefulServiceBaseTest
             _ = replica.SetupSet(_ => _.OnRestoreCompletedAsync = It.IsAny<Func<CancellationToken, Task>>())
                 .Callback<Func<CancellationToken, Task>>(f => captured = f);
 
-            CancellationToken expectedToken = new(canceled: true);
+            CancellationToken expectedToken = TestContext.Current.CancellationToken;
             CancellationToken actualToken = default;
             Task expected = new TaskCompletionSource<int>().Task;
             _ = new TestService(serviceContext, replica.Object)
@@ -238,11 +262,13 @@ public abstract class StatefulServiceBaseTest
         public void ForwardsToProtectedCreateServiceReplicaListeners()
         {
             IEnumerable<ServiceReplicaListener> expected = fuzzy.Array(fuzzy.ServiceReplicaListener);
-            sut.CreateServiceReplicaListenersHandler = () => expected;
+            int calls = 0;
+            sut.CreateServiceReplicaListenersHandler = () => { calls++; return expected; };
 
             IEnumerable<ServiceReplicaListener> actual = ((IStatefulUserServiceReplica)sut).CreateServiceReplicaListeners();
 
             Assert.Same(expected, actual);
+            Assert.Equal(1, calls);
         }
     }
 
@@ -262,12 +288,12 @@ public abstract class StatefulServiceBaseTest
         [Fact]
         public void ForwardsToProtectedOnAbort()
         {
-            bool called = false;
-            sut.OnAbortHandler = () => called = true;
+            int calls = 0;
+            sut.OnAbortHandler = () => calls++;
 
             ((IStatefulUserServiceReplica)sut).OnAbort();
 
-            Assert.True(called);
+            Assert.Equal(1, calls);
         }
     }
 
@@ -276,7 +302,7 @@ public abstract class StatefulServiceBaseTest
         [Fact]
         public void ReturnsCompletedTaskByDefault()
         {
-            Task actual = ((IStatefulUserServiceReplica)sut).OnChangeRoleAsync(ReplicaRole.Primary, TestContext.Current.CancellationToken);
+            Task actual = ((IStatefulUserServiceReplica)sut).OnChangeRoleAsync(fuzzy.Enum<ReplicaRole>(), TestContext.Current.CancellationToken);
             Assert.True(actual.IsCompletedSuccessfully);
         }
 
@@ -287,17 +313,19 @@ public abstract class StatefulServiceBaseTest
         [InlineData(ReplicaRole.None)]
         public void ForwardsArgumentsToProtectedOnChangeRoleAsync(ReplicaRole expectedRole)
         {
-            CancellationToken expectedToken = new(canceled: true);
+            CancellationToken expectedToken = TestContext.Current.CancellationToken;
             ReplicaRole actualRole = default;
             CancellationToken actualToken = default;
+            int calls = 0;
             Task task = new TaskCompletionSource<int>().Task;
-            sut.OnChangeRoleAsyncHandler = (r, ct) => { actualRole = r; actualToken = ct; return task; };
+            sut.OnChangeRoleAsyncHandler = (r, ct) => { calls++; actualRole = r; actualToken = ct; return task; };
 
             Task result = ((IStatefulUserServiceReplica)sut).OnChangeRoleAsync(expectedRole, expectedToken);
 
             Assert.Same(task, result);
             Assert.Equal(expectedRole, actualRole);
             Assert.Equal(expectedToken, actualToken);
+            Assert.Equal(1, calls);
         }
     }
 
@@ -317,15 +345,17 @@ public abstract class StatefulServiceBaseTest
         [Fact]
         public void ForwardsCancellationTokenToProtectedOnCloseAsync()
         {
-            CancellationToken expected = new(canceled: true);
+            CancellationToken expected = TestContext.Current.CancellationToken;
             CancellationToken actual = default;
+            int calls = 0;
             Task task = new TaskCompletionSource<int>().Task;
-            sut.OnCloseAsyncHandler = ct => { actual = ct; return task; };
+            sut.OnCloseAsyncHandler = ct => { calls++; actual = ct; return task; };
 
             Task result = ((IStatefulUserServiceReplica)sut).OnCloseAsync(expected);
 
             Assert.Same(task, result);
             Assert.Equal(expected, actual);
+            Assert.Equal(1, calls);
         }
 
         [Fact]
@@ -347,7 +377,7 @@ public abstract class StatefulServiceBaseTest
         [Fact]
         public void ReturnsCompletedTaskByDefault()
         {
-            Task actual = ((IStatefulUserServiceReplica)sut).OnOpenAsync(ReplicaOpenMode.New, TestContext.Current.CancellationToken);
+            Task actual = ((IStatefulUserServiceReplica)sut).OnOpenAsync(fuzzy.Enum<ReplicaOpenMode>(), TestContext.Current.CancellationToken);
             Assert.True(actual.IsCompletedSuccessfully);
         }
 
@@ -356,17 +386,30 @@ public abstract class StatefulServiceBaseTest
         [InlineData(ReplicaOpenMode.Existing)]
         public void ForwardsArgumentsToProtectedOnOpenAsync(ReplicaOpenMode expectedMode)
         {
-            CancellationToken expectedToken = new(canceled: true);
+            CancellationToken expectedToken = TestContext.Current.CancellationToken;
             ReplicaOpenMode actualMode = default;
             CancellationToken actualToken = default;
+            int calls = 0;
             Task task = new TaskCompletionSource<int>().Task;
-            sut.OnOpenAsyncHandler = (m, ct) => { actualMode = m; actualToken = ct; return task; };
+            sut.OnOpenAsyncHandler = (m, ct) => { calls++; actualMode = m; actualToken = ct; return task; };
 
             Task result = ((IStatefulUserServiceReplica)sut).OnOpenAsync(expectedMode, expectedToken);
 
             Assert.Same(task, result);
             Assert.Equal(expectedMode, actualMode);
             Assert.Equal(expectedToken, actualToken);
+            Assert.Equal(1, calls);
+        }
+    }
+
+    public sealed class IStatefulUserServiceReplica_Partition : StatefulServiceBaseTest
+    {
+        [Fact]
+        public void IsSetByExplicitInterfaceSetter()
+        {
+            var partition = Mock.Of<IStatefulServicePartition>();
+            ((IStatefulUserServiceReplica)sut).Partition = partition;
+            Assert.Same(partition, sut.GetPartitionForTest());
         }
     }
 
@@ -382,15 +425,17 @@ public abstract class StatefulServiceBaseTest
         [Fact]
         public void ForwardsCancellationTokenToProtectedRunAsync()
         {
-            CancellationToken expected = new(canceled: true);
+            CancellationToken expected = TestContext.Current.CancellationToken;
             CancellationToken actual = default;
+            int calls = 0;
             Task task = new TaskCompletionSource<int>().Task;
-            sut.RunAsyncHandler = ct => { actual = ct; return task; };
+            sut.RunAsyncHandler = ct => { calls++; actual = ct; return task; };
 
             Task result = ((IStatefulUserServiceReplica)sut).RunAsync(expected);
 
             Assert.Same(task, result);
             Assert.Equal(expected, actual);
+            Assert.Equal(1, calls);
         }
     }
 
@@ -398,7 +443,7 @@ public abstract class StatefulServiceBaseTest
     {
         [Fact]
         public async Task ReturnsFalse() =>
-            Assert.False(await sut.InvokeBaseOnDataLossAsync(default, TestContext.Current.CancellationToken));
+            Assert.False(await sut.InvokeBaseOnDataLoss(default, TestContext.Current.CancellationToken));
     }
 
     public sealed class OnRestoreCompletedAsync : StatefulServiceBaseTest
@@ -406,23 +451,8 @@ public abstract class StatefulServiceBaseTest
         [Fact]
         public void ReturnsCompletedTask()
         {
-            Task actual = sut.InvokeBaseOnRestoreCompletedAsync(TestContext.Current.CancellationToken);
+            Task actual = sut.InvokeBaseOnRestoreCompleted(TestContext.Current.CancellationToken);
             Assert.True(actual.IsCompletedSuccessfully);
-        }
-    }
-
-    public sealed class Partition : StatefulServiceBaseTest
-    {
-        [Fact]
-        public void IsInitiallyNull() =>
-            Assert.Null(sut.GetPartitionForTest());
-
-        [Fact]
-        public void IsSetByExplicitInterfaceSetter()
-        {
-            var partition = Mock.Of<IStatefulServicePartition>();
-            ((IStatefulUserServiceReplica)sut).Partition = partition;
-            Assert.Same(partition, sut.GetPartitionForTest());
         }
     }
 
@@ -433,11 +463,9 @@ public abstract class StatefulServiceBaseTest
             Assert.Same(serviceContext, sut.GetServiceContextForTest());
     }
 
-    sealed class TestService : StatefulServiceBase
+    sealed class TestService(StatefulServiceContext serviceContext, IStateProviderReplica stateProviderReplica)
+        : StatefulServiceBase(serviceContext, stateProviderReplica)
     {
-        internal TestService(StatefulServiceContext serviceContext, IStateProviderReplica stateProviderReplica)
-            : base(serviceContext, stateProviderReplica) { }
-
         // Hooks that override base protected virtuals when assigned; otherwise the base implementation runs.
         internal Func<CancellationToken, Task> RunAsyncHandler;
         internal Func<ReplicaOpenMode, CancellationToken, Task> OnOpenAsyncHandler;
@@ -480,7 +508,7 @@ public abstract class StatefulServiceBaseTest
         internal IReadOnlyDictionary<string, string> GetAddressesForTest() => GetAddresses();
         internal IStatefulServicePartition GetPartitionForTest() => Partition;
         internal StatefulServiceContext GetServiceContextForTest() => ServiceContext;
-        internal Task<bool> InvokeBaseOnDataLossAsync(RestoreContext c, CancellationToken ct) => base.OnDataLossAsync(c, ct);
-        internal Task InvokeBaseOnRestoreCompletedAsync(CancellationToken ct) => base.OnRestoreCompletedAsync(ct);
+        internal Task<bool> InvokeBaseOnDataLoss(RestoreContext c, CancellationToken ct) => base.OnDataLossAsync(c, ct);
+        internal Task InvokeBaseOnRestoreCompleted(CancellationToken ct) => base.OnRestoreCompletedAsync(ct);
     }
 }
