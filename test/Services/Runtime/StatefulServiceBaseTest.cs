@@ -54,10 +54,6 @@ public abstract class StatefulServiceBaseTest
                 _ => _.BackupAsync(It.IsAny<BackupOption>(), It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>(), It.IsAny<Func<BackupInfo, CancellationToken, Task<bool>>>()),
                 Times.Once);
         }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
-        public void ThrowsArgumentNullExceptionWhenBackupDescriptionIsNull() =>
-            Assert.Equal("backupDescription", Assert.Throws<ArgumentNullException>(() => sut.BackupAsync(null)).ParamName);
     }
 
     public sealed class BackupAsync_BackupDescription_TimeSpan_CancellationToken : StatefulServiceBaseTest
@@ -85,10 +81,6 @@ public abstract class StatefulServiceBaseTest
                 _ => _.BackupAsync(It.IsAny<BackupOption>(), It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>(), It.IsAny<Func<BackupInfo, CancellationToken, Task<bool>>>()),
                 Times.Once);
         }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
-        public void ThrowsArgumentNullExceptionWhenBackupDescriptionIsNull() =>
-            Assert.Equal("backupDescription", Assert.Throws<ArgumentNullException>(() => sut.BackupAsync(null, timeout, cancellationToken)).ParamName);
     }
 
     public sealed class Constructor : StatefulServiceBaseTest, IDisposable
@@ -98,6 +90,16 @@ public abstract class StatefulServiceBaseTest
         readonly EventSourceTest<ServiceEventSource> events = InstallEventSource();
 
         void IDisposable.Dispose() => events.Dispose();
+
+        [Fact]
+        public void InitializesProperties()
+        {
+            Assert.Same(serviceContext, sut.Context);
+            Assert.Same(serviceContext, sut.GetServiceContextForTest());
+            Assert.Same(stateProviderReplica.Object, sut.StateProviderReplica);
+            Assert.Null(sut.GetPartitionForTest());
+            Assert.Empty(sut.GetAddressesForTest());
+        }
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenServiceContextIsNull()
@@ -200,25 +202,11 @@ public abstract class StatefulServiceBaseTest
         }
     }
 
-    public sealed class Context : StatefulServiceBaseTest
-    {
-        [Fact]
-        public void ReturnsServiceContextPassedToConstructor() =>
-            Assert.Same(serviceContext, sut.Context);
-    }
-
     public sealed class CreateServiceReplicaListeners : StatefulServiceBaseTest
     {
         [Fact]
         public void ReturnsEmptyByDefault() =>
             Assert.Empty(sut.InvokeBaseCreateServiceReplicaListeners());
-    }
-
-    public sealed class GetAddresses : StatefulServiceBaseTest
-    {
-        [Fact]
-        public void ReturnsEmptyDictionaryByDefault() =>
-            Assert.Empty(sut.GetAddressesForTest());
     }
 
     public abstract class IStatefulUserServiceReplicaTest : StatefulServiceBaseTest
@@ -434,11 +422,12 @@ public abstract class StatefulServiceBaseTest
     public sealed class OnDataLossAsync : StatefulServiceBaseTest
     {
         // Method parameters
+        readonly RestoreContext restoreCtx = default;
         readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         [Fact]
         public async Task ReturnsFalse() =>
-            Assert.False(await sut.InvokeBaseOnDataLoss(default, cancellationToken));
+            Assert.False(await sut.InvokeBaseOnDataLoss(restoreCtx, cancellationToken));
     }
 
     public sealed class OnOpenAsync : StatefulServiceBaseTest
@@ -464,13 +453,6 @@ public abstract class StatefulServiceBaseTest
         }
     }
 
-    public sealed class Partition : StatefulServiceBaseTest
-    {
-        [Fact]
-        public void ReturnsNullByDefault() =>
-            Assert.Null(sut.GetPartitionForTest());
-    }
-
     public sealed class RunAsync : StatefulServiceBaseTest
     {
         [Fact]
@@ -479,20 +461,6 @@ public abstract class StatefulServiceBaseTest
             Task actual = sut.InvokeBaseRunAsync(TestContext.Current.CancellationToken);
             Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
         }
-    }
-
-    public sealed class ServiceContext : StatefulServiceBaseTest
-    {
-        [Fact]
-        public void ReturnsServiceContextPassedToConstructor() =>
-            Assert.Same(serviceContext, sut.GetServiceContextForTest());
-    }
-
-    public sealed class StateProviderReplica : StatefulServiceBaseTest
-    {
-        [Fact]
-        public void ReturnsInstancePassedToConstructor() =>
-            Assert.Same(stateProviderReplica.Object, sut.StateProviderReplica);
     }
 
     static EventSourceTest<ServiceEventSource> InstallEventSource()
