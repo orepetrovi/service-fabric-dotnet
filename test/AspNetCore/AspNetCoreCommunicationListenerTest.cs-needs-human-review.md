@@ -73,3 +73,33 @@ Tension is between the general Rule of Three and the test-organization rule abou
 `opus` insisted: A factory method whose name matches the produced type (`fuzzy.StatelessServiceContext()`) makes the type "apparent" the same way `new StatelessServiceContext(...)` does (Roslyn IDE0007 treats them equivalently). `gpt`'s reading would also reject the rule's own canonical example.
 
 Flagged for human review to decide whether the rule's "apparent type" applies to type-named factory methods on a different receiver.
+---
+
+### ❓ Needs Human Review — Facade tests largely duplicate behavior owned by internal-listener tests
+
+*Reported by `gemini` ⚠️ and `opus` ⚠️ independently. Not cross-checked with `gpt`. Overlaps with prior `❓ Needs Human Review — OpenAsync branch coverage` and the previously-elevated "URL-shape assertion belongs to internal listeners" tension recorded in [test/AspNetCore/AspNetCoreCommunicationListenerTest.cs-needs-human-review.md](test/AspNetCore/AspNetCoreCommunicationListenerTest.cs-needs-human-review.md).*
+
+`AspNetCoreCommunicationListener.Abort/CloseAsync/OpenAsync` are one-line delegations to `this.internalListener.*`. The internal listeners are owned by [test/AspNetCore/WebHostCommunicationListenerTest.cs](test/AspNetCore/WebHostCommunicationListenerTest.cs) and [test/AspNetCore/GenericHostCommunicationListenerTest.cs](test/AspNetCore/GenericHostCommunicationListenerTest.cs), which already cover:
+
+- `StartAsync`/`StopAsync` cancellation forwarding
+- `Dispose` ordering after `StopAsync`
+- Awaiting `StartAsync`/`StopAsync` before returning
+- Pre-`OpenAsync` no-host-interaction contract
+- URL extraction from `IServerAddressesFeature`
+- `build` delegate invocation arguments
+
+The facade tests duplicate every one of these behaviors twice (`OnGenericHost` and `OnWebHost`) — e.g., [test/AspNetCore/AspNetCoreCommunicationListenerTest.cs](test/AspNetCore/AspNetCoreCommunicationListenerTest.cs#L40-L88), [test/AspNetCore/AspNetCoreCommunicationListenerTest.cs](test/AspNetCore/AspNetCoreCommunicationListenerTest.cs#L94-L207), and [test/AspNetCore/AspNetCoreCommunicationListenerTest.cs](test/AspNetCore/AspNetCoreCommunicationListenerTest.cs#L300-L460). What is unique to the facade is only (a) the chosen constructor wires the correct internal listener type, and (b) the facade does not transform/swallow the return value or exceptions on the way through.
+
+Per the user's directive ("Restructure existing, eliminate redundant tests as needed") and [test.instructions.md](.github/instructions/test.instructions.md) ("Each test method should verify a single logical aspect of a single member of the SUT"), the facade-level `Abort`/`CloseAsync`/`OpenAsync` tests can be collapsed to a single test per facade method that proves pass-through. The strongest form would replace `internalListener` (via `Inspector`) with a `Mock<ICommunicationListener>` and assert that the facade returns the same `Task<string>` instance the internal listener returns (per [moq.instructions.md](.github/instructions/moq.instructions.md) — "Use `Assert.Same` to verify return values, particularly for `Task<T>`, and rule out unexpected transformations").
+
+If keeping per-host tests is preferred, at minimum the `DoesNotInvokeHostBeforeOpenAsync*`, `AwaitsHost*Async*`, `Disposes*After*`, and `PassesCancellationToken*` tests are direct duplicates of internal-listener tests and add no facade-specific coverage.
+
+Flagged for human review because this overlaps the prior "URL-shape assertion belongs to internal listeners" / "OpenAsync branch coverage" tensions, and because the user''s prior responses to similar restructure-vs-keep questions have been split. Decide whether facade tests should: (a) be collapsed against `Mock<ICommunicationListener>` via `Inspector`, (b) retain only facade-unique tests and drop the host-behavior duplicates, or (c) remain as-is.
+
+---
+
+### ❓ Needs Human Review — Oscillating preference: `Task.CompletedTask` vs unique completed task in fixture defaults
+
+*Reported by `gemini` ⚠️, cross-checked Agree by `gpt` and `opus` in the latest round; previously the inverse was applied and re-applied across commits (`ea1ae4ef` introduced unique TCS → `cb0336f6` switched to `Task.CompletedTask` → `NewCompletedTask()` helper added → removed back to `Task.CompletedTask`). Latest reviewer round insists again on unique tasks.*
+
+Tension between [coding.instructions.md](.github/instructions/coding.instructions.md) ("Make the code as concise as possible") and [moq.instructions.md](.github/instructions/moq.instructions.md) ("Use unique/generated argument and return values instead of passing well-known values like `null`, `Task.CompletedTask` that could also be used by the product code unexpectedly"). The SUT only `await`s the returned task — task identity is not asserted anywhere in this file. `Task.CompletedTask` is currently in [WebHostFixture](test/AspNetCore/AspNetCoreCommunicationListenerTest.cs) and [GenericHostFixture](test/AspNetCore/AspNetCoreCommunicationListenerTest.cs) defaults for `StartAsync`/`StopAsync`, matching the sibling [WebHostCommunicationListenerTest.cs](test/AspNetCore/WebHostCommunicationListenerTest.cs) and [GenericHostCommunicationListenerTest.cs](test/AspNetCore/GenericHostCommunicationListenerTest.cs) precedent. Flagged for human decision to break the oscillation; pick one rule for this file and freeze it.

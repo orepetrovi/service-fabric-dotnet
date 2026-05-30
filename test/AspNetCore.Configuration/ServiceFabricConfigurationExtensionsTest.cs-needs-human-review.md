@@ -45,3 +45,19 @@ Per the user's direction on this finding, when the codified pattern matches the 
 here instead of changing the code. Decision needed from a human: either update the codified pattern in
 `test.instructions.md` (and apply the new pattern consistently across the affected tests), or dismiss the review
 finding.
+
+---
+
+### ❓ Parameter field — Inconsistent `builder` declaration across argument-validation tests
+
+*Reported by Opus; Gemini agreed, GPT disagreed on cross-check; Opus insisted.*
+
+The 1-arg overload class uses a local `IConfigurationBuilder builder = null;` to satisfy both `null` argument and `nameof(builder)`. The 2-arg and 3-arg overload classes both have a per-class `readonly IConfigurationBuilder builder` field and pass literal `null` at the call site.
+
+**Opus's insistence:** [test.instructions.md](.github/instructions/test.instructions.md) says `Create fields for method parameters in the nested test classes to help the reader understand the method parameters and their types.` The 1-arg class has a method parameter `builder` and no field for it; the local is a workaround. Adding `readonly IConfigurationBuilder builder = new ConfigurationBuilder();` (mirroring the 2-/3-arg classes) and passing literal `null` would comply with the parameter-field rule, eliminate cross-class style divergence, and cost only one line.
+
+**Gemini's supporting view:** Clear inconsistency; the 1-arg class should align with the others by declaring a class-level `builder` field and using literal `null`.
+
+**GPT's dissent:** Inconsistency is explainable by fixture structure — the 1-arg class has no other use for a `builder` field. Forcing one style adds an otherwise unnecessary field.
+
+Human reviewer should decide whether the parameter-field documentation rule applies even when the field would be used only for `nameof` in a single null-validation test, or whether the current local-variable workaround is acceptable.

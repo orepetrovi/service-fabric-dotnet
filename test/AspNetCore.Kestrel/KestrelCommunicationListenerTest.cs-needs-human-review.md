@@ -137,3 +137,18 @@ The base declaration at [src/AspNetCore/AspNetCoreCommunicationListener.cs](src/
 The test file already contains `new readonly KestrelCommunicationListener sut;` which calls `sut.GetListenerUrl()` directly, and the project builds with 0 errors. GPT applied a plausible-sounding rule without checking actual compiler behavior. The accessibility check for a virtual call considers the original member's declared accessibility on the base.
 
 **Recommendation (pending human confirmation):** Remove the four casts. Consider mirroring in `test/AspNetCore/HttpSysCommunicationListenerTest.cs` if the pattern is identical there.
+---
+
+### ⚠️ Missing Inspector workaround TODO at four `GetConstructor` call sites
+
+Reported by `opus`, agreed on cross-check by `gemini` and `gpt`.
+
+[test/AspNetCore.Kestrel/KestrelCommunicationListenerTest.cs#L30-L31](test/AspNetCore.Kestrel/KestrelCommunicationListenerTest.cs#L30-L31), [#L62-L63](test/AspNetCore.Kestrel/KestrelCommunicationListenerTest.cs#L62-L63), [#L92-L93](test/AspNetCore.Kestrel/KestrelCommunicationListenerTest.cs#L92-L93), [#L142-L143](test/AspNetCore.Kestrel/KestrelCommunicationListenerTest.cs#L142-L143):
+
+[.github/instructions/inspector.instructions.md](.github/instructions/inspector.instructions.md) requires using Inspector instead of `System.Reflection` and, when an Inspector workaround is necessary, requires a TODO with explanation, package version, and GitHub issue link. The TODO text has been removed but the workaround code remains.
+
+**Coder investigation (Inspector 0.3.12):** Empirically verified that Inspector cannot disambiguate the two 2-arg `KestrelCommunicationListener` constructors that differ only by the delegate's return type (`Func<…,IHost>` vs `Func<…,IWebHost>`) — it throws `Sequence contains more than one element`. The 3-arg Kestrel constructors and both 2-arg HttpSys constructors resolve correctly. No open issue at https://github.com/olegsych/inspector/issues covers this case.
+
+**Decision needed:**
+1. **Hybrid:** Replace 3-arg Kestrel sites + HttpSys sites with Inspector calls; keep the two 2-arg Kestrel `GetConstructor` fields with a TODO citing Inspector 0.3.12 and the limitation. Requires filing an issue at `olegsych/inspector` and pasting its URL into the TODO.
+2. **Full revert:** Keep all sites on reflection with the same TODO across both peer files.
