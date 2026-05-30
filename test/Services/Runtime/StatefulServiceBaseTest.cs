@@ -155,7 +155,7 @@ public abstract class StatefulServiceBaseTest
             stateProviderReplica.VerifySet(_ => _.OnRestoreCompletedAsync = It.IsAny<Func<CancellationToken, Task>>(), Times.Once);
 
         [Fact]
-        public void InitializesWhenStateProviderReplicaIsNotV2()
+        public void SetsOnDataLossAsyncWhenStateProviderReplicaIsNotV2()
         {
             var v1 = new Mock<IStateProviderReplica> { DefaultValue = DefaultValue.Mock };
             _ = new TestService(serviceContext, v1.Object);
