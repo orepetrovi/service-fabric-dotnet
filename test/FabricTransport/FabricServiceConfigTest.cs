@@ -1,0 +1,209 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
+
+using System;
+using System.Fabric.Management.ServiceModel;
+using System.IO;
+using System.Reflection;
+using Fuzzy;
+using Inspector;
+using Moq;
+using Xunit;
+
+namespace Microsoft.ServiceFabric.FabricTransport;
+
+[Collection(nameof(FabricServiceConfigSingleton))]
+[WindowsOnly("Can't load libFabricCommon.so on Linux.")]
+public abstract class FabricServiceConfigTest
+{
+    static readonly string settingsFile = Path.Combine(
+        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+        "ServiceCommunicationTestSettings.xml");
+
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+    FabricServiceConfigTest() => typeof(FabricServiceConfig).Field<FabricServiceConfig>().Set(null);
+
+    public sealed class GetConfig: FabricServiceConfigTest
+    {
+        [Fact]
+        public void ReturnsInstanceCreatedByPriorInitialize()
+        {
+            // Stage an entry-assembly settings file so the fallback path in GetConfig would observably
+            // overwrite `instance` if the `if (instance == null)` fast-path guard regressed.
+            EntrySettingsFile.AssertAbsent();
+            File.WriteAllText(EntrySettingsFile.Path,
+                """<Settings xmlns="http://schemas.microsoft.com/2011/01/fabric"/>""");
+            try
+            {
+                var expected = new SettingsType();
+                IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>(_ => _.Parse(settingsFile) == expected);
+                _ = FabricServiceConfig.Initialize(settingsFile, configParser);
+                var initial = FabricServiceConfig.GetConfig();
+
+                var actual = FabricServiceConfig.GetConfig();
+
+                Assert.Same(initial, actual);
+            }
+            finally
+            {
+                File.Delete(EntrySettingsFile.Path);
+            }
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Depends on FabricRuntime.GetActivationContext().
+        public void ReturnsInstanceInitializedFromConfigPackageAndSkipsEntryAssemblyFallbackWhenConfigPackageIsAvailable() =>
+            // When InitializeFromConfigPkgWithCallerHoldingLock(DefaultPackageName) succeeds, GetConfig skips the
+            // entry-assembly fallback and returns the instance populated from the config package. Reaching this
+            // branch requires FabricRuntime.GetActivationContext() to expose a "Config" package, which is only
+            // available inside a Service Fabric host process and cannot be substituted in a unit test.
+            throw new NotImplementedException();
+
+        [Fact]
+        public void LazilyInitializesFromEntryAssemblySettingsFileWhenNotYetInitialized()
+        {
+            // Outside an SF host FabricRuntime.GetActivationContext() throws, so GetConfig falls through to the
+            // entry-assembly path: <entry-assembly-dir>/<entry-assembly-name>.Settings.xml. Under this test
+            // project the test runner is the entry assembly, so we can stage that file next to it. The staged
+            // file uses a unique section name so the assertion distinguishes it from the always-present
+            // ServiceCommunicationTestSettings.xml that the csproj copies to the output directory.
+            EntrySettingsFile.AssertAbsent();
+            string sectionName = "EntrySettings_" + fuzzy.String().LettersOrDigits();
+            File.WriteAllText(EntrySettingsFile.Path,
+                $"""
+                <Settings xmlns="http://schemas.microsoft.com/2011/01/fabric">
+                  <Section Name="{sectionName}" />
+                </Settings>
+                """);
+            try
+            {
+                var actual = FabricServiceConfig.GetConfig();
+
+                SettingsTypeSection section = Assert.Single(actual.Settings.Section);
+                Assert.Equal(sectionName, section.Name);
+            }
+            finally
+            {
+                File.Delete(EntrySettingsFile.Path);
+            }
+        }
+
+        [Fact]
+        public void ReturnsNullWhenNoInitializationPathSucceeds()
+        {
+            // Outside an SF host FabricRuntime.GetActivationContext() throws, and without staging the
+            // entry-assembly settings file the exe-settings path also fails. GetConfig then returns the
+            // instance left behind by InitializeWithCallerHoldingLock, which is the null reset by the base.
+            EntrySettingsFile.AssertAbsent();
+            Assert.Null(FabricServiceConfig.GetConfig());
+        }
+    }
+
+    public sealed class Initialize: FabricServiceConfigTest
+    {
+        readonly string fullFilePath = settingsFile;
+        readonly Mock<IFabricServiceConfigParser> configParser = new();
+
+        [Fact]
+        public void ReturnsTrueAndStoresParsedSettingsWhenFileExistsAndConfigParserIsProvided()
+        {
+            var expected = new SettingsType();
+            _ = configParser.Setup(_ => _.Parse(fullFilePath)).Returns(expected);
+
+            bool result = FabricServiceConfig.Initialize(fullFilePath, configParser.Object);
+
+            Assert.True(result);
+            var config = FabricServiceConfig.GetConfig();
+            Assert.Same(expected, config.Settings);
+            configParser.Verify(_ => _.Parse(It.IsAny<string>()), Times.Once);
+        }
+
+        [Fact]
+        public void ParsesFileWithDefaultParserWhenConfigParserIsNull()
+        {
+            // Integration-style by necessity: the SUT instantiates the default SettingsConfigParser inline
+            // when configParser is null, so there is no seam to substitute it. Adding a product-code
+            // testability seam is out of scope, so this test exercises the real parser against the real
+            // ServiceCommunicationTestSettings.xml staged next to the test assembly.
+            bool result = FabricServiceConfig.Initialize(fullFilePath, null);
+
+            Assert.True(result);
+            SettingsType settings = FabricServiceConfig.GetConfig().Settings;
+            SettingsTypeSection section = Assert.Single(settings.Section);
+            Assert.Equal("TestServiceListenerTransportSettings", section.Name);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void ReturnsFalseWhenFullFilePathIsNullOrEmpty(string fullFilePath) =>
+            Assert.False(FabricServiceConfig.Initialize(fullFilePath, configParser.Object));
+
+        [Fact]
+        public void ReturnsFalseAndLeavesInstanceUnchangedWhenFileDoesNotExist()
+        {
+            var expected = new SettingsType();
+            _ = configParser.Setup(_ => _.Parse(fullFilePath)).Returns(expected);
+            Assert.True(FabricServiceConfig.Initialize(fullFilePath, configParser.Object));
+            var initial = FabricServiceConfig.GetConfig();
+            string missing = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits() + ".xml");
+            Assert.False(File.Exists(missing), $"Pre-existing {missing} would invalidate this test.");
+
+            bool result = FabricServiceConfig.Initialize(missing, configParser.Object);
+
+            Assert.False(result);
+            Assert.Same(initial, FabricServiceConfig.GetConfig());
+            configParser.Verify(_ => _.Parse(It.IsAny<string>()), Times.Once);
+        }
+
+        [Fact]
+        public void ReplacesPriorInstanceOnSubsequentSuccessfulInitialize()
+        {
+            var first = new SettingsType();
+            var second = new SettingsType();
+            _ = configParser.SetupSequence(_ => _.Parse(fullFilePath)).Returns(first).Returns(second);
+            _ = FabricServiceConfig.Initialize(fullFilePath, configParser.Object);
+            var initial = FabricServiceConfig.GetConfig();
+
+            bool result = FabricServiceConfig.Initialize(fullFilePath, configParser.Object);
+
+            Assert.True(result);
+            var current = FabricServiceConfig.GetConfig();
+            Assert.NotSame(initial, current);
+            Assert.Same(second, current.Settings);
+            configParser.Verify(_ => _.Parse(It.IsAny<string>()), Times.Exactly(2));
+        }
+    }
+
+    public sealed class InitializeFromConfigPackage: FabricServiceConfigTest
+    {
+        readonly string configPackageName = fuzzy.String();
+
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Depends on FabricRuntime.GetActivationContext().
+        public void ReturnsTrueAndStoresConfigurationSettingsWhenActivationContextProvidesConfigPackage() =>
+            // The success path of InitializeFromConfigPackage calls FabricRuntime.GetActivationContext(),
+            // which is only available inside a Service Fabric host process and cannot be substituted in a unit test.
+            throw new NotImplementedException();
+
+        [Fact]
+        public void ReturnsFalseAndLeavesInstanceUnchangedWhenActivationContextIsUnavailable()
+        {
+            var expected = new SettingsType();
+            IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>(_ => _.Parse(settingsFile) == expected);
+            Assert.True(FabricServiceConfig.Initialize(settingsFile, configParser));
+            var initial = FabricServiceConfig.GetConfig();
+
+            bool result = FabricServiceConfig.InitializeFromConfigPackage(configPackageName);
+
+            Assert.False(result);
+            Assert.Same(initial, FabricServiceConfig.GetConfig());
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Depends on FabricRuntime.GetActivationContext().
+        public void ReturnsFalseWhenConfigPackageIsUnavailable() =>
+            // TryGetConfigPackageObject returns false when the activation context exists but does not expose
+            // a configuration package with the requested name. Exercising this branch requires substituting
+            // FabricRuntime.GetActivationContext(), which is only available inside a Service Fabric host process.
+            throw new NotImplementedException();
+    }
+}
