@@ -80,6 +80,11 @@ public abstract class ServiceHelperTest
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public async Task ThrowsArgumentNullExceptionWhenTaskToAwaitIsNull() =>
+            Assert.Equal(nameof(taskToAwait), (await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.AwaitAsyncTaskWithHealthReporting(partition, null, expectedCancellationTime, reportHealthFunc.Object))).ParamName);
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
         public async Task ThrowsArgumentNullExceptionWhenReportHealthFuncIsNull() =>
             Assert.Equal(nameof(reportHealthFunc), (await Assert.ThrowsAsync<ArgumentNullException>(
                 () => sut.AwaitAsyncTaskWithHealthReporting(partition, taskToAwait, expectedCancellationTime, null))).ParamName);
@@ -126,6 +131,16 @@ public abstract class ServiceHelperTest
                 "ServiceHelper.AwaitCloseCommunicationListerWithHealthReporting hard-codes a 15-second timeout via " +
                 "CommunicationListenerExpectedCloseTimeSpan. Triggering the slow-close health report would require a " +
                 "15-second wait or a testability seam that the SUT does not expose.");
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public async Task ThrowsArgumentNullExceptionWhenPartitionIsNull() =>
+            Assert.Equal(nameof(partition), (await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.AwaitCloseCommunicationListerWithHealthReporting(null, closeCommunicationListenerTask, communicationListenerName))).ParamName);
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public async Task ThrowsArgumentNullExceptionWhenCloseCommunicationListenerTaskIsNull() =>
+            Assert.Equal(nameof(closeCommunicationListenerTask), (await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.AwaitCloseCommunicationListerWithHealthReporting(partition, null, communicationListenerName))).ParamName);
     }
 
     public sealed class AwaitRunAsyncWithHealthReporting : ServiceHelperTest
@@ -167,6 +182,16 @@ public abstract class ServiceHelperTest
                 "ServiceHelper.AwaitRunAsyncWithHealthReporting hard-codes a 15-second timeout via " +
                 "RunAsyncExpectedCancellationTimeSpan. Triggering the slow-cancellation health report would require a " +
                 "15-second wait or a testability seam that the SUT does not expose.");
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public async Task ThrowsArgumentNullExceptionWhenPartitionIsNull() =>
+            Assert.Equal(nameof(partition), (await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.AwaitRunAsyncWithHealthReporting(null, runAsyncTask))).ParamName);
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public async Task ThrowsArgumentNullExceptionWhenRunAsyncTaskIsNull() =>
+            Assert.Equal(nameof(runAsyncTask), (await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.AwaitRunAsyncWithHealthReporting(partition, null))).ParamName);
     }
 
     public sealed class HandleRunAsyncUnexpectedException : ServiceHelperTest
