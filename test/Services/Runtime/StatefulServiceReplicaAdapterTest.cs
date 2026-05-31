@@ -424,9 +424,12 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 _ = await sut.ChangeRoleAsync(ReplicaRole.ActiveSecondary, cancellationToken);
 
                 userServiceReplica.VerifySet(
+                    _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.Count == 0),
+                    Times.Once());
+                userServiceReplica.VerifySet(
                     _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.ContainsKey(name) && d[name] == address),
                     Times.Once());
-                userServiceReplica.VerifySet(_ => _.Addresses = It.IsAny<IReadOnlyDictionary<string, string>>(), Times.Once());
+                userServiceReplica.VerifySet(_ => _.Addresses = It.IsAny<IReadOnlyDictionary<string, string>>(), Times.Exactly(2));
             }
 
             [Fact]
