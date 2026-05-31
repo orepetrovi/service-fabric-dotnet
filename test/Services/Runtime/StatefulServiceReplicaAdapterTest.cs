@@ -696,14 +696,14 @@ public abstract class StatefulServiceReplicaAdapterTest
         public void ThrowsArgumentNullExceptionWhenContextIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new StatefulServiceReplicaAdapter(null, userServiceReplica.Object));
-            Assert.Equal(nameof(context), exception.ParamName);
+            Assert.Equal(typeof(StatefulServiceReplicaAdapter).Constructor().Parameter<StatefulServiceContext>().Name, exception.ParamName);
         }
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenUserServiceReplicaIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new StatefulServiceReplicaAdapter(context, null));
-            Assert.Equal(nameof(userServiceReplica), exception.ParamName);
+            Assert.Equal(typeof(StatefulServiceReplicaAdapter).Constructor().Parameter<IStatefulUserServiceReplica>().Name, exception.ParamName);
         }
 
         [Fact]
