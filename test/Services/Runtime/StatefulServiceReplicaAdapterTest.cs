@@ -52,6 +52,25 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             }
 
             [Fact]
+            public void SwallowsExceptionsThrownByCommunicationListenerAbort()
+            {
+                var throwing = new Mock<ICommunicationListener>();
+                throwing.Setup(_ => _.Abort()).Throws(new InvalidOperationException(fuzzy.String()));
+                var following = new Mock<ICommunicationListener>();
+                sut.Field<IList<CommunicationListenerInfo>>().Set(new List<CommunicationListenerInfo>
+                {
+                    new(fuzzy.String(), throwing.Object),
+                    new(fuzzy.String(), following.Object),
+                });
+
+                sut.Abort();
+
+                throwing.Verify(_ => _.Abort(), Times.Once);
+                following.Verify(_ => _.Abort(), Times.Once);
+                Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+            }
+
+            [Fact]
             public void InvokesUserServiceOnAbort()
             {
                 sut.Abort();
@@ -503,6 +522,24 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
                 listener.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
                 listener.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
+                Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+            }
+
+            [Fact]
+            public async Task AbortsCommunicationListenersWhenCloseAsyncThrows()
+            {
+                var listener = new Mock<ICommunicationListener>();
+                _ = listener
+                    .Setup(_ => _.CloseAsync(cancellationToken))
+                    .ThrowsAsync(new InvalidOperationException(fuzzy.String()));
+                sut.Field<IList<CommunicationListenerInfo>>().Set(new List<CommunicationListenerInfo>
+                {
+                    new(fuzzy.String(), listener.Object),
+                });
+
+                await sut.CloseAsync(cancellationToken);
+
+                listener.Verify(_ => _.Abort(), Times.Once);
                 Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
             }
 
