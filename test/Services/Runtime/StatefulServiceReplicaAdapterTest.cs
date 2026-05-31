@@ -455,8 +455,16 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 userServiceReplica.Verify(_ => _.CreateStateProviderReplica(), Times.Once());
 
             [Fact]
-            public void StoresStateProviderReplicaCreatedByUserServiceReplica() =>
-                Assert.Same(userServiceReplica.Object.CreateStateProviderReplica(), StateProvider);
+            public void StoresStateProviderReplicaCreatedByUserServiceReplica()
+            {
+                var expected = new Mock<IStateProviderReplica>().Object;
+                var replica = new Mock<IStatefulUserServiceReplica>();
+                _ = replica.Setup(_ => _.CreateStateProviderReplica()).Returns(expected);
+
+                var sut = new StatefulServiceReplicaAdapter(context, replica.Object);
+
+                Assert.Same(expected, sut.Field<IStateProviderReplica>().Value);
+            }
         }
 
         public sealed class GetStatus : StatefulServiceReplicaAdapterTest
