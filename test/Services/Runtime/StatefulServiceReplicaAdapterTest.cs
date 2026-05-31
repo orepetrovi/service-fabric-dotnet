@@ -161,11 +161,15 @@ public abstract class StatefulServiceReplicaAdapterTest
             userServiceReplica.Verify(_ => _.OnChangeRoleAsync(ReplicaRole.None, cancellationToken), Times.Once);
         }
 
-        [Fact]
-        public async Task ForwardsToStateProviderReplica()
+        [Theory]
+        [InlineData(ReplicaRole.Primary)]
+        [InlineData(ReplicaRole.IdleSecondary)]
+        [InlineData(ReplicaRole.ActiveSecondary)]
+        [InlineData(ReplicaRole.None)]
+        public async Task ForwardsToStateProviderReplica(ReplicaRole newRole)
         {
-            _ = await sut.ChangeRoleAsync(ReplicaRole.None, cancellationToken);
-            stateProvider.Verify(_ => _.ChangeRoleAsync(ReplicaRole.None, cancellationToken), Times.Once);
+            _ = await sut.ChangeRoleAsync(newRole, cancellationToken);
+            stateProvider.Verify(_ => _.ChangeRoleAsync(newRole, cancellationToken), Times.Once);
             stateProvider.Verify(_ => _.ChangeRoleAsync(It.IsAny<ReplicaRole>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
