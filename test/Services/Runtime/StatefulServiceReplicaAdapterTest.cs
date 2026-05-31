@@ -205,9 +205,9 @@ public abstract class StatefulServiceReplicaAdapterTest
         public async Task OpensCommunicationListenersAndReturnsTheirEndpointsWhenNewRoleIsPrimary()
         {
             string name1 = fuzzy.String();
-            string name2 = fuzzy.String();
+            string name2 = name1 + fuzzy.String();
             string address1 = fuzzy.String();
-            string address2 = fuzzy.String();
+            string address2 = address1 + fuzzy.String();
             var listener1 = new Mock<ICommunicationListener>();
             var listener2 = new Mock<ICommunicationListener>();
             _ = listener1.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(address1);
