@@ -466,13 +466,14 @@ public abstract class StatefulServiceReplicaAdapterTest
         public async Task DefaultsToServiceReplicaListenerInstantiateForCreatingCommunicationListeners()
         {
             var listener = new Mock<ICommunicationListener>();
-            var entry = new ServiceReplicaListener(_ => listener.Object, fuzzy.String());
+            var entry = new ServiceReplicaListener(_ => listener.Object);
             _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
-            listener.Verify(_ => _.OpenAsync(cancellationToken), Times.Once);
-            listener.Verify(_ => _.OpenAsync(It.IsAny<CancellationToken>()), Times.Once);
+            CommunicationListenerInfo info = Assert.Single(sut.Field<IList<CommunicationListenerInfo>>().Value);
+            Assert.Equal("default", info.Name);
+            Assert.Same(typeof(TracingCommunicationListener), info.Listener.GetType());
         }
 
         [Fact]
