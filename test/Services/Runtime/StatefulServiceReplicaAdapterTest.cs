@@ -300,6 +300,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
                 userServiceReplica.Verify(_ => _.RunAsync(It.IsAny<CancellationToken>()), Times.Never);
                 partition.Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
+                partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
             }
 
             [Fact]
@@ -351,6 +352,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 await sut.Field<Task>().Value;
 
                 partition.Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
+                partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
             }
 
             [Fact(Explicit = true)] // TODO: SUT testability limitation. Environment.FailFast
@@ -712,6 +714,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 base.sut.Field<IStateProviderReplica>().Set(stateProvider.Object);
 
                 Assert.Same(expected, sut.GetStatus());
+                stateProvider.As<IInternalStatefulServiceReplica>().Verify(_ => _.GetStatus(), Times.Once);
             }
 
             [Fact]
