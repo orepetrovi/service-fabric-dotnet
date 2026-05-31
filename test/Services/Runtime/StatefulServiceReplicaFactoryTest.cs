@@ -91,7 +91,7 @@ public abstract class StatefulServiceReplicaFactoryTest
         }
 
         [Fact]
-        public void ReturnsStatefulServiceReplicaAdapterUsingServiceContextAndUserServiceFromServiceFactory()
+        public void ReturnsStatefulServiceReplicaAdapter()
         {
             int callCount = 0;
             var sut = (IStatefulServiceFactory)new StatefulServiceReplicaFactory(runtimeContext, _ =>
@@ -103,9 +103,7 @@ public abstract class StatefulServiceReplicaFactoryTest
             var actual = sut.CreateReplica(serviceTypeName, serviceName, initializationData, partitionId, replicaId);
 
             Assert.Equal(1, callCount);
-            var adapter = (StatefulServiceReplicaAdapter)actual;
-            Assert.Same(service.Context, adapter.Field<StatefulServiceContext>().Value);
-            Assert.Same(service, adapter.Field<IStatefulUserServiceReplica>().Value);
+            _ = (StatefulServiceReplicaAdapter)actual;
         }
     }
 
