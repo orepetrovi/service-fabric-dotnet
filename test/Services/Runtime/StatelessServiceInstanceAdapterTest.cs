@@ -29,7 +29,7 @@ public abstract class StatelessServiceInstanceAdapterTest
     // Test fixture
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    StatelessServiceInstanceAdapterTest() =>
+    private StatelessServiceInstanceAdapterTest() =>
         sut = new StatelessServiceInstanceAdapter(context, userServiceInstance.Object);
 
     public sealed class Abort : StatelessServiceInstanceAdapterTest
