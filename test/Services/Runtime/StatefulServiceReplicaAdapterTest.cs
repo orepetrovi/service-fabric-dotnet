@@ -176,13 +176,23 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 Assert.Equal(expected.ToString(), actual);
                 userServiceReplica.VerifySet(_ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(
                     d => d.Count == 2 && d[name1] == address1 && d[name2] == address2));
+            }
 
-                // Subsequent non-Primary ChangeRoleAsync closes the opened listeners, indirectly verifying storage.
-                await sut.ChangeRoleAsync(ReplicaRole.None, cancellationToken);
-                listener1.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
-                listener1.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
-                listener2.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
-                listener2.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
+            [Fact]
+            public async Task StoresOpenedCommunicationListenersWhenNewRoleIsPrimary()
+            {
+                string name = fuzzy.String();
+                var listener = new Mock<ICommunicationListener>();
+                listener.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(fuzzy.String());
+                userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
+                    .Returns(new[] { new ServiceReplicaListener(_ => listener.Object, name) });
+
+                await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+
+                var stored = sut.Field<IList<CommunicationListenerInfo>>().Value;
+                Assert.Single(stored);
+                Assert.Equal(name, stored[0].Name);
+                Assert.Same(listener.Object, stored[0].Listener);
             }
 
             [Fact]
