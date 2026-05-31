@@ -24,13 +24,13 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
         // Constructor parameters
         readonly StatefulServiceContext context = fuzzy.StatefulServiceContext();
-        readonly IStatefulUserServiceReplica userServiceReplica = new Mock<IStatefulUserServiceReplica> { DefaultValue = DefaultValue.Mock }.Object;
+        readonly Mock<IStatefulUserServiceReplica> userServiceReplica = new() { DefaultValue = DefaultValue.Mock };
 
         // Test fixture
         static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
         StatefulServiceReplicaAdapterTest() =>
-            sut = new StatefulServiceReplicaAdapter(context, userServiceReplica);
+            sut = new StatefulServiceReplicaAdapter(context, userServiceReplica.Object);
 
         IStateProviderReplica StateProvider => sut.Field<IStateProviderReplica>().Value;
 
@@ -55,7 +55,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             public void InvokesUserServiceOnAbort()
             {
                 sut.Abort();
-                Mock.Get(userServiceReplica).Verify(_ => _.OnAbort(), Times.Once);
+                userServiceReplica.Verify(_ => _.OnAbort(), Times.Once);
             }
 
             [Fact]
@@ -128,7 +128,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                     .Setup(_ => _.ChangeRoleAsync(ReplicaRole.None, cancellationToken))
                     .Callback(() => stateProviderOrder = ++order)
                     .Returns(Task.CompletedTask);
-                Mock.Get(userServiceReplica)
+                userServiceReplica
                     .Setup(_ => _.OnChangeRoleAsync(ReplicaRole.None, cancellationToken))
                     .Callback(() => userOrder = ++order)
                     .Returns(Task.CompletedTask);
@@ -157,7 +157,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 var listener2 = new Mock<ICommunicationListener>();
                 listener1.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(address1);
                 listener2.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(address2);
-                Mock.Get(userServiceReplica).Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[]
+                userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[]
                 {
                     new ServiceReplicaListener(_ => listener1.Object, name1),
                     new ServiceReplicaListener(_ => listener2.Object, name2),
@@ -174,7 +174,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 expected.AddEndpoint(name1, address1);
                 expected.AddEndpoint(name2, address2);
                 Assert.Equal(expected.ToString(), actual);
-                Mock.Get(userServiceReplica).VerifySet(_ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(
+                userServiceReplica.VerifySet(_ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(
                     d => d.Count == 2 && d[name1] == address1 && d[name2] == address2));
 
                 // Subsequent non-Primary ChangeRoleAsync closes the opened listeners, indirectly verifying storage.
@@ -193,14 +193,14 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 var listener = new Mock<ICommunicationListener>();
                 listener.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(address);
 
-                Mock.Get(userServiceReplica).Setup(_ => _.CreateServiceReplicaListeners())
+                userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
                     .Returns(new[] { new ServiceReplicaListener(_ => listener.Object, name) });
                 sut.Field<Func<ServiceReplicaListener, StatefulServiceContext, CommunicationListenerInfo>>()
                     .Set((entry, _) => new CommunicationListenerInfo(entry.Name, listener.Object));
 
                 await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
-                Mock.Get(userServiceReplica).VerifySet(
+                userServiceReplica.VerifySet(
                     _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.ContainsKey(name) && d[name].Contains(address)));
             }
 
@@ -235,13 +235,13 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 var listener = new Mock<ICommunicationListener>();
                 listener.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(address);
                 var entry = new ServiceReplicaListener(_ => listener.Object, name, listenOnSecondary: true);
-                Mock.Get(userServiceReplica).Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
+                userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
                 sut.Field<Func<ServiceReplicaListener, StatefulServiceContext, CommunicationListenerInfo>>()
                     .Set((e, _) => new CommunicationListenerInfo(e.Name, listener.Object));
 
                 await sut.ChangeRoleAsync(ReplicaRole.ActiveSecondary, cancellationToken);
 
-                Mock.Get(userServiceReplica).VerifySet(
+                userServiceReplica.VerifySet(
                     _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.ContainsKey(name) && d[name].Contains(address)));
             }
 
@@ -250,7 +250,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             {
                 var listener = new Mock<ICommunicationListener>();
                 var entry = new ServiceReplicaListener(_ => listener.Object, fuzzy.String());
-                Mock.Get(userServiceReplica).Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
+                userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
 
                 await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
@@ -264,7 +264,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 var listener = new Mock<ICommunicationListener>();
                 listener.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(fuzzy.String());
                 var entry = new ServiceReplicaListener(_ => listener.Object, fuzzy.String(), listenOnSecondary: true);
-                Mock.Get(userServiceReplica).Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
+                userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
                 sut.Field<Func<ServiceReplicaListener, StatefulServiceContext, CommunicationListenerInfo>>()
                     .Set((e, _) => new CommunicationListenerInfo(e.Name, listener.Object));
 
@@ -279,7 +279,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             {
                 var listener = new Mock<ICommunicationListener>();
                 var entry = new ServiceReplicaListener(_ => listener.Object, fuzzy.String(), listenOnSecondary: false);
-                Mock.Get(userServiceReplica).Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
+                userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
 
                 await sut.ChangeRoleAsync(ReplicaRole.ActiveSecondary, cancellationToken);
 
@@ -290,7 +290,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             [Fact]
             public async Task DoesNotOpenCommunicationListenersWhenNewRoleIsNone()
             {
-                Mock.Get(userServiceReplica).Setup(_ => _.CreateServiceReplicaListeners())
+                userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
                     .Returns(new[] { fuzzy.ServiceReplicaListener() });
 
                 await sut.ChangeRoleAsync(ReplicaRole.None, cancellationToken);
@@ -301,7 +301,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             [Fact]
             public async Task SkipsNullReplicaListeners()
             {
-                Mock.Get(userServiceReplica).Setup(_ => _.CreateServiceReplicaListeners())
+                userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
                     .Returns(new ServiceReplicaListener[] { null });
 
                 await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
@@ -312,7 +312,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             [Fact]
             public async Task SkipsListenersWhenCreateCommunicationListenerReturnsNull()
             {
-                Mock.Get(userServiceReplica).Setup(_ => _.CreateServiceReplicaListeners())
+                userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
                     .Returns(new[] { fuzzy.ServiceReplicaListener() });
                 sut.Field<Func<ServiceReplicaListener, StatefulServiceContext, CommunicationListenerInfo>>()
                     .Set((_, _) => null);
@@ -348,8 +348,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             public async Task InvokesUserServiceOnCloseAsync()
             {
                 await sut.CloseAsync(cancellationToken);
-                Mock.Get(userServiceReplica).Verify(_ => _.OnCloseAsync(cancellationToken), Times.Once);
-                Mock.Get(userServiceReplica).Verify(_ => _.OnCloseAsync(It.IsAny<CancellationToken>()), Times.Once);
+                userServiceReplica.Verify(_ => _.OnCloseAsync(cancellationToken), Times.Once);
+                userServiceReplica.Verify(_ => _.OnCloseAsync(It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
@@ -358,7 +358,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 int order = 0;
                 int userOrder = 0;
                 int stateProviderOrder = 0;
-                Mock.Get(userServiceReplica)
+                userServiceReplica
                     .Setup(_ => _.OnCloseAsync(cancellationToken))
                     .Callback(() => userOrder = ++order)
                     .Returns(Task.CompletedTask);
@@ -413,7 +413,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             [Fact]
             public void ThrowsArgumentNullExceptionWhenContextIsNull()
             {
-                var exception = Assert.Throws<ArgumentNullException>(() => new StatefulServiceReplicaAdapter(null, userServiceReplica));
+                var exception = Assert.Throws<ArgumentNullException>(() => new StatefulServiceReplicaAdapter(null, userServiceReplica.Object));
                 Assert.Equal(nameof(context), exception.ParamName);
             }
 
@@ -426,17 +426,17 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
             [Fact]
             public void SetsUserServiceReplicaAddressesToEmptyReadOnlyDictionary() =>
-                Mock.Get(userServiceReplica).VerifySet(
+                userServiceReplica.VerifySet(
                     _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.Count == 0),
                     Times.Once());
 
             [Fact]
             public void InvokesCreateStateProviderReplicaOnce() =>
-                Mock.Get(userServiceReplica).Verify(_ => _.CreateStateProviderReplica(), Times.Once());
+                userServiceReplica.Verify(_ => _.CreateStateProviderReplica(), Times.Once());
 
             [Fact]
             public void StoresStateProviderReplicaCreatedByUserServiceReplica() =>
-                Assert.Same(userServiceReplica.CreateStateProviderReplica(), StateProvider);
+                Assert.Same(userServiceReplica.Object.CreateStateProviderReplica(), StateProvider);
         }
 
         public sealed class GetStatus : StatefulServiceReplicaAdapterTest
@@ -494,7 +494,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             public async Task SetsUserServiceReplicaPartition()
             {
                 await sut.OpenAsync(openMode, partition, cancellationToken);
-                Mock.Get(userServiceReplica).VerifySet(_ => _.Partition = partition);
+                userServiceReplica.VerifySet(_ => _.Partition = partition);
             }
 
             [Fact]
@@ -512,8 +512,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             public async Task InvokesUserServiceOnOpenAsync()
             {
                 await sut.OpenAsync(openMode, partition, cancellationToken);
-                Mock.Get(userServiceReplica).Verify(_ => _.OnOpenAsync(openMode, cancellationToken), Times.Once);
-                Mock.Get(userServiceReplica).Verify(_ => _.OnOpenAsync(It.IsAny<ReplicaOpenMode>(), It.IsAny<CancellationToken>()), Times.Once);
+                userServiceReplica.Verify(_ => _.OnOpenAsync(openMode, cancellationToken), Times.Once);
+                userServiceReplica.Verify(_ => _.OnOpenAsync(It.IsAny<ReplicaOpenMode>(), It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
@@ -526,7 +526,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                     .Setup(_ => _.OpenAsync(openMode, partition, cancellationToken))
                     .Callback(() => stateProviderOrder = ++order)
                     .ReturnsAsync(Mock.Of<IReplicator>());
-                Mock.Get(userServiceReplica)
+                userServiceReplica
                     .Setup(_ => _.OnOpenAsync(openMode, cancellationToken))
                     .Callback(() => userOrder = ++order)
                     .Returns(Task.CompletedTask);
@@ -541,7 +541,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             public async Task ClosesStateProviderAndRethrowsWhenOnOpenAsyncThrows()
             {
                 var expected = new InvalidOperationException(fuzzy.String());
-                Mock.Get(userServiceReplica).Setup(_ => _.OnOpenAsync(openMode, cancellationToken)).ThrowsAsync(expected);
+                userServiceReplica.Setup(_ => _.OnOpenAsync(openMode, cancellationToken)).ThrowsAsync(expected);
                 IStateProviderReplica stateProvider = StateProvider;
 
                 var actual = await Assert.ThrowsAsync<InvalidOperationException>(
