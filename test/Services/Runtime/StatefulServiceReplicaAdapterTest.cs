@@ -286,8 +286,10 @@ public abstract class StatefulServiceReplicaAdapterTest
         public async Task InvokesUserServiceRunAsyncWhenWriteStatusIsGranted()
         {
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+            CancellationToken runAsyncToken = sut.Field<CancellationTokenSource>().Value.Token;
             await sut.Field<Task>().Value;
 
+            userServiceReplica.Verify(_ => _.RunAsync(runAsyncToken), Times.Once);
             userServiceReplica.Verify(_ => _.RunAsync(It.IsAny<CancellationToken>()), Times.Once);
             partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Never);
         }
@@ -503,11 +505,9 @@ public abstract class StatefulServiceReplicaAdapterTest
         [Fact]
         public async Task DoesNotOpenCommunicationListenersWhenNewRoleIsNone()
         {
-            _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
-                .Returns(new[] { fuzzy.ServiceReplicaListener() });
-
             _ = await sut.ChangeRoleAsync(ReplicaRole.None, cancellationToken);
 
+            userServiceReplica.Verify(_ => _.CreateServiceReplicaListeners(), Times.Never);
             Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
         }
 
@@ -788,6 +788,7 @@ public abstract class StatefulServiceReplicaAdapterTest
             IReplicator actual = await sut.OpenAsync(openMode, partition, cancellationToken);
 
             Assert.Same(expected, actual);
+            stateProvider.Verify(_ => _.OpenAsync(It.IsAny<ReplicaOpenMode>(), It.IsAny<IStatefulServicePartition>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
