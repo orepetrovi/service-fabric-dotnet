@@ -42,7 +42,7 @@ public abstract class StatelessServiceTest
         {
             Assert.Same(serviceContext, sut.Context);
             Assert.Null(sut.GetPartitionForTest());
-            Assert.Empty(sut.InvokeBaseGetAddresses());
+            Assert.Empty(sut.GetAddressesForTest());
         }
 
         [Fact]
@@ -86,7 +86,7 @@ public abstract class StatelessServiceTest
         public void UpdatesValueReturnedByGetAddresses()
         {
             sut.Addresses = addresses;
-            Assert.Same(addresses, ((TestService)sut).InvokeBaseGetAddresses());
+            Assert.Same(addresses, ((TestService)sut).GetAddressesForTest());
         }
     }
 
@@ -219,30 +219,36 @@ public abstract class StatelessServiceTest
 
     public sealed class OnCloseAsync : StatelessServiceTest
     {
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
         [Fact]
         public void ReturnsCompletedTaskByDefault()
         {
-            Task actual = sut.InvokeBaseOnCloseAsync(TestContext.Current.CancellationToken);
+            Task actual = sut.InvokeBaseOnCloseAsync(cancellationToken);
             Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
         }
     }
 
     public sealed class OnOpenAsync : StatelessServiceTest
     {
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
         [Fact]
         public void ReturnsCompletedTaskByDefault()
         {
-            Task actual = sut.InvokeBaseOnOpenAsync(TestContext.Current.CancellationToken);
+            Task actual = sut.InvokeBaseOnOpenAsync(cancellationToken);
             Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
         }
     }
 
     public sealed class RunAsync : StatelessServiceTest
     {
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
         [Fact]
         public void ReturnsCompletedTaskByDefault()
         {
-            Task actual = sut.InvokeBaseRunAsync(TestContext.Current.CancellationToken);
+            Task actual = sut.InvokeBaseRunAsync(cancellationToken);
             Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
         }
     }
@@ -285,7 +291,7 @@ public abstract class StatelessServiceTest
             CreateServiceInstanceListenersHandler != null ? CreateServiceInstanceListenersHandler() : base.CreateServiceInstanceListeners();
 
         internal IStatelessServicePartition GetPartitionForTest() => Partition;
-        internal IReadOnlyDictionary<string, string> InvokeBaseGetAddresses() => base.GetAddresses();
+        internal IReadOnlyDictionary<string, string> GetAddressesForTest() => GetAddresses();
         internal Task InvokeBaseRunAsync(CancellationToken cancellation) => base.RunAsync(cancellation);
         internal Task InvokeBaseOnOpenAsync(CancellationToken cancellation) => base.OnOpenAsync(cancellation);
         internal Task InvokeBaseOnCloseAsync(CancellationToken cancellation) => base.OnCloseAsync(cancellation);
