@@ -139,6 +139,7 @@ public abstract class StatefulServiceReplicaAdapterTest
             existing.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
             existing.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
             existing.Verify(_ => _.Abort(), Times.Never);
+            Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
         }
 
         [Fact]
