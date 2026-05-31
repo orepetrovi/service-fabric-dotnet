@@ -95,13 +95,14 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             // Method parameters
             readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
+            // Primary transitions schedule a background task that reads servicePartition.WriteStatus
+            // and reports faults via servicePartition.ReportFault. Provide a partition with Granted
+            // write status so the background task completes deterministically without an NRE.
+            readonly Mock<IStatefulServicePartition> partition = new();
+
             public ChangeRoleAsync()
             {
-                // Primary transitions schedule a background task that reads servicePartition.WriteStatus
-                // and reports faults via servicePartition.ReportFault. Provide a partition with Granted
-                // write status so the background task completes deterministically without an NRE.
-                var partition = new Mock<IStatefulServicePartition>();
-                partition.SetupGet(_ => _.WriteStatus).Returns(PartitionAccessStatus.Granted);
+                _ = partition.SetupGet(_ => _.WriteStatus).Returns(PartitionAccessStatus.Granted);
                 sut.Field<IStatefulServicePartition>().Set(partition.Object);
             }
 
@@ -234,6 +235,117 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             }
 
             [Fact]
+            public async Task InvokesUserServiceRunAsyncWhenWriteStatusIsGranted()
+            {
+                _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+                await sut.Field<Task>().Value;
+
+                userServiceReplica.Verify(_ => _.RunAsync(It.IsAny<CancellationToken>()), Times.Once);
+                partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Never);
+            }
+
+            [Fact]
+            public async Task DoesNotInvokeUserServiceRunAsyncWhenWriteStatusIsNotPrimary()
+            {
+                _ = partition.SetupGet(_ => _.WriteStatus).Returns(PartitionAccessStatus.NotPrimary);
+
+                _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+                await sut.Field<Task>().Value;
+
+                userServiceReplica.Verify(_ => _.RunAsync(It.IsAny<CancellationToken>()), Times.Never);
+                partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Never);
+            }
+
+            [Fact]
+            public async Task DoesNotInvokeUserServiceRunAsyncWhenWriteStatusThrowsFabricObjectClosedException()
+            {
+                _ = partition.SetupGet(_ => _.WriteStatus).Throws(new FabricObjectClosedException());
+
+                _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+                await sut.Field<Task>().Value;
+
+                userServiceReplica.Verify(_ => _.RunAsync(It.IsAny<CancellationToken>()), Times.Never);
+                partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Never);
+            }
+
+            [Fact]
+            public async Task ReportsTransientFaultWhenWriteStatusThrowsUnexpectedException()
+            {
+                _ = partition.SetupGet(_ => _.WriteStatus).Throws(new InvalidOperationException(fuzzy.String()));
+
+                _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+                await sut.Field<Task>().Value;
+
+                userServiceReplica.Verify(_ => _.RunAsync(It.IsAny<CancellationToken>()), Times.Never);
+                partition.Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
+            }
+
+            [Fact]
+            public async Task RetriesAcquiringWriteStatusWhenReconfigurationPending()
+            {
+                _ = partition.SetupSequence(_ => _.WriteStatus)
+                    .Returns(PartitionAccessStatus.ReconfigurationPending)
+                    .Returns(PartitionAccessStatus.Granted);
+
+                _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+                await sut.Field<Task>().Value;
+
+                userServiceReplica.Verify(_ => _.RunAsync(It.IsAny<CancellationToken>()), Times.Once);
+                partition.VerifyGet(_ => _.WriteStatus, Times.Exactly(2));
+            }
+
+            [Fact]
+            public async Task SwallowsOperationCanceledExceptionWhenTokenMatchesRunAsyncCancellation()
+            {
+                // User's RunAsync blocks until its cancellation token fires, then throws a matching OCE.
+                // The adapter must observe the token cancellation and complete the executeRunAsyncTask
+                // without rethrowing or reporting a fault.
+                var started = new TaskCompletionSource<bool>();
+                _ = userServiceReplica
+                    .Setup(_ => _.RunAsync(It.IsAny<CancellationToken>()))
+                    .Returns<CancellationToken>(async ct =>
+                    {
+                        _ = started.TrySetResult(true);
+                        await Task.Delay(Timeout.Infinite, ct);
+                    });
+
+                _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+                _ = await started.Task;
+                sut.Field<CancellationTokenSource>().Value.Cancel();
+
+                await sut.Field<Task>().Value;
+
+                partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Never);
+            }
+
+            [Fact]
+            public async Task ReportsTransientFaultWhenRunAsyncThrowsFabricException()
+            {
+                _ = userServiceReplica
+                    .Setup(_ => _.RunAsync(It.IsAny<CancellationToken>()))
+                    .ThrowsAsync(new FabricException(fuzzy.String()));
+
+                _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+                await sut.Field<Task>().Value;
+
+                partition.Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
+            }
+
+            [Fact(Explicit = true)] // TODO: SUT testability limitation. Environment.FailFast
+            public void ReportsTransientFaultWhenRunAsyncThrowsNonMatchingOperationCanceledException() =>
+                // ExecuteRunAsync routes an OperationCanceledException whose token does not match
+                // runAsynCancellationTokenSource.Token through ServiceHelper.HandleRunAsyncUnexpectedException,
+                // which calls Environment.FailFast and terminates the test host before any assertion can run.
+                throw new NotImplementedException();
+
+            [Fact(Explicit = true)] // TODO: SUT testability limitation. Environment.FailFast
+            public void ReportsTransientFaultWhenRunAsyncThrowsUnexpectedException() =>
+                // ExecuteRunAsync routes non-FabricException exceptions through
+                // ServiceHelper.HandleRunAsyncUnexpectedException, which calls Environment.FailFast
+                // and terminates the test host before any assertion can run.
+                throw new NotImplementedException();
+
+            [Fact]
             public async Task CancelsAndClearsRunAsyncTaskAndCancellationTokenSourceWhenNewRoleIsNotPrimary()
             {
                 var existingCts = new CancellationTokenSource();
@@ -243,6 +355,36 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 _ = await sut.ChangeRoleAsync(ReplicaRole.ActiveSecondary, cancellationToken);
 
                 Assert.True(existingCts.IsCancellationRequested);
+                Assert.Null(sut.Field<CancellationTokenSource>().Value);
+                Assert.Null(sut.Field<Task>().Value);
+            }
+
+            [Fact]
+            public async Task RethrowsOperationCanceledExceptionFromRunAsyncTaskWhenTokenDoesNotMatch()
+            {
+                var expected = new OperationCanceledException(new CancellationToken(canceled: true));
+                sut.Field<CancellationTokenSource>().Set(new CancellationTokenSource());
+                sut.Field<Task>().Set(Task.FromException(expected));
+
+                var actual = await Assert.ThrowsAsync<OperationCanceledException>(
+                    () => sut.ChangeRoleAsync(ReplicaRole.ActiveSecondary, cancellationToken));
+
+                Assert.Same(expected, actual);
+                Assert.Null(sut.Field<CancellationTokenSource>().Value);
+                Assert.Null(sut.Field<Task>().Value);
+            }
+
+            [Fact]
+            public async Task RethrowsUnexpectedExceptionFromRunAsyncTask()
+            {
+                var expected = new InvalidOperationException(fuzzy.String());
+                sut.Field<CancellationTokenSource>().Set(new CancellationTokenSource());
+                sut.Field<Task>().Set(Task.FromException(expected));
+
+                var actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                    () => sut.ChangeRoleAsync(ReplicaRole.ActiveSecondary, cancellationToken));
+
+                Assert.Same(expected, actual);
                 Assert.Null(sut.Field<CancellationTokenSource>().Value);
                 Assert.Null(sut.Field<Task>().Value);
             }
@@ -403,6 +545,36 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 await sut.CloseAsync(cancellationToken);
 
                 Assert.True(existingCts.IsCancellationRequested);
+                Assert.Null(sut.Field<CancellationTokenSource>().Value);
+                Assert.Null(sut.Field<Task>().Value);
+            }
+
+            [Fact]
+            public async Task RethrowsOperationCanceledExceptionFromRunAsyncTaskWhenTokenDoesNotMatch()
+            {
+                var expected = new OperationCanceledException(new CancellationToken(canceled: true));
+                sut.Field<CancellationTokenSource>().Set(new CancellationTokenSource());
+                sut.Field<Task>().Set(Task.FromException(expected));
+
+                var actual = await Assert.ThrowsAsync<OperationCanceledException>(
+                    () => sut.CloseAsync(cancellationToken));
+
+                Assert.Same(expected, actual);
+                Assert.Null(sut.Field<CancellationTokenSource>().Value);
+                Assert.Null(sut.Field<Task>().Value);
+            }
+
+            [Fact]
+            public async Task RethrowsUnexpectedExceptionFromRunAsyncTask()
+            {
+                var expected = new InvalidOperationException(fuzzy.String());
+                sut.Field<CancellationTokenSource>().Set(new CancellationTokenSource());
+                sut.Field<Task>().Set(Task.FromException(expected));
+
+                var actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                    () => sut.CloseAsync(cancellationToken));
+
+                Assert.Same(expected, actual);
                 Assert.Null(sut.Field<CancellationTokenSource>().Value);
                 Assert.Null(sut.Field<Task>().Value);
             }
