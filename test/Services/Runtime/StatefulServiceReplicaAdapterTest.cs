@@ -239,7 +239,9 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
                 userServiceReplica.VerifySet(
-                    _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.ContainsKey(name) && d[name].Contains(address)));
+                    _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.ContainsKey(name) && d[name].Contains(address)),
+                    Times.Once());
+                userServiceReplica.VerifySet(_ => _.Addresses = It.IsAny<IReadOnlyDictionary<string, string>>(), Times.Once());
             }
 
             [Fact]
@@ -421,7 +423,9 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 _ = await sut.ChangeRoleAsync(ReplicaRole.ActiveSecondary, cancellationToken);
 
                 userServiceReplica.VerifySet(
-                    _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.ContainsKey(name) && d[name].Contains(address)));
+                    _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.ContainsKey(name) && d[name].Contains(address)),
+                    Times.Once());
+                userServiceReplica.VerifySet(_ => _.Addresses = It.IsAny<IReadOnlyDictionary<string, string>>(), Times.Once());
             }
 
             [Fact]
@@ -670,10 +674,13 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             }
 
             [Fact]
-            public void SetsUserServiceReplicaAddressesToEmptyReadOnlyDictionary() =>
+            public void SetsUserServiceReplicaAddressesToEmptyReadOnlyDictionary()
+            {
                 userServiceReplica.VerifySet(
                     _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.Count == 0),
                     Times.Once());
+                userServiceReplica.VerifySet(_ => _.Addresses = It.IsAny<IReadOnlyDictionary<string, string>>(), Times.Once());
+            }
 
             [Fact]
             public void InvokesCreateStateProviderReplicaOnce() =>
@@ -747,7 +754,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             public async Task SetsUserServiceReplicaPartition()
             {
                 _ = await sut.OpenAsync(openMode, partition, cancellationToken);
-                userServiceReplica.VerifySet(_ => _.Partition = partition);
+                userServiceReplica.VerifySet(_ => _.Partition = partition, Times.Once());
+                userServiceReplica.VerifySet(_ => _.Partition = It.IsAny<IStatefulServicePartition>(), Times.Once());
             }
 
             [Fact]
