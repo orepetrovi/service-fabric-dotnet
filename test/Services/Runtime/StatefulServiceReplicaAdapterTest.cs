@@ -47,7 +47,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
                 sut.Abort();
 
-                listener.Verify(_ => _.Abort());
+                listener.Verify(_ => _.Abort(), Times.Once);
                 Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
             }
 
@@ -55,7 +55,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             public void InvokesUserServiceOnAbort()
             {
                 sut.Abort();
-                Mock.Get(userServiceReplica).Verify(_ => _.OnAbort());
+                Mock.Get(userServiceReplica).Verify(_ => _.OnAbort(), Times.Once);
             }
 
             [Fact]
@@ -65,7 +65,7 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
                 sut.Abort();
 
-                Mock.Get(stateProvider).Verify(_ => _.Abort());
+                Mock.Get(stateProvider).Verify(_ => _.Abort(), Times.Once);
                 Assert.Null(sut.Field<IStateProviderReplica>().Value);
             }
 
@@ -106,14 +106,16 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
                 await sut.ChangeRoleAsync(ReplicaRole.None, cancellationToken);
 
-                existing.Verify(_ => _.CloseAsync(cancellationToken));
+                existing.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
+                existing.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
             public async Task ForwardsToStateProviderReplica()
             {
                 await sut.ChangeRoleAsync(ReplicaRole.None, cancellationToken);
-                Mock.Get(StateProvider).Verify(_ => _.ChangeRoleAsync(ReplicaRole.None, cancellationToken));
+                Mock.Get(StateProvider).Verify(_ => _.ChangeRoleAsync(ReplicaRole.None, cancellationToken), Times.Once);
+                Mock.Get(StateProvider).Verify(_ => _.ChangeRoleAsync(It.IsAny<ReplicaRole>(), It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
@@ -163,8 +165,10 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
                 string actual = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
-                listener1.Verify(_ => _.OpenAsync(cancellationToken));
-                listener2.Verify(_ => _.OpenAsync(cancellationToken));
+                listener1.Verify(_ => _.OpenAsync(cancellationToken), Times.Once);
+                listener1.Verify(_ => _.OpenAsync(It.IsAny<CancellationToken>()), Times.Once);
+                listener2.Verify(_ => _.OpenAsync(cancellationToken), Times.Once);
+                listener2.Verify(_ => _.OpenAsync(It.IsAny<CancellationToken>()), Times.Once);
 
                 var expected = new ServiceEndpointCollection();
                 expected.AddEndpoint(name1, address1);
@@ -175,8 +179,10 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
                 // Subsequent non-Primary ChangeRoleAsync closes the opened listeners, indirectly verifying storage.
                 await sut.ChangeRoleAsync(ReplicaRole.None, cancellationToken);
-                listener1.Verify(_ => _.CloseAsync(cancellationToken));
-                listener2.Verify(_ => _.CloseAsync(cancellationToken));
+                listener1.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
+                listener1.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
+                listener2.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
+                listener2.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
@@ -248,7 +254,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
                 await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
-                listener.Verify(_ => _.OpenAsync(cancellationToken));
+                listener.Verify(_ => _.OpenAsync(cancellationToken), Times.Once);
+                listener.Verify(_ => _.OpenAsync(It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
@@ -263,7 +270,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
                 await sut.ChangeRoleAsync(ReplicaRole.ActiveSecondary, cancellationToken);
 
-                listener.Verify(_ => _.OpenAsync(cancellationToken));
+                listener.Verify(_ => _.OpenAsync(cancellationToken), Times.Once);
+                listener.Verify(_ => _.OpenAsync(It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
@@ -331,7 +339,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
                 await sut.CloseAsync(cancellationToken);
 
-                listener.Verify(_ => _.CloseAsync(cancellationToken));
+                listener.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
+                listener.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
                 Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
             }
 
@@ -339,7 +348,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             public async Task InvokesUserServiceOnCloseAsync()
             {
                 await sut.CloseAsync(cancellationToken);
-                Mock.Get(userServiceReplica).Verify(_ => _.OnCloseAsync(cancellationToken));
+                Mock.Get(userServiceReplica).Verify(_ => _.OnCloseAsync(cancellationToken), Times.Once);
+                Mock.Get(userServiceReplica).Verify(_ => _.OnCloseAsync(It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
@@ -384,7 +394,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
 
                 await sut.CloseAsync(cancellationToken);
 
-                Mock.Get(stateProvider).Verify(_ => _.CloseAsync(cancellationToken));
+                Mock.Get(stateProvider).Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
+                Mock.Get(stateProvider).Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
                 Assert.Null(sut.Field<IStateProviderReplica>().Value);
             }
 
@@ -460,7 +471,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             {
                 StatefulServiceInitializationParameters parameters = new();
                 sut.Initialize(parameters);
-                Mock.Get(StateProvider).Verify(_ => _.Initialize(parameters));
+                Mock.Get(StateProvider).Verify(_ => _.Initialize(parameters), Times.Once);
+                Mock.Get(StateProvider).Verify(_ => _.Initialize(It.IsAny<StatefulServiceInitializationParameters>()), Times.Once);
             }
         }
 
@@ -500,7 +512,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
             public async Task InvokesUserServiceOnOpenAsync()
             {
                 await sut.OpenAsync(openMode, partition, cancellationToken);
-                Mock.Get(userServiceReplica).Verify(_ => _.OnOpenAsync(openMode, cancellationToken));
+                Mock.Get(userServiceReplica).Verify(_ => _.OnOpenAsync(openMode, cancellationToken), Times.Once);
+                Mock.Get(userServiceReplica).Verify(_ => _.OnOpenAsync(It.IsAny<ReplicaOpenMode>(), It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
@@ -535,7 +548,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                     () => sut.OpenAsync(openMode, partition, cancellationToken));
 
                 Assert.Same(expected, actual);
-                Mock.Get(stateProvider).Verify(_ => _.CloseAsync(cancellationToken));
+                Mock.Get(stateProvider).Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
+                Mock.Get(stateProvider).Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
             }
         }
 
