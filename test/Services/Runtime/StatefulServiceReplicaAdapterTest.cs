@@ -240,10 +240,9 @@ public abstract class StatefulServiceReplicaAdapterTest
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
-            var stored = sut.Field<IList<CommunicationListenerInfo>>().Value;
-            Assert.Single(stored);
-            Assert.Equal(name, stored[0].Name);
-            Assert.Same(listener.Object, stored[0].Listener);
+            CommunicationListenerInfo stored = Assert.Single(sut.Field<IList<CommunicationListenerInfo>>().Value);
+            Assert.Equal(name, stored.Name);
+            Assert.Same(listener.Object, stored.Listener);
         }
 
         [Fact]
