@@ -191,10 +191,10 @@ public abstract class StatefulServiceReplicaAdapterTest
         }
 
         [Fact]
-        public async Task ReturnsEndpointCollectionToString()
+        public async Task ReturnsEmptyStringWhenNoListenersAreOpen()
         {
             string actual = await sut.ChangeRoleAsync(ReplicaRole.None, cancellationToken);
-            Assert.Equal(sut.Field<ServiceEndpointCollection>().Value.ToString(), actual);
+            Assert.Equal(string.Empty, actual);
         }
 
         [Fact]
