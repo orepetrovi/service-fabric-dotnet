@@ -214,6 +214,8 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 _ = listener.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(fuzzy.String());
                 _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
                     .Returns(new[] { new ServiceReplicaListener(_ => listener.Object, name) });
+                sut.Field<Func<ServiceReplicaListener, StatefulServiceContext, CommunicationListenerInfo>>()
+                    .Set((entry, _) => new CommunicationListenerInfo(entry.Name, listener.Object));
 
                 _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
