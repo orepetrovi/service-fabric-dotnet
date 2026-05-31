@@ -142,6 +142,26 @@ public abstract class StatefulServiceReplicaAdapterTest
         }
 
         [Fact]
+        public async Task AbortsExistingCommunicationListenersWhenCloseAsyncThrows()
+        {
+            var existing = new Mock<ICommunicationListener>();
+            _ = existing
+                .Setup(_ => _.CloseAsync(cancellationToken))
+                .ThrowsAsync(new InvalidOperationException(fuzzy.String()));
+            sut.Field<IList<CommunicationListenerInfo>>().Set(new List<CommunicationListenerInfo>
+            {
+                new(fuzzy.String(), existing.Object),
+            });
+
+            _ = await sut.ChangeRoleAsync(ReplicaRole.None, cancellationToken);
+
+            existing.Verify(_ => _.Abort(), Times.Once);
+            Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+            stateProvider.Verify(_ => _.ChangeRoleAsync(ReplicaRole.None, cancellationToken), Times.Once);
+            userServiceReplica.Verify(_ => _.OnChangeRoleAsync(ReplicaRole.None, cancellationToken), Times.Once);
+        }
+
+        [Fact]
         public async Task ForwardsToStateProviderReplica()
         {
             _ = await sut.ChangeRoleAsync(ReplicaRole.None, cancellationToken);
@@ -253,8 +273,14 @@ public abstract class StatefulServiceReplicaAdapterTest
         {
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
-            Assert.NotNull(sut.Field<Task>().Value);
-            Assert.NotNull(sut.Field<CancellationTokenSource>().Value);
+            var task = sut.Field<Task>().Value;
+            var cts = sut.Field<CancellationTokenSource>().Value;
+            Assert.NotNull(task);
+            Assert.NotNull(cts);
+            Assert.False(cts.IsCancellationRequested);
+
+            await task;
+            Assert.Same(task, sut.Field<Task>().Value);
         }
 
         [Fact]
@@ -524,6 +550,7 @@ public abstract class StatefulServiceReplicaAdapterTest
 
             userServiceReplica.Verify(_ => _.CreateServiceReplicaListeners(), Times.Once);
             listener.Verify(_ => _.OpenAsync(cancellationToken), Times.Exactly(2));
+            listener.Verify(_ => _.OpenAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
         }
     }
 
