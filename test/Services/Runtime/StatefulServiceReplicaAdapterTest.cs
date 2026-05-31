@@ -715,16 +715,8 @@ public abstract class StatefulServiceReplicaAdapterTest
             userServiceReplica.Verify(_ => _.CreateStateProviderReplica(), Times.Once());
 
         [Fact]
-        public void StoresStateProviderReplicaCreatedByUserServiceReplica()
-        {
-            var expected = new Mock<IStateProviderReplica>().Object;
-            var replica = new Mock<IStatefulUserServiceReplica>();
-            _ = replica.Setup(_ => _.CreateStateProviderReplica()).Returns(expected);
-
-            var sut = new StatefulServiceReplicaAdapter(context, replica.Object);
-
-            Assert.Same(expected, sut.Field<IStateProviderReplica>().Value);
-        }
+        public void StoresStateProviderReplicaCreatedByUserServiceReplica() =>
+            Assert.Same(stateProvider.Object, sut.Field<IStateProviderReplica>().Value);
     }
 
     public sealed class GetStatus : StatefulServiceReplicaAdapterTest
