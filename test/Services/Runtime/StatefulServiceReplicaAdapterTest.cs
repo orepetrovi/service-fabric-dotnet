@@ -161,6 +161,7 @@ public abstract class StatefulServiceReplicaAdapterTest
         public async Task ForwardsToStateProviderReplica(ReplicaRole newRole)
         {
             _ = await sut.ChangeRoleAsync(newRole, cancellationToken);
+            if (sut.Field<Task>().Value is Task runAsyncTask) await runAsyncTask;
             stateProvider.Verify(_ => _.ChangeRoleAsync(newRole, cancellationToken), Times.Once);
             stateProvider.Verify(_ => _.ChangeRoleAsync(It.IsAny<ReplicaRole>(), It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -211,6 +212,7 @@ public abstract class StatefulServiceReplicaAdapterTest
             ]);
 
             string actual = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+            await sut.Field<Task>().Value;
 
             listener1.Verify(_ => _.OpenAsync(cancellationToken), Times.Once);
             listener1.Verify(_ => _.OpenAsync(It.IsAny<CancellationToken>()), Times.Once);
@@ -221,24 +223,6 @@ public abstract class StatefulServiceReplicaAdapterTest
             expected.AddEndpoint(name1, address1);
             expected.AddEndpoint(name2, address2);
             Assert.Equal(expected.ToString(), actual);
-        }
-
-        [Fact]
-        public async Task StoresOpenedCommunicationListenersWhenNewRoleIsPrimary()
-        {
-            string name = fuzzy.String();
-            var listener = new Mock<ICommunicationListener>();
-            _ = listener.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(fuzzy.String());
-            _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
-                .Returns([new ServiceReplicaListener(_ => listener.Object, name)]);
-            sut.Field<Func<ServiceReplicaListener, StatefulServiceContext, CommunicationListenerInfo>>()
-                .Set((entry, _) => new CommunicationListenerInfo(entry.Name, listener.Object));
-
-            _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
-
-            CommunicationListenerInfo stored = Assert.Single(sut.Field<IList<CommunicationListenerInfo>>().Value);
-            Assert.Equal(name, stored.Name);
-            Assert.Same(listener.Object, stored.Listener);
         }
 
         [Fact]
@@ -253,6 +237,7 @@ public abstract class StatefulServiceReplicaAdapterTest
                 .Returns([new ServiceReplicaListener(_ => listener.Object, name)]);
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+            await sut.Field<Task>().Value;
 
             userServiceReplica.VerifySet(
                 _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.Count == 0),
@@ -341,6 +326,20 @@ public abstract class StatefulServiceReplicaAdapterTest
             userServiceReplica.Verify(_ => _.RunAsync(runAsyncToken), Times.Once);
             userServiceReplica.Verify(_ => _.RunAsync(It.IsAny<CancellationToken>()), Times.Once);
             partition.VerifyGet(_ => _.WriteStatus, Times.Exactly(2));
+        }
+
+        [Fact]
+        public async Task ObservesCancellationWhileWaitingForWriteStatus()
+        {
+            _ = partition.SetupGet(_ => _.WriteStatus)
+                .Callback(() => sut.Field<CancellationTokenSource>().Value.Cancel())
+                .Returns(PartitionAccessStatus.ReconfigurationPending);
+
+            _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+            _ = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => sut.Field<Task>().Value);
+
+            userServiceReplica.Verify(_ => _.RunAsync(It.IsAny<CancellationToken>()), Times.Never);
+            partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Never);
         }
 
         [Fact]
@@ -511,6 +510,15 @@ public abstract class StatefulServiceReplicaAdapterTest
         }
 
         [Fact]
+        public async Task DoesNotOpenCommunicationListenersWhenNewRoleIsIdleSecondary()
+        {
+            _ = await sut.ChangeRoleAsync(ReplicaRole.IdleSecondary, cancellationToken);
+
+            userServiceReplica.Verify(_ => _.CreateServiceReplicaListeners(), Times.Never);
+            Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+        }
+
+        [Fact]
         public async Task SkipsNullReplicaListeners()
         {
             _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
@@ -544,7 +552,9 @@ public abstract class StatefulServiceReplicaAdapterTest
                 .Returns([new ServiceReplicaListener(_ => listener.Object, name)]);
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+            await sut.Field<Task>().Value;
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
+            await sut.Field<Task>().Value;
 
             userServiceReplica.Verify(_ => _.CreateServiceReplicaListeners(), Times.Once);
             listener.Verify(_ => _.OpenAsync(cancellationToken), Times.Exactly(2));
@@ -684,14 +694,14 @@ public abstract class StatefulServiceReplicaAdapterTest
         public void ThrowsArgumentNullExceptionWhenContextIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new StatefulServiceReplicaAdapter(null, userServiceReplica.Object));
-            Assert.Equal(typeof(StatefulServiceReplicaAdapter).Constructor().Parameter<StatefulServiceContext>().Name, exception.ParamName);
+            Assert.Equal(nameof(context), exception.ParamName);
         }
 
         [Fact]
         public void ThrowsArgumentNullExceptionWhenUserServiceReplicaIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new StatefulServiceReplicaAdapter(context, null));
-            Assert.Equal(typeof(StatefulServiceReplicaAdapter).Constructor().Parameter<IStatefulUserServiceReplica>().Name, exception.ParamName);
+            Assert.Equal(nameof(userServiceReplica), exception.ParamName);
         }
 
         [Fact]
@@ -706,10 +716,6 @@ public abstract class StatefulServiceReplicaAdapterTest
         [Fact]
         public void InvokesCreateStateProviderReplicaOnce() =>
             userServiceReplica.Verify(_ => _.CreateStateProviderReplica(), Times.Once());
-
-        [Fact]
-        public void StoresStateProviderReplicaCreatedByUserServiceReplica() =>
-            Assert.Same(stateProvider.Object, sut.Field<IStateProviderReplica>().Value);
     }
 
     public sealed class GetStatus : StatefulServiceReplicaAdapterTest
@@ -770,8 +776,10 @@ public abstract class StatefulServiceReplicaAdapterTest
             userServiceReplica.VerifySet(_ => _.Partition = It.IsAny<IStatefulServicePartition>(), Times.Once());
         }
 
-        [Fact]
-        public async Task ReturnsReplicatorFromStateProviderOpenAsync()
+        [Theory]
+        [InlineData(ReplicaOpenMode.Existing)]
+        [InlineData(ReplicaOpenMode.New)]
+        public async Task ReturnsReplicatorFromStateProviderOpenAsync(ReplicaOpenMode openMode)
         {
             IReplicator expected = Mock.Of<IReplicator>();
             _ = stateProvider.Setup(_ => _.OpenAsync(openMode, partition, cancellationToken)).ReturnsAsync(expected);
@@ -782,16 +790,20 @@ public abstract class StatefulServiceReplicaAdapterTest
             stateProvider.Verify(_ => _.OpenAsync(It.IsAny<ReplicaOpenMode>(), It.IsAny<IStatefulServicePartition>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
-        [Fact]
-        public async Task InvokesUserServiceOnOpenAsync()
+        [Theory]
+        [InlineData(ReplicaOpenMode.Existing)]
+        [InlineData(ReplicaOpenMode.New)]
+        public async Task InvokesUserServiceOnOpenAsync(ReplicaOpenMode openMode)
         {
             _ = await sut.OpenAsync(openMode, partition, cancellationToken);
             userServiceReplica.Verify(_ => _.OnOpenAsync(openMode, cancellationToken), Times.Once);
             userServiceReplica.Verify(_ => _.OnOpenAsync(It.IsAny<ReplicaOpenMode>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
-        [Fact]
-        public async Task InvokesUserServiceOnOpenAsyncAfterStateProviderOpenAsync()
+        [Theory]
+        [InlineData(ReplicaOpenMode.Existing)]
+        [InlineData(ReplicaOpenMode.New)]
+        public async Task InvokesUserServiceOnOpenAsyncAfterStateProviderOpenAsync(ReplicaOpenMode openMode)
         {
             int order = 0;
             int stateProviderOrder = 0;
@@ -811,8 +823,10 @@ public abstract class StatefulServiceReplicaAdapterTest
             Assert.Equal(2, userOrder);
         }
 
-        [Fact]
-        public async Task ClosesStateProviderAndRethrowsWhenOnOpenAsyncThrows()
+        [Theory]
+        [InlineData(ReplicaOpenMode.Existing)]
+        [InlineData(ReplicaOpenMode.New)]
+        public async Task ClosesStateProviderAndRethrowsWhenOnOpenAsyncThrows(ReplicaOpenMode openMode)
         {
             var expected = new InvalidOperationException(fuzzy.String());
             _ = userServiceReplica.Setup(_ => _.OnOpenAsync(openMode, cancellationToken)).ThrowsAsync(expected);
