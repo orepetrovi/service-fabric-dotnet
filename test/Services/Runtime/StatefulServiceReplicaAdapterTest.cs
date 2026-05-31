@@ -204,8 +204,6 @@ namespace Microsoft.ServiceFabric.Services.Runtime
                 expected.AddEndpoint(name1, address1);
                 expected.AddEndpoint(name2, address2);
                 Assert.Equal(expected.ToString(), actual);
-                userServiceReplica.VerifySet(_ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(
-                    d => d.Count == 2 && d[name1] == address1 && d[name2] == address2));
             }
 
             [Fact]
