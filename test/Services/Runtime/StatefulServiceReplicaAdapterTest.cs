@@ -1,7 +1,5 @@
-// ------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
-// ------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -42,10 +40,7 @@ public abstract class StatefulServiceReplicaAdapterTest
         public void AbortsCommunicationListeners()
         {
             var listener = new Mock<ICommunicationListener>();
-            sut.Field<IList<CommunicationListenerInfo>>().Set(new List<CommunicationListenerInfo>
-            {
-                new(fuzzy.String(), listener.Object),
-            });
+            sut.Field<IList<CommunicationListenerInfo>>().Set([new(fuzzy.String(), listener.Object)]);
 
             sut.Abort();
 
@@ -59,11 +54,11 @@ public abstract class StatefulServiceReplicaAdapterTest
             var throwing = new Mock<ICommunicationListener>();
             _ = throwing.Setup(_ => _.Abort()).Throws(new InvalidOperationException(fuzzy.String()));
             var following = new Mock<ICommunicationListener>();
-            sut.Field<IList<CommunicationListenerInfo>>().Set(new List<CommunicationListenerInfo>
-            {
+            sut.Field<IList<CommunicationListenerInfo>>().Set(
+            [
                 new(fuzzy.String(), throwing.Object),
                 new(fuzzy.String(), following.Object),
-            });
+            ]);
 
             sut.Abort();
 
@@ -126,13 +121,10 @@ public abstract class StatefulServiceReplicaAdapterTest
         }
 
         [Fact]
-        public async Task ClosesExistingCommunicationListenersBeforeOpeningNew()
+        public async Task ClosesExistingCommunicationListenersWhenNewRoleIsNone()
         {
             var existing = new Mock<ICommunicationListener>();
-            sut.Field<IList<CommunicationListenerInfo>>().Set(new List<CommunicationListenerInfo>
-            {
-                new(fuzzy.String(), existing.Object),
-            });
+            sut.Field<IList<CommunicationListenerInfo>>().Set([new(fuzzy.String(), existing.Object)]);
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.None, cancellationToken);
 
@@ -149,17 +141,16 @@ public abstract class StatefulServiceReplicaAdapterTest
             _ = existing
                 .Setup(_ => _.CloseAsync(cancellationToken))
                 .ThrowsAsync(new InvalidOperationException(fuzzy.String()));
-            sut.Field<IList<CommunicationListenerInfo>>().Set(new List<CommunicationListenerInfo>
-            {
-                new(fuzzy.String(), existing.Object),
-            });
+            sut.Field<IList<CommunicationListenerInfo>>().Set([new(fuzzy.String(), existing.Object)]);
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.None, cancellationToken);
 
             existing.Verify(_ => _.Abort(), Times.Once);
             Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
             stateProvider.Verify(_ => _.ChangeRoleAsync(ReplicaRole.None, cancellationToken), Times.Once);
+            stateProvider.Verify(_ => _.ChangeRoleAsync(It.IsAny<ReplicaRole>(), It.IsAny<CancellationToken>()), Times.Once);
             userServiceReplica.Verify(_ => _.OnChangeRoleAsync(ReplicaRole.None, cancellationToken), Times.Once);
+            userServiceReplica.Verify(_ => _.OnChangeRoleAsync(It.IsAny<ReplicaRole>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -213,11 +204,11 @@ public abstract class StatefulServiceReplicaAdapterTest
             var listener2 = new Mock<ICommunicationListener>();
             _ = listener1.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(address1);
             _ = listener2.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(address2);
-            _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[]
-            {
+            _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns(
+            [
                 new ServiceReplicaListener(_ => listener1.Object, name1),
                 new ServiceReplicaListener(_ => listener2.Object, name2),
-            });
+            ]);
 
             string actual = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
@@ -239,7 +230,7 @@ public abstract class StatefulServiceReplicaAdapterTest
             var listener = new Mock<ICommunicationListener>();
             _ = listener.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(fuzzy.String());
             _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
-                .Returns(new[] { new ServiceReplicaListener(_ => listener.Object, name) });
+                .Returns([new ServiceReplicaListener(_ => listener.Object, name)]);
             sut.Field<Func<ServiceReplicaListener, StatefulServiceContext, CommunicationListenerInfo>>()
                 .Set((entry, _) => new CommunicationListenerInfo(entry.Name, listener.Object));
 
@@ -259,7 +250,7 @@ public abstract class StatefulServiceReplicaAdapterTest
             _ = listener.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(address);
 
             _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
-                .Returns(new[] { new ServiceReplicaListener(_ => listener.Object, name) });
+                .Returns([new ServiceReplicaListener(_ => listener.Object, name)]);
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
@@ -346,6 +337,8 @@ public abstract class StatefulServiceReplicaAdapterTest
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
             await sut.Field<Task>().Value;
 
+            CancellationToken runAsyncToken = sut.Field<CancellationTokenSource>().Value.Token;
+            userServiceReplica.Verify(_ => _.RunAsync(runAsyncToken), Times.Once);
             userServiceReplica.Verify(_ => _.RunAsync(It.IsAny<CancellationToken>()), Times.Once);
             partition.VerifyGet(_ => _.WriteStatus, Times.Exactly(2));
         }
@@ -454,7 +447,7 @@ public abstract class StatefulServiceReplicaAdapterTest
             var listener = new Mock<ICommunicationListener>();
             _ = listener.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(address);
             var entry = new ServiceReplicaListener(_ => listener.Object, name, listenOnSecondary: true);
-            _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
+            _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns([entry]);
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.ActiveSecondary, cancellationToken);
 
@@ -472,7 +465,7 @@ public abstract class StatefulServiceReplicaAdapterTest
         {
             var listener = new Mock<ICommunicationListener>();
             var entry = new ServiceReplicaListener(_ => listener.Object);
-            _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
+            _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns([entry]);
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
@@ -487,7 +480,7 @@ public abstract class StatefulServiceReplicaAdapterTest
             var listener = new Mock<ICommunicationListener>();
             _ = listener.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(fuzzy.String());
             var entry = new ServiceReplicaListener(_ => listener.Object, fuzzy.String(), listenOnSecondary: true);
-            _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
+            _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns([entry]);
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.ActiveSecondary, cancellationToken);
 
@@ -500,7 +493,7 @@ public abstract class StatefulServiceReplicaAdapterTest
         {
             var listener = new Mock<ICommunicationListener>();
             var entry = new ServiceReplicaListener(_ => listener.Object, fuzzy.String(), listenOnSecondary: false);
-            _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns(new[] { entry });
+            _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners()).Returns([entry]);
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.ActiveSecondary, cancellationToken);
 
@@ -521,7 +514,7 @@ public abstract class StatefulServiceReplicaAdapterTest
         public async Task SkipsNullReplicaListeners()
         {
             _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
-                .Returns(new ServiceReplicaListener[] { null });
+                .Returns([null]);
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
 
@@ -532,7 +525,7 @@ public abstract class StatefulServiceReplicaAdapterTest
         public async Task SkipsListenersWhenCreateCommunicationListenerReturnsNull()
         {
             _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
-                .Returns(new[] { fuzzy.ServiceReplicaListener() });
+                .Returns([fuzzy.ServiceReplicaListener()]);
             sut.Field<Func<ServiceReplicaListener, StatefulServiceContext, CommunicationListenerInfo>>()
                 .Set((_, _) => null);
 
@@ -548,7 +541,7 @@ public abstract class StatefulServiceReplicaAdapterTest
             var listener = new Mock<ICommunicationListener>();
             _ = listener.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(fuzzy.String());
             _ = userServiceReplica.Setup(_ => _.CreateServiceReplicaListeners())
-                .Returns(new[] { new ServiceReplicaListener(_ => listener.Object, name) });
+                .Returns([new ServiceReplicaListener(_ => listener.Object, name)]);
 
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
             _ = await sut.ChangeRoleAsync(ReplicaRole.Primary, cancellationToken);
@@ -568,10 +561,7 @@ public abstract class StatefulServiceReplicaAdapterTest
         public async Task ClosesCommunicationListeners()
         {
             var listener = new Mock<ICommunicationListener>();
-            sut.Field<IList<CommunicationListenerInfo>>().Set(new List<CommunicationListenerInfo>
-            {
-                new(fuzzy.String(), listener.Object),
-            });
+            sut.Field<IList<CommunicationListenerInfo>>().Set([new(fuzzy.String(), listener.Object)]);
 
             await sut.CloseAsync(cancellationToken);
 
@@ -588,10 +578,7 @@ public abstract class StatefulServiceReplicaAdapterTest
             _ = listener
                 .Setup(_ => _.CloseAsync(cancellationToken))
                 .ThrowsAsync(new InvalidOperationException(fuzzy.String()));
-            sut.Field<IList<CommunicationListenerInfo>>().Set(new List<CommunicationListenerInfo>
-            {
-                new(fuzzy.String(), listener.Object),
-            });
+            sut.Field<IList<CommunicationListenerInfo>>().Set([new(fuzzy.String(), listener.Object)]);
 
             await sut.CloseAsync(cancellationToken);
 
@@ -743,12 +730,10 @@ public abstract class StatefulServiceReplicaAdapterTest
             stateProvider.As<IInternalStatefulServiceReplica>().Verify(_ => _.GetStatus(), Times.Once);
         }
 
+        // Default mock from CreateStateProviderReplica does not implement IInternalStatefulServiceReplica
         [Fact]
-        public void ReturnsNullWhenStateProviderReplicaDoesNotImplementIInternalStatefulServiceReplica()
-        {
-            // Default mock from CreateStateProviderReplica does not implement IInternalStatefulServiceReplica
+        public void ReturnsNullWhenStateProviderReplicaDoesNotImplementIInternalStatefulServiceReplica() =>
             Assert.Null(sut.GetStatus());
-        }
     }
 
     public sealed class Initialize : StatefulServiceReplicaAdapterTest
