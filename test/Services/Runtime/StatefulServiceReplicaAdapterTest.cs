@@ -385,7 +385,7 @@ public abstract class StatefulServiceReplicaAdapterTest
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Environment.FailFast
         public void FailsFastWhenRunAsyncThrowsNonMatchingOperationCanceledException() =>
             // ExecuteRunAsync routes an OperationCanceledException whose token does not match
-            // runAsynCancellationTokenSource.Token through ServiceHelper.HandleRunAsyncUnexpectedException,
+            // runAsyncCancellationTokenSource.Token through ServiceHelper.HandleRunAsyncUnexpectedException,
             // which calls Environment.FailFast and terminates the test host before any assertion can run.
             throw new NotImplementedException();
 
