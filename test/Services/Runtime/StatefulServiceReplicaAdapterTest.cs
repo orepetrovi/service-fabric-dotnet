@@ -142,7 +142,7 @@ public abstract class StatefulServiceReplicaAdapterTest
         }
 
         [Fact]
-        public async Task AbortsExistingCommunicationListenersWhenCloseAsyncThrows()
+        public async Task ContinuesChangeRoleFlowAfterAbortingListenersWhenCloseAsyncThrows()
         {
             var existing = new Mock<ICommunicationListener>();
             _ = existing
