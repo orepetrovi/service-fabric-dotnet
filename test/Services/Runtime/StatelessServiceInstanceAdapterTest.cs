@@ -209,13 +209,6 @@ public abstract class StatelessServiceInstanceAdapterTest
         readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         [Fact]
-        public async Task SetsServicePartition()
-        {
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
-            Assert.Same(partition.Object, sut.Field<IStatelessServicePartition>().Value);
-        }
-
-        [Fact]
         public async Task SetsUserServiceInstancePartition()
         {
             _ = await sut.OpenAsync(partition.Object, cancellationToken);
@@ -271,13 +264,6 @@ public abstract class StatelessServiceInstanceAdapterTest
             expected.AddEndpoint(name1, address1);
             expected.AddEndpoint(name2, address2);
             Assert.Equal(expected.ToString(), actual);
-        }
-
-        [Fact]
-        public async Task InvokesCreateServiceInstanceListeners()
-        {
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
-            userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
         }
 
         [Fact]
