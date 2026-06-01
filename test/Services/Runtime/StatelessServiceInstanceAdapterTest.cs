@@ -179,6 +179,15 @@ public abstract class StatelessServiceInstanceAdapterTest
     public sealed class Constructor : StatelessServiceInstanceAdapterTest
     {
         [Fact]
+        public void SetsUserServiceInstanceAddressesToEmptyReadOnlyDictionary()
+        {
+            userServiceInstance.VerifySet(
+                _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.Count == 0),
+                Times.Once());
+            userServiceInstance.VerifySet(_ => _.Addresses = It.IsAny<IReadOnlyDictionary<string, string>>(), Times.Once());
+        }
+
+        [Fact]
         public void ThrowsArgumentNullExceptionWhenContextIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new StatelessServiceInstanceAdapter(null, userServiceInstance.Object));
@@ -190,15 +199,6 @@ public abstract class StatelessServiceInstanceAdapterTest
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new StatelessServiceInstanceAdapter(context, null));
             Assert.Equal(nameof(userServiceInstance), exception.ParamName);
-        }
-
-        [Fact]
-        public void SetsUserServiceInstanceAddressesToEmptyReadOnlyDictionary()
-        {
-            userServiceInstance.VerifySet(
-                _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.Count == 0),
-                Times.Once());
-            userServiceInstance.VerifySet(_ => _.Addresses = It.IsAny<IReadOnlyDictionary<string, string>>(), Times.Once());
         }
     }
 
@@ -274,6 +274,20 @@ public abstract class StatelessServiceInstanceAdapterTest
             _ = await sut.OpenAsync(partition.Object, cancellationToken);
 
             userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
+        }
+
+        [Fact]
+        public async Task DefaultsToServiceInstanceListenerInstantiateForCreatingCommunicationListeners()
+        {
+            var listener = new Mock<ICommunicationListener>();
+            var entry = new ServiceInstanceListener(_ => listener.Object);
+            _ = userServiceInstance.Setup(_ => _.CreateServiceInstanceListeners()).Returns([entry]);
+
+            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+
+            CommunicationListenerInfo info = Assert.Single(sut.Field<IList<CommunicationListenerInfo>>().Value);
+            Assert.Equal("default", info.Name);
+            Assert.Same(typeof(TracingCommunicationListener), info.Listener.GetType());
         }
 
         [Fact]
