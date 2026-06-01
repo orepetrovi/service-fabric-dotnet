@@ -200,12 +200,6 @@ public abstract class StatelessServiceInstanceAdapterTest
                 Times.Once());
             userServiceInstance.VerifySet(_ => _.Addresses = It.IsAny<IReadOnlyDictionary<string, string>>(), Times.Once());
         }
-
-        [Fact]
-        public void UsesServiceInstanceListenerInstantiateToCreateCommunicationListeners() =>
-            Assert.Equal(
-                ServiceInstanceListener.Instantiate,
-                sut.Field<Func<ServiceInstanceListener, StatelessServiceContext, CommunicationListenerInfo>>().Value);
     }
 
     public sealed class OpenAsync : StatelessServiceInstanceAdapterTest
@@ -253,6 +247,7 @@ public abstract class StatelessServiceInstanceAdapterTest
             listener1.Verify(_ => _.OpenAsync(It.IsAny<CancellationToken>()), Times.Once);
             listener2.Verify(_ => _.OpenAsync(cancellationToken), Times.Once);
             listener2.Verify(_ => _.OpenAsync(It.IsAny<CancellationToken>()), Times.Once);
+            userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
 
             var expected = new ServiceEndpointCollection();
             expected.AddEndpoint(name1, address1);
@@ -295,6 +290,7 @@ public abstract class StatelessServiceInstanceAdapterTest
                 _ => _.Addresses = It.Is<IReadOnlyDictionary<string, string>>(d => d.ContainsKey(name) && d[name] == address),
                 Times.Once());
             userServiceInstance.VerifySet(_ => _.Addresses = It.IsAny<IReadOnlyDictionary<string, string>>(), Times.Exactly(2));
+            userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
         }
 
         [Fact]
@@ -305,6 +301,7 @@ public abstract class StatelessServiceInstanceAdapterTest
             _ = await sut.OpenAsync(partition.Object, cancellationToken);
 
             Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+            userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
         }
 
         [Fact]
@@ -318,6 +315,7 @@ public abstract class StatelessServiceInstanceAdapterTest
             _ = await sut.OpenAsync(partition.Object, cancellationToken);
 
             Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+            userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
         }
 
         [Fact]
@@ -335,6 +333,7 @@ public abstract class StatelessServiceInstanceAdapterTest
             Assert.Same(expected, actual);
             listener.Verify(_ => _.Abort(), Times.Once);
             Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+            userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
         }
 
         [Fact]
@@ -353,6 +352,7 @@ public abstract class StatelessServiceInstanceAdapterTest
             Assert.Same(expected, actual);
             listener.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
             Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+            userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
         }
 
         [Fact]
