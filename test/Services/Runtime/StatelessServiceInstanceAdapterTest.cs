@@ -224,6 +224,24 @@ public abstract class StatelessServiceInstanceAdapterTest
         }
 
         [Fact]
+        public async Task SetsUserServiceInstancePartitionBeforeOpeningCommunicationListeners()
+        {
+            IStatelessServicePartition partitionWhenListenerOpened = null;
+            userServiceInstance.SetupSet(_ => _.Partition = It.IsAny<IStatelessServicePartition>())
+                .Callback<IStatelessServicePartition>(p => partitionWhenListenerOpened = p);
+            var listener = new Mock<ICommunicationListener>();
+            _ = listener.Setup(_ => _.OpenAsync(cancellationToken))
+                .Callback(() => Assert.Same(partition.Object, partitionWhenListenerOpened))
+                .ReturnsAsync(fuzzy.String());
+            _ = userServiceInstance.Setup(_ => _.CreateServiceInstanceListeners())
+                .Returns([new ServiceInstanceListener(_ => listener.Object, fuzzy.String())]);
+
+            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+
+            listener.Verify(_ => _.OpenAsync(cancellationToken), Times.Once);
+        }
+
+        [Fact]
         public async Task OpensCommunicationListenersAndReturnsTheirEndpoints()
         {
             string name1 = fuzzy.String();
@@ -259,6 +277,16 @@ public abstract class StatelessServiceInstanceAdapterTest
         public async Task InvokesCreateServiceInstanceListeners()
         {
             _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
+        }
+
+        [Fact]
+        public async Task ReusesCachedInstanceListenersOnSubsequentOpen()
+        {
+            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            await sut.CloseAsync(cancellationToken);
+            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+
             userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
         }
 
