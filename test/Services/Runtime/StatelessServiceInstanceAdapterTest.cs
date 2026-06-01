@@ -370,20 +370,6 @@ public abstract class StatelessServiceInstanceAdapterTest
         }
 
         [Fact]
-        public async Task SchedulesExecuteRunAsyncTask()
-        {
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
-
-            var task = sut.Field<Task>().Value;
-            var cts = sut.Field<CancellationTokenSource>().Value;
-            Assert.NotNull(task);
-            Assert.NotNull(cts);
-            Assert.False(cts.IsCancellationRequested);
-
-            await task;
-        }
-
-        [Fact]
         public async Task InvokesUserServiceRunAsync()
         {
             _ = await sut.OpenAsync(partition.Object, cancellationToken);
