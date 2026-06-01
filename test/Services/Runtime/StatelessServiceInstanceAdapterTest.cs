@@ -407,6 +407,29 @@ public abstract class StatelessServiceInstanceAdapterTest
         }
 
         [Fact]
+        public async Task AbortsPreviouslyOpenedCommunicationListenersWhenSubsequentListenerOpenAsyncThrows()
+        {
+            var expected = new InvalidOperationException(fuzzy.String());
+            var listener1 = new Mock<ICommunicationListener>();
+            var listener2 = new Mock<ICommunicationListener>();
+            _ = listener1.Setup(_ => _.OpenAsync(cancellationToken)).ReturnsAsync(fuzzy.String());
+            _ = listener2.Setup(_ => _.OpenAsync(cancellationToken)).ThrowsAsync(expected);
+            _ = userServiceInstance.Setup(_ => _.CreateServiceInstanceListeners()).Returns(
+            [
+                new ServiceInstanceListener(_ => listener1.Object, fuzzy.String()),
+                new ServiceInstanceListener(_ => listener2.Object, fuzzy.String()),
+            ]);
+
+            var actual = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => sut.OpenAsync(partition, cancellationToken));
+
+            Assert.Same(expected, actual);
+            listener1.Verify(_ => _.Abort(), Times.Once);
+            listener2.Verify(_ => _.Abort(), Times.Once);
+            Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+        }
+
+        [Fact]
         public async Task ClosesCommunicationListenersAndRethrowsWhenOnOpenAsyncThrows()
         {
             var expected = new InvalidOperationException(fuzzy.String());
