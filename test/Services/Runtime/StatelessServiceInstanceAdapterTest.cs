@@ -76,7 +76,6 @@ public abstract class StatelessServiceInstanceAdapterTest
         {
             var existingCts = new CancellationTokenSource();
             sut.Field<CancellationTokenSource>().Set(existingCts);
-            sut.Field<Task>().Set(Task.CompletedTask);
 
             sut.Abort();
 
@@ -84,8 +83,12 @@ public abstract class StatelessServiceInstanceAdapterTest
         }
 
         [Fact]
-        public void DoesNothingToCancellationTokenSourceWhenItIsNull() =>
+        public void DoesNothingToCancellationTokenSourceWhenItIsNull()
+        {
             sut.Abort();
+
+            Assert.Null(sut.Field<CancellationTokenSource>().Value);
+        }
     }
 
     public sealed class CloseAsync : StatelessServiceInstanceAdapterTest
@@ -390,6 +393,7 @@ public abstract class StatelessServiceInstanceAdapterTest
             await sut.Field<Task>().Value;
 
             userServiceInstance.Verify(_ => _.RunAsync(runAsyncToken), Times.Once);
+            userServiceInstance.Verify(_ => _.RunAsync(It.IsAny<CancellationToken>()), Times.Once);
             partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Never);
         }
 
