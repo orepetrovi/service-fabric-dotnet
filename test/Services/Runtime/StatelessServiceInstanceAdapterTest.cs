@@ -96,7 +96,7 @@ public abstract class StatelessServiceInstanceAdapterTest
             var canceledCts = new CancellationTokenSource();
             canceledCts.Cancel();
             sut.Field<CancellationTokenSource>().Set(canceledCts);
-            var existingTask = Task.CompletedTask;
+            var existingTask = Task.FromResult(fuzzy.String());
             sut.Field<Task>().Set(existingTask);
 
             sut.Abort();
@@ -178,7 +178,7 @@ public abstract class StatelessServiceInstanceAdapterTest
             var canceledCts = new CancellationTokenSource();
             canceledCts.Cancel();
             sut.Field<CancellationTokenSource>().Set(canceledCts);
-            var existingTask = Task.CompletedTask;
+            var existingTask = Task.FromResult(fuzzy.String());
             sut.Field<Task>().Set(existingTask);
 
             await sut.CloseAsync(cancellationToken);
@@ -368,9 +368,9 @@ public abstract class StatelessServiceInstanceAdapterTest
         {
             _ = userServiceInstance.Setup(_ => _.CreateServiceInstanceListeners()).Returns([null]);
 
-            _ = await sut.OpenAsync(partition, cancellationToken);
+            string actual = await sut.OpenAsync(partition, cancellationToken);
 
-            Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+            Assert.Equal(new ServiceEndpointCollection().ToString(), actual);
             userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
         }
 
@@ -382,9 +382,9 @@ public abstract class StatelessServiceInstanceAdapterTest
             sut.Field<Func<ServiceInstanceListener, StatelessServiceContext, CommunicationListenerInfo>>()
                 .Set((_, _) => null);
 
-            _ = await sut.OpenAsync(partition, cancellationToken);
+            string actual = await sut.OpenAsync(partition, cancellationToken);
 
-            Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+            Assert.Equal(new ServiceEndpointCollection().ToString(), actual);
             userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
         }
 
@@ -509,28 +509,28 @@ public abstract class StatelessServiceInstanceAdapterTest
         [Fact]
         public void ReturnsTrueWhenExecuteRunAsyncTaskIsNotCompleted()
         {
-            base.sut.Field<Task>().Set(new TaskCompletionSource<bool>().Task);
+            sut.Field<Task>().Set(new TaskCompletionSource<bool>().Task);
             Assert.True(sut.Test_IsRunAsyncTaskRunning());
         }
 
         [Fact]
-        public void ReturnsFalseWhenExecuteRunAsyncTaskIsCompleted()
+        public void ReturnsFalseWhenExecuteRunAsyncTaskRanToCompletion()
         {
-            base.sut.Field<Task>().Set(Task.CompletedTask);
+            sut.Field<Task>().Set(Task.CompletedTask);
             Assert.False(sut.Test_IsRunAsyncTaskRunning());
         }
 
         [Fact]
         public void ReturnsFalseWhenExecuteRunAsyncTaskIsCanceled()
         {
-            base.sut.Field<Task>().Set(Task.FromCanceled(new CancellationToken(true)));
+            sut.Field<Task>().Set(Task.FromCanceled(new CancellationToken(true)));
             Assert.False(sut.Test_IsRunAsyncTaskRunning());
         }
 
         [Fact]
         public void ReturnsFalseWhenExecuteRunAsyncTaskIsFaulted()
         {
-            base.sut.Field<Task>().Set(Task.FromException(new InvalidOperationException()));
+            sut.Field<Task>().Set(Task.FromException(new InvalidOperationException()));
             Assert.False(sut.Test_IsRunAsyncTaskRunning());
         }
     }
