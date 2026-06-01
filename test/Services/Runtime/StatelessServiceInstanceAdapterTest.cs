@@ -136,6 +136,26 @@ public abstract class StatelessServiceInstanceAdapterTest
         }
 
         [Fact]
+        public async Task ClosesAllCommunicationListeners()
+        {
+            var first = new Mock<ICommunicationListener>();
+            var second = new Mock<ICommunicationListener>();
+            sut.Field<IList<CommunicationListenerInfo>>().Set(
+            [
+                new(fuzzy.String(), first.Object),
+                new(fuzzy.String(), second.Object),
+            ]);
+
+            await sut.CloseAsync(cancellationToken);
+
+            first.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
+            second.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
+            first.Verify(_ => _.Abort(), Times.Never);
+            second.Verify(_ => _.Abort(), Times.Never);
+            Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+        }
+
+        [Fact]
         public async Task AbortsCommunicationListenersWhenCloseAsyncThrows()
         {
             var listener = new Mock<ICommunicationListener>();
@@ -147,6 +167,27 @@ public abstract class StatelessServiceInstanceAdapterTest
             await sut.CloseAsync(cancellationToken);
 
             listener.Verify(_ => _.Abort(), Times.Once);
+            Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
+        }
+
+        [Fact]
+        public async Task AbortsAllCommunicationListenersWhenCloseAsyncThrows()
+        {
+            var throwing = new Mock<ICommunicationListener>();
+            _ = throwing
+                .Setup(_ => _.CloseAsync(cancellationToken))
+                .ThrowsAsync(new InvalidOperationException(fuzzy.String()));
+            var following = new Mock<ICommunicationListener>();
+            sut.Field<IList<CommunicationListenerInfo>>().Set(
+            [
+                new(fuzzy.String(), throwing.Object),
+                new(fuzzy.String(), following.Object),
+            ]);
+
+            await sut.CloseAsync(cancellationToken);
+
+            throwing.Verify(_ => _.Abort(), Times.Once);
+            following.Verify(_ => _.Abort(), Times.Once);
             Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
         }
 
