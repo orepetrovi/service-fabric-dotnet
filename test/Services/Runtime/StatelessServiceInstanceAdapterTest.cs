@@ -89,6 +89,31 @@ public abstract class StatelessServiceInstanceAdapterTest
 
             Assert.Null(sut.Field<CancellationTokenSource>().Value);
         }
+
+        [Fact]
+        public void DoesNothingWhenCancellationTokenSourceIsAlreadyCanceled()
+        {
+            var canceledCts = new CancellationTokenSource();
+            canceledCts.Cancel();
+            sut.Field<CancellationTokenSource>().Set(canceledCts);
+            var existingTask = Task.CompletedTask;
+            sut.Field<Task>().Set(existingTask);
+
+            sut.Abort();
+
+            Assert.Same(canceledCts, sut.Field<CancellationTokenSource>().Value);
+            Assert.Same(existingTask, sut.Field<Task>().Value);
+        }
+
+        [Fact]
+        public void IgnoresExceptionsFromCancelRunAsync()
+        {
+            var faulted = Task.FromException(new InvalidOperationException(fuzzy.String()));
+            sut.Field<CancellationTokenSource>().Set(new CancellationTokenSource());
+            sut.Field<Task>().Set(faulted);
+
+            sut.Abort();
+        }
     }
 
     public sealed class CloseAsync : StatelessServiceInstanceAdapterTest
@@ -145,6 +170,21 @@ public abstract class StatelessServiceInstanceAdapterTest
             Assert.True(existingCts.IsCancellationRequested);
             Assert.Null(sut.Field<CancellationTokenSource>().Value);
             Assert.Null(sut.Field<Task>().Value);
+        }
+
+        [Fact]
+        public async Task DoesNothingWhenCancellationTokenSourceIsAlreadyCanceled()
+        {
+            var canceledCts = new CancellationTokenSource();
+            canceledCts.Cancel();
+            sut.Field<CancellationTokenSource>().Set(canceledCts);
+            var existingTask = Task.CompletedTask;
+            sut.Field<Task>().Set(existingTask);
+
+            await sut.CloseAsync(cancellationToken);
+
+            Assert.Same(canceledCts, sut.Field<CancellationTokenSource>().Value);
+            Assert.Same(existingTask, sut.Field<Task>().Value);
         }
 
         [Fact]
@@ -381,6 +421,7 @@ public abstract class StatelessServiceInstanceAdapterTest
 
             Assert.Same(expected, actual);
             listener.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
+            listener.Verify(_ => _.CloseAsync(It.IsAny<CancellationToken>()), Times.Once);
             Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
             userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
         }
