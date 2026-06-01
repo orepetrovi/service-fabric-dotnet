@@ -92,7 +92,7 @@ public abstract class StatelessServiceInstanceAdapterTest
     public sealed class CloseAsync : StatelessServiceInstanceAdapterTest
     {
         // Method parameters
-        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken; // consistency with SUT parameter
 
         [Fact]
         public async Task ClosesCommunicationListeners()
@@ -206,7 +206,7 @@ public abstract class StatelessServiceInstanceAdapterTest
     {
         // Method parameters
         readonly Mock<IStatelessServicePartition> partition = new();
-        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken; // consistency with SUT parameter
 
         [Fact]
         public async Task SetsUserServiceInstancePartition()
@@ -220,7 +220,7 @@ public abstract class StatelessServiceInstanceAdapterTest
         public async Task SetsUserServiceInstancePartitionBeforeOpeningCommunicationListeners()
         {
             IStatelessServicePartition partitionWhenListenerOpened = null;
-            userServiceInstance.SetupSet(_ => _.Partition = It.IsAny<IStatelessServicePartition>())
+            _ = userServiceInstance.SetupSet(_ => _.Partition = It.IsAny<IStatelessServicePartition>())
                 .Callback<IStatelessServicePartition>(p => partitionWhenListenerOpened = p);
             var listener = new Mock<ICommunicationListener>();
             _ = listener.Setup(_ => _.OpenAsync(cancellationToken))
@@ -414,6 +414,11 @@ public abstract class StatelessServiceInstanceAdapterTest
             partition.Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
             partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
+        public async Task ThrowsArgumentNullExceptionWhenPartitionIsNull() =>
+            Assert.Equal(nameof(partition), (await Assert.ThrowsAsync<ArgumentNullException>(
+                () => sut.OpenAsync(null, cancellationToken))).ParamName);
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Environment.FailFast
         public void FailsFastWhenRunAsyncThrowsNonMatchingOperationCanceledException() =>
