@@ -207,14 +207,14 @@ public abstract class StatelessServiceInstanceAdapterTest
     public sealed class OpenAsync : StatelessServiceInstanceAdapterTest
     {
         // Method parameters
-        readonly Mock<IStatelessServicePartition> partition = new();
+        readonly IStatelessServicePartition partition = Mock.Of<IStatelessServicePartition>();
         readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken; // consistency with SUT parameter
 
         [Fact]
         public async Task SetsUserServiceInstancePartition()
         {
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
-            userServiceInstance.VerifySet(_ => _.Partition = partition.Object, Times.Once());
+            _ = await sut.OpenAsync(partition, cancellationToken);
+            userServiceInstance.VerifySet(_ => _.Partition = partition, Times.Once());
             userServiceInstance.VerifySet(_ => _.Partition = It.IsAny<IStatelessServicePartition>(), Times.Once());
         }
 
@@ -226,12 +226,12 @@ public abstract class StatelessServiceInstanceAdapterTest
                 .Callback<IStatelessServicePartition>(p => partitionWhenListenerOpened = p);
             var listener = new Mock<ICommunicationListener>();
             _ = listener.Setup(_ => _.OpenAsync(cancellationToken))
-                .Callback(() => Assert.Same(partition.Object, partitionWhenListenerOpened))
+                .Callback(() => Assert.Same(partition, partitionWhenListenerOpened))
                 .ReturnsAsync(fuzzy.String());
             _ = userServiceInstance.Setup(_ => _.CreateServiceInstanceListeners())
                 .Returns([new ServiceInstanceListener(_ => listener.Object, fuzzy.String())]);
 
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            _ = await sut.OpenAsync(partition, cancellationToken);
 
             listener.Verify(_ => _.OpenAsync(cancellationToken), Times.Once);
         }
@@ -253,7 +253,7 @@ public abstract class StatelessServiceInstanceAdapterTest
                 new ServiceInstanceListener(_ => listener2.Object, name2),
             ]);
 
-            string actual = await sut.OpenAsync(partition.Object, cancellationToken);
+            string actual = await sut.OpenAsync(partition, cancellationToken);
             await sut.Field<Task>().Value;
 
             listener1.Verify(_ => _.OpenAsync(cancellationToken), Times.Once);
@@ -271,9 +271,9 @@ public abstract class StatelessServiceInstanceAdapterTest
         [Fact]
         public async Task ReusesCachedInstanceListenersOnSubsequentOpen()
         {
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            _ = await sut.OpenAsync(partition, cancellationToken);
             await sut.CloseAsync(cancellationToken);
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            _ = await sut.OpenAsync(partition, cancellationToken);
 
             userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
         }
@@ -285,7 +285,7 @@ public abstract class StatelessServiceInstanceAdapterTest
             var entry = new ServiceInstanceListener(_ => listener.Object);
             _ = userServiceInstance.Setup(_ => _.CreateServiceInstanceListeners()).Returns([entry]);
 
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            _ = await sut.OpenAsync(partition, cancellationToken);
 
             CommunicationListenerInfo info = Assert.Single(sut.Field<IList<CommunicationListenerInfo>>().Value);
             Assert.Equal("default", info.Name);
@@ -295,7 +295,7 @@ public abstract class StatelessServiceInstanceAdapterTest
         [Fact]
         public async Task InvokesUserServiceOnOpenAsync()
         {
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            _ = await sut.OpenAsync(partition, cancellationToken);
             userServiceInstance.Verify(_ => _.OnOpenAsync(cancellationToken), Times.Once);
             userServiceInstance.Verify(_ => _.OnOpenAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -310,7 +310,7 @@ public abstract class StatelessServiceInstanceAdapterTest
             _ = userServiceInstance.Setup(_ => _.CreateServiceInstanceListeners())
                 .Returns([new ServiceInstanceListener(_ => listener.Object, name)]);
 
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            _ = await sut.OpenAsync(partition, cancellationToken);
             await sut.Field<Task>().Value;
 
             userServiceInstance.VerifySet(
@@ -328,7 +328,7 @@ public abstract class StatelessServiceInstanceAdapterTest
         {
             _ = userServiceInstance.Setup(_ => _.CreateServiceInstanceListeners()).Returns([null]);
 
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            _ = await sut.OpenAsync(partition, cancellationToken);
 
             Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
             userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
@@ -342,7 +342,7 @@ public abstract class StatelessServiceInstanceAdapterTest
             sut.Field<Func<ServiceInstanceListener, StatelessServiceContext, CommunicationListenerInfo>>()
                 .Set((_, _) => null);
 
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            _ = await sut.OpenAsync(partition, cancellationToken);
 
             Assert.Null(sut.Field<IList<CommunicationListenerInfo>>().Value);
             userServiceInstance.Verify(_ => _.CreateServiceInstanceListeners(), Times.Once);
@@ -358,7 +358,7 @@ public abstract class StatelessServiceInstanceAdapterTest
                 .Returns([new ServiceInstanceListener(_ => listener.Object, fuzzy.String())]);
 
             var actual = await Assert.ThrowsAsync<InvalidOperationException>(
-                () => sut.OpenAsync(partition.Object, cancellationToken));
+                () => sut.OpenAsync(partition, cancellationToken));
 
             Assert.Same(expected, actual);
             listener.Verify(_ => _.Abort(), Times.Once);
@@ -377,7 +377,7 @@ public abstract class StatelessServiceInstanceAdapterTest
                 .Returns([new ServiceInstanceListener(_ => listener.Object, fuzzy.String())]);
 
             var actual = await Assert.ThrowsAsync<InvalidOperationException>(
-                () => sut.OpenAsync(partition.Object, cancellationToken));
+                () => sut.OpenAsync(partition, cancellationToken));
 
             Assert.Same(expected, actual);
             listener.Verify(_ => _.CloseAsync(cancellationToken), Times.Once);
@@ -388,13 +388,13 @@ public abstract class StatelessServiceInstanceAdapterTest
         [Fact]
         public async Task InvokesUserServiceRunAsync()
         {
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            _ = await sut.OpenAsync(partition, cancellationToken);
             CancellationToken runAsyncToken = sut.Field<CancellationTokenSource>().Value.Token;
             await sut.Field<Task>().Value;
 
             userServiceInstance.Verify(_ => _.RunAsync(runAsyncToken), Times.Once);
             userServiceInstance.Verify(_ => _.RunAsync(It.IsAny<CancellationToken>()), Times.Once);
-            partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Never);
+            Mock.Get(partition).Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Never);
         }
 
         [Fact]
@@ -409,13 +409,13 @@ public abstract class StatelessServiceInstanceAdapterTest
                     await Task.Delay(Timeout.Infinite, ct);
                 });
 
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            _ = await sut.OpenAsync(partition, cancellationToken);
             _ = await started.Task;
             sut.Field<CancellationTokenSource>().Value.Cancel();
 
             await sut.Field<Task>().Value;
 
-            partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Never);
+            Mock.Get(partition).Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Never);
         }
 
         [Fact]
@@ -425,11 +425,11 @@ public abstract class StatelessServiceInstanceAdapterTest
                 .Setup(_ => _.RunAsync(It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new FabricException(fuzzy.String()));
 
-            _ = await sut.OpenAsync(partition.Object, cancellationToken);
+            _ = await sut.OpenAsync(partition, cancellationToken);
             await sut.Field<Task>().Value;
 
-            partition.Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
-            partition.Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
+            Mock.Get(partition).Verify(_ => _.ReportFault(FaultType.Transient), Times.Once);
+            Mock.Get(partition).Verify(_ => _.ReportFault(It.IsAny<FaultType>()), Times.Once);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation.
