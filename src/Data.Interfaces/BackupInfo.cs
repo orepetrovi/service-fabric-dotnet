@@ -1,4 +1,4 @@
-// ------------------------------------------------------------
+﻿// ------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
@@ -31,6 +31,7 @@ namespace Microsoft.ServiceFabric.Data
             this.ParentBackupId = Guid.Empty;
         }
 
+        // todo: this constructor accepts parentBackupId without validating it against option, allowing callers to construct an Incremental backup with Guid.Empty parent; reconcile constructor behavior with the documented ParentBackupId invariant
         /// <summary>
         /// Initializes a new instance of the <see cref="BackupInfo"/> class.
         /// </summary>
@@ -80,7 +81,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the identifier of the parent backup.
         /// </summary>
-        /// <value>The identifier of the corresponding full backup when <see cref="Option"/> is <see cref="BackupOption.Incremental"/>; otherwise, <see cref="Guid.Empty"/>.</value>
+        /// <value>The identifier of the corresponding full backup, or <see cref="Guid.Empty"/> when the instance was constructed without one or when <see cref="Option"/> is <see cref="BackupOption.Full"/>.</value>
         public Guid ParentBackupId { get; private set; }
 
         /// <summary>
