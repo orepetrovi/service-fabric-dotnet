@@ -6,7 +6,7 @@
 namespace Microsoft.ServiceFabric.Data
 {
     /// <summary>
-    /// Policy for restore operation.
+    /// Specifies the policy applied when restoring a replica from backup.
     /// </summary>
     public enum RestorePolicy : int
     {
