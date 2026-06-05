@@ -11,16 +11,16 @@ namespace Microsoft.ServiceFabric.Data
     using System.Globalization;
 
     /// <summary>
-    /// Provides information about the backup.
+    /// Describes a backup produced by a Service Fabric Reliable State Provider.
     /// </summary>
     public class BackupInfo
     {
         /// <summary>
-        /// Initializes a new instance of the <cref name="BackupInfo"/> class.
+        /// Initializes a new instance of the <see cref="BackupInfo"/> class without identifying the backup or its parent.
         /// </summary>
-        /// <param name="directory">Folder path that contains the backup.</param>
-        /// <param name="option"><cref name="BackupOption"/> that was used to take the backup.</param>
-        /// <param name="version"><cref name="BackupVersion"/> of the backup.</param>
+        /// <param name="directory">The folder path that contains the backup.</param>
+        /// <param name="option">One of the enumeration values that specifies the kind of backup that was taken.</param>
+        /// <param name="version">The latest epoch and LSN included in the backup.</param>
         public BackupInfo(string directory, BackupOption option, BackupVersion version)
         {
             this.Directory = directory;
@@ -32,14 +32,14 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Initializes a new instance of the <cref name="BackupInfo"/> class.
+        /// Initializes a new instance of the <see cref="BackupInfo"/> class.
         /// </summary>
-        /// <param name="directory">Folder path that contains the backup.</param>
-        /// <param name="option"><cref name="BackupOption"/> that was used to take the backup.</param>
-        /// <param name="version"><cref name="BackupVersion"/> of the backup.</param>
-        /// <param name="startBackupVersion"><cref name="BackupVersion"/> of first logical log record in the backup.</param>
-        /// <param name="backupId">Id of the backup.</param>
-        /// <param name="parentBackupId">Id of the corresponding full backup in case of incremental backup, Guid.Empty in case this is full backup.</param>
+        /// <param name="directory">The folder path that contains the backup.</param>
+        /// <param name="option">One of the enumeration values that specifies the kind of backup that was taken.</param>
+        /// <param name="version">The latest epoch and LSN included in the backup.</param>
+        /// <param name="startBackupVersion">The epoch and LSN of the first logical log record in the backup.</param>
+        /// <param name="backupId">The identifier of this backup.</param>
+        /// <param name="parentBackupId">The identifier of the corresponding full backup when <paramref name="option"/> is <see cref="BackupOption.Incremental"/>; otherwise, <see cref="Guid.Empty"/>.</param>
         public BackupInfo(string directory, BackupOption option, BackupVersion version, BackupVersion startBackupVersion, Guid backupId, Guid parentBackupId)
         {
             this.Directory = directory;
@@ -51,55 +51,54 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Gets the directory where the backup was created. 
+        /// Gets the folder path that contains the backup.
         /// </summary>
-        /// <returns>The directory containing the backup.</returns>
         public string Directory { get; private set; }
 
         /// <summary>
-        /// Gets the backup option used.
+        /// Gets the kind of backup that was taken.
         /// </summary>
-        /// <returns>The <cref name="BackupOption"/> that was used to take the backup.</returns>
         public BackupOption Option { get; private set; }
 
         /// <summary>
         /// Gets the latest epoch and LSN included in the backup.
         /// </summary>
-        /// <returns><cref name="BackupVersion"/> of the backup.</returns>
         public BackupVersion Version { get; private set; }
 
         /// <summary>
-        /// Gets the Backup Id
+        /// Gets the identifier of this backup.
         /// </summary>
+        /// <value>The backup identifier, or <see cref="Guid.Empty"/> when the instance was constructed without one.</value>
         public Guid BackupId { get; private set; }
 
         /// <summary>
-        /// Gets the first epoch and LSN in the backup
+        /// Gets the epoch and LSN of the first logical log record included in this backup.
         /// </summary>
+        /// <value>The starting version, or <see cref="BackupVersion.InvalidBackupVersion"/> when the instance was constructed without one.</value>
         public BackupVersion StartBackupVersion { get; private set; }
 
         /// <summary>
-        /// Gets the parent backup ID
+        /// Gets the identifier of the parent backup.
         /// </summary>
+        /// <value>The identifier of the corresponding full backup when <see cref="Option"/> is <see cref="BackupOption.Incremental"/>; otherwise, <see cref="Guid.Empty"/>.</value>
         public Guid ParentBackupId { get; private set; }
 
         /// <summary>
-        /// Returns a string that represents this instance.
+        /// Returns a string representation of this <see cref="BackupInfo"/> that includes the backup folder and option.
         /// </summary>
-        /// <returns>A string that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format(CultureInfo.CurrentCulture, "Backup folder: {0}, backup option: {1}", this.Directory, this.Option);
         }
 
         /// <summary>
-        /// Represents the version of the backup.
+        /// Represents the version of a backup as the <see cref="System.Fabric.Epoch"/> in which it was taken and the last logical sequence number it includes.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1815")]
         public struct BackupVersion : IComparable<BackupVersion>, IEquatable<BackupVersion>
         {
             /// <summary>
-            /// Invalid Backup Version.
+            /// Represents a <see cref="BackupVersion"/> with sentinel values that indicate the version is not valid.
             /// </summary>
             public static readonly BackupVersion InvalidBackupVersion = new BackupVersion(new Epoch(-1, -1), -1);
 
@@ -107,9 +106,9 @@ namespace Microsoft.ServiceFabric.Data
             private long _lsn;
 
             /// <summary>
-            /// Initializes a new instance of the <cref name="BackupVersion"/>
+            /// Initializes a new instance of the <see cref="BackupVersion"/> struct.
             /// </summary>
-            /// <param name="epoch">The <cref name="Epoch"/> at which the backup was taken.</param>
+            /// <param name="epoch">The <see cref="System.Fabric.Epoch"/> in which the backup was taken.</param>
             /// <param name="lsn">The last committed logical sequence number included in the backup.</param>
             public BackupVersion(Epoch epoch, long lsn)
             {
@@ -118,29 +117,23 @@ namespace Microsoft.ServiceFabric.Data
             }
 
             /// <summary>
-            /// Gets the <cref name="Epoch"/> at which the backup was taken.
+            /// Gets the <see cref="System.Fabric.Epoch"/> in which the backup was taken.
             /// </summary>
-            /// <value>The <cref name="Epoch"/> at which the backup was taken.</value>
             public Epoch Epoch { get { return this._epoch; } private set { this._epoch = value; } }
 
 
             /// <summary>
             /// Gets the last committed logical sequence number included in the backup.
             /// </summary>
-            /// <returns>The last committed logical sequence number included in the backup.</returns>
             public long Lsn { get { return this._lsn; } private set { this._lsn = value; } }
 
 
             /// <summary>
-            /// Compares this instance with a specified <cref name="BackupVersion"/> object and indicates whether this instance precedes, 
-            /// follows, or appears in the same position in the sort order as the specified <cref name="BackupVersion"/>. 
+            /// Returns an integer that indicates whether this instance precedes, follows, or appears in the same sort position as <paramref name="other"/>, comparing by <see cref="Epoch"/> first and then by <see cref="Lsn"/>.
             /// </summary>
-            /// <param name="other">An object that evaluates to a <cref name="BackupVersion"/>.</param>
+            /// <param name="other">The <see cref="BackupVersion"/> to compare with this instance.</param>
             /// <returns>
-            /// A value that indicates the relative order of the objects being compared.
-            /// Less than zero indicates that this instance precedes other in the sort order.
-            /// Zero indicates that this instance occurs in the same position in the sort order as other. 
-            /// Greater than zero indicates that this instance follows other in the sort order.
+            /// A negative value if this instance precedes <paramref name="other"/>; zero if they are equal; a positive value if this instance follows <paramref name="other"/>.
             /// </returns>
             public int CompareTo(BackupVersion other)
             {
@@ -155,12 +148,10 @@ namespace Microsoft.ServiceFabric.Data
             }
 
             /// <summary>
-            /// Determines whether this instance and another specified <cref name="BackupVersion"/> object have the same value.
+            /// Returns a value that indicates whether this instance is equal to <paramref name="other"/>.
             /// </summary>
-            /// <param name="other">The <cref name="BackupVersion"/> to compare to this instance. </param>
-            /// <returns>
-            /// true if the value of the value parameter is the same as the value of this instance; otherwise, false. 
-            /// </returns>
+            /// <param name="other">The <see cref="BackupVersion"/> to compare with this instance.</param>
+            /// <returns><see langword="true"/> if <paramref name="other"/> has the same <see cref="Epoch"/> and <see cref="Lsn"/> as this instance; otherwise, <see langword="false"/>.</returns>
             public bool Equals(BackupVersion other)
             {
                 if (this.CompareTo(other) == 0)
@@ -172,12 +163,10 @@ namespace Microsoft.ServiceFabric.Data
             }
 
             /// <summary>
-            /// Determines whether this instance and another specified <cref name="BackupVersion"/> object have the same value.
+            /// Returns a value that indicates whether this instance is equal to a specified object.
             /// </summary>
-            /// <param name="obj">The <cref name="BackupVersion"/> to compare to this instance. </param>
-            /// <returns>
-            /// true if the value of the value parameter is the same as the value of this instance; otherwise, false. 
-            /// </returns>
+            /// <param name="obj">The object to compare with this instance.</param>
+            /// <returns><see langword="true"/> if <paramref name="obj"/> is a <see cref="BackupVersion"/> with the same <see cref="Epoch"/> and <see cref="Lsn"/> as this instance; otherwise, <see langword="false"/>.</returns>
             public override bool Equals(object obj)
             {
                 if (obj is BackupVersion == false)
@@ -189,11 +178,8 @@ namespace Microsoft.ServiceFabric.Data
             }
 
             /// <summary>
-            /// Returns the hash code for this <cref name="BackupVersion"/>.
+            /// Returns the hash code for this <see cref="BackupVersion"/>.
             /// </summary>
-            /// <returns>
-            /// A 32-bit signed integer hash code.
-            /// </returns>
             public override int GetHashCode()
             {
                 // Note that Epoch.GetHashCode uses "+". Since it cannot be changed without breaking, I do not use this method.
