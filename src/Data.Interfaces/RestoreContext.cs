@@ -54,8 +54,7 @@ namespace Microsoft.ServiceFabric.Data
         /// but the input backup folder contains a version of the state that is older than the state maintained in the current replica.
         /// </para>
         /// <para>
-        /// When restoring an Actor Service this exception is thrown if specified <see cref="RestoreDescription.BackupFolderPath"/>
-        /// is empty.
+        /// When restoring an Actor Service, the specified <see cref="RestoreDescription.BackupFolderPath"/> is empty.
         /// </para>
         /// </exception>
         /// <exception cref="DirectoryNotFoundException">
