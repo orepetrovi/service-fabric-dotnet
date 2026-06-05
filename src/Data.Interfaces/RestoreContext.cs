@@ -11,14 +11,14 @@ namespace Microsoft.ServiceFabric.Data
     using System.Threading.Tasks;
 
     /// <summary>
-    /// <cref name="RestoreContext"/> contains the <cref name="RestoreContext.RestoreAsync(RestoreDescription)"/> that can be used to restore the state of the replica from a backup. 
+    /// <see cref="RestoreContext"/> contains the <see cref="RestoreAsync(RestoreDescription)"/> that can be used to restore the state of the replica from a backup. 
     /// </summary>
     public struct RestoreContext
     {
         private readonly IStateProviderReplica stateProviderReplica;
 
         /// <summary>
-        /// Initializes a new instance of the <cref name="RestoreContext"/> structure.
+        /// Initializes a new instance of the <see cref="RestoreContext"/> structure.
         /// </summary>
         /// <param name="stateProviderReplica">
         /// An <see cref="IStateProviderReplica"/> representing a reliable state provider replica.
