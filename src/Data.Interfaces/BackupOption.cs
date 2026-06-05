@@ -11,12 +11,12 @@ namespace Microsoft.ServiceFabric.Data
     public enum BackupOption : int
     {
         /// <summary>
-        /// A full backup of all state managed by the <see cref="IReliableStateManager"/>.
+        /// Represents a full backup of all state managed by the <see cref="IReliableStateManager"/>.
         /// </summary>
         Full = 0,
 
         /// <summary>
-        /// An incremental backup of the replica containing only the changes since the last full or incremental backup.
+        /// Represents an incremental backup of the replica containing only the changes since the last full or incremental backup.
         /// </summary>
         Incremental = 1,
     }
