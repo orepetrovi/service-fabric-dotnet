@@ -6,7 +6,7 @@
 namespace Microsoft.ServiceFabric.Data
 {
     /// <summary>
-    /// Indicates the kind of the backup.
+    /// Indicates the kind of backup.
     /// </summary>
     public enum BackupOption : int
     {
