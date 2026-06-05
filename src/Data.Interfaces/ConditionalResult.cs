@@ -34,7 +34,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Gets the value supplied to the constructor of the current <see cref="ConditionalValue{TValue}"/> object.
+        /// Gets the value of the current <see cref="ConditionalValue{TValue}"/> object.
         /// </summary>
         /// <value>Meaningful only when <see cref="HasValue"/> is <see langword="true"/>.</value>
         public TValue Value
