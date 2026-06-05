@@ -1,4 +1,4 @@
-﻿// ------------------------------------------------------------
+// ------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
@@ -130,8 +130,9 @@ namespace Microsoft.ServiceFabric.Data
 
 
             /// <summary>
-            /// Returns an integer that indicates whether this instance precedes, follows, or appears in the same sort position as <paramref name="other"/>, comparing by <see cref="Epoch"/> first and then by <see cref="Lsn"/>.
+            /// Returns an integer that indicates whether this instance precedes, follows, or appears in the same sort position as <paramref name="other"/>.
             /// </summary>
+            /// <remarks>Versions are ordered by <see cref="Epoch"/> first and then by <see cref="Lsn"/>.</remarks>
             /// <param name="other">The <see cref="BackupVersion"/> to compare with this instance.</param>
             /// <returns>
             /// A negative value if this instance precedes <paramref name="other"/>; zero if they are equal; a positive value if this instance follows <paramref name="other"/>.
