@@ -50,8 +50,8 @@ namespace Microsoft.ServiceFabric.Data
         /// </exception>
         /// <exception cref="ArgumentException">
         /// <para>
-        /// One of the arguments is not valid. For example, when restoring a Reliable Service if <see cref="RestoreDescription.Policy"/> is set to <see cref="RestorePolicy.Safe"/>, 
-        /// but the input backup folder contains a version of the state that is older than the state maintained in the current replica.
+        /// For Reliable Services, this occurs when <see cref="RestoreDescription.Policy"/> is set to <see cref="RestorePolicy.Safe"/>
+        /// but the input backup folder contains a version older than the state maintained in the current replica.
         /// </para>
         /// <para>
         /// When restoring an Actor Service, the specified <see cref="RestoreDescription.BackupFolderPath"/> is empty.
