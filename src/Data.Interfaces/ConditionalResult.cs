@@ -47,7 +47,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the value of the current <see cref="ConditionalValue{TValue}"/> object if it has been assigned a valid underlying value.
         /// </summary>
-        /// <value>The value of the object. If <see cref="HasValue"/> is <see langword="false"/>, the default value for type of the <typeparamref name="TValue"/> parameter.</value>
+        /// <value>The value supplied to the constructor. Meaningful only when <see cref="HasValue"/> is <see langword="true"/>.</value>
         public TValue Value
         {
             get
