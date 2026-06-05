@@ -20,8 +20,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// </summary>
         Remove = 1,
 
-        /// <summary> 
-        /// State manager has been rebuilt.
+        /// <summary>
+        /// Indicates that the entire state manager has been rebuilt, typically during recovery, restore, or end of copy.
         /// </summary>
         Rebuild = 2,
     }
