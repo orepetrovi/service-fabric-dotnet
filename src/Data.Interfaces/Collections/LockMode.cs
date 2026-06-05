@@ -17,9 +17,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Default = 0,
 
         /// <summary>
-        /// Used on resources that are intended to be updated. Prevents a common form of deadlock
-        /// that occurs when multiple transactions are reading, locking, and potentially
-        /// updating resources later.
+        /// Acquires an update-intent lock on resources the transaction intends to update later, preventing a common
+        /// form of deadlock that occurs when multiple transactions read, lock, and then attempt to update the same resources.
         /// </summary>
         Update = 1,
     }
