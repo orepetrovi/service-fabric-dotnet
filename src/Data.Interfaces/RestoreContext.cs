@@ -94,9 +94,6 @@ namespace Microsoft.ServiceFabric.Data
         ///     </item>
         /// </list>
         /// </exception>
-        /// <returns>
-        /// Task that represents the asynchronous restore operation.
-        /// </returns>
         /// <remarks>
         /// This API must be called from OnDataLossAsync method. Only one RestoreAsync API can be inflight per replica at any given point of time.
         /// 
@@ -212,9 +209,6 @@ namespace Microsoft.ServiceFabric.Data
         ///     </item>
         /// </list>
         /// </exception>
-        /// <returns>
-        /// Task that represents the asynchronous restore operation.
-        /// </returns>
         /// <remarks>
         /// This API must be called from OnDataLossAsync method. Only one RestoreAsync API can be inflight per replica at any given point of time.
         /// 
