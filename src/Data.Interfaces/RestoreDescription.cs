@@ -56,6 +56,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the restore policy.
         /// </summary>
+        /// <value>The default is <see cref="RestorePolicy.Safe"/>.</value>
         public RestorePolicy Policy
         {
             get
