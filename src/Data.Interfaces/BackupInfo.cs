@@ -16,7 +16,7 @@ namespace Microsoft.ServiceFabric.Data
     public class BackupInfo
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BackupInfo"/> class without identifying the backup or its parent.
+        /// Initializes a new instance of the <see cref="BackupInfo"/> class without supplying the backup identifier, parent identifier, or start backup version.
         /// </summary>
         /// <inheritdoc cref="BackupInfo(string, BackupOption, BackupVersion, BackupVersion, Guid, Guid)" path="/param[@name='directory']"/>
         /// <inheritdoc cref="BackupInfo(string, BackupOption, BackupVersion, BackupVersion, Guid, Guid)" path="/param[@name='option']"/>
