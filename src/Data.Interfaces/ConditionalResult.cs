@@ -6,7 +6,7 @@
 namespace Microsoft.ServiceFabric.Data
 {
     /// <summary>
-    /// Result class returned by Reliable Collections APIs that may or may not return a value.
+    /// Represents the result of a Reliable Collections operation that may or may not return a value.
     /// </summary>
     /// <typeparam name="TValue">The type of the value returned by this <see cref="ConditionalValue{TValue}"/>.</typeparam>
     public struct ConditionalValue<TValue>
@@ -22,7 +22,7 @@ namespace Microsoft.ServiceFabric.Data
         private readonly TValue value;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConditionalValue{TValue}"/> class with the given value.
+        /// Initializes a new instance of the <see cref="ConditionalValue{TValue}"/> struct with the given value.
         /// </summary>
         /// <param name="hasValue">Indicates whether the value is valid.</param>
         /// <param name="value">The value.</param>
