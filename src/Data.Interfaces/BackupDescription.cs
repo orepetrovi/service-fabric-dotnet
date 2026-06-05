@@ -33,9 +33,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="BackupDescription"/> struct.
         /// </summary>
-        /// <param name="option">
-        /// The <see cref="BackupOption"/> for the backup.
-        /// </param>
+        /// <param name="option">One of the enumeration values that specifies the kind of backup to perform.</param>
         /// <param name="backupCallback">
         /// Callback to be called when the backup folder has been created locally and is ready to be moved out of the node.
         /// </param>
