@@ -101,6 +101,7 @@ namespace Microsoft.ServiceFabric.Data
             /// <summary>
             /// Represents a <see cref="BackupVersion"/> with sentinel values that indicate the version is not valid.
             /// </summary>
+            /// <remarks>Compare against this field rather than <c>default(BackupVersion)</c> to detect an unset version.</remarks>
             public static readonly BackupVersion InvalidBackupVersion = new BackupVersion(new Epoch(-1, -1), -1);
 
             private Epoch _epoch;
