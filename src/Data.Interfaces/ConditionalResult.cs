@@ -14,7 +14,7 @@ namespace Microsoft.ServiceFabric.Data
         private readonly TValue value;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConditionalValue{TValue}"/> struct with the given value.
+        /// Initializes a new instance of the <see cref="ConditionalValue{TValue}"/> struct.
         /// </summary>
         public ConditionalValue(bool hasValue, TValue value)
         {
