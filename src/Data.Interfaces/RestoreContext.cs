@@ -49,11 +49,14 @@ namespace Microsoft.ServiceFabric.Data
         /// For a backup folder to be restorable, it must contain exactly one full backup and any number of incremental backups.
         /// </exception>
         /// <exception cref="ArgumentException">
+        /// <para>
         /// One of the arguments is not valid. For example, when restoring a Reliable Service if <see cref="RestoreDescription.Policy"/> is set to <see cref="RestorePolicy.Safe"/>, 
         /// but the input backup folder contains a version of the state that is older than the state maintained in the current replica.
-        /// 
+        /// </para>
+        /// <para>
         /// When restoring an Actor Service this exception is thrown if specified <see cref="RestoreDescription.BackupFolderPath"/>
         /// is empty.
+        /// </para>
         /// </exception>
         /// <exception cref="DirectoryNotFoundException">
         /// The supplied restore directory does not exist.
