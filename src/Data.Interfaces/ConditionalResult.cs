@@ -33,7 +33,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Gets a value indicating whether the current <see cref="ConditionalValue{TValue}"/> object has a valid value of its underlying type.
+        /// Gets a value that indicates whether the current <see cref="ConditionalValue{TValue}"/> object has a valid value of its underlying type.
         /// </summary>
         /// <value><see langword="true"/> if the value is valid; otherwise, <see langword="false"/>.</value>
         public bool HasValue
