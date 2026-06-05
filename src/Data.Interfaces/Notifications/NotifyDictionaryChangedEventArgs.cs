@@ -9,8 +9,12 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     using System.Collections.Generic;
 
     /// <summary>
-    /// Describes the action that caused the DictionaryChanged event.
+    /// Identifies the operation that produced a <see cref="NotifyDictionaryChangedEventArgs{TKey, TValue}"/> notification.
     /// </summary>
+    /// <remarks>
+    /// <see cref="Rebuild"/> is delivered through <see cref="Collections.IReliableDictionary{TKey, TValue}.RebuildNotificationAsyncCallback"/>.
+    /// All other values are delivered through <see cref="Collections.IReliableDictionary{TKey, TValue}.DictionaryChanged"/>.
+    /// </remarks>
     public enum NotifyDictionaryChangedAction : int
     {
         /// <summary>
