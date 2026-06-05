@@ -18,27 +18,28 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     public enum NotifyDictionaryChangedAction : int
     {
         /// <summary>
-        /// Indicates that the notification is for an add operation.
+        /// A key/value pair was added; cast to <see cref="NotifyDictionaryItemAddedEventArgs{TKey, TValue}"/>.
         /// </summary>
         Add = 0,
 
         /// <summary>
-        /// Indicates that the notification is for an update operation.
+        /// A key's value was replaced; cast to <see cref="NotifyDictionaryItemUpdatedEventArgs{TKey, TValue}"/>.
         /// </summary>
         Update = 1,
 
         /// <summary>
-        /// Indicates that the notification is for a remove operation.
+        /// A key was removed; cast to <see cref="NotifyDictionaryItemRemovedEventArgs{TKey, TValue}"/>.
         /// </summary>
         Remove = 2,
 
         /// <summary>
-        /// Indicates that the notification is for a clear operation.
+        /// All entries were removed by a clear operation; cast to <see cref="NotifyDictionaryClearEventArgs{TKey, TValue}"/>.
         /// </summary>
         Clear = 3,
 
         /// <summary>
-        /// Indicates that the notification is for a rebuild operation.
+        /// The reliable dictionary was repopulated from copy, restore, or recovery; cast to <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/>.
+        /// Delivered through <see cref="Collections.IReliableDictionary{TKey, TValue}.RebuildNotificationAsyncCallback"/>, not the <see cref="Collections.IReliableDictionary{TKey, TValue}.DictionaryChanged"/> event.
         /// </summary>
         Rebuild = 4
     }
