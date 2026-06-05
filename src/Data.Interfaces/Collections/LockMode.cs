@@ -6,8 +6,8 @@
 namespace Microsoft.ServiceFabric.Data.Collections
 {
     /// <summary>
-    /// Specifies how reliable collections will lock resources, which determines
-    /// how the resources can be accessed by concurrent transactions.
+    /// Specifies the lock mode a read operation on a reliable collection acquires, controlling how the read
+    /// interacts with concurrent transactions.
     /// </summary>
     public enum LockMode : int
     {
