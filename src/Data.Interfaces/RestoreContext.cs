@@ -104,7 +104,7 @@ namespace Microsoft.ServiceFabric.Data
         ///         <term><see cref="FabricErrorCode.RestoreSafeCheckFailed"/></term>
         ///         <description>
         ///         <see cref="RestorePolicy.Safe"/> is specified as part of <see cref="RestoreDescription"/> and
-        ///         the backup provided for restore has older data than currently present in the service.
+        ///         the backup provided is older than the state currently present in the service.
         ///         </description>
         ///     </item>
         /// </list>
