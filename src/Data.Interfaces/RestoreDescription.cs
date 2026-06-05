@@ -27,7 +27,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Initializes a new instance of the <see cref="RestoreDescription"/> struct.
         /// </summary>
         /// <param name="backupFolderPath">The directory to restore the replica from.</param>
-        /// <param name="restorePolicy">The restore policy.</param>
+        /// <param name="restorePolicy">One of the enumeration values that specifies the policy used to restore the replica.</param>
         public RestoreDescription(string backupFolderPath, RestorePolicy restorePolicy)
         {
             this.backupFolderPath = backupFolderPath;
