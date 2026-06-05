@@ -32,64 +32,64 @@ namespace Microsoft.ServiceFabric.Data
         /// Restores a backup described by <see cref="RestoreDescription"/>.
         /// </summary>
         /// <exception cref="System.Fabric.FabricMissingFullBackupException">
-        /// Indicates that the input backup folder does not contain a full backup.
+        /// The input backup folder does not contain a full backup.
         /// For a backup folder to be restorable, it must contain exactly one full backup and any number of incremental backups.
         /// </exception>
         /// <exception cref="System.ArgumentException">
-        /// Indicates that one of the arguments is not valid. For example, when restoring a Reliable Service if RestorePolicy is set to Safe, 
+        /// One of the arguments is not valid. For example, when restoring a Reliable Service if RestorePolicy is set to Safe, 
         /// but the input backup folder contains a version of the state that is older than the state maintained in the current replica.
         /// 
         /// When restoring an Actor Service this exception is thrown if specified <see cref="Microsoft.ServiceFabric.Data.RestoreDescription.BackupFolderPath"/>
         /// is empty.
         /// </exception>
         /// <exception cref="System.IO.DirectoryNotFoundException">
-        /// Indicates that the supplied restore directory does not exist.
+        /// The supplied restore directory does not exist.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">
-        /// Indicates that the replica is closing.
+        /// The replica is closing.
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
-        /// Indicates that current restore operation is not valid. For example, the <see cref="System.Fabric.ServicePartitionKind"/> 
+        /// The current restore operation is not valid. For example, the <see cref="System.Fabric.ServicePartitionKind"/> 
         /// of the partition from where backup was taken is different than that of current partition being restored.
         /// </exception>
         /// <exception cref="System.IO.FileNotFoundException">
-        /// Indicates the expected backup files under the supplied restore directory is not found.
+        /// The expected backup files under the supplied restore directory are not found.
         /// </exception>
         /// <exception cref="System.Fabric.FabricException">
-        /// Indicates either the restore operation encountered an unexpected error or the backup files in restore directory are not valid.
+        /// Either the restore operation encountered an unexpected error or the backup files in the restore directory are not valid.
         /// The <see cref="System.Fabric.FabricException.ErrorCode"/> property indicates the type of error that occurred.
         /// <list type="bullet">
         ///     <item>
         ///         <term><see cref="System.Fabric.FabricErrorCode.InvalidBackup"/></term>
         ///         <description>
-        ///         Indicates that the backup files supplied in the restore directory are either missing files or have extra unexpected files.
+        ///         The backup files supplied in the restore directory are either missing or contain extra unexpected files.
         ///         </description>
         ///     </item>
         ///     <item>
         ///         <term><see cref="System.Fabric.FabricErrorCode.InvalidRestoreData"/></term>
         ///         <description>
-        ///         Indicates that metadata files (restore.dat) present in restore directory is either corrupt or contains invalid information.
+        ///         The metadata files (restore.dat) present in the restore directory are either corrupt or contain invalid information.
         ///         </description>
         ///     </item>
         ///     <item>
         ///         <term><see cref="System.Fabric.FabricErrorCode.InvalidBackupChain"/></term>
         ///         <description>
-        ///         Indicates that the backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
+        ///         The backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
         ///         supplied in the restore directory is broken. 
         ///         </description>
         ///     </item>
         ///     <item>
         ///         <term><see cref="System.Fabric.FabricErrorCode.DuplicateBackups"/></term>
         ///         <description>
-        ///         Indicates that the backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
+        ///         The backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
         ///         supplied in the restore directory contains duplicate backups. 
         ///         </description>
         ///     </item>
         ///     <item>
         ///         <term><see cref="System.Fabric.FabricErrorCode.RestoreSafeCheckFailed"/></term>
         ///         <description>
-        ///         If <see cref="Microsoft.ServiceFabric.Data.RestorePolicy.Safe"/> is specified as part of <see cref="Microsoft.ServiceFabric.Data.RestoreDescription"/>, it 
-        ///         indicates that the backup provided for restore has older data than currently present in service.
+        ///         <see cref="Microsoft.ServiceFabric.Data.RestorePolicy.Safe"/> is specified as part of <see cref="Microsoft.ServiceFabric.Data.RestoreDescription"/> and
+        ///         the backup provided for restore has older data than currently present in the service.
         ///         </description>
         ///     </item>
         /// </list>
@@ -147,64 +147,64 @@ namespace Microsoft.ServiceFabric.Data
         /// Restores a backup described by <see cref="RestoreDescription"/>.
         /// </summary>
         /// <exception cref="FabricMissingFullBackupException">
-        /// Indicates that the input backup folder does not contain a full backup.
+        /// The input backup folder does not contain a full backup.
         /// For a backup folder to be restorable, it must contain exactly one full backup and any number of incremental backups.
         /// </exception>
         /// <exception cref="System.ArgumentException">
-        /// Indicates that one of the arguments is not valid. For example, when restoring a Reliable Service if RestorePolicy is set to Safe, 
+        /// One of the arguments is not valid. For example, when restoring a Reliable Service if RestorePolicy is set to Safe, 
         /// but the input backup folder contains a version of the state that is older than the state maintained in the current replica.
         /// 
         /// When restoring an Actor Service this exception is thrown if specified <see cref="Microsoft.ServiceFabric.Data.RestoreDescription.BackupFolderPath"/>
         /// is empty.
         /// </exception>
         /// <exception cref="System.IO.DirectoryNotFoundException">
-        /// Indicates that the supplied restore directory does not exist.
+        /// The supplied restore directory does not exist.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">
-        /// Indicates that the replica is closing.
+        /// The replica is closing.
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
-        /// Indicates that current restore operation is not valid. For example, the <see cref="System.Fabric.ServicePartitionKind"/> 
+        /// The current restore operation is not valid. For example, the <see cref="System.Fabric.ServicePartitionKind"/> 
         /// of the partition from where backup was taken is different than that of current partition being restored.
         /// </exception>
         /// <exception cref="System.IO.FileNotFoundException">
-        /// Indicates the expected backup files under the supplied restore directory is not found.
+        /// The expected backup files under the supplied restore directory are not found.
         /// </exception>
         /// <exception cref="System.Fabric.FabricException">
-        /// Indicates either the restore operation encountered an unexpected error or the backup files in restore directory are not valid.
+        /// Either the restore operation encountered an unexpected error or the backup files in the restore directory are not valid.
         /// The <see cref="System.Fabric.FabricException.ErrorCode"/> property indicates the type of error that occurred.
         /// <list type="bullet">
         ///     <item>
         ///         <term><see cref="System.Fabric.FabricErrorCode.InvalidBackup"/></term>
         ///         <description>
-        ///         Indicates that the backup files supplied in the restore directory are either missing files or have extra unexpected files.
+        ///         The backup files supplied in the restore directory are either missing or contain extra unexpected files.
         ///         </description>
         ///     </item>
         ///     <item>
         ///         <term><see cref="System.Fabric.FabricErrorCode.InvalidRestoreData"/></term>
         ///         <description>
-        ///         Indicates that metadata files (restore.dat) present in restore directory is either corrupt or contains invalid information.
+        ///         The metadata files (restore.dat) present in the restore directory are either corrupt or contain invalid information.
         ///         </description>
         ///     </item>
         ///     <item>
         ///         <term><see cref="System.Fabric.FabricErrorCode.InvalidBackupChain"/></term>
         ///         <description>
-        ///         Indicates that the backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
+        ///         The backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
         ///         supplied in the restore directory is broken. 
         ///         </description>
         ///     </item>
         ///     <item>
         ///         <term><see cref="System.Fabric.FabricErrorCode.DuplicateBackups"/></term>
         ///         <description>
-        ///         Indicates that the backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
+        ///         The backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
         ///         supplied in the restore directory contains duplicate backups. 
         ///         </description>
         ///     </item>
         ///     <item>
         ///         <term><see cref="System.Fabric.FabricErrorCode.RestoreSafeCheckFailed"/></term>
         ///         <description>
-        ///         If <see cref="Microsoft.ServiceFabric.Data.RestorePolicy.Safe"/> is specified as part of <see cref="Microsoft.ServiceFabric.Data.RestoreDescription"/>, it 
-        ///         indicates that the backup provided for restore has older data than currently present in service.
+        ///         <see cref="Microsoft.ServiceFabric.Data.RestorePolicy.Safe"/> is specified as part of <see cref="Microsoft.ServiceFabric.Data.RestoreDescription"/> and
+        ///         the backup provided for restore has older data than currently present in the service.
         ///         </description>
         ///     </item>
         /// </list>
