@@ -14,7 +14,7 @@ namespace Microsoft.ServiceFabric.Data
         private readonly RestorePolicy restorePolicy;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RestoreDescription"/> struct.
+        /// Initializes a new instance of the <see cref="RestoreDescription"/> struct using <see cref="RestorePolicy.Safe"/>.
         /// </summary>
         /// <param name="backupFolderPath">The directory to restore the replica from.</param>
         public RestoreDescription(string backupFolderPath)
