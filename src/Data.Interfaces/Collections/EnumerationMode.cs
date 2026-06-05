@@ -11,14 +11,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// </summary>
     public enum EnumerationMode : int
     {
-        /// <summary>
-        /// Results are returned as an unordered enumeration. Fastest enumeration mode.
-        /// </summary>
+        /// <summary>Returns results in arbitrary order, which is the fastest enumeration mode.</summary>
         Unordered = 0,
 
-        /// <summary>
-        /// Results are returned as an ordered enumeration.
-        /// </summary>
+        /// <summary>Returns results in ascending key order.</summary>
         Ordered = 1,
     }
 }
