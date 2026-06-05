@@ -35,7 +35,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets a value indicating whether the current <see cref="ConditionalValue{TValue}"/> object has a valid value of its underlying type.
         /// </summary>
-        /// <returns><see langword="true"/>: Value is valid, <see langword="false"/> otherwise.</returns>
+        /// <value><see langword="true"/> if the value is valid; otherwise, <see langword="false"/>.</value>
         public bool HasValue
         {
             get
@@ -47,7 +47,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the value of the current <see cref="ConditionalValue{TValue}"/> object if it has been assigned a valid underlying value.
         /// </summary>
-        /// <returns>The value of the object. If HasValue is <see langword="false"/>, returns the default value for type of the TValue parameter.</returns>
+        /// <value>The value of the object. If <see cref="HasValue"/> is <see langword="false"/>, the default value for type of the <typeparamref name="TValue"/> parameter.</value>
         public TValue Value
         {
             get
