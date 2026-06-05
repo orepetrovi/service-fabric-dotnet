@@ -18,7 +18,7 @@ namespace Microsoft.ServiceFabric.Data
         private readonly Func<BackupInfo, CancellationToken, Task<bool>> backupCallback;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BackupDescription"/> structure.
+        /// Initializes a new instance of the <see cref="BackupDescription"/> struct.
         /// </summary>
         /// <param name="backupCallback">
         /// Callback to be called when the backup folder has been created and populated locally by the system. 
@@ -31,7 +31,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BackupDescription"/> structure.
+        /// Initializes a new instance of the <see cref="BackupDescription"/> struct.
         /// </summary>
         /// <param name="option">
         /// The <see cref="BackupOption"/> for the backup.
