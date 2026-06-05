@@ -18,7 +18,7 @@ namespace Microsoft.ServiceFabric.Data
         private readonly IStateProviderReplica stateProviderReplica;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RestoreContext"/> structure.
+        /// Initializes a new instance of the <see cref="RestoreContext"/> struct.
         /// </summary>
         /// <param name="stateProviderReplica">
         /// An <see cref="IStateProviderReplica"/> representing a reliable state provider replica.
