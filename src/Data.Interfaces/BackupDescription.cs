@@ -10,7 +10,7 @@ namespace Microsoft.ServiceFabric.Data
     using System.Threading.Tasks;
 
     /// <summary>
-    /// A BackupDescription contains all of the information necessary to backup a stateful service replica. 
+    /// Contains the information necessary to back up a stateful service replica.
     /// </summary>
     public struct BackupDescription
     {
