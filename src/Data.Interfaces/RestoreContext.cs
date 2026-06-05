@@ -21,9 +21,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="RestoreContext"/> struct.
         /// </summary>
-        /// <param name="stateProviderReplica">
-        /// An <see cref="IStateProviderReplica"/> representing a reliable state provider replica.
-        /// </param>
         // todo: stateProviderReplica is not validated; passing null (or using default(RestoreContext)) causes RestoreAsync to throw NullReferenceException instead of ArgumentNullException/InvalidOperationException
         public RestoreContext(IStateProviderReplica stateProviderReplica)
         {
