@@ -6,7 +6,7 @@
 namespace Microsoft.ServiceFabric.Data
 {
     /// <summary>
-    /// A RestoreDescription contains all of the information necessary to restore a stateful service replica. 
+    /// Contains the information needed to restore a stateful service replica from a backup.
     /// </summary>
     public struct RestoreDescription
     {
