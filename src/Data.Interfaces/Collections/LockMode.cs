@@ -12,7 +12,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     public enum LockMode : int
     {
         /// <summary>
-        /// Use the default lock mode based on the operation and isolation level of the transaction.
+        /// Selects the default lock mode based on the operation and isolation level of the transaction.
         /// </summary>
         Default = 0,
 
