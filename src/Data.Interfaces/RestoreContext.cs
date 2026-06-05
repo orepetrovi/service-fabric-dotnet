@@ -24,6 +24,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="stateProviderReplica">
         /// An <see cref="IStateProviderReplica"/> representing a reliable state provider replica.
         /// </param>
+        // todo: stateProviderReplica is not validated; passing null (or using default(RestoreContext)) causes RestoreAsync to throw NullReferenceException instead of ArgumentNullException/InvalidOperationException
         public RestoreContext(IStateProviderReplica stateProviderReplica)
         {
             this.stateProviderReplica = stateProviderReplica;
@@ -34,6 +35,7 @@ namespace Microsoft.ServiceFabric.Data
         /// This overload is equivalent to calling <see cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
         /// with <see cref="CancellationToken.None"/>.
         /// </remarks>
+        // todo: throws NullReferenceException when invoked on default(RestoreContext) or after passing null to the constructor; see TODO on the constructor
         public Task RestoreAsync(RestoreDescription restoreDescription)
         {
             return this.stateProviderReplica.RestoreAsync(
@@ -152,6 +154,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </list>
         /// </para>
         /// </remarks>
+        // todo: throws NullReferenceException when invoked on default(RestoreContext) or after passing null to the constructor; see TODO on the constructor
         public Task RestoreAsync(RestoreDescription restoreDescription, CancellationToken cancellationToken)
         {
             return this.stateProviderReplica.RestoreAsync(
