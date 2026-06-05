@@ -24,6 +24,9 @@ namespace Microsoft.ServiceFabric.Data
         /// Callback to be called when the backup folder has been created and populated locally by the system. 
         /// This folder is now ready to be moved out of the node.
         /// </param>
+        /// <remarks>
+        /// Uses <see cref="BackupOption.Full"/> for the backup option.
+        /// </remarks>
         public BackupDescription(Func<BackupInfo, CancellationToken, Task<bool>> backupCallback)
         {
             this.option = BackupOption.Full;
