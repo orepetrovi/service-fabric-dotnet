@@ -66,10 +66,11 @@ namespace Microsoft.ServiceFabric.Data
         /// The backup callback function commonly used to copy the backup folder to an external location.
         /// </value>
         /// <remarks>
-        /// Backup callback function takes in BackupInfo and Cancellation token and returns a Task that represents the processing of the backup folder.
-        /// Boolean returned by the backupCallback indicate whether the service was able to successfully move the backup folder to an external location.
-        /// If false is returned, BackupAsync throws InvalidOperationException with the relevant message indicating backupCallback returned false.
-        /// Also, backup will be marked as unsuccessful.
+        /// The <see langword="bool"/> returned by <see cref="BackupCallback"/> indicates whether the service was able to successfully move the backup folder to an external location.
+        /// If <see langword="false"/> is returned,
+        /// <see cref="IStateProviderReplica.BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>
+        /// throws <see cref="InvalidOperationException"/> indicating <see cref="BackupCallback"/> returned <see langword="false"/>,
+        /// and the backup is marked as unsuccessful.
         /// </remarks>
         public Func<BackupInfo, CancellationToken, Task<bool>> BackupCallback
         {
