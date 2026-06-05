@@ -28,10 +28,6 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <inheritdoc cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
-        /// <remarks>
-        /// This overload is equivalent to calling <see cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
-        /// with <see cref="CancellationToken.None"/>.
-        /// </remarks>
         // todo: throws NullReferenceException when invoked on default(RestoreContext) or after passing null to the constructor; see TODO on the constructor
         public Task RestoreAsync(RestoreDescription restoreDescription)
         {
