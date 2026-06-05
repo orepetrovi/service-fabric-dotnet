@@ -129,14 +129,8 @@ namespace Microsoft.ServiceFabric.Data
             public long Lsn { get { return this._lsn; } private set { this._lsn = value; } }
 
 
-            /// <summary>
-            /// Returns an integer that indicates whether this instance precedes, follows, or appears in the same sort position as <paramref name="other"/>.
-            /// </summary>
+            /// <inheritdoc/>
             /// <remarks>Versions are ordered by <see cref="Epoch"/> first and then by <see cref="Lsn"/>.</remarks>
-            /// <param name="other">The <see cref="BackupVersion"/> to compare with this instance.</param>
-            /// <returns>
-            /// A negative value if this instance precedes <paramref name="other"/>; zero if they are equal; a positive value if this instance follows <paramref name="other"/>.
-            /// </returns>
             public int CompareTo(BackupVersion other)
             {
                 var compareEpochResult = this.Epoch.CompareTo(other.Epoch);
@@ -149,11 +143,8 @@ namespace Microsoft.ServiceFabric.Data
                 return this.Lsn.CompareTo(other.Lsn);
             }
 
-            /// <summary>
-            /// Returns a value that indicates whether this instance is equal to <paramref name="other"/>.
-            /// </summary>
-            /// <param name="other">The <see cref="BackupVersion"/> to compare with this instance.</param>
-            /// <returns><see langword="true"/> if <paramref name="other"/> has the same <see cref="Epoch"/> and <see cref="Lsn"/> as this instance; otherwise, <see langword="false"/>.</returns>
+            /// <inheritdoc/>
+            /// <remarks>Two versions are equal when they have the same <see cref="Epoch"/> and <see cref="Lsn"/>.</remarks>
             public bool Equals(BackupVersion other)
             {
                 if (this.CompareTo(other) == 0)
@@ -164,11 +155,7 @@ namespace Microsoft.ServiceFabric.Data
                 return false;
             }
 
-            /// <summary>
-            /// Returns a value that indicates whether this instance is equal to a specified object.
-            /// </summary>
-            /// <param name="obj">The object to compare with this instance.</param>
-            /// <returns><see langword="true"/> if <paramref name="obj"/> is a <see cref="BackupVersion"/> with the same <see cref="Epoch"/> and <see cref="Lsn"/> as this instance; otherwise, <see langword="false"/>.</returns>
+            /// <inheritdoc/>
             public override bool Equals(object obj)
             {
                 if (obj is BackupVersion == false)
@@ -179,9 +166,7 @@ namespace Microsoft.ServiceFabric.Data
                 return this.Equals((BackupVersion)obj);
             }
 
-            /// <summary>
-            /// Returns the hash code for this <see cref="BackupVersion"/>.
-            /// </summary>
+            /// <inheritdoc/>
             public override int GetHashCode()
             {
                 // Note that Epoch.GetHashCode uses "+". Since it cannot be changed without breaking, I do not use this method.
