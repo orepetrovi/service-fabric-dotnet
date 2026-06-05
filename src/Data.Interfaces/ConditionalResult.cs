@@ -10,14 +10,7 @@ namespace Microsoft.ServiceFabric.Data
     /// </summary>
     public struct ConditionalValue<TValue>
     {
-        /// <summary>
-        /// Is there a value.
-        /// </summary>
         private readonly bool hasValue;
-
-        /// <summary>
-        /// The value.
-        /// </summary>
         private readonly TValue value;
 
         /// <summary>
