@@ -13,7 +13,10 @@ namespace Microsoft.ServiceFabric.Data
         private readonly string backupFolderPath;
         private readonly RestorePolicy restorePolicy;
 
-        /// <inheritdoc cref="RestoreDescription(string, RestorePolicy)"/>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RestoreDescription"/> struct.
+        /// </summary>
+        /// <inheritdoc cref="RestoreDescription(string, RestorePolicy)" path="/param[@name='backupFolderPath']"/>
         /// <remarks>The restore <see cref="Policy"/> defaults to <see cref="RestorePolicy.Safe"/>.</remarks>
         public RestoreDescription(string backupFolderPath)
         {
