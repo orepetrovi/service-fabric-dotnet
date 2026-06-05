@@ -111,14 +111,14 @@ namespace Microsoft.ServiceFabric.Data
         /// </exception>
         /// <remarks>
         /// <para>
-        /// This API must be called from the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>. Only one call to <see cref="RestoreAsync(RestoreDescription, CancellationToken)"/> can be inflight per replica at any given point of time.
+        /// This API must be called from the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>. Only one call to <see cref="RestoreAsync(RestoreDescription, CancellationToken)"/> can be in flight per replica at a time.
         /// </para>
         /// <para>
-        /// Note that exceptions thrown by this API differ depending on the underlying state provider. The exceptions that are currently documented for
+        /// Exceptions thrown by this API differ depending on the underlying state provider. The exceptions that are currently documented for
         /// this API apply only to out-of-box state providers provided by Service Fabric for Reliable Services and Reliable Actors.
         /// </para>
         /// <para>
-        /// Following exceptions are thrown by this API when invoked in Reliable Service:
+        /// The following exceptions are thrown by this API when invoked in a Reliable Service:
         /// <list type="bullet">
         ///     <item>
         ///         <description><see cref="FabricMissingFullBackupException"/></description>
@@ -129,7 +129,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </list>
         /// </para>
         /// <para>
-        /// Following exceptions are thrown by this API when invoked in Actor Service with <c>KvsActorStateProvider</c> as its state provider (which is the
+        /// The following exceptions are thrown by this API when invoked in an Actor Service with <c>KvsActorStateProvider</c> as its state provider (which is the
         /// default state provider for Reliable Actors):
         /// <list type="bullet">
         ///     <item>
