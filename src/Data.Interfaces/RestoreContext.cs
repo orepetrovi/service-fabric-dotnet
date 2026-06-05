@@ -115,7 +115,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </para>
         /// <para>
         /// Note that exceptions thrown by this API differ depending on the underlying state provider. The exceptions that are currently documented for
-        /// this API applies only to out-of-box state providers provided by Service Fabric for Reliable Services and Reliable Actors.
+        /// this API apply only to out-of-box state providers provided by Service Fabric for Reliable Services and Reliable Actors.
         /// </para>
         /// <para>
         /// Following exceptions are thrown by this API when invoked in Reliable Service:
