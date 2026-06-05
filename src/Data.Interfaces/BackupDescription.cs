@@ -55,7 +55,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Gets the callback to be called when the backup folder has been created locally and is ready to be moved out of the node.
+        /// Gets the callback invoked when the backup folder has been created locally and is ready to be moved out of the node.
         /// </summary>
         /// <remarks>
         /// When invoked, <see cref="BackupCallback"/> returns a <see cref="Task{TResult}"/> whose result indicates whether the service was able to successfully move the backup folder to an external location.
