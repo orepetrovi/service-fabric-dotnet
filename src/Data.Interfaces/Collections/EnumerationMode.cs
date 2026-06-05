@@ -17,7 +17,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Unordered = 0,
 
         /// <summary>
-        /// Results are be returned as an ordered enumeration.
+        /// Results are returned as an ordered enumeration.
         /// </summary>
         Ordered = 1,
     }
