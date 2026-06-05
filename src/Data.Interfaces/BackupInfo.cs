@@ -87,6 +87,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Returns a string representation of this <see cref="BackupInfo"/> that includes the backup folder and option.
         /// </summary>
+        /// <remarks>The format is intended for diagnostics and may change between releases; do not parse it.</remarks>
         public override string ToString()
         {
             return string.Format(CultureInfo.CurrentCulture, "Backup folder: {0}, backup option: {1}", this.Directory, this.Option);
