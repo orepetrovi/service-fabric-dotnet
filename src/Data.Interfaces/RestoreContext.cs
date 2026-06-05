@@ -148,7 +148,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Restore a backup described by <see cref="RestoreDescription"/>.
+        /// Restores a backup described by <see cref="RestoreDescription"/>.
         /// </summary>
         /// <param name="restoreDescription">Description for the restore request.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
