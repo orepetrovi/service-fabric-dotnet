@@ -28,7 +28,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Initializes a new instance of the RestoreDescription structure.
+        /// Initializes a new instance of the <see cref="RestoreDescription"/> struct.
         /// </summary>
         /// <param name="backupFolderPath">
         /// The directory where the replica is to be restored from.
