@@ -51,9 +51,6 @@ namespace Microsoft.ServiceFabric.Data
         /// Folder must at least contain one full backup.
         /// In addition, it could include one or more incremental backups.
         /// </remarks>
-        /// <value>
-        /// The directory which will be used to restore the replica's state.
-        /// </value>
         public string BackupFolderPath
         {
             get
@@ -65,9 +62,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the restore policy.
         /// </summary>
-        /// <value>
-        /// Policy to be used for the restore.
-        /// </value>
         public RestorePolicy Policy
         {
             get
