@@ -6,7 +6,7 @@
 namespace Microsoft.ServiceFabric.Data.Notifications
 {
     /// <summary>
-    /// Describes the action that caused the StateManagerChanged event.
+    /// Describes the action that caused the <see cref="IReliableStateManager.StateManagerChanged"/> event.
     /// </summary>
     public enum NotifyStateManagerChangedAction : int
     {
