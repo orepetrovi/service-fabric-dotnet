@@ -20,10 +20,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="BackupDescription"/> struct.
         /// </summary>
-        /// <param name="backupCallback">
-        /// Callback to be called when the backup folder has been created and populated locally by the system. 
-        /// This folder is now ready to be moved out of the node.
-        /// </param>
+        /// <inheritdoc cref="BackupDescription(BackupOption, Func{BackupInfo, CancellationToken, Task{bool}})" path="/param[@name='backupCallback']"/>
         /// <remarks>
         /// Uses <see cref="BackupOption.Full"/> for the backup option.
         /// </remarks>
