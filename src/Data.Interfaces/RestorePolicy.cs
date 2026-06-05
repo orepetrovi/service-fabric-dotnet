@@ -16,7 +16,7 @@ namespace Microsoft.ServiceFabric.Data
         Safe = 0,
 
         /// <summary>
-        /// Does not check whether backed up state being restored is ahead of the current state.
+        /// Restores the backup without checking whether it is older than the current state.
         /// </summary>
         Force = 1,
     }
