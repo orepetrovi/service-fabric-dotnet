@@ -8,7 +8,6 @@ namespace Microsoft.ServiceFabric.Data
     /// <summary>
     /// Represents the result of a Reliable Collections operation that may or may not return a value.
     /// </summary>
-    /// <typeparam name="TValue">The type of the value returned by this <see cref="ConditionalValue{TValue}"/>.</typeparam>
     public struct ConditionalValue<TValue>
     {
         /// <summary>
@@ -24,8 +23,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="ConditionalValue{TValue}"/> struct with the given value.
         /// </summary>
-        /// <param name="hasValue"><see langword="true"/> to indicate the value is valid; otherwise, <see langword="false"/>.</param>
-        /// <param name="value">The value.</param>
         public ConditionalValue(bool hasValue, TValue value)
         {
             this.hasValue = hasValue;
