@@ -11,7 +11,7 @@ namespace Microsoft.ServiceFabric.Data
     using System.Threading.Tasks;
 
     /// <summary>
-    /// <see cref="RestoreContext"/> contains the <see cref="RestoreAsync(RestoreDescription)"/> that can be used to restore the state of the replica from a backup. 
+    /// Provides the ability to restore a replica's state from a backup.
     /// </summary>
     public struct RestoreContext
     {
