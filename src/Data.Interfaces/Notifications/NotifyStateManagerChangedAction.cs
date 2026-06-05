@@ -10,13 +10,13 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// </summary>
     public enum NotifyStateManagerChangedAction : int
     {
-        /// <summary> 
-        /// A state provider has been added.
+        /// <summary>
+        /// Indicates that a reliable state has been added to the state manager.
         /// </summary>
         Add = 0,
 
-        /// <summary> 
-        /// A state provider has been removed.
+        /// <summary>
+        /// Indicates that a reliable state has been removed from the state manager.
         /// </summary>
         Remove = 1,
 
