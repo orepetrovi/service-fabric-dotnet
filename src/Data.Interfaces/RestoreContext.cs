@@ -31,7 +31,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Restores a backup described by <see cref="RestoreDescription"/>.
         /// </summary>
-        /// <param name="restoreDescription">Description for the restore request.</param>
         /// <exception cref="System.Fabric.FabricMissingFullBackupException">
         /// Indicates that the input backup folder does not contain a full backup.
         /// For a backup folder to be restorable, it must contain exactly one full backup and any number of incremental backups.
@@ -150,8 +149,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Restores a backup described by <see cref="RestoreDescription"/>.
         /// </summary>
-        /// <param name="restoreDescription">Description for the restore request.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="FabricMissingFullBackupException">
         /// Indicates that the input backup folder does not contain a full backup.
         /// For a backup folder to be restorable, it must contain exactly one full backup and any number of incremental backups.
