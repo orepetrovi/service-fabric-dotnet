@@ -16,11 +16,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="RestoreDescription"/> struct.
         /// </summary>
-        /// <param name="backupFolderPath">
-        /// The directory where the replica is to be restored from.
-        /// This parameter cannot be null, empty, or consist only of whitespace. 
-        /// UNC paths may also be provided.
-        /// </param>
+        /// <param name="backupFolderPath">The directory to restore the replica from.</param>
         public RestoreDescription(string backupFolderPath)
         {
             this.backupFolderPath = backupFolderPath;
@@ -30,11 +26,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="RestoreDescription"/> struct.
         /// </summary>
-        /// <param name="backupFolderPath">
-        /// The directory where the replica is to be restored from.
-        /// This parameter cannot be null, empty, or consist only of whitespace. 
-        /// UNC paths may also be provided.
-        /// </param>
+        /// <param name="backupFolderPath">The directory to restore the replica from.</param>
         /// <param name="restorePolicy">The restore policy.</param>
         public RestoreDescription(string backupFolderPath, RestorePolicy restorePolicy)
         {
@@ -43,14 +35,15 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Gets the directory which will be used to restore the replica's state.
-        /// This parameter cannot be null, empty, or consist only of whitespace. 
-        /// UNC paths may also be provided.
+        /// Gets the directory used to restore the replica's state.
         /// </summary>
         /// <remarks>
-        /// Folder must at least contain one full backup.
-        /// In addition, it could include one or more incremental backups.
+        /// The folder must contain at least one full backup and may include one or more incremental backups.
+        /// UNC paths are supported.
         /// </remarks>
+        // TODO: Constructors do not validate backupFolderPath. The "non-null, non-empty, non-whitespace"
+        // contract is enforced only later by the restore pipeline. Consider validating here so the
+        // invariant matches the documentation, or document the deferred validation explicitly.
         public string BackupFolderPath
         {
             get
