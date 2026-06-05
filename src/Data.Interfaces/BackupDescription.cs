@@ -46,7 +46,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// The type of backup to perform.
+        /// Gets the kind of backup to perform.
         /// </summary>
         /// <value>
         /// The type of the backup.
