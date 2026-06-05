@@ -6,7 +6,7 @@
 namespace Microsoft.ServiceFabric.Data
 {
     /// <summary>
-    /// Represents the result of a Reliable Collections operation that may or may not return a value.
+    /// Represents the result of an operation that may or may not return a value.
     /// </summary>
     public struct ConditionalValue<TValue>
     {
