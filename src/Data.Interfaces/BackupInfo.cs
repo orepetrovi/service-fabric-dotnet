@@ -31,7 +31,7 @@ namespace Microsoft.ServiceFabric.Data
             this.ParentBackupId = Guid.Empty;
         }
 
-        // todo: this constructor accepts parentBackupId without validating it against option, allowing callers to construct an Incremental backup with Guid.Empty parent; reconcile constructor behavior with the documented ParentBackupId invariant
+        // todo: this constructor accepts parentBackupId without validating it against option, allowing callers to construct an Incremental backup with Guid.Empty parent or a Full backup with a non-empty parent; reconcile constructor behavior with the documented ParentBackupId invariant
         /// <summary>
         /// Initializes a new instance of the <see cref="BackupInfo"/> class.
         /// </summary>
