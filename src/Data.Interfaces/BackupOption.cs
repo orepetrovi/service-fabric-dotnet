@@ -16,8 +16,7 @@ namespace Microsoft.ServiceFabric.Data
         Full = 0,
 
         /// <summary>
-        /// Incremental backup of the replica. i.e. only the changes 
-        /// since the last full or incremental backup will be backed up.
+        /// An incremental backup of the replica containing only the changes since the last full or incremental backup.
         /// </summary>
         Incremental = 1,
     }
