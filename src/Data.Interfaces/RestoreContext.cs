@@ -7,6 +7,7 @@ namespace Microsoft.ServiceFabric.Data
 {
     using System;
     using System.Fabric;
+    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -48,60 +49,60 @@ namespace Microsoft.ServiceFabric.Data
         /// The input backup folder does not contain a full backup.
         /// For a backup folder to be restorable, it must contain exactly one full backup and any number of incremental backups.
         /// </exception>
-        /// <exception cref="System.ArgumentException">
+        /// <exception cref="ArgumentException">
         /// One of the arguments is not valid. For example, when restoring a Reliable Service if RestorePolicy is set to Safe, 
         /// but the input backup folder contains a version of the state that is older than the state maintained in the current replica.
         /// 
-        /// When restoring an Actor Service this exception is thrown if specified <see cref="Microsoft.ServiceFabric.Data.RestoreDescription.BackupFolderPath"/>
+        /// When restoring an Actor Service this exception is thrown if specified <see cref="RestoreDescription.BackupFolderPath"/>
         /// is empty.
         /// </exception>
-        /// <exception cref="System.IO.DirectoryNotFoundException">
+        /// <exception cref="DirectoryNotFoundException">
         /// The supplied restore directory does not exist.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">
+        /// <exception cref="FabricObjectClosedException">
         /// The replica is closing.
         /// </exception>
-        /// <exception cref="System.InvalidOperationException">
-        /// The current restore operation is not valid. For example, the <see cref="System.Fabric.ServicePartitionKind"/> 
+        /// <exception cref="InvalidOperationException">
+        /// The current restore operation is not valid. For example, the <see cref="ServicePartitionKind"/> 
         /// of the partition from where backup was taken is different than that of current partition being restored.
         /// </exception>
-        /// <exception cref="System.IO.FileNotFoundException">
+        /// <exception cref="FileNotFoundException">
         /// The expected backup files under the supplied restore directory are not found.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricException">
+        /// <exception cref="FabricException">
         /// Either the restore operation encountered an unexpected error or the backup files in the restore directory are not valid.
-        /// The <see cref="System.Fabric.FabricException.ErrorCode"/> property indicates the type of error that occurred.
+        /// The <see cref="FabricException.ErrorCode"/> property indicates the type of error that occurred.
         /// <list type="bullet">
         ///     <item>
-        ///         <term><see cref="System.Fabric.FabricErrorCode.InvalidBackup"/></term>
+        ///         <term><see cref="FabricErrorCode.InvalidBackup"/></term>
         ///         <description>
         ///         The backup files supplied in the restore directory are either missing or contain extra unexpected files.
         ///         </description>
         ///     </item>
         ///     <item>
-        ///         <term><see cref="System.Fabric.FabricErrorCode.InvalidRestoreData"/></term>
+        ///         <term><see cref="FabricErrorCode.InvalidRestoreData"/></term>
         ///         <description>
         ///         The metadata files (restore.dat) present in the restore directory are either corrupt or contain invalid information.
         ///         </description>
         ///     </item>
         ///     <item>
-        ///         <term><see cref="System.Fabric.FabricErrorCode.InvalidBackupChain"/></term>
+        ///         <term><see cref="FabricErrorCode.InvalidBackupChain"/></term>
         ///         <description>
         ///         The backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
         ///         supplied in the restore directory is broken. 
         ///         </description>
         ///     </item>
         ///     <item>
-        ///         <term><see cref="System.Fabric.FabricErrorCode.DuplicateBackups"/></term>
+        ///         <term><see cref="FabricErrorCode.DuplicateBackups"/></term>
         ///         <description>
         ///         The backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
         ///         supplied in the restore directory contains duplicate backups. 
         ///         </description>
         ///     </item>
         ///     <item>
-        ///         <term><see cref="System.Fabric.FabricErrorCode.RestoreSafeCheckFailed"/></term>
+        ///         <term><see cref="FabricErrorCode.RestoreSafeCheckFailed"/></term>
         ///         <description>
-        ///         <see cref="Microsoft.ServiceFabric.Data.RestorePolicy.Safe"/> is specified as part of <see cref="Microsoft.ServiceFabric.Data.RestoreDescription"/> and
+        ///         <see cref="RestorePolicy.Safe"/> is specified as part of <see cref="RestoreDescription"/> and
         ///         the backup provided for restore has older data than currently present in the service.
         ///         </description>
         ///     </item>
@@ -116,10 +117,10 @@ namespace Microsoft.ServiceFabric.Data
         /// Following exceptions are thrown by this API when invoked in Reliable Service:
         /// <list type="bullet">
         ///     <item>
-        ///         <description><see cref="System.Fabric.FabricMissingFullBackupException"/></description>
+        ///         <description><see cref="FabricMissingFullBackupException"/></description>
         ///     </item>
         ///     <item>
-        ///         <description><see cref="System.ArgumentException"/></description>
+        ///         <description><see cref="ArgumentException"/></description>
         ///     </item>
         /// </list>
         /// </para>
@@ -128,22 +129,22 @@ namespace Microsoft.ServiceFabric.Data
         /// default state provider for Reliable Actors):
         /// <list type="bullet">
         ///     <item>
-        ///         <description><see cref="System.ArgumentException"/></description>
+        ///         <description><see cref="ArgumentException"/></description>
         ///     </item>
         ///     <item>
-        ///         <description><see cref="System.IO.DirectoryNotFoundException"/></description>
+        ///         <description><see cref="DirectoryNotFoundException"/></description>
         ///     </item>
         ///     <item>
-        ///         <description><see cref="System.Fabric.FabricObjectClosedException"/></description>
+        ///         <description><see cref="FabricObjectClosedException"/></description>
         ///     </item>
         ///     <item>
-        ///         <description><see cref="System.InvalidOperationException"/></description>
+        ///         <description><see cref="InvalidOperationException"/></description>
         ///     </item>
         ///     <item>
-        ///         <description><see cref="System.IO.FileNotFoundException"/></description>
+        ///         <description><see cref="FileNotFoundException"/></description>
         ///     </item>
         ///     <item>
-        ///         <description><see cref="System.Fabric.FabricException"/></description>
+        ///         <description><see cref="FabricException"/></description>
         ///     </item>
         /// </list>
         /// </para>
