@@ -110,7 +110,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// This API must be called from the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>. Only one RestoreAsync API can be inflight per replica at any given point of time.
         /// 
-        /// Note that exceptions thrown by this API differ depending on of underlying state provider. The exceptions that are currently documented for
+        /// Note that exceptions thrown by this API differ depending on the underlying state provider. The exceptions that are currently documented for
         /// this API applies only to out-of-box state providers provided by Service Fabric for Reliable Services and Reliable Actors.
         /// <para>
         /// Following exceptions are thrown by this API when invoked in Reliable Service:
