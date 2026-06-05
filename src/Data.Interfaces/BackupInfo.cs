@@ -18,9 +18,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="BackupInfo"/> class without identifying the backup or its parent.
         /// </summary>
-        /// <param name="directory">The folder path that contains the backup.</param>
-        /// <param name="option">One of the enumeration values that specifies the kind of backup that was taken.</param>
-        /// <param name="version">The latest epoch and LSN included in the backup.</param>
+        /// <inheritdoc cref="BackupInfo(string, BackupOption, BackupVersion, BackupVersion, Guid, Guid)" path="/param[@name='directory']"/>
+        /// <inheritdoc cref="BackupInfo(string, BackupOption, BackupVersion, BackupVersion, Guid, Guid)" path="/param[@name='option']"/>
+        /// <inheritdoc cref="BackupInfo(string, BackupOption, BackupVersion, BackupVersion, Guid, Guid)" path="/param[@name='version']"/>
         public BackupInfo(string directory, BackupOption option, BackupVersion version)
         {
             this.Directory = directory;
