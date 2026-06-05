@@ -50,7 +50,7 @@ namespace Microsoft.ServiceFabric.Data
         /// For a backup folder to be restorable, it must contain exactly one full backup and any number of incremental backups.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// One of the arguments is not valid. For example, when restoring a Reliable Service if RestorePolicy is set to Safe, 
+        /// One of the arguments is not valid. For example, when restoring a Reliable Service if <see cref="RestoreDescription.Policy"/> is set to <see cref="RestorePolicy.Safe"/>, 
         /// but the input backup folder contains a version of the state that is older than the state maintained in the current replica.
         /// 
         /// When restoring an Actor Service this exception is thrown if specified <see cref="RestoreDescription.BackupFolderPath"/>
@@ -109,7 +109,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </list>
         /// </exception>
         /// <remarks>
-        /// This API must be called from the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>. Only one RestoreAsync API can be inflight per replica at any given point of time.
+        /// This API must be called from the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>. Only one call to <see cref="RestoreAsync(RestoreDescription, CancellationToken)"/> can be inflight per replica at any given point of time.
         /// 
         /// Note that exceptions thrown by this API differ depending on the underlying state provider. The exceptions that are currently documented for
         /// this API applies only to out-of-box state providers provided by Service Fabric for Reliable Services and Reliable Actors.
@@ -125,7 +125,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </list>
         /// </para>
         /// <para>
-        /// Following exceptions are thrown by this API when invoked in Actor Service with KvsActorStateProvider as its state provider (which is the
+        /// Following exceptions are thrown by this API when invoked in Actor Service with <c>KvsActorStateProvider</c> as its state provider (which is the
         /// default state provider for Reliable Actors):
         /// <list type="bullet">
         ///     <item>
