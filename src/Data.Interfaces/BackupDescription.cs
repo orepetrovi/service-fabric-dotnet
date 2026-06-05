@@ -35,7 +35,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <param name="option">One of the enumeration values that specifies the kind of backup to perform.</param>
         /// <param name="backupCallback">
-        /// Callback to be called when the backup folder has been created locally and is ready to be moved out of the node.
+        /// A callback invoked when the backup folder has been created locally and is ready to be moved out of the node.
         /// </param>
         public BackupDescription(BackupOption option, Func<BackupInfo, CancellationToken, Task<bool>> backupCallback)
         {
