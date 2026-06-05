@@ -58,11 +58,10 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets the callback to be called when the backup folder has been created locally and is ready to be moved out of the node.
         /// </summary>
         /// <remarks>
-        /// The <see langword="bool"/> returned by <see cref="BackupCallback"/> indicates whether the service was able to successfully move the backup folder to an external location.
+        /// When invoked, <see cref="BackupCallback"/> returns a <see cref="Task{TResult}"/> whose result indicates whether the service was able to successfully move the backup folder to an external location.
         /// If <see langword="false"/> is returned,
         /// <see cref="IStateProviderReplica.BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>
-        /// throws <see cref="InvalidOperationException"/> indicating <see cref="BackupCallback"/> returned <see langword="false"/>,
-        /// and the backup is marked as unsuccessful.
+        /// throws <see cref="InvalidOperationException"/>, and the backup is marked as unsuccessful.
         /// </remarks>
         public Func<BackupInfo, CancellationToken, Task<bool>> BackupCallback
         {
