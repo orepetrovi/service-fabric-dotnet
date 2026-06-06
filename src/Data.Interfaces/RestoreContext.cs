@@ -67,8 +67,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The expected backup files under the supplied restore directory are not found.
         /// </exception>
         /// <exception cref="FabricException">
-        /// Either the restore operation encountered an unexpected error or the backup files in the restore directory are not valid.
-        /// The <see cref="FabricException.ErrorCode"/> property indicates the type of error that occurred.
+        /// The restore operation failed. The <see cref="FabricException.ErrorCode"/> property indicates the specific reason.
         /// <list type="bullet">
         ///     <item>
         ///         <term><see cref="FabricErrorCode.InvalidBackup"/></term>
