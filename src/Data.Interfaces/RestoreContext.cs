@@ -107,7 +107,8 @@ namespace Microsoft.ServiceFabric.Data
         /// </exception>
         /// <remarks>
         /// <para>
-        /// This API must be called from the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>. Only one call to <see cref="RestoreAsync(RestoreDescription, CancellationToken)"/> can be in flight per replica at a time.
+        /// This API must be called from the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>.
+        /// Only one call to <see cref="RestoreAsync(RestoreDescription, CancellationToken)"/> can be in flight per replica at a time.
         /// </para>
         /// <para>
         /// Exceptions thrown by this API differ depending on the underlying state provider. The exceptions that are currently documented for
