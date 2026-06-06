@@ -46,11 +46,11 @@ namespace Microsoft.ServiceFabric.Data
         /// </exception>
         /// <exception cref="ArgumentException">
         /// <para>
-        /// For Reliable Services, this occurs when <see cref="RestoreDescription.Policy"/> is set to <see cref="RestorePolicy.Safe"/>
-        /// but the input backup folder contains a version older than the state maintained in the current replica.
+        /// The specified <see cref="RestoreDescription.BackupFolderPath"/> is <see langword="null"/>, empty, or contains only whitespace.
         /// </para>
         /// <para>
-        /// When restoring an Actor Service, the specified <see cref="RestoreDescription.BackupFolderPath"/> is empty.
+        /// For Reliable Services, this also occurs when <see cref="RestoreDescription.Policy"/> is set to <see cref="RestorePolicy.Safe"/>
+        /// but the input backup folder contains a version older than the state maintained in the current replica.
         /// </para>
         /// </exception>
         /// <exception cref="DirectoryNotFoundException">
