@@ -105,6 +105,11 @@ namespace Microsoft.ServiceFabric.Data
         ///     </item>
         /// </list>
         /// </exception>
+        /// <exception cref="NotImplementedException">
+        /// The actor service is backed by <c>VolatileActorStateProvider</c> or <c>NullActorStateProvider</c>, neither of which supports restore.
+        /// <c>NullActorStateProvider</c> is selected for actor types whose <c>StatePersistenceAttribute</c> is <c>StatePersistence.None</c> or absent;
+        /// <c>VolatileActorStateProvider</c> is selected for <c>StatePersistence.Volatile</c>.
+        /// </exception>
         /// <remarks>
         /// <para>
         /// This API must be called from the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>.
@@ -112,7 +117,10 @@ namespace Microsoft.ServiceFabric.Data
         /// </para>
         /// <para>
         /// Exceptions thrown by this API differ depending on the underlying state provider. The exceptions that are currently documented for
-        /// this API apply only to out-of-box state providers provided by Service Fabric for Reliable Services and Reliable Actors.
+        /// this API apply only to the out-of-box state providers that support restore: any Reliable Services state provider, the
+        /// <c>KvsActorStateProvider</c> used for actor types with <c>StatePersistence.Persisted</c> (on .NET Framework and on Windows .NET),
+        /// and the <c>ReliableCollectionsActorStateProvider</c> used for <c>StatePersistence.Persisted</c> on non-Windows .NET.
+        /// Restore is unsupported by <c>VolatileActorStateProvider</c> and <c>NullActorStateProvider</c>, both of which throw <see cref="NotImplementedException"/>.
         /// </para>
         /// <para>
         /// The following exceptions are thrown by this API when invoked in a Reliable Service:
@@ -126,8 +134,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </list>
         /// </para>
         /// <para>
-        /// The following exceptions are thrown by this API when invoked in an Actor Service with <c>KvsActorStateProvider</c> as its state provider (which is the
-        /// default state provider for Reliable Actors):
+        /// The following exceptions are thrown by this API when invoked in an Actor Service backed by <c>KvsActorStateProvider</c>:
         /// <list type="bullet">
         ///     <item>
         ///         <description><see cref="ArgumentException"/></description>
