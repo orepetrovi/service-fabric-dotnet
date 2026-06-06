@@ -21,14 +21,16 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="RestoreContext"/> struct.
         /// </summary>
-        // todo: stateProviderReplica is not validated; passing null (or using default(RestoreContext)) causes RestoreAsync to throw NullReferenceException instead of ArgumentNullException/InvalidOperationException
+        // todo: stateProviderReplica is not validated; passing null (or using default(RestoreContext)) causes
+        // RestoreAsync to throw NullReferenceException instead of ArgumentNullException/InvalidOperationException
         public RestoreContext(IStateProviderReplica stateProviderReplica)
         {
             this.stateProviderReplica = stateProviderReplica;
         }
 
         /// <inheritdoc cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
-        // todo: throws NullReferenceException when invoked on default(RestoreContext) or after passing null to the constructor; see TODO on the constructor
+        // todo: throws NullReferenceException when invoked on default(RestoreContext) or after passing null to the constructor;
+        // see TODO on the constructor
         public Task RestoreAsync(RestoreDescription restoreDescription)
         {
             return this.stateProviderReplica.RestoreAsync(
@@ -106,7 +108,8 @@ namespace Microsoft.ServiceFabric.Data
         /// </exception>
         /// <exception cref="NotImplementedException">
         /// The actor service is backed by <c>VolatileActorStateProvider</c> or <c>NullActorStateProvider</c>, neither of which supports restore.
-        /// <c>NullActorStateProvider</c> is selected for actor types whose <c>[StatePersistence]</c> attribute specifies <c>StatePersistence.None</c> or that omit the attribute entirely;
+        /// <c>NullActorStateProvider</c> is selected for actor types whose <c>[StatePersistence]</c> attribute specifies <c>StatePersistence.None</c>
+        /// or that omit the attribute entirely;
         /// <c>VolatileActorStateProvider</c> is selected for <c>StatePersistence.Volatile</c>.
         /// </exception>
         /// <remarks>
@@ -121,7 +124,8 @@ namespace Microsoft.ServiceFabric.Data
         /// and the <c>ReliableCollectionsActorStateProvider</c> used for <c>StatePersistence.Persisted</c> on non-Windows .NET.
         /// </para>
         /// </remarks>
-        // todo: throws NullReferenceException when invoked on default(RestoreContext) or after passing null to the constructor; see TODO on the constructor
+        // todo: throws NullReferenceException when invoked on default(RestoreContext) or after passing null to the constructor;
+        // see TODO on the constructor
         public Task RestoreAsync(RestoreDescription restoreDescription, CancellationToken cancellationToken)
         {
             return this.stateProviderReplica.RestoreAsync(
