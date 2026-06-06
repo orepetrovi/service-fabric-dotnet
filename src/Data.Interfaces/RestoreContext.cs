@@ -119,7 +119,6 @@ namespace Microsoft.ServiceFabric.Data
         /// this API apply only to the out-of-box state providers that support restore: any Reliable Services state provider, the
         /// <c>KvsActorStateProvider</c> used for actor types with <c>StatePersistence.Persisted</c> (on .NET Framework and on Windows .NET),
         /// and the <c>ReliableCollectionsActorStateProvider</c> used for <c>StatePersistence.Persisted</c> on non-Windows .NET.
-        /// Restore is unsupported by <c>VolatileActorStateProvider</c> and <c>NullActorStateProvider</c>, both of which throw <see cref="NotImplementedException"/>.
         /// </para>
         /// </remarks>
         // todo: throws NullReferenceException when invoked on default(RestoreContext) or after passing null to the constructor; see TODO on the constructor
