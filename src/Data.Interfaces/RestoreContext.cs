@@ -122,40 +122,6 @@ namespace Microsoft.ServiceFabric.Data
         /// and the <c>ReliableCollectionsActorStateProvider</c> used for <c>StatePersistence.Persisted</c> on non-Windows .NET.
         /// Restore is unsupported by <c>VolatileActorStateProvider</c> and <c>NullActorStateProvider</c>, both of which throw <see cref="NotImplementedException"/>.
         /// </para>
-        /// <para>
-        /// The following exceptions are thrown by this API when invoked in a Reliable Service:
-        /// <list type="bullet">
-        ///     <item>
-        ///         <description><see cref="FabricMissingFullBackupException"/></description>
-        ///     </item>
-        ///     <item>
-        ///         <description><see cref="ArgumentException"/></description>
-        ///     </item>
-        /// </list>
-        /// </para>
-        /// <para>
-        /// The following exceptions are thrown by this API when invoked in an Actor Service backed by <c>KvsActorStateProvider</c>:
-        /// <list type="bullet">
-        ///     <item>
-        ///         <description><see cref="ArgumentException"/></description>
-        ///     </item>
-        ///     <item>
-        ///         <description><see cref="DirectoryNotFoundException"/></description>
-        ///     </item>
-        ///     <item>
-        ///         <description><see cref="FabricObjectClosedException"/></description>
-        ///     </item>
-        ///     <item>
-        ///         <description><see cref="InvalidOperationException"/></description>
-        ///     </item>
-        ///     <item>
-        ///         <description><see cref="FileNotFoundException"/></description>
-        ///     </item>
-        ///     <item>
-        ///         <description><see cref="FabricException"/></description>
-        ///     </item>
-        /// </list>
-        /// </para>
         /// </remarks>
         // todo: throws NullReferenceException when invoked on default(RestoreContext) or after passing null to the constructor; see TODO on the constructor
         public Task RestoreAsync(RestoreDescription restoreDescription, CancellationToken cancellationToken)
