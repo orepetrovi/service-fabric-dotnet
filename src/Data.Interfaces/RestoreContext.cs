@@ -106,7 +106,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </exception>
         /// <exception cref="NotImplementedException">
         /// The actor service is backed by <c>VolatileActorStateProvider</c> or <c>NullActorStateProvider</c>, neither of which supports restore.
-        /// <c>NullActorStateProvider</c> is selected for actor types whose <c>StatePersistenceAttribute</c> is <c>StatePersistence.None</c> or absent;
+        /// <c>NullActorStateProvider</c> is selected for actor types whose <c>[StatePersistence]</c> attribute specifies <c>StatePersistence.None</c> or that omit the attribute entirely;
         /// <c>VolatileActorStateProvider</c> is selected for <c>StatePersistence.Volatile</c>.
         /// </exception>
         /// <remarks>
