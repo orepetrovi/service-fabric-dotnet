@@ -474,6 +474,13 @@ public abstract class FabricTransportClientTest
                     It.IsAny<uint>(),
                     It.IsAny<IFabricAsyncOperationCallback>()),
                 Times.Once);
+            Mock.Get(nativeClient).Verify(
+                _ => _.BeginRequestWithId(
+                    It.IsAny<Guid>(),
+                    It.IsAny<IFabricTransportMessage>(),
+                    It.IsAny<uint>(),
+                    It.IsAny<IFabricAsyncOperationCallback>()),
+                Times.Never);
             Mock.Get(nativeClient).Verify(_ => _.EndRequest(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
             Mock.Get(nativeClient).Verify(_ => _.EndRequestWithId(It.IsAny<IFabricAsyncOperationContext>()), Times.Never);
             var wrapper = (NativeFabricTransportMessage)capturedNativeMessage;
@@ -512,6 +519,12 @@ public abstract class FabricTransportClientTest
                     It.IsAny<uint>(),
                     It.IsAny<IFabricAsyncOperationCallback>()),
                 Times.Once);
+            Mock.Get(nativeClient).Verify(
+                _ => _.BeginRequest(
+                    It.IsAny<IFabricTransportMessage>(),
+                    It.IsAny<uint>(),
+                    It.IsAny<IFabricAsyncOperationCallback>()),
+                Times.Never);
             Mock.Get(nativeClient).Verify(_ => _.EndRequestWithId(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
             Mock.Get(nativeClient).Verify(_ => _.EndRequest(It.IsAny<IFabricAsyncOperationContext>()), Times.Never);
             var wrapper = (NativeFabricTransportMessage)capturedNativeMessage;
