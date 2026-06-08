@@ -397,10 +397,6 @@ namespace Microsoft.ServiceFabric.Data
         /// Returns a value that indicates whether the specified object is a <see cref="ReliableStateManagerReplicatorSettings"/>
         /// of exactly the same type whose V2 settings match the current instance.
         /// </summary>
-        /// <returns>
-        /// <see langword="true"/> if <paramref name="obj"/> is a <see cref="ReliableStateManagerReplicatorSettings"/> of
-        /// exactly the same type whose V2 settings match the current instance; otherwise, <see langword="false"/>.
-        /// </returns>
         public override bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != GetType())
