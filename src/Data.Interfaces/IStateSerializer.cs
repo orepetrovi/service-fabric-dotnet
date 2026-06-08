@@ -27,34 +27,34 @@ namespace Microsoft.ServiceFabric.Data
     ///
     /// class OrderSerializer : IStateSerializer&lt;Order&gt;
     /// {
-    ///     public void Write(Order value, BinaryWriter writer)
+    ///     public void Write(Order value, BinaryWriter binaryWriter)
     ///     {
-    ///         writer.Write(value.Warehouse);
-    ///         writer.Write(value.District);
-    ///         writer.Write(value.Customer);
-    ///         writer.Write(value.OrderNumber);
+    ///         binaryWriter.Write(value.Warehouse);
+    ///         binaryWriter.Write(value.District);
+    ///         binaryWriter.Write(value.Customer);
+    ///         binaryWriter.Write(value.OrderNumber);
     ///     }
     ///
-    ///     public Order Read(BinaryReader reader)
+    ///     public Order Read(BinaryReader binaryReader)
     ///     {
     ///         Order value = new Order();
     ///
-    ///         value.Warehouse = reader.ReadByte();
-    ///         value.District = reader.ReadInt16();
-    ///         value.Customer = reader.ReadInt32();
-    ///         value.OrderNumber = reader.ReadInt64();
+    ///         value.Warehouse = binaryReader.ReadByte();
+    ///         value.District = binaryReader.ReadInt16();
+    ///         value.Customer = binaryReader.ReadInt32();
+    ///         value.OrderNumber = binaryReader.ReadInt64();
     ///
     ///         return value;
     ///     }
     ///
-    ///     public void Write(Order currentValue, Order newValue, BinaryWriter writer)
+    ///     public void Write(Order baseValue, Order targetValue, BinaryWriter binaryWriter)
     ///     {
-    ///         this.Write(newValue, writer);
+    ///         this.Write(targetValue, binaryWriter);
     ///     }
     ///
-    ///     public Order Read(Order baseValue, BinaryReader reader)
+    ///     public Order Read(Order baseValue, BinaryReader binaryReader)
     ///     {
-    ///         return this.Read(reader);
+    ///         return this.Read(binaryReader);
     ///     }
     /// }
     /// </code>
