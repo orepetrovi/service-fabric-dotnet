@@ -179,16 +179,22 @@ namespace Microsoft.ServiceFabric.Data
         public bool? OptimizeForLocalSSD { get; set; }
 
         /// <summary>
-        /// Gets or sets a flag, when true indicates the log should optimize in a way where less disk space is used for the log at the cost of IO performance. If false, the log will use more disk space but have better IO performance.
-        /// Default value is true.
+        /// Gets or sets a value that indicates whether the log should be optimized to use less disk space at the cost of IO performance.
         /// </summary>
+        /// <value>
+        /// <see langword="true"/> if the log uses less disk space at the cost of IO performance; otherwise, <see langword="false"/>, in which case the log uses more disk space but has better IO performance. The default is <see langword="true"/>.
+        /// </value>
         public bool? OptimizeLogForLowerDiskUsage { get; set; }
 
         /// <summary>
-        /// Gets or sets a flag, when true indicates the secondary replicator should clear the in-memory queue after acknowledging the operations to the primary (After the operations are flushed to disk).
-        /// Default value is false.
-        /// Settings this to "TRUE" can result in additional disk reads on the new primary, while catching up replicas after a failover.
+        /// Gets or sets a value that indicates whether the secondary replicator should clear the in-memory queue after acknowledging operations to the primary.
         /// </summary>
+        /// <value>
+        /// <see langword="true"/> if the secondary replicator clears the in-memory queue after acknowledging operations (after they are flushed to disk); otherwise, <see langword="false"/>. The default is <see langword="false"/>.
+        /// </value>
+        /// <remarks>
+        /// Setting this to <see langword="true"/> can result in additional disk reads on the new primary when catching up replicas after a failover.
+        /// </remarks>
         public bool? SecondaryClearAcknowledgedOperations { get; set; }
 
         /// <summary>
