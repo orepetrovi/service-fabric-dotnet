@@ -207,7 +207,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets the maximum stream size.
         /// </summary>
         /// <remarks>
-        /// The value is specified in MB. This property is deprecated.
+        /// This property is deprecated.
         /// </remarks>
         public int? MaxStreamSizeInMB { get; set; }
 
@@ -253,9 +253,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <value>
         /// The default is 50.
         /// </value>
-        /// <remarks>
-        /// The value is specified in MB.
-        /// </remarks>
         public int? CheckpointThresholdInMB { get; set; }
 
         /// <summary>
@@ -266,7 +263,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </value>
         /// <remarks>
         /// An incremental backup request fails when the backup logs it generates would cause the total amount of logs accumulated
-        /// since the last full backup to exceed this value. In that case, take a full backup. The value is specified in MB.
+        /// since the last full backup to exceed this value. In that case, take a full backup.
         /// </remarks>
         public int? MaxAccumulatedBackupLogSizeInMB { get; set; }
 
@@ -318,8 +315,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 0.
         /// </value>
         /// <remarks>
-        /// A truncation is not initiated if it would reduce the size of the log below this value. The value is specified
-        /// in MB.
+        /// A truncation is not initiated if it would reduce the size of the log below this value.
         /// </remarks>
         public int? MinLogSizeInMB { get; set; }
 
