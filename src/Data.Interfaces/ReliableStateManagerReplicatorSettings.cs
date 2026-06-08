@@ -28,6 +28,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <value>
         /// The default is 5 milliseconds.
         /// </value>
+        // todo: documented default of 5 milliseconds disagrees with the public Reliable Services configuration documentation (https://learn.microsoft.com/azure/service-fabric/service-fabric-reliable-services-configuration#replicator-configuration), which lists the BatchAcknowledgementInterval default as 0.015 seconds (15 milliseconds); the current runtime contract cannot be verified from this repository
         public TimeSpan? BatchAcknowledgementInterval { get; set; }
 
         /// <summary>
