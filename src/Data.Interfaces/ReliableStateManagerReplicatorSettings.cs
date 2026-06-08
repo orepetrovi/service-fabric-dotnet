@@ -267,13 +267,13 @@ namespace Microsoft.ServiceFabric.Data
 #endif
 
         /// <summary>
-        /// Determines whether the specified ReplicatorSettings is equal to the current object.
+        /// Determines whether the specified object is a <see cref="ReliableStateManagerReplicatorSettings"/> with equivalent V2 settings.
         /// </summary>
         /// <param name="obj">
         /// Object to check against.
         /// </param>
         /// <returns>
-        /// The <see cref="bool"/>.
+        /// <see langword="true"/> if <paramref name="obj"/> is a <see cref="ReliableStateManagerReplicatorSettings"/> whose V2 settings match the current instance; otherwise, <see langword="false"/>.
         /// </returns>
         public override bool Equals(object obj)
         {
