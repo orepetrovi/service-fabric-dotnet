@@ -79,9 +79,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </remarks>
         void Write(T value, BinaryWriter binaryWriter);
 
-        /// <summary>
-        /// Returns a value of type <typeparamref name="T"/> deserialized from the given <see cref="BinaryReader"/>.
-        /// </summary>
+        /// <inheritdoc cref="Read(BinaryReader)"/>
         /// <remarks>
         /// <para>
         /// When accessing the <see cref="BinaryReader"/> base stream, care must be taken when moving the position in the stream.
@@ -94,9 +92,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </remarks>
         T Read(T baseValue, BinaryReader binaryReader);
 
-        /// <summary>
-        /// Serializes a value and writes it to the given <see cref="BinaryWriter"/>.
-        /// </summary>
+        /// <inheritdoc cref="Write(T, BinaryWriter)"/>
         /// <remarks>
         /// <para>
         /// When accessing the <see cref="BinaryWriter"/> base stream, care must be taken when moving the position in the stream.
