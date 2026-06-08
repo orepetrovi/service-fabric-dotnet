@@ -33,7 +33,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Initializes a new instance of the <see cref="QueueFullException"/> class.
         /// </summary>
-        /// <param name="msg">The message that describes the error.</param>
         public QueueFullException(string msg)
             : base(msg)
         {
@@ -42,8 +41,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Initializes a new instance of the <see cref="QueueFullException"/> class.
         /// </summary>
-        /// <param name="msg">The error message that explains the reason for the exception.</param>
-        /// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
         public QueueFullException(string msg, Exception innerException)
             : base(msg, innerException)
         {
