@@ -103,6 +103,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// The value is specified in bytes.
         /// </remarks>
+        // todo: documented default of 50 MB does not state the exact byte value the runtime uses; the public Reliable
+        // Services configuration documentation (https://learn.microsoft.com/azure/service-fabric/service-fabric-reliable-services-configuration#replicator-configuration)
+        // does not list MaxReplicationMessageSize, and the current runtime contract cannot be verified from this repository
         public long? MaxReplicationMessageSize { get; set; }
 
         /// <summary>
