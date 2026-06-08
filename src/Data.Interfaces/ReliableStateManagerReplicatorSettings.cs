@@ -28,7 +28,10 @@ namespace Microsoft.ServiceFabric.Data
         /// <value>
         /// The default is 5 milliseconds.
         /// </value>
-        // todo: documented default of 5 milliseconds disagrees with the public Reliable Services configuration documentation (https://learn.microsoft.com/azure/service-fabric/service-fabric-reliable-services-configuration#replicator-configuration), which lists the BatchAcknowledgementInterval default as 0.015 seconds (15 milliseconds); the current runtime contract cannot be verified from this repository
+        // todo: documented default of 5 milliseconds disagrees with the public Reliable Services configuration documentation
+        // (https://learn.microsoft.com/azure/service-fabric/service-fabric-reliable-services-configuration#replicator-configuration),
+        // which lists the BatchAcknowledgementInterval default as 0.015 seconds (15 milliseconds); the current runtime contract
+        // cannot be verified from this repository
         public TimeSpan? BatchAcknowledgementInterval { get; set; }
 
         /// <summary>
@@ -243,7 +246,8 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 800.
         /// </value>
         /// <remarks>
-        /// An incremental backup request fails when the backup logs it generates would cause the total amount of logs accumulated since the last full backup to exceed this value. In that case, take a full backup. The value is specified in MB.
+        /// An incremental backup request fails when the backup logs it generates would cause the total amount of logs accumulated
+        /// since the last full backup to exceed this value. In that case, take a full backup. The value is specified in MB.
         /// </remarks>
         public int? MaxAccumulatedBackupLogSizeInMB { get; set; }
 
@@ -267,7 +271,8 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets a value that indicates whether the secondary replicator should clear the in-memory queue after acknowledging operations to the primary.
         /// </summary>
         /// <value>
-        /// <see langword="true"/> if the secondary replicator clears the in-memory queue after acknowledging operations (after they are flushed to disk); otherwise, <see langword="false"/>. The default is <see langword="false"/>.
+        /// <see langword="true"/> if the secondary replicator clears the in-memory queue after acknowledging operations
+        /// (after they are flushed to disk); otherwise, <see langword="false"/>. The default is <see langword="false"/>.
         /// </value>
         /// <remarks>
         /// Setting this to <see langword="true"/> can result in additional disk reads on the new primary when catching up replicas after a failover.
