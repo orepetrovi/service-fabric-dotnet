@@ -397,9 +397,6 @@ namespace Microsoft.ServiceFabric.Data
         /// Returns a value that indicates whether the specified object is a <see cref="ReliableStateManagerReplicatorSettings"/>
         /// of exactly the same type whose V2 settings match the current instance.
         /// </summary>
-        /// <param name="obj">
-        /// The object to compare with the current instance.
-        /// </param>
         /// <returns>
         /// <see langword="true"/> if <paramref name="obj"/> is a <see cref="ReliableStateManagerReplicatorSettings"/> of
         /// exactly the same type whose V2 settings match the current instance; otherwise, <see langword="false"/>.
