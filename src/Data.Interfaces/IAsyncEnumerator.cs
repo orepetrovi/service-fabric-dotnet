@@ -31,10 +31,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Returns a value that indicates whether the enumerator was successfully advanced to the next element of the sequence.
         /// </summary>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>
-        /// A task whose result is <see langword="true"/> if the enumerator was advanced to the next element;
-        /// <see langword="false"/> if the enumerator has passed the end of the sequence.
-        /// </returns>
+        /// <returns><see langword="true"/> if the enumerator was advanced to the next element; otherwise, <see langword="false"/>.</returns>
         /// <exception cref="InvalidOperationException">The underlying collection was modified after the enumerator was created.</exception>
         Task<bool> MoveNextAsync(CancellationToken cancellationToken);
 
