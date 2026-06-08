@@ -48,7 +48,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is <c>"localhost:0"</c>, which picks a dynamic port number at runtime.
         /// </value>
         /// <remarks>
-        /// The <c>{ip}</c> part of the listen address can be obtained from <see cref="System.Fabric.CodePackageActivationContext.ServiceListenAddress"/>.
+        /// The <c>{ip}</c> part of the listen address can be obtained from <see cref="CodePackageActivationContext.ServiceListenAddress"/>.
         /// </remarks>
         public string ReplicatorListenAddress { get; set; }
 
@@ -59,7 +59,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is <c>"localhost:0"</c>, which picks a dynamic port number at runtime.
         /// </value>
         /// <remarks>
-        /// The <c>{ip}</c> part of the publish address can be obtained from <see cref="System.Fabric.CodePackageActivationContext.ServicePublishAddress"/>.
+        /// The <c>{ip}</c> part of the publish address can be obtained from <see cref="CodePackageActivationContext.ServicePublishAddress"/>.
         /// </remarks>
         public string ReplicatorPublishAddress { get; set; }
 
