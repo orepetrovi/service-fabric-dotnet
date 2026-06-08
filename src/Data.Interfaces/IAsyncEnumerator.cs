@@ -23,7 +23,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <remarks>
         /// The value is undefined before the first call to <see cref="MoveNextAsync(CancellationToken)"/>
-        /// and after a call returns <see langword="false"/>.
+        /// and after a <see cref="MoveNextAsync(CancellationToken)"/> operation completes with <see langword="false"/>.
         /// </remarks>
         T Current { get; }
 
