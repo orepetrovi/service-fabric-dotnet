@@ -85,9 +85,12 @@ namespace Microsoft.ServiceFabric.Data
         public string ReplicatorSettingsSectionName { get; private set; }
 
         /// <summary>
-        /// Gets the delegate which will be called when custom serializers can be added.  
-        /// When called, specify custom serializers via <see cref="IReliableStateManager.TryAddStateSerializer{T}(IStateSerializer{T})"/>
+        /// Gets the callback invoked when custom state serializers can be registered.
         /// </summary>
+        /// <remarks>
+        /// When invoked, the callback should register custom serializers via
+        /// <see cref="IReliableStateManager.TryAddStateSerializer{T}(IStateSerializer{T})"/>.
+        /// </remarks>
         public Func<Task> OnInitializeStateSerializersEvent { get; private set; }
     }
 }
