@@ -198,7 +198,7 @@ namespace Microsoft.ServiceFabric.Data
         public bool? SecondaryClearAcknowledgedOperations { get; set; }
 
         /// <summary>
-        /// Sets the interval after which the replicator sends a warning health report that the API is slow and is taking longer than expected duration.
+        /// Gets or sets the interval after which the replicator sends a warning health report that the API is slow and is taking longer than expected duration.
         /// Default value is 5 minutes.
         /// </summary>
         public TimeSpan? SlowApiMonitoringDuration { get; set; }
