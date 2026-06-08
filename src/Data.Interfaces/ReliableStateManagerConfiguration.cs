@@ -9,7 +9,7 @@ namespace Microsoft.ServiceFabric.Data
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Configuration object used to create ReliableStateManager.
+    /// Represents the configuration used to create an <see cref="IReliableStateManager"/>.
     /// </summary>
     public class ReliableStateManagerConfiguration
     {
