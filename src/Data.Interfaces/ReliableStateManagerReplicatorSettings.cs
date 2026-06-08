@@ -16,35 +16,51 @@ namespace Microsoft.ServiceFabric.Data
     {
         /// <summary>
         /// Gets or sets how long the replicator waits after it transmits a message from the primary to the secondary for the secondary to acknowledge that it has received the message.
-        /// The default is 5 seconds.
         /// </summary>
+        /// <value>
+        /// The default is 5 seconds.
+        /// </value>
         public TimeSpan? RetryInterval { get; set; }
 
         /// <summary>
         /// Gets or sets the amount of time that the replicator waits after receiving an operation before sending back an acknowledgment.
-        /// The default is 5 milliseconds.
         /// </summary>
+        /// <value>
+        /// The default is 5 milliseconds.
+        /// </value>
         public TimeSpan? BatchAcknowledgementInterval { get; set; }
 
         /// <summary>
-        /// Gets or sets the address in {ip}:{port} format that this replicator will use when communicating with other replicators.
-        /// The default is "localhost:0", which picks a dynamic port number in runtime.
-        /// If replicator is running inside a container, you should try setting up <see cref="ReplicatorListenAddress" /> and <see cref="ReplicatorPublishAddress" />.
+        /// Gets or sets the address in <c>{ip}:{port}</c> format that this replicator uses when communicating with other replicators.
         /// </summary>
+        /// <value>
+        /// The default is <c>"localhost:0"</c>, which picks a dynamic port number at runtime.
+        /// </value>
+        /// <remarks>
+        /// If the replicator runs inside a container, set <see cref="ReplicatorListenAddress"/> and <see cref="ReplicatorPublishAddress"/> instead.
+        /// </remarks>
         public string ReplicatorAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets the address in {ip}:{port} format that this replicator will use to receive information from other replicators.
-        /// The default is "localhost:0", which picks a dynamic port number in runtime.
-        /// {ip} part of the listen address can be obtained from <see cref="System.Fabric.CodePackageActivationContext.ServiceListenAddress" />.
+        /// Gets or sets the address in <c>{ip}:{port}</c> format that this replicator uses to receive information from other replicators.
         /// </summary>
+        /// <value>
+        /// The default is <c>"localhost:0"</c>, which picks a dynamic port number at runtime.
+        /// </value>
+        /// <remarks>
+        /// The <c>{ip}</c> part of the listen address can be obtained from <see cref="System.Fabric.CodePackageActivationContext.ServiceListenAddress"/>.
+        /// </remarks>
         public string ReplicatorListenAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets the address in {ip}:{port} format that this replicator will use to send information to other replicators.
-        /// The default is "localhost:0", which picks a dynamic port number in runtime.
-        /// {ip} part of the publish address can be obtained from <see cref="System.Fabric.CodePackageActivationContext.ServicePublishAddress" />.
+        /// Gets or sets the address in <c>{ip}:{port}</c> format that this replicator uses to send information to other replicators.
         /// </summary>
+        /// <value>
+        /// The default is <c>"localhost:0"</c>, which picks a dynamic port number at runtime.
+        /// </value>
+        /// <remarks>
+        /// The <c>{ip}</c> part of the publish address can be obtained from <see cref="System.Fabric.CodePackageActivationContext.ServicePublishAddress"/>.
+        /// </remarks>
         public string ReplicatorPublishAddress { get; set; }
 
         /// <summary>
@@ -53,129 +69,189 @@ namespace Microsoft.ServiceFabric.Data
         public SecurityCredentials SecurityCredentials { get; set; }
 
         /// <summary>
-        /// Gets or sets the initial size of the copy operation queue inside the replicator, which contains copy operations.
-        /// The default is 64.
-        /// The value is the number of operations in the copy operation queue. Must be a power of 2.
+        /// Gets or sets the initial size of the copy operation queue inside the replicator.
         /// </summary>
+        /// <value>
+        /// The default is 64.
+        /// </value>
+        /// <remarks>
+        /// The value is the number of operations in the copy operation queue and must be a power of 2.
+        /// </remarks>
         public long? InitialCopyQueueSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum size of the copy operation queue inside replicator, which contains copy operations.
-        /// The default is 1024.
-        /// The value is the max number of operations in the copy operation queue. Must be a power of 2.
+        /// Gets or sets the maximum size of the copy operation queue inside the replicator.
         /// </summary>
+        /// <value>
+        /// The default is 1024.
+        /// </value>
+        /// <remarks>
+        /// The value is the maximum number of operations in the copy operation queue and must be a power of 2.
+        /// </remarks>
         public long? MaxCopyQueueSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the max replication message size.
-        /// The default is 50MB.
-        /// The unit is Bytes.
+        /// Gets or sets the maximum replication message size.
         /// </summary>
+        /// <value>
+        /// The default is 50 MB.
+        /// </value>
+        /// <remarks>
+        /// The value is specified in bytes.
+        /// </remarks>
         public long? MaxReplicationMessageSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the initial primary replication queue size.
-        /// The default is 64.
-        /// The value is the number of operations in the primary replication queue. Must be a power of 2.
+        /// Gets or sets the initial size of the primary replication queue.
         /// </summary>
+        /// <value>
+        /// The default is 64.
+        /// </value>
+        /// <remarks>
+        /// The value is the number of operations in the primary replication queue and must be a power of 2.
+        /// </remarks>
         public long? InitialPrimaryReplicationQueueSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the max primary replication queue size.
-        /// The default is 8192.
-        /// The value is the max number of operations in the primary replication queue. Must be a power of 2.
+        /// Gets or sets the maximum size of the primary replication queue.
         /// </summary>
+        /// <value>
+        /// The default is 8192.
+        /// </value>
+        /// <remarks>
+        /// The value is the maximum number of operations in the primary replication queue and must be a power of 2.
+        /// </remarks>
         public long? MaxPrimaryReplicationQueueSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the max primary replication queue memory size.
-        /// The default is 0, which implies there is no memory limitation.
-        /// The unit is Bytes.
+        /// Gets or sets the maximum memory size of the primary replication queue.
         /// </summary>
+        /// <value>
+        /// The default is 0, which means there is no memory limit.
+        /// </value>
+        /// <remarks>
+        /// The value is specified in bytes.
+        /// </remarks>
         public long? MaxPrimaryReplicationQueueMemorySize { get; set; }
 
         /// <summary>
-        /// Gets or sets the initial secondary replication queue size.
-        /// The default is 64.
-        /// The value is the number of operations in the secondary replication queue. Must be a power of 2.
+        /// Gets or sets the initial size of the secondary replication queue.
         /// </summary>
+        /// <value>
+        /// The default is 64.
+        /// </value>
+        /// <remarks>
+        /// The value is the number of operations in the secondary replication queue and must be a power of 2.
+        /// </remarks>
         public long? InitialSecondaryReplicationQueueSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the max secondary replication queue size.
-        /// The default is 16384.
-        /// The value is the max number of operations in the secondary replication queue. Must be a power of 2.
+        /// Gets or sets the maximum size of the secondary replication queue.
         /// </summary>
+        /// <value>
+        /// The default is 16384.
+        /// </value>
+        /// <remarks>
+        /// The value is the maximum number of operations in the secondary replication queue and must be a power of 2.
+        /// </remarks>
         public long? MaxSecondaryReplicationQueueSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the max secondary replication queue memory size.
-        /// The default is 0, which implies there is no memory limitation.
-        /// The unit is Bytes.
+        /// Gets or sets the maximum memory size of the secondary replication queue.
         /// </summary>
+        /// <value>
+        /// The default is 0, which means there is no memory limit.
+        /// </value>
+        /// <remarks>
+        /// The value is specified in bytes.
+        /// </remarks>
         public long? MaxSecondaryReplicationQueueMemorySize { get; set; }
 
         /// <summary>
-        /// Gets or sets the GUID identifier for the log container that is shared by a number of replicas on the windows fabric node including this one.
-        /// The default is "" which causes the replicator to use the global shared log for the node.
+        /// Gets or sets the GUID identifier for the log container shared by a number of replicas on the node including this one.
         /// </summary>
+        /// <value>
+        /// The default is an empty string, which causes the replicator to use the global shared log for the node.
+        /// </value>
         public string SharedLogId { get; set; }
 
         /// <summary>
-        /// Gets or sets the full pathname to the log container that is shared by a number of replicas on the node including this one.
-        /// The default is "" which causes the replicator to use the global shared log for the node.
+        /// Gets or sets the full pathname to the log container shared by a number of replicas on the node including this one.
         /// </summary>
+        /// <value>
+        /// The default is an empty string, which causes the replicator to use the global shared log for the node.
+        /// </value>
         public string SharedLogPath { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum stream size, in MB. This property is deprecated.
+        /// Gets or sets the maximum stream size.
         /// </summary>
+        /// <remarks>
+        /// The value is specified in MB. This property is deprecated.
+        /// </remarks>
         public int? MaxStreamSizeInMB { get; set; }
 
         /// <summary>
-        /// Gets or sets the amount of extra persistent storage space reserved for the replicator specified in kilobytes that is associated with this replica. This
-        /// value must be a multiple of 4.
-        /// The default is 4.
-        /// The unit is KB.
+        /// Gets or sets the amount of extra persistent storage space reserved for the replicator associated with this replica.
         /// </summary>
+        /// <value>
+        /// The default is 4.
+        /// </value>
+        /// <remarks>
+        /// The value is specified in KB and must be a multiple of 4.
+        /// </remarks>
         public int? MaxMetadataSizeInKB { get; set; }
 
         /// <summary>
-        /// Gets or sets the largest record size which the replicator may write specified in kilobytes for the log that is associated with this replica. This
-        /// value must be a multiple of 4 and greater than or equal to 128.
-        /// The default is 1024.
-        /// The unit is KB.
+        /// Gets or sets the largest record size that the replicator may write for the log associated with this replica.
         /// </summary>
+        /// <value>
+        /// The default is 1024.
+        /// </value>
+        /// <remarks>
+        /// The value is specified in KB and must be a multiple of 4 and greater than or equal to 128.
+        /// </remarks>
         public int? MaxRecordSizeInKB { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum write queue depth that the core logger can use as specified in kilobytes for the log that is associated with this replica. This
-        /// value is the maximum number of bytes that can be outstanding during core logger updates. It may be 0 for the core logger
-        /// to compute an appropriate value or a multiple of 4.
-        /// The default is 0.
-        /// The unit is KB.
+        /// Gets or sets the maximum write queue depth that the core logger can use for the log associated with this replica.
         /// </summary>
+        /// <value>
+        /// The default is 0.
+        /// </value>
+        /// <remarks>
+        /// The value is the maximum number of bytes that can be outstanding during core logger updates. It may be 0 to let the core logger compute an appropriate value or a multiple of 4. The value is specified in KB.
+        /// </remarks>
         public int? MaxWriteQueueDepthInKB { get; set; }
 
         /// <summary>
-        /// Gets or sets the checkpoint threshold. A checkpoint will be initiated when the log usage exceeds this value.
-        /// The default is 50.
-        /// The unit is MB.
+        /// Gets or sets the log usage threshold above which a checkpoint is initiated.
         /// </summary>
+        /// <value>
+        /// The default is 50.
+        /// </value>
+        /// <remarks>
+        /// The value is specified in MB.
+        /// </remarks>
         public int? CheckpointThresholdInMB { get; set; }
 
         /// <summary>
-        /// Gets or sets the max size for an accumulated backup log across backups.
-        /// An incremental backup requests will fail if the backup logs generated by the request causes the total amount of logs accumulated including the last full backup to be greater than MaxAccumulatedBackupLogSizeInMB.
-        /// In such cases, user is required to take a full backup.
-        /// The default is 800.
-        /// The unit is MB.
+        /// Gets or sets the maximum size for an accumulated backup log across backups.
         /// </summary>
+        /// <value>
+        /// The default is 800.
+        /// </value>
+        /// <remarks>
+        /// An incremental backup request fails when the backup logs it generates would cause the total amount of logs accumulated since the last full backup to exceed this value. In that case, take a full backup. The value is specified in MB.
+        /// </remarks>
         public int? MaxAccumulatedBackupLogSizeInMB { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the replicator is optimized for local SSD storage. This property is deprecated.
+        /// Gets or sets a value that indicates whether the replicator is optimized for local SSD storage.
         /// </summary>
+        /// <remarks>
+        /// This property is deprecated.
+        /// </remarks>
         public bool? OptimizeForLocalSSD { get; set; }
 
         /// <summary>
@@ -198,27 +274,44 @@ namespace Microsoft.ServiceFabric.Data
         public bool? SecondaryClearAcknowledgedOperations { get; set; }
 
         /// <summary>
-        /// Gets or sets the interval after which the replicator sends a warning health report that the API is slow and is taking longer than expected duration.
-        /// The default is 5 minutes.
+        /// Gets or sets the interval after which the replicator sends a warning health report indicating that the API is slow and taking longer than expected.
         /// </summary>
+        /// <value>
+        /// The default is 5 minutes.
+        /// </value>
         public TimeSpan? SlowApiMonitoringDuration { get; set; }
 
         /// <summary>
-        /// Gets or sets the minimum log size. A truncation will not be initiated if it would reduce the size of the log to below this value.
-        /// The default is 0.
+        /// Gets or sets the minimum log size.
         /// </summary>
+        /// <value>
+        /// The default is 0.
+        /// </value>
+        /// <remarks>
+        /// A truncation is not initiated if it would reduce the size of the log below this value. The value is specified in MB.
+        /// </remarks>
         public int? MinLogSizeInMB { get; set; }
 
         /// <summary>
-        /// Gets or sets the truncation threshold factor. A truncation will be initiated when the log usage exceeds this value times MinLogSizeInMB.
-        /// The default is 2.
+        /// Gets or sets the truncation threshold factor.
         /// </summary>
+        /// <value>
+        /// The default is 2.
+        /// </value>
+        /// <remarks>
+        /// A truncation is initiated when log usage exceeds this value times <see cref="MinLogSizeInMB"/>.
+        /// </remarks>
         public int? TruncationThresholdFactor { get; set; }
 
         /// <summary>
-        /// Gets or sets the throttling threshold factor. Throttling will be initiated when the log usage exceeds this value times MinLogSizeInMB.
-        /// The default is 3.
+        /// Gets or sets the throttling threshold factor.
         /// </summary>
+        /// <value>
+        /// The default is 3.
+        /// </value>
+        /// <remarks>
+        /// Throttling is initiated when log usage exceeds this value times <see cref="MinLogSizeInMB"/>.
+        /// </remarks>
         public int? ThrottlingThresholdFactor { get; set; }
 
 #if NETFRAMEWORK
