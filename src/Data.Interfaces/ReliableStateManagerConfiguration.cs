@@ -63,7 +63,7 @@ public class ReliableStateManagerConfiguration
     }
 
     /// <summary>
-    /// Gets the replicator settings.
+    /// Gets the replicator settings used by the <see cref="IReliableStateManager"/>.
     /// </summary>
     /// <value>The replicator settings supplied to the constructor. Returns <see langword="null"/> when the constructor taking a config package name and section names was used instead.</value>
     public ReliableStateManagerReplicatorSettings ReplicatorSettings { get; private set; }
