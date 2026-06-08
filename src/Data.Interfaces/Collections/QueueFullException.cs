@@ -14,8 +14,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Retriable; when encountering this exception, the caller should wait some time for additional enqueue operations
-    /// before issuing another dequeue.
+    /// Retriable; when encountering this exception, the caller should wait some time for additional dequeue operations
+    /// before retrying the enqueue.
     /// </para>
     /// <para>
     /// Queue capacity is not currently implemented.
