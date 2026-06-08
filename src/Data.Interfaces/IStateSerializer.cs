@@ -15,7 +15,7 @@ namespace Microsoft.ServiceFabric.Data
     /// </remarks>
     /// <example>
     /// In this example, implementation of the <c>Read</c> and <c>Write</c> overloads simply call their counterpart overloads.
-    /// The <c>baseValue</c> parameter on the second <c>Read</c> overload and the <c>baseValue</c> and <c>targetValue</c> parameters on the second <c>Write</c> overload are not set by the platform and should be ignored.
+    /// The <c>baseValue</c> parameter on the second <c>Read</c> overload and the <c>baseValue</c> parameter on the second <c>Write</c> overload are not set by the platform and should be ignored.
     /// <code language="csharp">
     /// class Order
     /// {
@@ -103,7 +103,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Writing must begin at the current stream position and end at the current position plus the length of your data.
         /// </para>
         /// <para>
-        /// The platform currently does not populate <paramref name="baseValue"/> or <paramref name="targetValue"/>; implementers can ignore them.
+        /// The platform currently does not populate <paramref name="baseValue"/>; implementers can ignore it.
         /// See the example on <see cref="IStateSerializer{T}"/>.
         /// </para>
         /// </remarks>
