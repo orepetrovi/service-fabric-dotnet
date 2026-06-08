@@ -18,7 +18,7 @@ namespace Microsoft.ServiceFabric.Data
         private const string DefaultReplicatorSettingsSectionName = "ReplicatorConfig";
 
         /// <summary>
-        /// Create a new ReliableStateManagerConfiguration.
+        /// Initializes a new instance of the <see cref="ReliableStateManagerConfiguration"/> class.
         /// </summary>
         /// <param name="configPackageName">Optional config package name from which to load replicator security/settings.</param>
         /// <param name="replicatorSecuritySectionName">Optional config section name from which to load replicator security settings.</param>
@@ -37,7 +37,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Create a new ReliableStateManagerConfiguration.
+        /// Initializes a new instance of the <see cref="ReliableStateManagerConfiguration"/> class.
         /// </summary>
         /// <param name="replicatorSettings">Replicator settings used to initialize the ReliableStateManager.</param>
         /// <param name="onInitializeStateSerializersEvent">
