@@ -306,6 +306,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </value>
         /// <remarks>
         /// A truncation is initiated when log usage exceeds this value times <see cref="MinLogSizeInMB"/>.
+        /// Must be greater than 1.
         /// </remarks>
         public int? TruncationThresholdFactor { get; set; }
 
