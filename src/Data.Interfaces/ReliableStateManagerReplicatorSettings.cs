@@ -320,7 +320,7 @@ namespace Microsoft.ServiceFabric.Data
 #if NETFRAMEWORK
         // 12529905 - Disable new configuration for LogTruncationIntervalSeconds in CoreCLR
         /// <summary>
-        /// Gets or sets a time interval at which log truncation will be initiated.
+        /// Gets or sets the time interval at which log truncation is initiated.
         /// </summary>
         public int? LogTruncationIntervalSeconds { get; set; }
 
