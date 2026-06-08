@@ -128,7 +128,7 @@ namespace Microsoft.ServiceFabric.Data
         public string SharedLogPath { get; set; }
 
         /// <summary>
-        /// Deprecated
+        /// Gets or sets the maximum stream size, in MB. This property is deprecated.
         /// </summary>
         public int? MaxStreamSizeInMB { get; set; }
 
@@ -174,7 +174,7 @@ namespace Microsoft.ServiceFabric.Data
         public int? MaxAccumulatedBackupLogSizeInMB { get; set; }
 
         /// <summary>
-        /// Deprecated
+        /// Gets or sets a value that indicates whether the replicator is optimized for local SSD storage. This property is deprecated.
         /// </summary>
         public bool? OptimizeForLocalSSD { get; set; }
 
