@@ -87,6 +87,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the callback invoked when custom state serializers can be registered.
         /// </summary>
+        /// <value>The registration callback. Never <see langword="null"/>; defaults to a no-op when none was supplied to the constructor.</value>
         /// <remarks>
         /// When invoked, the callback should register custom serializers via
         /// <see cref="IReliableStateManager.TryAddStateSerializer{T}(IStateSerializer{T})"/>.
