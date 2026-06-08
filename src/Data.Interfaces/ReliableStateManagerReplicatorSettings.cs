@@ -308,10 +308,12 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets the throttling threshold factor.
         /// </summary>
         /// <value>
-        /// The default is 3.
+        /// The default is 4.
         /// </value>
         /// <remarks>
-        /// Throttling is initiated when log usage exceeds this value times <see cref="MinLogSizeInMB"/>.
+        /// Throttling is initiated when log usage exceeds the maximum of this value times <see cref="MinLogSizeInMB"/>
+        /// and this value times <see cref="CheckpointThresholdInMB"/>.
+        /// The throttling threshold must be greater than the truncation threshold.
         /// </remarks>
         public int? ThrottlingThresholdFactor { get; set; }
 
