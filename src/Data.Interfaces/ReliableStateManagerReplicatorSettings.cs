@@ -360,7 +360,7 @@ namespace Microsoft.ServiceFabric.Data
 #endif
 
         /// <summary>
-        /// Determines whether the specified object is a <see cref="ReliableStateManagerReplicatorSettings"/> with equivalent V2 settings.
+        /// Returns a value that indicates whether the specified object is a <see cref="ReliableStateManagerReplicatorSettings"/> with equivalent V2 settings.
         /// </summary>
         /// <param name="obj">
         /// The object to compare with the current instance.
@@ -379,9 +379,7 @@ namespace Microsoft.ServiceFabric.Data
             return InternalEquals(this, arg);
         }
 
-        /// <summary>
-        /// Serves as a hash function for this type.
-        /// </summary>
+        /// <inheritdoc/>
         // todo: returns reference-identity hash via base.GetHashCode() while Equals does deep value comparison through InternalEquals, so two settings instances that compare equal hash differently and break HashSet/Dictionary lookups in violation of the Object.GetHashCode contract
         public override int GetHashCode()
         {
