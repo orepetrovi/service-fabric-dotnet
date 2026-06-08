@@ -28,7 +28,7 @@ namespace Microsoft.ServiceFabric.Data
     ///
     /// class OrderSerializer : IStateSerializer&lt;Order&gt;
     /// {
-    ///     void Write(Order value, BinaryWriter writer)
+    ///     public void Write(Order value, BinaryWriter writer)
     ///     {
     ///         writer.Write(value.Warehouse);
     ///         writer.Write(value.District);
@@ -36,7 +36,7 @@ namespace Microsoft.ServiceFabric.Data
     ///         writer.Write(value.OrderNumber);
     ///     }
     ///
-    ///     Order Read(BinaryReader reader)
+    ///     public Order Read(BinaryReader reader)
     ///     {
     ///         Order value = new Order();
     ///
@@ -48,12 +48,12 @@ namespace Microsoft.ServiceFabric.Data
     ///         return value;
     ///     }
     ///
-    ///     void Write(Order currentValue, Order newValue, BinaryWriter writer)
+    ///     public void Write(Order currentValue, Order newValue, BinaryWriter writer)
     ///     {
     ///         this.Write(newValue, writer);
     ///     }
     ///
-    ///     Order Read(Order baseValue, BinaryReader reader)
+    ///     public Order Read(Order baseValue, BinaryReader reader)
     ///     {
     ///         return this.Read(reader);
     ///     }
