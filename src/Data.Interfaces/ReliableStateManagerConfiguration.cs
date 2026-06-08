@@ -81,16 +81,16 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets the replicator security settings section name.
         /// </summary>
         /// <value>The section name; defaults to <c>"ReplicatorSecurityConfig"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
-        /// <remarks>If present in the config package specified by <see cref="ConfigPackageName"/> in Settings.xml,
-        /// this section will be used to configure replicator security settings.</remarks>
+        /// <remarks>When this section is present in the Settings.xml of the config package specified by
+        /// <see cref="ConfigPackageName"/>, it is used to configure replicator security settings.</remarks>
         public string ReplicatorSecuritySectionName { get; private set; }
 
         /// <summary>
         /// Gets the replicator settings section name.
         /// </summary>
         /// <value>The section name; defaults to <c>"ReplicatorConfig"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
-        /// <remarks>If present in the config package specified by <see cref="ConfigPackageName"/> in Settings.xml,
-        /// this section will be used to configure replicator settings.</remarks>
+        /// <remarks>When this section is present in the Settings.xml of the config package specified by
+        /// <see cref="ConfigPackageName"/>, it is used to configure replicator settings.</remarks>
         public string ReplicatorSettingsSectionName { get; private set; }
 
         /// <summary>
