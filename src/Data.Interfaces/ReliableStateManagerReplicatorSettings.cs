@@ -16,33 +16,33 @@ namespace Microsoft.ServiceFabric.Data
     {
         /// <summary>
         /// Gets or sets how long the replicator waits after it transmits a message from the primary to the secondary for the secondary to acknowledge that it has received the message.
-        /// The default value is 5 seconds.
+        /// The default is 5 seconds.
         /// </summary>
         public TimeSpan? RetryInterval { get; set; }
 
         /// <summary>
         /// Gets or sets the amount of time that the replicator waits after receiving an operation before sending back an acknowledgment.
-        /// The default value is 5 milliseconds.
+        /// The default is 5 milliseconds.
         /// </summary>
         public TimeSpan? BatchAcknowledgementInterval { get; set; }
 
         /// <summary>
         /// Gets or sets the address in {ip}:{port} format that this replicator will use when communicating with other replicators.
-        /// The default value is "localhost:0", which picks a dynamic port number in runtime.
+        /// The default is "localhost:0", which picks a dynamic port number in runtime.
         /// If replicator is running inside a container, you should try setting up <see cref="ReliableStateManagerReplicatorSettings.ReplicatorListenAddress" /> and <see cref="ReliableStateManagerReplicatorSettings.ReplicatorPublishAddress" />.
         /// </summary>
         public string ReplicatorAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the address in {ip}:{port} format that this replicator will use to receive information from other replicators.
-        /// The default value is "localhost:0", which picks a dynamic port number in runtime.
+        /// The default is "localhost:0", which picks a dynamic port number in runtime.
         /// {ip} part of the listen address can be obtained from <see cref="System.Fabric.CodePackageActivationContext.ServiceListenAddress" />.
         /// </summary>
         public string ReplicatorListenAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the address in {ip}:{port} format that this replicator will use to send information to other replicators.
-        /// The default value is "localhost:0", which picks a dynamic port number in runtime.
+        /// The default is "localhost:0", which picks a dynamic port number in runtime.
         /// {ip} part of the publish address can be obtained from <see cref="System.Fabric.CodePackageActivationContext.ServicePublishAddress" />.
         /// </summary>
         public string ReplicatorPublishAddress { get; set; }
@@ -54,76 +54,76 @@ namespace Microsoft.ServiceFabric.Data
 
         /// <summary>
         /// Gets or sets the initial size of the copy operation queue inside the replicator, which contains copy operations.
-        /// Default value is 64.
+        /// The default is 64.
         /// The value is the number of operations in the copy operation queue. Must be a power of 2.
         /// </summary>
         public long? InitialCopyQueueSize { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum size of the copy operation queue inside replicator, which contains copy operations.
-        /// Default value is 1024.
+        /// The default is 1024.
         /// The value is the max number of operations in the copy operation queue. Must be a power of 2.
         /// </summary>
         public long? MaxCopyQueueSize { get; set; }
 
         /// <summary>
         /// Gets or sets the max replication message size.
-        /// Default value is 50MB.
+        /// The default is 50MB.
         /// The unit is Bytes.
         /// </summary>
         public long? MaxReplicationMessageSize { get; set; }
 
         /// <summary>
         /// Gets or sets the initial primary replication queue size.
-        /// Default value is 64.
+        /// The default is 64.
         /// The value is the number of operations in the primary replication queue. Must be a power of 2.
         /// </summary>
         public long? InitialPrimaryReplicationQueueSize { get; set; }
 
         /// <summary>
         /// Gets or sets the max primary replication queue size.
-        /// Default value is 8192.
+        /// The default is 8192.
         /// The value is the max number of operations in the primary replication queue. Must be a power of 2.
         /// </summary>
         public long? MaxPrimaryReplicationQueueSize { get; set; }
 
         /// <summary>
         /// Gets or sets the max primary replication queue memory size.
-        /// Default value is 0, which implies there is no memory limitation.
+        /// The default is 0, which implies there is no memory limitation.
         /// The unit is Bytes.
         /// </summary>
         public long? MaxPrimaryReplicationQueueMemorySize { get; set; }
 
         /// <summary>
         /// Gets or sets the initial secondary replication queue size.
-        /// Default value is 64.
+        /// The default is 64.
         /// The value is the number of operations in the secondary replication queue. Must be a power of 2.
         /// </summary>
         public long? InitialSecondaryReplicationQueueSize { get; set; }
 
         /// <summary>
         /// Gets or sets the max secondary replication queue size.
-        /// Default value is 16384.
+        /// The default is 16384.
         /// The value is the max number of operations in the secondary replication queue. Must be a power of 2.
         /// </summary>
         public long? MaxSecondaryReplicationQueueSize { get; set; }
 
         /// <summary>
         /// Gets or sets the max secondary replication queue memory size.
-        /// Default value is 0, which implies there is no memory limitation.
+        /// The default is 0, which implies there is no memory limitation.
         /// The unit is Bytes.
         /// </summary>
         public long? MaxSecondaryReplicationQueueMemorySize { get; set; }
 
         /// <summary>
         /// Gets or sets the GUID identifier for the log container that is shared by a number of replicas on the windows fabric node including this one.
-        /// Default value is "" which causes the replicator to use the global shared log for the node.
+        /// The default is "" which causes the replicator to use the global shared log for the node.
         /// </summary>
         public string SharedLogId { get; set; }
 
         /// <summary>
         /// Gets or sets the full pathname to the log container that is shared by a number of replicas on the node including this one.
-        /// Default value is "" which causes the replicator to use the global shared log for the node.
+        /// The default is "" which causes the replicator to use the global shared log for the node.
         /// </summary>
         public string SharedLogPath { get; set; }
 
@@ -135,7 +135,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets or sets the amount of extra persistent storage space reserved for the replicator specified in kilobytes that is associated with this replica. This
         /// value must be a multiple of 4.
-        /// The default value is 4.
+        /// The default is 4.
         /// The unit is KB.
         /// </summary>
         public int? MaxMetadataSizeInKB { get; set; }
@@ -143,7 +143,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets or sets the largest record size which the replicator may write specified in kilobytes for the log that is associated with this replica. This
         /// value must be a multiple of 4 and greater than or equal to 128.
-        /// The default value is 1024.
+        /// The default is 1024.
         /// The unit is KB.
         /// </summary>
         public int? MaxRecordSizeInKB { get; set; }
@@ -152,14 +152,14 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets the maximum write queue depth that the core logger can use as specified in kilobytes for the log that is associated with this replica. This
         /// value is the maximum number of bytes that can be outstanding during core logger updates. It may be 0 for the core logger
         /// to compute an appropriate value or a multiple of 4.
-        /// The default value is 0.
+        /// The default is 0.
         /// The unit is KB.
         /// </summary>
         public int? MaxWriteQueueDepthInKB { get; set; }
 
         /// <summary>
         /// Gets or sets the checkpoint threshold. A checkpoint will be initiated when the log usage exceeds this value.
-        /// Default value is 50.
+        /// The default is 50.
         /// The unit is MB.
         /// </summary>
         public int? CheckpointThresholdInMB { get; set; }
@@ -168,7 +168,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets the max size for an accumulated backup log across backups.
         /// An incremental backup requests will fail if the backup logs generated by the request causes the total amount of logs accumulated including the last full backup to be greater than MaxAccumulatedBackupLogSizeInMB.
         /// In such cases, user is required to take a full backup.
-        /// Default value is 800.
+        /// The default is 800.
         /// The unit is MB.
         /// </summary>
         public int? MaxAccumulatedBackupLogSizeInMB { get; set; }
@@ -199,25 +199,25 @@ namespace Microsoft.ServiceFabric.Data
 
         /// <summary>
         /// Gets or sets the interval after which the replicator sends a warning health report that the API is slow and is taking longer than expected duration.
-        /// Default value is 5 minutes.
+        /// The default is 5 minutes.
         /// </summary>
         public TimeSpan? SlowApiMonitoringDuration { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum log size. A truncation will not be initiated if it would reduce the size of the log to below this value.
-        /// Default value is 0.
+        /// The default is 0.
         /// </summary>
         public int? MinLogSizeInMB { get; set; }
 
         /// <summary>
         /// Gets or sets the truncation threshold factor. A truncation will be initiated when the log usage exceeds this value times MinLogSizeInMB.
-        /// Default value is 2.
+        /// The default is 2.
         /// </summary>
         public int? TruncationThresholdFactor { get; set; }
 
         /// <summary>
         /// Gets or sets the throttling threshold factor. Throttling will be initiated when the log usage exceeds this value times MinLogSizeInMB.
-        /// Default value is 3.
+        /// The default is 3.
         /// </summary>
         public int? ThrottlingThresholdFactor { get; set; }
 
@@ -237,7 +237,7 @@ namespace Microsoft.ServiceFabric.Data
 
         /// <summary>
         /// Controls if send window size for primary queues should be in bytes of number of messages
-        /// Default is false
+        /// The default is false
         /// </summary>
         internal bool? EnableSendWindowSizeInBytes { get; set; }
 
@@ -255,13 +255,13 @@ namespace Microsoft.ServiceFabric.Data
 
         /// <summary>
         /// Controls if multiple replicas within process should use their own individual heaps or shared heap.
-        /// Default is false
+        /// The default is false
         /// </summary>
         internal bool? UseIndividualHeapPerReplica { get; set; }
 
         /// <summary>
         /// Controls the initial size of the heap owned by a replicas in a process, when UseIndividualHeapPerReplica is enabled.
-        /// Default is 0
+        /// The default is 0
         /// </summary>
         internal uint? InitialReplicaHeapSizeInKB { get; set; }
 #endif
