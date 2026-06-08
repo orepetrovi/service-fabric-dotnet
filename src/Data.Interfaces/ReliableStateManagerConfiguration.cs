@@ -98,8 +98,10 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <value>The registration callback. Never <see langword="null"/>; defaults to a no-op when none was supplied to the constructor.</value>
         /// <remarks>
-        /// When invoked, the callback should register custom serializers via
-        /// <see cref="IReliableStateManager.TryAddStateSerializer{T}(IStateSerializer{T})"/>.
+        /// The callback should register custom serializers via
+        /// <see cref="IReliableStateManager.TryAddStateSerializer{T}(IStateSerializer{T})"/>; it is the
+        /// configuration-supplied alternative to calling that method from the stateful service constructor.
+        /// See that method's remarks for the timing requirement that applies to both registration paths.
         /// </remarks>
         public Func<Task> OnInitializeStateSerializersEvent { get; private set; }
     }
