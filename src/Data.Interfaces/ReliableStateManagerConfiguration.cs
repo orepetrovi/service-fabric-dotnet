@@ -25,9 +25,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="ReliableStateManagerConfiguration"/> class.
         /// </summary>
-        /// <param name="configPackageName">The name of the config package from which to load replicator security and replicator settings.</param>
-        /// <param name="replicatorSecuritySectionName">The name of the section in the config package from which to load replicator security settings.</param>
-        /// <param name="replicatorSettingsSectionName">The name of the section in the config package from which to load replicator settings.</param>
+        /// <param name="configPackageName">The name of the config package whose Settings.xml provides replicator security and replicator settings.</param>
+        /// <param name="replicatorSecuritySectionName">The name of the Settings.xml section that provides replicator security settings.</param>
+        /// <param name="replicatorSettingsSectionName">The name of the Settings.xml section that provides replicator settings.</param>
         /// <param name="onInitializeStateSerializersEvent">A callback that registers custom state serializers via <see cref="IReliableStateManager.TryAddStateSerializer{T}(IStateSerializer{T})"/>.</param>
         public ReliableStateManagerConfiguration(
             string configPackageName = DefaultConfigPackageName,
