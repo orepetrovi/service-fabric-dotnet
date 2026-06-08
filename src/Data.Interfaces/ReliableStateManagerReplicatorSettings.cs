@@ -393,11 +393,8 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Returns a string that represents the current object.
+        /// Returns a multi-line listing of the property values that have been set on this instance.
         /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
         public override string ToString()
         {
             var builder = new StringBuilder();
