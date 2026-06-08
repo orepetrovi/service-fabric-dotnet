@@ -12,9 +12,9 @@ namespace Microsoft.ServiceFabric.Data
     /// Represents the configuration used to create an <see cref="IReliableStateManager"/>.
     /// </summary>
     /// <remarks>
-    /// Replicator settings come from one of two mutually exclusive sources: pass section names to load them from
-    /// a Settings.xml config package at runtime, or pass a <see cref="ReliableStateManagerReplicatorSettings"/>
-    /// instance to supply them programmatically.
+    /// Replicator settings come from one of two mutually exclusive sources: pass a config package name and section
+    /// names to load them from that package's Settings.xml at runtime, or pass a
+    /// <see cref="ReliableStateManagerReplicatorSettings"/> instance to supply them programmatically.
     /// </remarks>
     public class ReliableStateManagerConfiguration
     {
