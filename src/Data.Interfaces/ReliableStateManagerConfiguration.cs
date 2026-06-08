@@ -20,9 +20,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="ReliableStateManagerConfiguration"/> class.
         /// </summary>
-        /// <param name="configPackageName">Optional config package name from which to load replicator security/settings.</param>
-        /// <param name="replicatorSecuritySectionName">Optional config section name from which to load replicator security settings.</param>
-        /// <param name="replicatorSettingsSectionName">Optional config section name from which to load replicator settings.</param>
+        /// <param name="configPackageName">The name of the config package from which to load replicator security and replicator settings.</param>
+        /// <param name="replicatorSecuritySectionName">The name of the section in the config package from which to load replicator security settings.</param>
+        /// <param name="replicatorSettingsSectionName">The name of the section in the config package from which to load replicator settings.</param>
         /// <param name="onInitializeStateSerializersEvent">
         /// Optional callback which will fire when custom serializers should be added.
         /// Used to set the <see cref="OnInitializeStateSerializersEvent"/> property.
@@ -39,7 +39,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="ReliableStateManagerConfiguration"/> class.
         /// </summary>
-        /// <param name="replicatorSettings">Replicator settings used to initialize the ReliableStateManager.</param>
+        /// <param name="replicatorSettings">The replicator settings used to initialize the <see cref="IReliableStateManager"/>.</param>
         /// <param name="onInitializeStateSerializersEvent">
         /// Optional callback which will fire when custom serializers should be added.
         /// Used to set the <see cref="OnInitializeStateSerializersEvent"/> property.
