@@ -12,7 +12,6 @@ namespace Microsoft.ServiceFabric.Data
     /// <summary>
     /// Supports asynchronous iteration over a sequence of values of type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T">The type of values produced by the enumerator.</typeparam>
     /// <remarks>
     /// Obtained from <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/>.
     /// </remarks>
