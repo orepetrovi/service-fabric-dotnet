@@ -32,6 +32,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <returns><see langword="true"/> if the enumerator was advanced to the next element; otherwise, <see langword="false"/>.</returns>
         /// <exception cref="InvalidOperationException">The underlying collection was modified after the enumerator was created.</exception>
+        /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
         Task<bool> MoveNextAsync(CancellationToken cancellationToken);
 
         /// <summary>
