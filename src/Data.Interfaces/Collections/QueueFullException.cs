@@ -10,7 +10,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
 
     // todo: when queue capacity constraint is configurable, remove "not implemented" para
     /// <summary>
-    /// Thrown by <see cref="IReliableConcurrentQueue{T}.EnqueueAsync"/> when the queue capacity has been reached.
+    /// Represents the exception thrown by <see cref="IReliableConcurrentQueue{T}.EnqueueAsync"/> when the queue capacity has been reached.
     /// </summary>
     /// <remarks>
     /// <para>
