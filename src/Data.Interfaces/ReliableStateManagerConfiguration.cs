@@ -100,7 +100,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// The callback should register custom serializers via
         /// <see cref="IReliableStateManager.TryAddStateSerializer{T}(IStateSerializer{T})"/>; it is the
-        /// configuration-supplied alternative to calling that method from the stateful service constructor.
+        /// configuration-supplied alternative to calling that method from the constructor of the Stateful Service.
         /// See that method's remarks for the timing requirement that applies to both registration paths.
         /// </remarks>
         public Func<Task> OnInitializeStateSerializersEvent { get; private set; }
