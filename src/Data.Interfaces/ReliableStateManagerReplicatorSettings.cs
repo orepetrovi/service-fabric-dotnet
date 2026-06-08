@@ -15,7 +15,8 @@ namespace Microsoft.ServiceFabric.Data
     public class ReliableStateManagerReplicatorSettings
     {
         /// <summary>
-        /// Gets or sets how long the replicator waits after it transmits a message from the primary to the secondary for the secondary to acknowledge that it has received the message.
+        /// Gets or sets how long the replicator waits after it transmits a message from the primary to the secondary for
+        /// the secondary to acknowledge that it has received the message.
         /// </summary>
         /// <value>
         /// The default is 5 seconds.
@@ -35,18 +36,21 @@ namespace Microsoft.ServiceFabric.Data
         public TimeSpan? BatchAcknowledgementInterval { get; set; }
 
         /// <summary>
-        /// Gets or sets the address in <c>{ip}:{port}</c> format that this replicator uses when communicating with other replicators.
+        /// Gets or sets the address in <c>{ip}:{port}</c> format that this replicator uses when communicating with other
+        /// replicators.
         /// </summary>
         /// <value>
         /// The default is <c>"localhost:0"</c>, which picks a dynamic port number at runtime.
         /// </value>
         /// <remarks>
-        /// If the replicator runs inside a container, set <see cref="ReplicatorListenAddress"/> and <see cref="ReplicatorPublishAddress"/> instead.
+        /// If the replicator runs inside a container, set <see cref="ReplicatorListenAddress"/> and <see cref="ReplicatorPublishAddress"/>
+        /// instead.
         /// </remarks>
         public string ReplicatorAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets the address in <c>{ip}:{port}</c> format that this replicator uses to receive information from other replicators.
+        /// Gets or sets the address in <c>{ip}:{port}</c> format that this replicator uses to receive information from other
+        /// replicators.
         /// </summary>
         /// <value>
         /// The default is <c>"localhost:0"</c>, which picks a dynamic port number at runtime.
@@ -57,7 +61,8 @@ namespace Microsoft.ServiceFabric.Data
         public string ReplicatorListenAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets the address in <c>{ip}:{port}</c> format that this replicator uses to send information to other replicators.
+        /// Gets or sets the address in <c>{ip}:{port}</c> format that this replicator uses to send information to other
+        /// replicators.
         /// </summary>
         /// <value>
         /// The default is <c>"localhost:0"</c>, which picks a dynamic port number at runtime.
@@ -126,7 +131,8 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 8192.
         /// </value>
         /// <remarks>
-        /// The value is the maximum number of operations in the primary replication queue and must be a power of 2 and greater than 64.
+        /// The value is the maximum number of operations in the primary replication queue and must be a power of 2 and greater
+        /// than 64.
         /// </remarks>
         public long? MaxPrimaryReplicationQueueSize { get; set; }
 
@@ -159,7 +165,8 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 16384.
         /// </value>
         /// <remarks>
-        /// The value is the maximum number of operations in the secondary replication queue and must be a power of 2 and greater than 64.
+        /// The value is the maximum number of operations in the secondary replication queue and must be a power of 2 and
+        /// greater than 64.
         /// </remarks>
         public long? MaxSecondaryReplicationQueueSize { get; set; }
 
@@ -175,7 +182,8 @@ namespace Microsoft.ServiceFabric.Data
         public long? MaxSecondaryReplicationQueueMemorySize { get; set; }
 
         /// <summary>
-        /// Gets or sets the GUID identifier for the log container shared by a number of replicas on the node including this one.
+        /// Gets or sets the GUID identifier for the log container shared by a number of replicas on the node including this
+        /// one.
         /// </summary>
         /// <value>
         /// The default is an empty string, which causes the replicator to use the global shared log for the node.
@@ -183,7 +191,8 @@ namespace Microsoft.ServiceFabric.Data
         public string SharedLogId { get; set; }
 
         /// <summary>
-        /// Gets or sets the full pathname to the log container shared by a number of replicas on the node including this one.
+        /// Gets or sets the full pathname to the log container shared by a number of replicas on the node including this
+        /// one.
         /// </summary>
         /// <value>
         /// The default is an empty string, which causes the replicator to use the global shared log for the node.
@@ -228,7 +237,8 @@ namespace Microsoft.ServiceFabric.Data
         /// </value>
         /// <remarks>
         /// The value is the maximum amount of data that can be outstanding during core logger updates.
-        /// It may be 0, in which case the core logger computes an appropriate value; otherwise it must be a multiple of 4.
+        /// It may be 0, in which case the core logger computes an appropriate value; otherwise it must be a multiple of
+        /// 4.
         /// The value is specified in KB.
         /// </remarks>
         public int? MaxWriteQueueDepthInKB { get; set; }
@@ -265,27 +275,32 @@ namespace Microsoft.ServiceFabric.Data
         public bool? OptimizeForLocalSSD { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the log should be optimized to use less disk space at the cost of IO performance.
+        /// Gets or sets a value that indicates whether the log should be optimized to use less disk space at the cost of
+        /// IO performance.
         /// </summary>
         /// <value>
-        /// <see langword="true"/> if the log uses less disk space at the cost of IO performance; otherwise, <see langword="false"/>, in which case the log uses more disk space but has better IO performance. The default is <see langword="true"/>.
+        /// <see langword="true"/> if the log uses less disk space at the cost of IO performance; otherwise, <see langword="false"/>,
+        /// in which case the log uses more disk space but has better IO performance. The default is <see langword="true"/>.
         /// </value>
         public bool? OptimizeLogForLowerDiskUsage { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the secondary replicator should clear the in-memory queue after acknowledging operations to the primary.
+        /// Gets or sets a value that indicates whether the secondary replicator should clear the in-memory queue after acknowledging
+        /// operations to the primary.
         /// </summary>
         /// <value>
         /// <see langword="true"/> if the secondary replicator clears the in-memory queue after acknowledging operations
         /// (after they are flushed to disk); otherwise, <see langword="false"/>. The default is <see langword="false"/>.
         /// </value>
         /// <remarks>
-        /// Setting this to <see langword="true"/> can result in additional disk reads on the new primary when catching up replicas after a failover.
+        /// Setting this to <see langword="true"/> can result in additional disk reads on the new primary when catching up
+        /// replicas after a failover.
         /// </remarks>
         public bool? SecondaryClearAcknowledgedOperations { get; set; }
 
         /// <summary>
-        /// Gets or sets the interval after which the replicator sends a warning health report indicating that the API is slow and taking longer than expected.
+        /// Gets or sets the interval after which the replicator sends a warning health report indicating that the API is
+        /// slow and taking longer than expected.
         /// </summary>
         /// <value>
         /// The default is 5 minutes.
@@ -299,7 +314,8 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 0.
         /// </value>
         /// <remarks>
-        /// A truncation is not initiated if it would reduce the size of the log below this value. The value is specified in MB.
+        /// A truncation is not initiated if it would reduce the size of the log below this value. The value is specified
+        /// in MB.
         /// </remarks>
         public int? MinLogSizeInMB { get; set; }
 
@@ -374,13 +390,15 @@ namespace Microsoft.ServiceFabric.Data
 #endif
 
         /// <summary>
-        /// Returns a value that indicates whether the specified object is a <see cref="ReliableStateManagerReplicatorSettings"/> of exactly the same type whose V2 settings match the current instance.
+        /// Returns a value that indicates whether the specified object is a <see cref="ReliableStateManagerReplicatorSettings"/>
+        /// of exactly the same type whose V2 settings match the current instance.
         /// </summary>
         /// <param name="obj">
         /// The object to compare with the current instance.
         /// </param>
         /// <returns>
-        /// <see langword="true"/> if <paramref name="obj"/> is a <see cref="ReliableStateManagerReplicatorSettings"/> of exactly the same type whose V2 settings match the current instance; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if <paramref name="obj"/> is a <see cref="ReliableStateManagerReplicatorSettings"/> of
+        /// exactly the same type whose V2 settings match the current instance; otherwise, <see langword="false"/>.
         /// </returns>
         public override bool Equals(object obj)
         {
