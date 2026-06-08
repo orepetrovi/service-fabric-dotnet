@@ -10,7 +10,6 @@ namespace Microsoft.ServiceFabric.Data
     /// <summary>
     /// Represents a custom serializer for type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T">Type to serialize and deserialize.</typeparam>
     /// <remarks>
     /// Use <see cref="IReliableStateManager.TryAddStateSerializer{T}(IStateSerializer{T})"/> to register a custom serializer.
     /// </remarks>
@@ -65,8 +64,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Deserializes from the given <see cref="BinaryReader"/> to <typeparamref name="T"/>.
         /// </summary>
-        /// <param name="binaryReader">The <see cref="BinaryReader"/> to deserialize from.</param>
-        /// <returns>The deserialized value.</returns>
         /// <remarks>
         /// When accessing the <see cref="BinaryReader"/> base stream, care must be taken when moving the position in the stream.
         /// Reading must begin at the current stream position and end at the current position plus the length of your data.
@@ -76,8 +73,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Serializes a value and writes it to the given <see cref="BinaryWriter"/>.
         /// </summary>
-        /// <param name="value">The value to serialize.</param>
-        /// <param name="binaryWriter">The <see cref="BinaryWriter"/> to serialize to.</param>
         /// <remarks>
         /// When accessing the <see cref="BinaryWriter"/> base stream, care must be taken when moving the position in the stream.
         /// Writing must begin at the current stream position and end at the current position plus the length of your data.
@@ -87,9 +82,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Deserializes from the given <see cref="BinaryReader"/> to <typeparamref name="T"/>.
         /// </summary>
-        /// <param name="baseValue">The base value for the deserialization.</param>
-        /// <param name="binaryReader">The <see cref="BinaryReader"/> to deserialize from.</param>
-        /// <returns>The deserialized value.</returns>
         /// <remarks>
         /// When accessing the <see cref="BinaryReader"/> base stream, care must be taken when moving the position in the stream.
         /// Reading must begin at the current stream position and end at the current position plus the length of your data.
@@ -99,9 +91,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Serializes an object and writes it to the given <see cref="BinaryWriter"/>.
         /// </summary>
-        /// <param name="baseValue">The base value for the serialization.</param>
-        /// <param name="targetValue">The value to serialize.</param>
-        /// <param name="binaryWriter">The <see cref="BinaryWriter"/> to serialize to.</param>
         /// <remarks>
         /// When accessing the <see cref="BinaryWriter"/> base stream, care must be taken when moving the position in the stream.
         /// Writing must begin at the current stream position and end at the current position plus the length of your data.
