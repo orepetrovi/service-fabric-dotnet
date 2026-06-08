@@ -221,7 +221,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 0.
         /// </value>
         /// <remarks>
-        /// The value is the maximum number of bytes that can be outstanding during core logger updates. It may be 0 to let the core logger compute an appropriate value or a multiple of 4. The value is specified in KB.
+        /// The value is the maximum amount of data that can be outstanding during core logger updates. It may be 0 to let the core logger compute an appropriate value or a multiple of 4. The value is specified in KB.
         /// </remarks>
         public int? MaxWriteQueueDepthInKB { get; set; }
 
