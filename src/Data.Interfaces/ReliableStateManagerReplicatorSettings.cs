@@ -382,9 +382,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Serves as a hash function for this type.
         /// </summary>
-        /// <returns>
-        /// The <see cref="int"/> representing the hash code.
-        /// </returns>
         // todo: returns reference-identity hash via base.GetHashCode() while Equals does deep value comparison through InternalEquals, so two settings instances that compare equal hash differently and break HashSet/Dictionary lookups in violation of the Object.GetHashCode contract
         public override int GetHashCode()
         {
