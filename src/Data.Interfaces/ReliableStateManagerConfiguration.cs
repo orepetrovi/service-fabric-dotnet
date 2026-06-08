@@ -74,13 +74,13 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets the name of the config package whose Settings.xml provides replicator settings and replicator
         /// security settings.
         /// </summary>
-        /// <value>The configuration package name; defaults to <c>"Config"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
+        /// <value>The configuration package name. The default is <c>"Config"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
         public string ConfigPackageName { get; private set; }
 
         /// <summary>
         /// Gets the replicator security settings section name.
         /// </summary>
-        /// <value>The section name; defaults to <c>"ReplicatorSecurityConfig"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
+        /// <value>The section name. The default is <c>"ReplicatorSecurityConfig"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
         /// <remarks>When this section is present in the Settings.xml of the config package specified by
         /// <see cref="ConfigPackageName"/>, it is used to configure replicator security settings.</remarks>
         public string ReplicatorSecuritySectionName { get; private set; }
@@ -88,7 +88,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the replicator settings section name.
         /// </summary>
-        /// <value>The section name; defaults to <c>"ReplicatorConfig"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
+        /// <value>The section name. The default is <c>"ReplicatorConfig"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
         /// <remarks>When this section is present in the Settings.xml of the config package specified by
         /// <see cref="ConfigPackageName"/>, it is used to configure replicator settings.</remarks>
         public string ReplicatorSettingsSectionName { get; private set; }
@@ -96,7 +96,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the callback invoked when custom state serializers can be registered.
         /// </summary>
-        /// <value>The registration callback. Never <see langword="null"/>; defaults to a no-op when none was supplied to the constructor.</value>
+        /// <value>The registration callback. Never <see langword="null"/>. The default is a no-op when none was supplied to the constructor.</value>
         /// <remarks>
         /// The callback should register custom serializers via
         /// <see cref="IReliableStateManager.TryAddStateSerializer{T}(IStateSerializer{T})"/>; it is the
