@@ -75,6 +75,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets or sets the security credentials for securing the traffic between replicators.
         /// </summary>
+        /// <value>
+        /// The default is <see langword="null"/>.
+        /// </value>
         public SecurityCredentials SecurityCredentials { get; set; }
 
         /// <summary>
