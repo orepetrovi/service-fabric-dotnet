@@ -83,17 +83,29 @@ namespace Microsoft.ServiceFabric.Data
         /// Returns a value of type <typeparamref name="T"/> deserialized from the given <see cref="BinaryReader"/>.
         /// </summary>
         /// <remarks>
+        /// <para>
         /// When accessing the <see cref="BinaryReader"/> base stream, care must be taken when moving the position in the stream.
         /// Reading must begin at the current stream position and end at the current position plus the length of your data.
+        /// </para>
+        /// <para>
+        /// The platform currently does not populate <paramref name="baseValue"/>; implementers can ignore it.
+        /// See the example on <see cref="IStateSerializer{T}"/>.
+        /// </para>
         /// </remarks>
         T Read(T baseValue, BinaryReader binaryReader);
 
         /// <summary>
-        /// Serializes an object and writes it to the given <see cref="BinaryWriter"/>.
+        /// Serializes a value and writes it to the given <see cref="BinaryWriter"/>.
         /// </summary>
         /// <remarks>
+        /// <para>
         /// When accessing the <see cref="BinaryWriter"/> base stream, care must be taken when moving the position in the stream.
         /// Writing must begin at the current stream position and end at the current position plus the length of your data.
+        /// </para>
+        /// <para>
+        /// The platform currently does not populate <paramref name="baseValue"/> or <paramref name="targetValue"/>; implementers can ignore them.
+        /// See the example on <see cref="IStateSerializer{T}"/>.
+        /// </para>
         /// </remarks>
         void Write(T baseValue, T targetValue, BinaryWriter binaryWriter);
     }
