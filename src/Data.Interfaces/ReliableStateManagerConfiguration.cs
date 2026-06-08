@@ -71,7 +71,7 @@ public class ReliableStateManagerConfiguration
     /// <summary>
     /// Gets the name of the config package whose Settings.xml provides replicator security and replicator settings.
     /// </summary>
-    /// <value>The configuration package name. The default is <c>"Config"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
+    /// <value>The config package name. The default is <c>"Config"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
     public string ConfigPackageName { get; private set; }
 
     /// <summary>
