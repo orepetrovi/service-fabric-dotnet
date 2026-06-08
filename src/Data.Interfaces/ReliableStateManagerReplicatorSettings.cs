@@ -29,7 +29,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets or sets the address in {ip}:{port} format that this replicator will use when communicating with other replicators.
         /// The default is "localhost:0", which picks a dynamic port number in runtime.
-        /// If replicator is running inside a container, you should try setting up <see cref="ReliableStateManagerReplicatorSettings.ReplicatorListenAddress" /> and <see cref="ReliableStateManagerReplicatorSettings.ReplicatorPublishAddress" />.
+        /// If replicator is running inside a container, you should try setting up <see cref="ReplicatorListenAddress" /> and <see cref="ReplicatorPublishAddress" />.
         /// </summary>
         public string ReplicatorAddress { get; set; }
 
