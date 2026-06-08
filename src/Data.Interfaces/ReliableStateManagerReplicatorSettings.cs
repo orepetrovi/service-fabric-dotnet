@@ -212,7 +212,7 @@ namespace Microsoft.ServiceFabric.Data
         public int? MaxStreamSizeInMB { get; set; }
 
         /// <summary>
-        /// Gets or sets the amount of extra persistent storage space reserved for the replicator associated with this replica.
+        /// Gets or sets the amount of persistent storage space reserved for replication-log metadata on this replica.
         /// </summary>
         /// <value>
         /// The default is 4.
