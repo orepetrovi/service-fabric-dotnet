@@ -10,7 +10,7 @@ namespace Microsoft.ServiceFabric.Data
     using System.Text;
 
     /// <summary>
-    /// Settings that configure the replicator
+    /// Configures the replicator used by the reliable state manager.
     /// </summary>
     public class ReliableStateManagerReplicatorSettings
     {
