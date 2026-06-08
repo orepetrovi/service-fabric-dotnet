@@ -62,17 +62,20 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the replicator settings.
         /// </summary>
+        /// <value>The replicator settings supplied to the constructor, or <see langword="null"/> if none were supplied.</value>
         public ReliableStateManagerReplicatorSettings ReplicatorSettings { get; private set; }
 
         /// <summary>
         /// Gets the name of the config package in Settings.xml from which to load replicator settings and replicator
         /// security settings.
         /// </summary>
+        /// <value>The configuration package name; defaults to <c>"Config"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
         public string ConfigPackageName { get; private set; }
 
         /// <summary>
         /// Gets the replicator security settings section name.
         /// </summary>
+        /// <value>The section name; defaults to <c>"ReplicatorSecurityConfig"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
         /// <remarks>If present in the config package specified by <see cref="ConfigPackageName"/> in Settings.xml,
         /// this section will be used to configure replicator security settings.</remarks>
         public string ReplicatorSecuritySectionName { get; private set; }
@@ -80,6 +83,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the replicator settings section name.
         /// </summary>
+        /// <value>The section name; defaults to <c>"ReplicatorConfig"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
         /// <remarks>If present in the config package specified by <see cref="ConfigPackageName"/> in Settings.xml,
         /// this section will be used to configure replicator settings.</remarks>
         public string ReplicatorSettingsSectionName { get; private set; }
