@@ -28,7 +28,7 @@ namespace Microsoft.ServiceFabric.Data
         T Current { get; }
 
         /// <summary>
-        /// Advances the enumerator asynchronously to the next element of the sequence.
+        /// Returns a value that indicates whether the enumerator was successfully advanced to the next element of the sequence.
         /// </summary>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>
