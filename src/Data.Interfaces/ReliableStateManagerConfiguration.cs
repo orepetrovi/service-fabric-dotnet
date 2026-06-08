@@ -66,7 +66,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Gets or sets the replicator settings.
+        /// Gets the replicator settings.
         /// </summary>
         public ReliableStateManagerReplicatorSettings ReplicatorSettings { get; private set; }
 
