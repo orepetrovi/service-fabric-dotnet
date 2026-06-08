@@ -17,7 +17,7 @@ namespace Microsoft.ServiceFabric.Data
     /// <example>
     /// In this example, implementation of the Read and Write overloads simply call their counterpart overloads.
     /// The currentValue and baseValue parameters are not set by the platform and should be ignored.
-    /// <code>
+    /// <code language="csharp">
     /// class Order
     /// {
     ///     public byte Warehouse { get; set; }
