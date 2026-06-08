@@ -24,14 +24,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
     public class QueueFullException : FabricTransientException
     {
         /// <summary>
-        /// Initializes a new Instance of the <see cref="QueueFullException"/> class.
+        /// Initializes a new instance of the <see cref="QueueFullException"/> class.
         /// </summary>
         public QueueFullException()
         {
         }
 
         /// <summary>
-        /// Initializes a new Instance of the <see cref="QueueFullException"/> class with a specified error message.
+        /// Initializes a new instance of the <see cref="QueueFullException"/> class with a specified error message.
         /// </summary>
         /// <param name="msg">The message that describes the error.</param>
         public QueueFullException(string msg)
