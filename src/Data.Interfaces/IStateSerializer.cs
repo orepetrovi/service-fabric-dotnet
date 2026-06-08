@@ -14,7 +14,7 @@ namespace Microsoft.ServiceFabric.Data
     /// Use <see cref="IReliableStateManager.TryAddStateSerializer{T}(IStateSerializer{T})"/> to register a custom serializer.
     /// </remarks>
     /// <example>
-    /// In this example, implementation of the <c>Read</c> and <c>Write</c> overloads simply call their counterpart overloads.
+    /// In this example, the differential <c>Read</c> and <c>Write</c> overloads delegate to the simpler overloads.
     /// The <c>baseValue</c> parameter on the second <c>Read</c> overload and the <c>baseValue</c> parameter on the second <c>Write</c> overload are not set by the platform and should be ignored.
     /// <code language="csharp">
     /// class Order
