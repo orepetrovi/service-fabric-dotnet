@@ -324,26 +324,26 @@ namespace Microsoft.ServiceFabric.Data
         public int? MinLogSizeInMB { get; set; }
 
         /// <summary>
-        /// Gets or sets the truncation threshold factor.
+        /// Gets or sets the multiplier applied to <see cref="MinLogSizeInMB"/> to determine the log usage threshold
+        /// above which truncation is initiated.
         /// </summary>
         /// <value>
         /// The default is 2.
         /// </value>
         /// <remarks>
-        /// A truncation is initiated when log usage exceeds this value times <see cref="MinLogSizeInMB"/>.
         /// Must be greater than 1.
         /// </remarks>
         public int? TruncationThresholdFactor { get; set; }
 
         /// <summary>
-        /// Gets or sets the throttling threshold factor.
+        /// Gets or sets the multiplier applied to <see cref="MinLogSizeInMB"/> and <see cref="CheckpointThresholdInMB"/>
+        /// to determine the log usage threshold above which throttling is initiated; throttling starts at the larger
+        /// of the two products.
         /// </summary>
         /// <value>
         /// The default is 4.
         /// </value>
         /// <remarks>
-        /// Throttling is initiated when log usage exceeds the maximum of this value times <see cref="MinLogSizeInMB"/>
-        /// and this value times <see cref="CheckpointThresholdInMB"/>.
         /// The throttling threshold must be greater than the truncation threshold.
         /// </remarks>
         public int? ThrottlingThresholdFactor { get; set; }
