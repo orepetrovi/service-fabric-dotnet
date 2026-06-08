@@ -68,20 +68,17 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets or sets the replicator settings.
         /// </summary>
-        /// <returns>The replicator settings.</returns>
         public ReliableStateManagerReplicatorSettings ReplicatorSettings { get; private set; }
 
         /// <summary>
         /// Gets the name of the config package in Settings.xml from which to load replicator settings and replicator
         /// security settings.
         /// </summary>
-        /// <returns>The config package name.</returns>
         public string ConfigPackageName { get; private set; }
 
         /// <summary>
         /// Gets the replicator security settings section name.
         /// </summary>
-        /// <returns>The section name.</returns>
         /// <remarks>If present in the config package specified by <see cref="ConfigPackageName"/> in Settings.xml,
         /// this section will be used to configure replicator security settings.</remarks>
         public string ReplicatorSecuritySectionName { get; private set; }
@@ -89,7 +86,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the replicator settings section name.
         /// </summary>
-        /// <returns>The section name.</returns>
         /// <remarks>If present in the config package specified by <see cref="ConfigPackageName"/> in Settings.xml,
         /// this section will be used to configure replicator settings.</remarks>
         public string ReplicatorSettingsSectionName { get; private set; }
@@ -98,7 +94,6 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets the delegate which will be called when custom serializers can be added.  
         /// When called, specify custom serializers via <see cref="IReliableStateManager.TryAddStateSerializer{T}(IStateSerializer{T})"/>
         /// </summary>
-        /// <returns>Task that represents the asynchronous operation.</returns>
         public Func<Task> OnInitializeStateSerializersEvent { get; private set; }
     }
 }
