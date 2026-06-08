@@ -24,7 +24,8 @@ namespace Microsoft.ServiceFabric.Data
         public TimeSpan? RetryInterval { get; set; }
 
         /// <summary>
-        /// Gets or sets the amount of time that the replicator waits after receiving an operation before sending back an acknowledgment.
+        /// Gets or sets the amount of time that the replicator waits after receiving an operation before sending back
+        /// an acknowledgment.
         /// </summary>
         /// <value>
         /// The default is 5 milliseconds.
