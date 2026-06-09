@@ -54,54 +54,53 @@ namespace Microsoft.ServiceFabric.Data
     /// The following is an example of correct usage.
     /// <code language="csharp">
     /// <![CDATA[
+    /// while (true)
+    /// {
+    ///     cancellationToken.ThrowIfCancellationRequested();
     /// 
-    ///     while (true)
+    ///     try
     ///     {
-    ///         cancellationToken.ThrowIfCancellationRequested();
-    /// 
-    ///         try
+    ///         using (var tx = this.StateManager.CreateTransaction())
     ///         {
-    ///             using (var tx = this.StateManager.CreateTransaction())
-    ///             {
-    ///                 await concurrentQueue.EnqueueAsync(tx, 12L, cancellationToken);
-    ///                 await tx.CommitAsync();
+    ///             await concurrentQueue.EnqueueAsync(tx, 12L, cancellationToken);
+    ///             await tx.CommitAsync();
     ///
-    ///                 return;
-    ///             }
-    ///         }
-    ///         catch (TransactionFaultedException e)
-    ///         {
-    ///             // This indicates that the transaction was internally faulted by the system. One possible cause for this is that the transaction was long running
-    ///             // and blocked a checkpoint. Increasing the "ReliableStateManagerReplicatorSettings.CheckpointThresholdInMB" will help reduce the chances of running into this exception
-    ///             Console.WriteLine("Transaction was internally faulted, retrying the transaction: " + e);
-    ///         }
-    ///         catch (FabricNotPrimaryException e)
-    ///         {
-    ///             // Gracefully exit RunAsync as the new primary should have RunAsync invoked on it and continue work.
-    ///             // If instead enqueue was being executed as part of a client request, the client would be signaled to re-resolve.
-    ///             Console.WriteLine("Replica is not primary, exiting RunAsync: " + e);
     ///             return;
     ///         }
-    ///         catch (FabricNotReadableException e)
-    ///         {
-    ///             // Retry until the queue is readable or a different exception is thrown.
-    ///             Console.WriteLine("Queue is not readable, retrying the transaction: " + e);
-    ///         }
-    ///         catch (FabricObjectClosedException e)
-    ///         {
-    ///             // Gracefully exit RunAsync as this is happening due to replica close.
-    ///             // If instead enqueue was being executed as part of a client request, the client would be signaled to re-resolve.
-    ///             Console.WriteLine("Replica is closing, exiting RunAsync: " + e);
-    ///             return;
-    ///         }
-    ///         catch (TimeoutException e)
-    ///         {
-    ///             Console.WriteLine("Encountered TimeoutException during EnqueueAsync, retrying the transaction: " + e);
-    ///         }
-    ///
-    ///         // Delay and retry.
-    ///         await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
     ///     }
+    ///     catch (TransactionFaultedException e)
+    ///     {
+    ///         // This indicates that the transaction was internally faulted by the system. One possible cause for this is that the transaction was long running
+    ///         // and blocked a checkpoint. Increasing the "ReliableStateManagerReplicatorSettings.CheckpointThresholdInMB" will help reduce the chances of running into this exception
+    ///         Console.WriteLine("Transaction was internally faulted, retrying the transaction: " + e);
+    ///     }
+    ///     catch (FabricNotPrimaryException e)
+    ///     {
+    ///         // Gracefully exit RunAsync as the new primary should have RunAsync invoked on it and continue work.
+    ///         // If instead enqueue was being executed as part of a client request, the client would be signaled to re-resolve.
+    ///         Console.WriteLine("Replica is not primary, exiting RunAsync: " + e);
+    ///         return;
+    ///     }
+    ///     catch (FabricNotReadableException e)
+    ///     {
+    ///         // Retry until the queue is readable or a different exception is thrown.
+    ///         Console.WriteLine("Queue is not readable, retrying the transaction: " + e);
+    ///     }
+    ///     catch (FabricObjectClosedException e)
+    ///     {
+    ///         // Gracefully exit RunAsync as this is happening due to replica close.
+    ///         // If instead enqueue was being executed as part of a client request, the client would be signaled to re-resolve.
+    ///         Console.WriteLine("Replica is closing, exiting RunAsync: " + e);
+    ///         return;
+    ///     }
+    ///     catch (TimeoutException e)
+    ///     {
+    ///         Console.WriteLine("Encountered TimeoutException during EnqueueAsync, retrying the transaction: " + e);
+    ///     }
+    ///
+    ///     // Delay and retry.
+    ///     await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
+    /// }
     /// ]]>
     /// </code>
     /// </example>
