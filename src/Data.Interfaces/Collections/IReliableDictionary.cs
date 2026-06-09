@@ -230,7 +230,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
-        /// <param name="lockMode">Type of locking to use for this read operation.</param>
+        /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -273,7 +273,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
-        /// <param name="lockMode">Type of locking to use for this read operation.</param>
+        /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
@@ -327,7 +327,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
-        /// <param name="enumerationMode">The enumeration mode to use. The default is Unordered. Ordered enumeration is ascending only. </param>
+        /// <param name="enumerationMode">One of the enumeration values that specifies the enumeration mode to use. The default is Unordered. Ordered enumeration is ascending only. </param>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
@@ -355,7 +355,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">Predicate that filters the key-value pairs to include in the enumeration based on the key.</param>
-        /// <param name="enumerationMode">The enumeration mode to use. The default is Unordered. Ordered enumeration is ascending only.</param>
+        /// <param name="enumerationMode">One of the enumeration values that specifies the enumeration mode to use. The default is Unordered. Ordered enumeration is ascending only.</param>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
@@ -540,7 +540,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
-        /// <param name="lockMode">Type of locking to use for this read operation.</param>
+        /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -593,7 +593,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
-        /// <param name="lockMode">Type of locking to use for this read operation.</param>
+        /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
