@@ -119,6 +119,11 @@ namespace Microsoft.ServiceFabric.Data
     /// ]]>
     /// </code>
     /// </example>
+    // todo: ITransaction inherits Dispose from IDisposable and the canonical-usage <example> above relies on a using
+    // block, but Dispose semantics cannot be verified from this repository; extend the interface <remarks> with a
+    // sentence describing whether disposing an uncommitted transaction implicitly aborts it, whether Dispose is
+    // idempotent after a successful CommitAsync or Abort, and whether Dispose can throw or swallows faults raised
+    // during implicit abort, once domain knowledge is available.
     public interface ITransaction : IDisposable
     {
         /// <summary>
