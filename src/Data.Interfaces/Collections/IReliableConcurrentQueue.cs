@@ -75,7 +75,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotReadableException">The replica is currently not readable.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableConcurrentQueue{T}"/> was closed by the runtime.</exception>
         /// <exception cref="FabricTransientException">The replica saw a transient failure. Retry the operation on a new transaction.</exception>
-        /// <exception cref="FabricException">The replica saw a non-retriable failure other than the types defined above. Cleanup and rethrow the exception.</exception>
+        /// <exception cref="FabricException">The replica saw a non-retriable failure other than <see cref="FabricNotPrimaryException"/>, <see cref="FabricNotReadableException"/>, <see cref="FabricObjectClosedException"/>, or <see cref="FabricTransientException"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
@@ -189,7 +189,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotReadableException">The replica is currently not readable.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableConcurrentQueue{T}"/> was closed by the runtime.</exception>
         /// <exception cref="FabricTransientException">The replica saw a transient failure. Retry the operation on a new transaction.</exception>
-        /// <exception cref="FabricException">The replica saw a non-retriable failure other than the types defined above. Cleanup and rethrow the exception.</exception>
+        /// <exception cref="FabricException">The replica saw a non-retriable failure other than <see cref="FabricNotPrimaryException"/>, <see cref="FabricNotReadableException"/>, <see cref="FabricObjectClosedException"/>, or <see cref="FabricTransientException"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
