@@ -197,7 +197,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <example>
-        /// This example shows how to dequeue and log infinitely with retry, until the cancellation token is canceled.  
+        /// This example shows how to dequeue and log continuously with retry, until the cancellation token is canceled.  
         /// <code language="csharp">
         /// <![CDATA[
         /// protected override async Task RunAsync(CancellationToken cancellationToken)
@@ -294,7 +294,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableConcurrentQueue{T}"/> was closed by the runtime.</exception>
         ///  
         /// <example>
-        /// This example shows how to monitor the queue's count infinitely, until the cancellation token is canceled.
+        /// This example shows how to monitor the queue's count continuously, until the cancellation token is canceled.
         /// <code language="csharp">
         /// <![CDATA[
         /// protected override async Task RunAsync(CancellationToken cancellationToken)
@@ -335,7 +335,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </example>
         // todo: the <example> above calls Task.Run(...) into `var observer` and never awaits or returns it, so
         // RunAsync returns immediately, leaving the spawned task orphaned - contradicting the lead-in's "monitor the
-        // queue's count infinitely, until the cancellation token is canceled". Restructure the example as an awaited
+        // queue's count continuously, until the cancellation token is canceled". Restructure the example as an awaited
         // single-threaded loop matching the lead-in's contract.
         // todo: the consistency/atomicity contract of Count cannot be verified from this repository - it is unclear
         // whether reads are atomic point-in-time snapshots, eventually consistent (may lag committed mutations by some
