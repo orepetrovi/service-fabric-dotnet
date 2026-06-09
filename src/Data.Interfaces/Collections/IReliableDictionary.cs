@@ -73,7 +73,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         Task AddAsync(ITransaction tx, TKey key, TValue value);
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         Task AddAsync(ITransaction tx, TKey key, TValue value, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>The new value for the key: the result of <paramref name="addValueFactory"/> if the key was absent, or the result of <paramref name="updateValueFactory"/> if the key was present.</returns>
         Task<TValue> AddOrUpdateAsync(
             ITransaction tx, 
@@ -128,7 +128,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>The new value for the key: <paramref name="addValue"/> if the key was absent, or the result of <paramref name="updateValueFactory"/> if the key was present.</returns>
         Task<TValue> AddOrUpdateAsync(
             ITransaction tx, 
@@ -153,7 +153,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>The new value for the key: the result of <paramref name="addValueFactory"/> if the key was absent, or the result of <paramref name="updateValueFactory"/> if the key was present.</returns>
         Task<TValue> AddOrUpdateAsync(
             ITransaction tx, 
@@ -180,7 +180,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>The new value for the key: <paramref name="addValue"/> if the key was absent, or the result of <paramref name="updateValueFactory"/> if the key was present.</returns>
         Task<TValue> AddOrUpdateAsync(
             ITransaction tx, 
@@ -216,7 +216,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns><see langword="true"/> if the Reliable Dictionary contains the key; otherwise, <see langword="false"/>.</returns>
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key);
 
@@ -236,7 +236,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns><see langword="true"/> if the Reliable Dictionary contains the key; otherwise, <see langword="false"/>.</returns>
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key, LockMode lockMode);
 
@@ -259,7 +259,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns><see langword="true"/> if the Reliable Dictionary contains the key; otherwise, <see langword="false"/>.</returns>
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
 
@@ -283,7 +283,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns><see langword="true"/> if the Reliable Dictionary contains the key; otherwise, <see langword="false"/>.</returns>
         Task<bool> ContainsKeyAsync(
             ITransaction tx, 
@@ -304,7 +304,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <remarks>
         /// The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Please note that <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> needs to be called on
@@ -327,7 +327,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <remarks>
         /// The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Please note that <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> needs to be called on
@@ -351,7 +351,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <remarks>
         /// The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Please note that <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> needs to be called on
@@ -375,7 +375,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>The value associated with the key: the existing value if the key was already present, or the value returned by <paramref name="valueFactory"/> otherwise.</returns>
         Task<TValue> GetOrAddAsync(ITransaction tx, TKey key, Func<TKey, TValue> valueFactory);
 
@@ -391,7 +391,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>The value associated with the key: the existing value if the key was already present, or <paramref name="value"/> otherwise.</returns>
         Task<TValue> GetOrAddAsync(ITransaction tx, TKey key, TValue value);
 
@@ -410,7 +410,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>The value associated with the key: the existing value if the key was already present, or the value returned by <paramref name="valueFactory"/> otherwise.</returns>
         Task<TValue> GetOrAddAsync(
             ITransaction tx, 
@@ -434,7 +434,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>The value associated with the key: the existing value if the key was already present, or <paramref name="value"/> otherwise.</returns>
         Task<TValue> GetOrAddAsync(
             ITransaction tx, 
@@ -454,7 +454,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns><see langword="true"/> if the key/value pair was added; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryAddAsync(ITransaction tx, TKey key, TValue value);
 
@@ -473,7 +473,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns><see langword="true"/> if the key/value pair was added; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryAddAsync(
             ITransaction tx, 
@@ -497,7 +497,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>A <see cref="ConditionalValue{TValue}"/> indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
         Task<ConditionalValue<TValue>> TryGetValueAsync(ITransaction tx, TKey key);
 
@@ -517,7 +517,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>A <see cref="ConditionalValue{TValue}"/> indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
         Task<ConditionalValue<TValue>> TryGetValueAsync(ITransaction tx, TKey key, LockMode lockMode);
 
@@ -540,7 +540,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>A <see cref="ConditionalValue{TValue}"/> indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
         Task<ConditionalValue<TValue>> TryGetValueAsync(
             ITransaction tx, 
@@ -568,7 +568,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>A <see cref="ConditionalValue{TValue}"/> indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
         Task<ConditionalValue<TValue>> TryGetValueAsync(
             ITransaction tx, 
@@ -587,7 +587,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>A <see cref="ConditionalValue{TValue}"/> indicating whether the key was removed from the Reliable Dictionary and, if so, the previous value.</returns>
         Task<ConditionalValue<TValue>> TryRemoveAsync(ITransaction tx, TKey key);
 
@@ -605,7 +605,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns>A <see cref="ConditionalValue{TValue}"/> indicating whether the key was removed from the Reliable Dictionary and, if so, the previous value.</returns>
         Task<ConditionalValue<TValue>> TryRemoveAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
 
@@ -621,7 +621,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, TValue comparisonValue);
 
@@ -641,7 +641,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryUpdateAsync(
             ITransaction tx, 
@@ -663,7 +663,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         Task SetAsync(ITransaction tx, TKey key, TValue value);
 
         /// <summary>
@@ -682,7 +682,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         Task SetAsync(ITransaction tx, TKey key, TValue value, TimeSpan timeout, CancellationToken cancellationToken);
     }
 }
