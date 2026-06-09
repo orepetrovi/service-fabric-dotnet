@@ -234,7 +234,13 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // contract for IReliableQueue<T> cannot be verified from this repository; once domain knowledge is
         // available, rewrite the <summary> to describe these semantics (snapshot vs. live view, concurrency
         // safety, ordering, transaction scoping), and add a <returns> element only if it carries information
-        // beyond the rewritten <summary>.
+        // beyond the rewritten <summary>. The rewritten <summary> must also disambiguate IAsyncEnumerable<T>
+        // as the Service Fabric custom Microsoft.ServiceFabric.Data.IAsyncEnumerable<T> (whose
+        // GetAsyncEnumerator() has no CancellationToken parameter and returns the custom
+        // Microsoft.ServiceFabric.Data.IAsyncEnumerator<T>) rather than the BCL
+        // System.Collections.Generic.IAsyncEnumerable<T> that await foreach binds to; sibling
+        // IReliableDictionary<TKey,TValue>.CreateEnumerableAsync makes this explicit by qualifying its cref as
+        // Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}.GetAsyncEnumerator.
         Task<IAsyncEnumerable<T>> CreateEnumerableAsync(ITransaction tx);
     }
 }
