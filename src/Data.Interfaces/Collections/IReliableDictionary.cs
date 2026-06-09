@@ -207,7 +207,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task ClearAsync(TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Determines whether the Reliable Dictionary contains the specified key.
+        /// Returns a value indicating whether the Reliable Dictionary contains the specified key.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
@@ -226,7 +226,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key);
 
         /// <summary>
-        /// Determines whether the Reliable Dictionary contains the specified key.
+        /// Returns a value indicating whether the Reliable Dictionary contains the specified key.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
@@ -246,7 +246,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key, LockMode lockMode);
 
         /// <summary>
-        /// Determines whether the Reliable Dictionary contains the specified key.
+        /// Returns a value indicating whether the Reliable Dictionary contains the specified key.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
@@ -269,7 +269,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Determines whether the Reliable Dictionary contains the specified key.
+        /// Returns a value indicating whether the Reliable Dictionary contains the specified key.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
@@ -475,7 +475,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Attempts to add the specified key and value to the Reliable Dictionary.
+        /// Returns a value indicating whether the specified key and value were added to the Reliable Dictionary.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
@@ -490,7 +490,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<bool> TryAddAsync(ITransaction tx, TKey key, TValue value);
 
         /// <summary>
-        /// Attempts to add the specified key and value to the Reliable Dictionary.
+        /// Returns a value indicating whether the specified key and value were added to the Reliable Dictionary.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
@@ -514,7 +514,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Attempts to get the value associated with the specified key from the Reliable Dictionary.
+        /// Returns the value associated with the specified key from the Reliable Dictionary, or an empty result if the key was not found.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
@@ -536,7 +536,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<TValue>> TryGetValueAsync(ITransaction tx, TKey key);
 
         /// <summary>
-        /// Attempts to get the value associated with the specified key from the Reliable Dictionary.
+        /// Returns the value associated with the specified key from the Reliable Dictionary, or an empty result if the key was not found.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
@@ -559,7 +559,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<TValue>> TryGetValueAsync(ITransaction tx, TKey key, LockMode lockMode);
 
         /// <summary>
-        /// Attempts to get the value associated with the specified key from the Reliable Dictionary.
+        /// Returns the value associated with the specified key from the Reliable Dictionary, or an empty result if the key was not found.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
@@ -589,7 +589,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Attempts to get the value associated with the specified key from the Reliable Dictionary.
+        /// Returns the value associated with the specified key from the Reliable Dictionary, or an empty result if the key was not found.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
@@ -621,7 +621,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Attempts to remove the value with the specified key from the Reliable Dictionary.
+        /// Returns the value removed from the Reliable Dictionary, or an empty result if the specified key was not found.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
@@ -638,7 +638,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<TValue>> TryRemoveAsync(ITransaction tx, TKey key);
 
         /// <summary>
-        /// Attempts to remove the value with the specified key from the Reliable Dictionary.
+        /// Returns the value removed from the Reliable Dictionary, or an empty result if the specified key was not found.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
@@ -659,7 +659,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<TValue>> TryRemoveAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Compares the existing value for the specified key with a specified value, and if they are equal, updates the key with a third value.
+        /// Returns a value indicating whether the value for the specified key was atomically updated from <paramref name="comparisonValue"/> to <paramref name="newValue"/>.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key whose value is compared with <paramref name="comparisonValue"/> and possibly replaced.</param>
@@ -675,7 +675,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, TValue comparisonValue);
 
         /// <summary>
-        /// Compares the existing value for the specified key with a specified value, and if they are equal, updates the key with a third value.
+        /// Returns a value indicating whether the value for the specified key was atomically updated from <paramref name="comparisonValue"/> to <paramref name="newValue"/>.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key whose value is compared with <paramref name="comparisonValue"/> and possibly replaced.</param>
