@@ -72,7 +72,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Returns the value removed from the beginning of the queue, or an empty result if the queue is empty.
         /// </summary>
-        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableQueue{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.</exception>
@@ -113,7 +112,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Returns the value at the beginning of the queue without removing it, or an empty result if the queue is empty.
         /// </summary>
-        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -217,7 +215,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Returns an async enumerable over the <see cref="IReliableQueue{T}"/>.
         /// </summary>
-        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
