@@ -13,6 +13,12 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// Represents a Reliable Collection of elements of type <typeparamref name="T"/>.
     /// </summary>
     /// <seealso href="https://learn.microsoft.com/azure/service-fabric/service-fabric-reliable-services-reliable-collections">Reliable Collections</seealso>
+    // todo: this base interface has no type-level <remarks> documenting the transactional/concurrency contract,
+    // while sibling reliable-collection interfaces (IReliableQueue<T>, IReliableConcurrentQueue<T>) document a value-
+    // mutation prohibition and the "transaction is the unit of concurrency" / per-transaction await-serialization rule.
+    // Hoist the universal clauses to a <remarks> block here (or have subtypes <inheritdoc> from here) once domain
+    // knowledge confirms which clauses apply to every IReliableCollection<T> implementation rather than only to specific
+    // subtypes.
     public interface IReliableCollection<T> : IReliableState
     {
         /// <summary>
