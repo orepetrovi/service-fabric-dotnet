@@ -12,10 +12,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <summary>
     /// Represents a Reliable Collection of elements of type <typeparamref name="T"/>.
     /// </summary>
-    /// <remarks>
-    /// More information on Reliable Collections can be seen
-    /// <see href="https://docs.microsoft.com/azure/service-fabric/service-fabric-reliable-services-reliable-collections">here</see>.
-    /// </remarks>
+    /// <seealso href="https://learn.microsoft.com/azure/service-fabric/service-fabric-reliable-services-reliable-collections">Reliable Collections</seealso>
     public interface IReliableCollection<T> : IReliableState
     {
         /// <summary>
