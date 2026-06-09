@@ -51,7 +51,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// The <see cref="IReliableCollection{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.
         /// </exception>
         /// <exception cref="TimeoutException">
-        /// Indicates that this operation failed to complete within the given timeout.
+        /// The operation failed to complete within the default timeout.
         /// </exception>
         /// <returns>
         /// A task that represents the asynchronous clear operation.
