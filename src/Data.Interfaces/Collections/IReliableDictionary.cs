@@ -19,9 +19,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <remarks>
     /// <para>Keys or values stored in this dictionary MUST NOT be mutated outside the context of an operation on the 
     /// dictionary. It is highly recommended to make both <typeparamref name="TKey"/> and <typeparamref name="TValue"/> 
-    /// immutable in order to avoid accidental data corruption.
+    /// immutable to avoid accidental data corruption.
     /// See <see href="https://docs.microsoft.com/azure/service-fabric/service-fabric-work-with-reliable-collections">here</see> for common pitfalls.</para>
-    /// <para>The transaction is the unit of concurrency. Users can have multiple transactions in-flight at any given point of time, but for a given transaction each API must be called one at a time.
+    /// <para>The transaction is the unit of concurrency. Users can have multiple transactions in flight at any time, but for a given transaction each API must be called one at a time.
     /// When calling any asynchronous Reliable Collection method that takes an <see cref="ITransaction"/>, you must wait for completion of the returned Task before calling
     /// another method using the same transaction. See examples of transactions <see href="https://docs.microsoft.com/azure/service-fabric/service-fabric-work-with-reliable-collections">here</see>.</para>
     /// </remarks>
@@ -294,7 +294,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <remarks>
         /// The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Please note that <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> needs to be called on
-        /// the returned instance in order to enumerate. Example usage can be
+        /// the returned instance to enumerate. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.
         /// </remarks>
         /// <returns>A task whose result is an <see cref="IAsyncEnumerable{T}"/> over the key/value pairs in the <see cref="IReliableDictionary{TKey,TValue}"/>.</returns>
@@ -317,7 +317,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <remarks>
         /// The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Please note that <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> needs to be called on
-        /// the returned instance in order to enumerate. Example usage can be
+        /// the returned instance to enumerate. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.
         /// </remarks>
         /// <returns>A task whose result is an <see cref="IAsyncEnumerable{T}"/> over the key/value pairs in the <see cref="IReliableDictionary{TKey,TValue}"/>.</returns>
@@ -341,7 +341,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <remarks>
         /// The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Please note that <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> needs to be called on
-        /// the returned instance in order to enumerate. Example usage can be
+        /// the returned instance to enumerate. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.
         /// </remarks>
         /// <returns>A task whose result is an <see cref="IAsyncEnumerable{T}"/> over the key/value pairs in the <see cref="IReliableDictionary{TKey,TValue}"/>.</returns>
