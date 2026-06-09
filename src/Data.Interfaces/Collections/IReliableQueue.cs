@@ -48,8 +48,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="item">The value to add. Can be <see langword="null"/> for reference types.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
@@ -87,8 +87,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Returns the value removed from the beginning of the queue, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
@@ -135,8 +135,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Returns the value at the beginning of the queue without removing it, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
@@ -190,8 +190,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
