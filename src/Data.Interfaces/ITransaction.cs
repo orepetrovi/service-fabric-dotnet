@@ -106,8 +106,8 @@ namespace Microsoft.ServiceFabric.Data
     ///     taskList.Add(concurrentQueue.TryDequeueAsync(tx, cancellationToken));
     ///     taskList.Add(concurrentQueue.TryDequeueAsync(tx, cancellationToken));
     ///
-    ///     // Both TryDequeueAsync calls are issued on the same transaction and awaited together; per the await-serialization
-    ///     // rule in <remarks> above, every IReliableCollection<T> API on a transaction must be awaited before the next is started.
+    ///     // Both TryDequeueAsync calls run on the same transaction and are awaited together; per the await-serialization
+    ///     // rule documented on this interface, every IReliableCollection<T> API on a transaction must be awaited one at a time.
     ///     await Task.WhenAll(taskList);
     ///     await tx.CommitAsync();
     /// }
