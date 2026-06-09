@@ -36,9 +36,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// In some instances, read operations, such as this one, can be performed from secondary replicas
         /// depending on the implementation of the <see cref="IReliableCollection{T}"/> used.
         /// </exception>
-        /// <returns>
-        /// A task that represents the asynchronous operation, indicating the number of elements.
-        /// </returns>
         // todo: the FabricNotPrimaryException <exception> text is internally contradictory - sentence 1 says it is thrown
         // when not Primary, while sentence 2 says reads such as this one can be served from secondary replicas; this
         // also overlaps with FabricNotReadableException above, which already documents the secondary-readable case. The
@@ -55,9 +52,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TimeoutException">
         /// The operation failed to complete within the default timeout.
         /// </exception>
-        /// <returns>
-        /// A task that represents the asynchronous clear operation.
-        /// </returns>
         // todo: ClearAsync has no timeout parameter, so the TimeoutException <exception> text's reference to "the given
         // timeout" is misleading; the actual timeout source (implicit default, configurable replicator setting, or none)
         // cannot be verified from this repository. Either rewrite the <exception> text to describe the actual default and
