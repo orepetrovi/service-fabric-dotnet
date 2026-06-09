@@ -167,7 +167,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="timeout">The amount of time to wait for the operation to complete. The default is <see langword="null"/>. If <see langword="null"/> is passed, a default timeout will be used.</param>
         /// 
         /// <returns>
-        /// <see cref="ConditionalValue{T}.HasValue"/> is <see langword="true"/> and <see cref="ConditionalValue{T}.Value"/> is the dequeued item when a value became available within the timeout; otherwise <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
+        /// A <see cref="ConditionalValue{T}"/> whose <see cref="ConditionalValue{T}.HasValue"/> is <see langword="true"/> and <see cref="ConditionalValue{T}.Value"/> holds the dequeued item when a value was available before the timeout; otherwise <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
         /// 
         /// <remarks>
