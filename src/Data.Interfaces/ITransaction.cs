@@ -9,6 +9,8 @@ namespace Microsoft.ServiceFabric.Data
     using System.Fabric;
     using System.Threading.Tasks;
 
+    using Microsoft.ServiceFabric.Data.Collections;
+
     /// <summary>
     /// A sequence of operations performed as a single logical unit of work.
     /// </summary>
@@ -46,7 +48,7 @@ namespace Microsoft.ServiceFabric.Data
     /// <para>
     /// Any instance member of this type is not guaranteed to be thread safe. 
     /// This makes transactions the unit of concurrency: Users can have multiple transactions in-flight at any given point of time, but for a given transaction each API must be called one at a time.
-    /// All <see cref="T:IReliableCollection{T}"/> APIs that accept a transaction and return a Task must be awaited one at a time.
+    /// All <see cref="IReliableCollection{T}"/> APIs that accept a transaction and return a Task must be awaited one at a time.
     /// </para>
     /// 
     /// 
