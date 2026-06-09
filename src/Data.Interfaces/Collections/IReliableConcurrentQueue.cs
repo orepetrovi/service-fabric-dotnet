@@ -333,6 +333,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// ]]>
         /// </code>
         /// </example>
+        // todo: the consistency/atomicity contract of Count cannot be verified from this repository - it is unclear
+        // whether reads are atomic point-in-time snapshots, eventually consistent (may lag committed mutations by some
+        // bounded or unbounded interval), or best-effort. Consumers using Count for back-pressure need this guarantee.
+        // Document the observed semantics in <remarks> once domain knowledge is available.
         long Count { get; }
     }
 }
