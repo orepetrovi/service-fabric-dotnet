@@ -133,7 +133,7 @@ namespace Microsoft.ServiceFabric.Data
         /// You cannot abort a transaction once it has been committed, because all modifications
         /// have been persisted and replicated.
         /// </remarks>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
         /// <exception cref="FabricNotPrimaryException">
         /// The transaction includes updates to <see cref="IReliableState"/> and the <see cref="System.Fabric.ReplicaRole"/> is not Primary.
@@ -144,7 +144,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Aborts the transaction, rolling back any uncommitted operations.
         /// </summary>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
         /// <exception cref="FabricNotPrimaryException">
         /// The transaction includes updates to <see cref="IReliableState"/> and the <see cref="System.Fabric.ReplicaRole"/> is not Primary.
@@ -160,7 +160,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Returns the visibility sequence number for this transaction.
         /// </summary>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
         /// <returns>The visibility sequence number.</returns>
         // todo: "visibility sequence number" semantics cannot be verified from this repository; rewrite the summary and
