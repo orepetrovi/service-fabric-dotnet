@@ -176,7 +176,7 @@ namespace Microsoft.ServiceFabric.Data
         long TransactionId { get; }
 
         /// <summary>
-        /// Gets the visibility sequence number.
+        /// Returns the visibility sequence number for this transaction.
         /// </summary>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
@@ -185,6 +185,8 @@ namespace Microsoft.ServiceFabric.Data
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <returns>The visibility sequence number.</returns>
+        // todo: "visibility sequence number" semantics cannot be verified from this repository; rewrite the summary and
+        // <returns> to describe what the returned value represents and how callers should use it once domain knowledge is available
         Task<long> GetVisibilitySequenceNumberAsync();
     }
 }
