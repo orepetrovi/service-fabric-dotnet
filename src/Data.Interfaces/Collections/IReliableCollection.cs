@@ -27,7 +27,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// transactions <see href="https://docs.microsoft.com/azure/service-fabric/service-fabric-work-with-reliable-collections">here</see>.
         /// </param>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableCollection cannot serve reads at the moment.
+        /// The <see cref="IReliableCollection{T}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
@@ -37,7 +37,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">
         /// The <see cref="IReliableCollection{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.
         /// In some instances, read operations, such as this one, can be performed from secondary replicas
-        /// depending on the implementation of the IReliableCollection used.
+        /// depending on the implementation of the <see cref="IReliableCollection{T}"/> used.
         /// </exception>
         /// <returns>
         /// A task that represents the asynchronous operation, indicating the number of elements.
