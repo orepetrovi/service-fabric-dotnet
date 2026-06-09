@@ -39,6 +39,12 @@ namespace Microsoft.ServiceFabric.Data.Collections
     // all three on its queue operations, and IReliableDictionary documents FabricObjectClosedException broadly.
     // Once domain knowledge confirms which exceptions each member throws directly, add the corresponding
     // <exception> elements to each affected member.
+    // todo: the <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception> text on
+    // the four EnqueueAsync/TryDequeueAsync/TryPeekAsync overloads that take a TimeSpan timeout may
+    // over-promise rejection: Timeout.InfiniteTimeSpan has Ticks = -1 (strictly negative) and is a common
+    // wait-forever sentinel across .NET and Service Fabric APIs. Verify whether this interface accepts
+    // Timeout.InfiniteTimeSpan; if so, refine each <exception cref="ArgumentException"> description to
+    // exclude that sentinel (e.g. "is negative and not <see cref="Timeout.InfiniteTimeSpan"/>").
     public interface IReliableQueue<T> : IReliableCollection<T>
     {
         /// <inheritdoc cref="EnqueueAsync(ITransaction, T, TimeSpan, CancellationToken)" path="/summary"/>
