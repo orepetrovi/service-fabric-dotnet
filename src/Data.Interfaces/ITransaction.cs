@@ -110,11 +110,11 @@ namespace Microsoft.ServiceFabric.Data
     /// <![CDATA[
     /// using (var txn = this.StateManager.CreateTransaction())
     /// {
-    ///     List<Task> taskList = new List<Task>();
-    ///     taskList.Add(concurrentQueue.DequeueAsync(txn, cancellationToken));
-    ///     taskList.Add(concurrentQueue.DequeueAsync(txn, cancellationToken));
+    ///     List<Task<ConditionalValue<T>>> taskList = new List<Task<ConditionalValue<T>>>();
+    ///     taskList.Add(concurrentQueue.TryDequeueAsync(txn, cancellationToken));
+    ///     taskList.Add(concurrentQueue.TryDequeueAsync(txn, cancellationToken));
     ///
-    ///     // Both DequeueAsync calls are issued on the same transaction and awaited together; per the await-serialization
+    ///     // Both TryDequeueAsync calls are issued on the same transaction and awaited together; per the await-serialization
     ///     // rule in <remarks> above, every IReliableCollection<T> API on a transaction must be awaited before the next is started.
     ///     await Task.WhenAll(taskList);
     ///     await txn.CommitAsync();
