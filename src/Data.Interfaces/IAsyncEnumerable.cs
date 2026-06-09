@@ -11,7 +11,7 @@ namespace Microsoft.ServiceFabric.Data
     public interface IAsyncEnumerable<out T>
     {
         /// <summary>
-        /// Returns an <see cref="IAsyncEnumerator{T}"/> that asynchronously iterates through the collection.
+        /// Returns an <see cref="IAsyncEnumerator{T}"/> for the collection.
         /// </summary>
         IAsyncEnumerator<T> GetAsyncEnumerator();
     }
