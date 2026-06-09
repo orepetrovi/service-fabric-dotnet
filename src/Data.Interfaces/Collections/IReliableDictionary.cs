@@ -203,6 +203,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        // todo: ClearAsync is missing <exception cref="FabricObjectClosedException"> that the other 29 state-touching
+        // members in this file all document. Verify against the runtime implementation: if ClearAsync also throws when
+        // the IReliableDictionary is closed or deleted, add the standard "The <see cref="IReliableDictionary{TKey,
+        // TValue}"/> is closed or deleted." element; otherwise document why this method alone is exempt.
         Task ClearAsync(TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
