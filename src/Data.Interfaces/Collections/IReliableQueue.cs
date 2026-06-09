@@ -27,7 +27,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     public interface IReliableQueue<T> : IReliableCollection<T>
     {
         /// <summary>
-        /// Adds an object to the end of the reliable queue.
+        /// Adds an object to the end of the queue.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="item">The value to add. Can be <see langword="null"/> for reference types.</param>
@@ -44,7 +44,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task EnqueueAsync(ITransaction tx, T item);
 
         /// <summary>
-        /// Adds an object to the end of the reliable queue.
+        /// Adds an object to the end of the queue.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="item">The value to add. Can be <see langword="null"/> for reference types.</param>
@@ -65,7 +65,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task EnqueueAsync(ITransaction tx, T item, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Returns the value removed from the beginning of the reliable queue, or an empty result if the queue is empty.
+        /// Returns the value removed from the beginning of the queue, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
@@ -84,7 +84,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx);
 
         /// <summary>
-        /// Returns the value removed from the beginning of the reliable queue, or an empty result if the queue is empty.
+        /// Returns the value removed from the beginning of the queue, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
@@ -108,7 +108,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Returns the value at the beginning of the reliable queue without removing it, or an empty result if the queue is empty.
+        /// Returns the value at the beginning of the queue without removing it, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
@@ -131,7 +131,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx);
 
         /// <summary>
-        /// Returns the value at the beginning of the reliable queue without removing it, or an empty result if the queue is empty.
+        /// Returns the value at the beginning of the queue without removing it, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
@@ -159,7 +159,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Returns the value at the beginning of the reliable queue without removing it, or an empty result if the queue is empty.
+        /// Returns the value at the beginning of the queue without removing it, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
@@ -183,7 +183,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, LockMode lockMode);
 
         /// <summary>
-        /// Returns the value at the beginning of the reliable queue without removing it, or an empty result if the queue is empty.
+        /// Returns the value at the beginning of the queue without removing it, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
