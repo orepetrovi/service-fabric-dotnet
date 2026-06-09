@@ -80,7 +80,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// This includes the transaction in which the value was enqueued; as a consequence, <see cref="IReliableConcurrentQueue{T}"/> does not support Read-Your-Writes.
         /// </remarks>
         /// 
-        /// <exception cref="FabricNotPrimaryException">The replica is no longer in <cref name="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The replica is no longer in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="FabricNotReadableException">The replica is currently not readable.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableConcurrentQueue{T}"/> was closed by the runtime.</exception>
         /// <exception cref="FabricTransientException">The replica saw a transient failure. Retry the operation on a new transaction</exception>
@@ -191,7 +191,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </para>
         /// </remarks>
         /// 
-        /// <exception cref="FabricNotPrimaryException">The replica is no longer in <cref name="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The replica is no longer in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="FabricNotReadableException">The replica is currently not readable.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableConcurrentQueue{T}"/> was closed by the runtime.</exception>
         /// <exception cref="FabricTransientException">The replica saw a transient failure. Retry the operation on a new transaction</exception>
