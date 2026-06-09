@@ -80,7 +80,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the identifier of the parent backup.
         /// </summary>
-        /// <value>The identifier of the corresponding full backup, or <see cref="Guid.Empty"/> when the instance was constructed without one or when <see cref="Option"/> is <see cref="BackupOption.Full"/>.</value>
+        /// <value>The identifier of the corresponding full backup, or <see cref="Guid.Empty"/> when the instance was constructed without one.</value>
         public Guid ParentBackupId { get; private set; }
 
         /// <summary>
