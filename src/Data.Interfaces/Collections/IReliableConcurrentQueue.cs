@@ -110,8 +110,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         ///         }
         ///         catch (TransactionFaultedException e)
         ///         {
-        ///             // This indicates that the transaction was internally faulted by the system. One possible cause for this is that the transaction was long running
-        ///             // and blocked a checkpoint. Increasing the "ReliableStateManagerReplicatorSettings.CheckpointThresholdInMB" will help reduce the chances of running into this exception
+        ///             // This indicates that the transaction was internally faulted by the system. One possible
+        ///             // cause for this is that the transaction was long running and blocked a checkpoint.
+        ///             // Increasing the "ReliableStateManagerReplicatorSettings.CheckpointThresholdInMB" will
+        ///             // help reduce the chances of running into this exception.
         ///             Console.WriteLine("Transaction was internally faulted, retrying the transaction: " + e);
         ///         }
         ///         catch (FabricNotPrimaryException e)
@@ -233,8 +235,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         ///         }
         ///         catch (TransactionFaultedException e)
         ///         {
-        ///             // This indicates that the transaction was internally faulted by the system. One possible cause for this is that the transaction was long running
-        ///             // and blocked a checkpoint. Increasing the "ReliableStateManagerReplicatorSettings.CheckpointThresholdInMB" will help reduce the chances of running into this exception
+        ///             // This indicates that the transaction was internally faulted by the system. One possible
+        ///             // cause for this is that the transaction was long running and blocked a checkpoint.
+        ///             // Increasing the "ReliableStateManagerReplicatorSettings.CheckpointThresholdInMB" will
+        ///             // help reduce the chances of running into this exception.
         ///             Console.WriteLine("Transaction was internally faulted, retrying the transaction: " + e);
         ///         }
         ///         catch (FabricNotPrimaryException e)
