@@ -159,7 +159,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Abort (rolls back) the transaction.
         /// </summary>
-        /// <remarks>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when a method call is invalid for the object's current state.
@@ -170,7 +169,6 @@ namespace Microsoft.ServiceFabric.Data
         /// The transaction includes updates to <see cref="IReliableState"/> and the <see cref="System.Fabric.ReplicaRole"/> is not Primary.
         /// Only Primary replicas are given write status.
         /// </exception>
-        /// </remarks>
         void Abort();
 
         /// <summary>
@@ -182,14 +180,12 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the visibility sequence number.
         /// </summary>
-        /// <remarks>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when a method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// </remarks>
         /// <returns>The visibility sequence number.</returns>
         Task<long> GetVisibilitySequenceNumberAsync();
     }
