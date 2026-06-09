@@ -155,6 +155,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the identifier of the transaction.
         /// </summary>
+        // todo: TransactionId semantics (uniqueness scope, assignment, monotonicity, lifetime, valid range) cannot be verified
+        // from this repository; rewrite the summary to describe these properties once domain knowledge is available
         long TransactionId { get; }
 
         /// <summary>
