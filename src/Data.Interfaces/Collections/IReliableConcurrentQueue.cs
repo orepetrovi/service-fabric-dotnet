@@ -287,7 +287,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // the operation throws in the same situation. The <example> above catches TimeoutException and also
         // handles HasValue=false. The relationship between the timeout parameter and TimeoutException cannot
         // be verified from this repository; correct either the <summary> or the <exception> element once
-        // domain knowledge is available.
+        // domain knowledge is available. Additionally, the <param name="timeout"> description on this
+        // member omits the "before throwing a <see cref="TimeoutException"/>" clause that the same param
+        // carries on EnqueueAsync; align both <param> descriptions once the timeout/<exception> contract
+        // is resolved (the right wording depends on whether timeout expiry throws TimeoutException or
+        // returns HasValue=false).
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
