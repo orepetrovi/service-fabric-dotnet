@@ -354,6 +354,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // whether reads are atomic point-in-time snapshots, eventually consistent (may lag committed mutations by some
         // bounded or unbounded interval), or best-effort. Consumers using Count for back-pressure need this guarantee.
         // Document the observed semantics in <remarks> once domain knowledge is available.
+        // todo: Count does not document FabricNotPrimaryException, but the sibling read API
+        // IReliableCollection<T>.GetCountAsync documents it. Whether Count actually throws this on a non-Primary
+        // replica cannot be verified from this repository; verify against the runtime implementation and add an
+        // <exception cref="FabricNotPrimaryException"> element if confirmed.
         long Count { get; }
     }
 }
