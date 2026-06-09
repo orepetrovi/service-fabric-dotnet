@@ -30,8 +30,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <para>
     /// It is expected that values will be relatively short-lived in the queue; in other words, that the egress (<see cref="TryDequeueAsync"/>) rate is 
     /// equal to or greater than the ingress (<see cref="EnqueueAsync"/>) rate.  Violating this expectation 
-    /// may worsen system performance.  A planned queue capacity constraint which will throttle incoming Enqueues once the capacity is reached
-    /// will help in maintaining this property.
+    /// may worsen system performance.
     /// </para>
     /// <para>
     /// As the ordering of elements is not strictly guaranteed, assumptions about the ordering of any two values in the queue MUST NOT
