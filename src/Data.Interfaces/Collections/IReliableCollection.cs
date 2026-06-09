@@ -33,15 +33,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
-        /// </exception>
+        /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
         /// <exception cref="FabricNotPrimaryException">
-        /// Thrown when attempting to perform this operation on a <see cref="IReliableCollection{T}"/> 
-        /// that is not in the <see cref="ReplicaRole.Primary"/> role.
-        /// In some instances, read operations, such as this one, can be performed from secondary replicas 
+        /// The <see cref="IReliableCollection{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.
+        /// In some instances, read operations, such as this one, can be performed from secondary replicas
         /// depending on the implementation of the IReliableCollection used.
         /// </exception>
         /// <returns>
@@ -53,8 +48,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Removes all state from the <see cref="IReliableCollection{T}"/>, including replicated and persisted state.
         /// </summary>
         /// <exception cref="FabricNotPrimaryException">
-        /// Thrown when attempting to perform this operation
-        /// on a <see cref="IReliableCollection{T}"/> that is not in the <see cref="ReplicaRole.Primary"/> role.
+        /// The <see cref="IReliableCollection{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.
         /// </exception>
         /// <exception cref="TimeoutException">
         /// Indicates that this operation failed to complete within the given timeout.
