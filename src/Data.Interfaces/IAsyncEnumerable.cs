@@ -6,9 +6,7 @@
 namespace Microsoft.ServiceFabric.Data
 {
     /// <summary>
-    /// Exposes an <see cref="IAsyncEnumerator{T}"/> 
-    /// which supports an asynchronous iteration over a collection 
-    /// of a specified type.
+    /// Exposes an <see cref="IAsyncEnumerator{T}"/> for asynchronous iteration over a collection.
     /// </summary>
     public interface IAsyncEnumerable<out T>
     {
