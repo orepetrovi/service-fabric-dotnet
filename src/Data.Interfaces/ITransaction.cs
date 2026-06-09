@@ -129,11 +129,8 @@ namespace Microsoft.ServiceFabric.Data
     public interface ITransaction : IDisposable
     {
         /// <summary>
-        /// Sequence number for the commit operation.
+        /// Gets the sequence number assigned to the transaction when it was committed.
         /// </summary>
-        /// <value>
-        /// The sequence number at which the the transaction was committed.
-        /// </value>
         long CommitSequenceNumber { get; }
 
         /// <summary>
@@ -174,7 +171,7 @@ namespace Microsoft.ServiceFabric.Data
         void Abort();
 
         /// <summary>
-        /// Gets a value identifying the transaction.
+        /// Gets the identifier of the transaction.
         /// </summary>
         long TransactionId { get; }
 
