@@ -16,8 +16,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <summary>
     /// <para>Represents a Reliable Collection of key/value pairs that are persisted and replicated.</para>
     /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the Reliable Dictionary.</typeparam>
-    /// <typeparam name="TValue">The type of the values in the Reliable Dictionary.</typeparam>
     /// <remarks>
     /// <para>Keys or values stored in this dictionary MUST NOT be mutated outside the context of an operation on the 
     /// dictionary. It is highly recommended to make both <typeparamref name="TKey"/> and <typeparamref name="TValue"/> 
