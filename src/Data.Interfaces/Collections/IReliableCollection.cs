@@ -20,7 +20,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     public interface IReliableCollection<T> : IReliableState
     {
         /// <summary>
-        /// Gets the number of elements contained in the <see cref="IReliableCollection{T}"/>.
+        /// Returns the number of elements in the <see cref="IReliableCollection{T}"/>.
         /// </summary>
         /// <param name="tx">
         /// The transaction to associate this operation with. See examples of
