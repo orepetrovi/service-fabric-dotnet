@@ -50,11 +50,10 @@ namespace Microsoft.ServiceFabric.Data
     /// This makes transactions the unit of concurrency: Users can have multiple transactions in-flight at any given point of time, but for a given transaction each API must be called one at a time.
     /// All <see cref="IReliableCollection{T}"/> APIs that accept a transaction and return a Task must be awaited one at a time.
     /// </para>
-    /// 
-    /// 
-    /// <para>
+    /// </remarks>
+    /// <example>
     /// Following is an example of a correct usage.
-    /// <code>
+    /// <code language="csharp">
     /// <![CDATA[
     /// 
     ///     while (true)
@@ -106,11 +105,10 @@ namespace Microsoft.ServiceFabric.Data
     ///     }
     /// ]]>
     /// </code>
-    /// </para>
-    /// 
-    /// <para>
+    /// </example>
+    /// <example>
     /// The following is an example of incorrect usage that has undefined behavior.
-    /// <code>
+    /// <code language="csharp">
     /// <![CDATA[
     /// using (var txn = this.StateManager.CreateTransaction())
     /// {
@@ -123,9 +121,7 @@ namespace Microsoft.ServiceFabric.Data
     /// }
     /// ]]>
     /// </code>
-    /// </para>
-    /// 
-    /// </remarks>
+    /// </example>
     public interface ITransaction : IDisposable
     {
         /// <summary>
