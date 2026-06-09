@@ -88,7 +88,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// 
         /// <example>
         /// This example shows how to use <see cref="EnqueueAsync"/> to enqueue a value with retry.
-        /// <code>
+        /// <code language="csharp">
         /// <![CDATA[
         /// protected override async Task RunAsync(CancellationToken cancellationToken)
         /// {
@@ -203,7 +203,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <example>
         /// This example shows how to dequeue and log infinitely with retry, until the cancellation token is canceled.  
-        /// <code>
+        /// <code language="csharp">
         /// <![CDATA[
         /// protected override async Task RunAsync(CancellationToken cancellationToken)
         /// {
@@ -294,7 +294,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         ///  
         /// <example>
         /// This example shows how to monitor the queue's count infinitely, until the cancellation token is canceled.
-        /// <code>
+        /// <code language="csharp">
         /// <![CDATA[
         /// protected override async Task RunAsync(CancellationToken cancellationToken)
         /// {
