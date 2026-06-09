@@ -56,7 +56,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // todo: when queue capacity constraint is configurable, add QueueFullException to EnqueueAsync exceptions and document capacity behavior (including example)
 
         /// <summary>
-        /// Stage the enqueue of a value into the queue.
+        /// Stages the enqueue of a value into the queue.
         /// </summary>
         /// 
         /// <param name="tx">Transaction to associate this operation with.</param>
@@ -156,7 +156,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task EnqueueAsync(ITransaction tx, T value, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
-        /// Tentatively dequeue a value from the queue. If the queue is empty, the dequeue operation will wait for an item to become available.
+        /// Tentatively dequeues a value from the queue. If the queue is empty, the dequeue operation will wait for an item to become available.
         /// </summary>
         /// 
         /// <param name="tx">Transaction to associate this operation with.</param>
