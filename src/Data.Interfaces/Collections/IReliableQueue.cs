@@ -128,6 +128,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// The value at the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
+        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx);
 
         /// <summary>
@@ -155,6 +156,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// The value at the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
+        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, TimeSpan timeout,
             CancellationToken cancellationToken);
 
@@ -180,6 +182,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// The value at the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
+        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, LockMode lockMode);
 
         /// <summary>
@@ -208,6 +211,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// The value at the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
+        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, LockMode lockMode, TimeSpan timeout,
             CancellationToken cancellationToken);
 
