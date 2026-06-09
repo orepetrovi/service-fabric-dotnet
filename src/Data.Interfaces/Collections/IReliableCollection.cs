@@ -19,7 +19,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Returns the number of elements in the <see cref="IReliableCollection{T}"/>.
         /// </summary>
         /// <exception cref="FabricNotReadableException">
-        /// The <see cref="IReliableCollection{T}"/> cannot serve reads at the moment.
+        /// The <see cref="IReliableCollection{T}"/> cannot serve reads.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
