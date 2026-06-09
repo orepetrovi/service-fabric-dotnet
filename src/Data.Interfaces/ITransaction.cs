@@ -15,7 +15,7 @@ namespace Microsoft.ServiceFabric.Data
     /// Represents a sequence of operations performed as a single logical unit of work.
     /// </summary>
     /// <remarks>
-    /// A transaction must exhibit the following ACID properties. (see: https://technet.microsoft.com/en-us/library/ms190612)
+    /// A transaction must exhibit the following <see href="https://learn.microsoft.com/windows/win32/cossdk/acid-properties">ACID properties</see>:
     /// <list type="bullet">
     ///     <item>
     ///         <description>
