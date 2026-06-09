@@ -116,18 +116,11 @@ namespace Microsoft.ServiceFabric.Data
     /// ]]>
     /// </code>
     /// </example>
-    // todo: ITransaction inherits Dispose from IDisposable and the canonical-usage <example> above relies on a using
-    // block, but Dispose semantics cannot be verified from this repository; extend the interface <remarks> with a
-    // sentence describing whether disposing an uncommitted transaction implicitly aborts it, whether Dispose is
-    // idempotent after a successful CommitAsync or Abort, and whether Dispose can throw or swallows faults raised
-    // during implicit abort, once domain knowledge is available.
     public interface ITransaction : IDisposable
     {
         /// <summary>
         /// Gets the sequence number assigned to the transaction when it was committed.
         /// </summary>
-        // todo: pre-commit behavior of CommitSequenceNumber (value returned before CommitAsync succeeds, or exception thrown)
-        // cannot be verified from this repository; document this in the summary or a <remarks> block once domain knowledge is available
         long CommitSequenceNumber { get; }
 
         /// <summary>
@@ -153,18 +146,11 @@ namespace Microsoft.ServiceFabric.Data
         /// The transaction includes updates to <see cref="IReliableState"/> and the replica is not in the <see cref="ReplicaRole.Primary"/> role.
         /// Only <see cref="ReplicaRole.Primary"/> replicas are given write status.
         /// </exception>
-        // todo: verify whether Abort actually throws TransactionFaultedException (the natural recovery from a faulted
-        // transaction is to abort it, so the documented contract is suspect) and whether Abort is idempotent or instead
-        // throws InvalidOperationException on a second call (ITransaction : IDisposable, so Dispose-on-exception paths
-        // depend on this); the FabricNotPrimaryException claim on Abort is already tracked in
-        // ITransaction.cs-needs-human-review.md and is not duplicated here
         void Abort();
 
         /// <summary>
         /// Gets the identifier of the transaction.
         /// </summary>
-        // todo: TransactionId semantics (uniqueness scope, assignment, monotonicity, lifetime, valid range) cannot be verified
-        // from this repository; rewrite the summary to describe these properties once domain knowledge is available
         long TransactionId { get; }
 
         /// <summary>
@@ -172,10 +158,6 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
-        // todo: "visibility sequence number" semantics cannot be verified from this repository; rewrite the summary to
-        // describe what the returned value represents and how callers should use it, and add a <returns> element only if
-        // it carries information beyond the rewritten summary; verify whether FabricNotPrimaryException or other
-        // role/readability exceptions apply to this member once domain knowledge is available.
         Task<long> GetVisibilitySequenceNumberAsync();
     }
 }
