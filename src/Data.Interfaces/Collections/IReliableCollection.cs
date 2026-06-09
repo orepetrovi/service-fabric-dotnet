@@ -42,6 +42,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// A task that represents the asynchronous operation, indicating the number of elements.
         /// </returns>
+        // todo: the FabricNotPrimaryException <exception> text is internally contradictory - sentence 1 says it is thrown
+        // when not Primary, while sentence 2 says reads such as this one can be served from secondary replicas; this
+        // also overlaps with FabricNotReadableException above, which already documents the secondary-readable case. The
+        // precise throw condition (and its relationship to FabricNotReadableException) cannot be verified from this
+        // repository; rewrite the <exception> text once domain knowledge is available.
         Task<long> GetCountAsync(ITransaction tx);
 
         /// <summary>
