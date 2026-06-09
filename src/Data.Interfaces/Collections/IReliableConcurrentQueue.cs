@@ -43,7 +43,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// </para>
     /// <para>
     /// This queue does not offer a Peek operation; however, by combining <see cref="TryDequeueAsync"/> and <see cref="ITransaction.Abort"/>
-    /// the same semantic can be achieved.  See <see cref="TryDequeueAsync"/> for additional details and an example.
+    /// the same semantics can be achieved.  See <see cref="TryDequeueAsync"/> for additional details and an example.
     /// </para>
     /// <para>
     /// Values stored in this queue MUST NOT be mutated outside the context of an operation on the queue. It is
