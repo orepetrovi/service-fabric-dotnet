@@ -176,7 +176,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// 
         /// <remarks>
         /// <para>
-        /// If the queue is empty, the dequeue operation waits for an item to become available, subject to the given timeout.
+        /// If the queue is empty, the dequeue operation waits for a value to become available, subject to the given timeout.
         /// </para>
         /// <para>
         /// While <see cref="TryDequeueAsync"/> can only return values for which the corresponding <see cref="EnqueueAsync"/> was committed, <see cref="TryDequeueAsync"/> operations are not isolated
