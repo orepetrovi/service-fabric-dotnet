@@ -28,14 +28,12 @@ namespace Microsoft.ServiceFabric.Data
         /// Returns a value that indicates whether the enumerator was successfully advanced to the next element of the sequence.
         /// </summary>
         /// <returns><see langword="true"/> if the enumerator was advanced to the next element; otherwise, <see langword="false"/>.</returns>
-        /// <exception cref="InvalidOperationException">The underlying collection was modified after the enumerator was created.</exception>
         /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
         Task<bool> MoveNextAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Sets the enumerator to its initial position, before the first element of the sequence.
         /// </summary>
-        /// <exception cref="InvalidOperationException">The underlying collection was modified after the enumerator was created.</exception>
         /// <exception cref="NotSupportedException">Resetting the enumerator is not supported.</exception>
         void Reset();
     }
