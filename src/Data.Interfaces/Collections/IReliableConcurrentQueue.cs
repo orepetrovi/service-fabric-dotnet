@@ -258,7 +258,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         ///         }
         ///         catch (TimeoutException e)
         ///         {
-        ///             Console.WriteLine("Encountered TimeoutException during DequeueAsync, retrying the transaction: " + e);
+        ///             Console.WriteLine("Encountered TimeoutException during TryDequeueAsync, retrying the transaction: " + e);
         ///         }
         ///         catch (FabricTransientException e)
         ///         {
