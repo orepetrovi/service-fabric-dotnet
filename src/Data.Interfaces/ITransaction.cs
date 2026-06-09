@@ -136,8 +136,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
         /// <exception cref="FabricNotPrimaryException">
-        /// The transaction includes updates to <see cref="IReliableState"/> and the <see cref="System.Fabric.ReplicaRole"/> is not Primary.
-        /// Only Primary replicas are given write status.
+        /// The transaction includes updates to <see cref="IReliableState"/> and the replica is not in the <see cref="ReplicaRole.Primary"/> role.
+        /// Only <see cref="ReplicaRole.Primary"/> replicas are given write status.
         /// </exception>
         Task CommitAsync();
 
@@ -147,8 +147,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
         /// <exception cref="FabricNotPrimaryException">
-        /// The transaction includes updates to <see cref="IReliableState"/> and the <see cref="System.Fabric.ReplicaRole"/> is not Primary.
-        /// Only Primary replicas are given write status.
+        /// The transaction includes updates to <see cref="IReliableState"/> and the replica is not in the <see cref="ReplicaRole.Primary"/> role.
+        /// Only <see cref="ReplicaRole.Primary"/> replicas are given write status.
         /// </exception>
         void Abort();
 
