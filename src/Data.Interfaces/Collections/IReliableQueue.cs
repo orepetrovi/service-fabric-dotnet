@@ -22,6 +22,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// A transaction is the unit of concurrency. Multiple transactions can be in-flight at any time, but operations within a given transaction must be called sequentially.
     /// <see cref="IReliableCollection{T}"/> APIs that take a transaction and return a <see cref="Task"/> must be awaited one at a time.
     /// </para>
+    /// <para>
+    /// If a retriable exception is thrown by an operation on this queue, dispose the transaction and retry
+    /// the operation with a new transaction.
+    /// </para>
     /// </remarks>
     /// <seealso cref="ITransaction"/>
     public interface IReliableQueue<T> : IReliableCollection<T>
@@ -40,7 +44,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
-        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task EnqueueAsync(ITransaction tx, T item);
 
         /// <summary>
@@ -61,7 +64,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
-        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task EnqueueAsync(ITransaction tx, T item, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
@@ -80,7 +82,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// The value removed from the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
-        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx);
 
         /// <summary>
@@ -103,7 +104,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// The value removed from the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
-        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx, TimeSpan timeout,
             CancellationToken cancellationToken);
 
@@ -128,7 +128,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// The value at the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
-        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx);
 
         /// <summary>
@@ -156,7 +155,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// The value at the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
-        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, TimeSpan timeout,
             CancellationToken cancellationToken);
 
@@ -182,7 +180,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// The value at the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
-        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, LockMode lockMode);
 
         /// <summary>
@@ -211,7 +208,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// The value at the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
-        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, LockMode lockMode, TimeSpan timeout,
             CancellationToken cancellationToken);
 
