@@ -37,6 +37,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // also overlaps with FabricNotReadableException above, which already documents the secondary-readable case. The
         // precise throw condition (and its relationship to FabricNotReadableException) cannot be verified from this
         // repository; rewrite the <exception> text once domain knowledge is available.
+        // Additionally, verify the <exception> block against the runtime implementation - sibling members such as
+        // IReliableConcurrentQueue<T>.EnqueueAsync, IReliableQueue<T> operations, and every IReliableDictionary
+        // overload that accepts a transaction document ArgumentNullException for the tx parameter, but whether that
+        // contract (or any other exception thrown directly by the implementation) applies here cannot be verified from
+        // this repository.
         Task<long> GetCountAsync(ITransaction tx);
 
         /// <summary>
@@ -52,7 +57,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // timeout" is misleading; the actual timeout source (implicit default, configurable replicator setting, or none)
         // cannot be verified from this repository. Either rewrite the <exception> text to describe the actual default and
         // its source, or remove the <exception> element if it is unreachable from this signature, once domain knowledge
-        // is available.
+        // is available. Additionally, verify the full <exception> block against the runtime implementation - other
+        // exceptions thrown directly by the implementation may belong here.
         Task ClearAsync();
     }
 }
