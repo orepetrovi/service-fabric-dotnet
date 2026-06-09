@@ -47,7 +47,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// </para>
     /// <para>
     /// Transaction is the unit of concurrency: Users can have multiple transactions in-flight at any time but for a given transaction each API must be called one at a time.
-    /// So all Reliable Collection APIs that take in an <see cref="ITransaction"/> and return a Task, must be awaited one at a time.
+    /// So all Reliable Collection APIs that take in an <see cref="ITransaction"/> and return a <see cref="Task"/>, must be awaited one at a time.
     /// </para>
     /// </remarks>
     public interface IReliableConcurrentQueue<T> : IReliableState
@@ -61,7 +61,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">The transaction in which to enqueue the value.</param>
         /// <param name="value">The value to add to the end of the queue. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="cancellationToken">Monitors for cancellation requests. Defaults to <see cref="CancellationToken.None"/>.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. The default is <see langword="null"/>.  If <see langword="null"/> is passed, a default timeout will be used.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. The default is <see langword="null"/>.  If <see langword="null"/> is passed, a default timeout will be used.</param>
         /// 
         /// <remarks>
         /// A <see cref="TryDequeueAsync"/> operation cannot return any value for which its <see cref="EnqueueAsync"/> has not yet been committed.
