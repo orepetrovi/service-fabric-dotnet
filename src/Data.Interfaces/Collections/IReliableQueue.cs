@@ -68,7 +68,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task EnqueueAsync(ITransaction tx, T item, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Tries to remove and return the object at the beginning of the reliable queue.
+        /// Returns the value removed from the beginning of the reliable queue, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
@@ -88,7 +88,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx);
 
         /// <summary>
-        /// Tries to remove and return the object at the beginning of the reliable queue.
+        /// Returns the value removed from the beginning of the reliable queue, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
@@ -113,7 +113,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Tries to return an object from the beginning of the reliable queue without removing it.
+        /// Returns the value at the beginning of the reliable queue without removing it, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
@@ -137,7 +137,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx);
 
         /// <summary>
-        /// Tries to return an object from the beginning of the reliable queue without removing it.
+        /// Returns the value at the beginning of the reliable queue without removing it, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
@@ -166,7 +166,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Tries to return an object from the beginning of the reliable queue without removing it.
+        /// Returns the value at the beginning of the reliable queue without removing it, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="lockMode">Type of locking to use for this read operation.</param>
@@ -191,7 +191,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, LockMode lockMode);
 
         /// <summary>
-        /// Tries to return an object from the beginning of the reliable queue without removing it.
+        /// Returns the value at the beginning of the reliable queue without removing it, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="lockMode">Type of locking to use for this read operation.</param>
@@ -221,7 +221,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Creates an async enumerable over the <see cref="IReliableQueue{T}"/>.
+        /// Returns an async enumerable over the <see cref="IReliableQueue{T}"/>.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <exception cref="FabricNotReadableException">
