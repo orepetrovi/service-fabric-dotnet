@@ -150,9 +150,6 @@ namespace Microsoft.ServiceFabric.Data
         /// The transaction includes updates to <see cref="IReliableState"/> and the <see cref="System.Fabric.ReplicaRole"/> is not Primary.
         /// Only Primary replicas are given write status.
         /// </exception>
-        /// <returns>
-        /// A task that represents the asynchronous commit operation. 
-        /// </returns>
         Task CommitAsync();
 
         /// <summary>
