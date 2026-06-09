@@ -98,7 +98,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <returns>
-        /// The value removed from the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
+        /// The value removed from the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with
+        /// <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty;
+        /// otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx, TimeSpan timeout,
             CancellationToken cancellationToken);
@@ -189,7 +191,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <returns>
-        /// The value at the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
+        /// The value at the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with
+        /// <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty;
+        /// otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, LockMode lockMode, TimeSpan timeout,
             CancellationToken cancellationToken);
