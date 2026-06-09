@@ -16,7 +16,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets the name of this reliable state.
         /// </summary>
         /// <value>
-        /// The <see cref="System.Uri"/> name of this <see cref="IReliableState"/> instance.
+        /// The <see cref="Uri"/> name of this <see cref="IReliableState"/> instance.
         /// </value>
         /// <remarks>
         /// The name uniquely identifies this reliable state within its owning <see cref="IReliableStateManager"/>,
