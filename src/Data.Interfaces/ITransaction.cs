@@ -173,7 +173,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
         /// <returns>The visibility sequence number.</returns>
         // todo: "visibility sequence number" semantics cannot be verified from this repository; rewrite the summary and
-        // <returns> to describe what the returned value represents and how callers should use it once domain knowledge is available
+        // <returns> to describe what the returned value represents and how callers should use it, and verify whether
+        // FabricNotPrimaryException or other role/readability exceptions apply to this member once domain knowledge is available.
         Task<long> GetVisibilitySequenceNumberAsync();
     }
 }
