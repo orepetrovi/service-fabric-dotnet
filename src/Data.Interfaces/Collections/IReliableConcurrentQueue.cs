@@ -270,6 +270,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// ]]>
         /// </code>
         /// </example>
+        // todo: the <example> above logs `dequeueOutput` (the ConditionalValue<T> wrapper) instead of
+        // `dequeueOutput.Value`, so it renders ValueType.ToString() (e.g.
+        // "Microsoft.ServiceFabric.Data.ConditionalValue`1[System.Int64]") rather than the dequeued payload.
+        // Update the example to log `dequeueOutput.Value`.
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
@@ -329,6 +333,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// ]]>
         /// </code>
         /// </example>
+        // todo: the <example> above calls Task.Run(...) into `var observer` and never awaits or returns it, so
+        // RunAsync returns immediately, leaving the spawned task orphaned - contradicting the lead-in's "monitor the
+        // queue's count infinitely, until the cancellation token is canceled". Restructure the example as an awaited
+        // single-threaded loop matching the lead-in's contract.
         // todo: the consistency/atomicity contract of Count cannot be verified from this repository - it is unclear
         // whether reads are atomic point-in-time snapshots, eventually consistent (may lag committed mutations by some
         // bounded or unbounded interval), or best-effort. Consumers using Count for back-pressure need this guarantee.
