@@ -18,7 +18,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Returns the number of elements in the <see cref="IReliableCollection{T}"/>.
         /// </summary>
-        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableCollection{T}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
