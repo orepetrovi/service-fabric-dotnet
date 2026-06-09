@@ -152,6 +152,11 @@ namespace Microsoft.ServiceFabric.Data
         /// The transaction includes updates to <see cref="IReliableState"/> and the replica is not in the <see cref="ReplicaRole.Primary"/> role.
         /// Only <see cref="ReplicaRole.Primary"/> replicas are given write status.
         /// </exception>
+        // todo: verify whether Abort actually throws TransactionFaultedException (the natural recovery from a faulted
+        // transaction is to abort it, so the documented contract is suspect) and whether Abort is idempotent or instead
+        // throws InvalidOperationException on a second call (ITransaction : IDisposable, so Dispose-on-exception paths
+        // depend on this); the FabricNotPrimaryException claim on Abort is already tracked in
+        // ITransaction.cs-needs-human-review.md and is not duplicated here
         void Abort();
 
         /// <summary>
