@@ -49,7 +49,7 @@ namespace Microsoft.ServiceFabric.Data
     /// All <see cref="IReliableCollection{T}"/> APIs that accept a transaction and return a <see cref="Task"/> must be awaited one at a time.
     /// </remarks>
     /// <example>
-    /// Following is an example of a correct usage.
+    /// The following is an example of correct usage.
     /// <code language="csharp">
     /// <![CDATA[
     /// 
