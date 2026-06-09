@@ -36,9 +36,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableQueue{T}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
+        /// A method call is invalid for the object's current state.
+        /// For example, the transaction used was already terminated: committed or aborted by the user.
+        /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         /// <returns>Task that represents the asynchronous enqueue operation.</returns>
@@ -58,9 +58,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableQueue{T}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
+        /// A method call is invalid for the object's current state.
+        /// For example, the transaction used was already terminated: committed or aborted by the user.
+        /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         /// <returns>Task that represents the asynchronous enqueue operation.</returns>
@@ -75,9 +75,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableQueue{T}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
+        /// A method call is invalid for the object's current state.
+        /// For example, the transaction used was already terminated: committed or aborted by the user.
+        /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         /// <returns>
@@ -99,9 +99,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableQueue{T}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
+        /// A method call is invalid for the object's current state.
+        /// For example, the transaction used was already terminated: committed or aborted by the user.
+        /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         /// <returns>
@@ -125,9 +125,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
+        /// A method call is invalid for the object's current state.
+        /// For example, the transaction used was already terminated: committed or aborted by the user.
+        /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <returns>
         /// Task that represents the asynchronous peek operation. The task result is a tuple indicating
@@ -153,9 +153,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
+        /// A method call is invalid for the object's current state.
+        /// For example, the transaction used was already terminated: committed or aborted by the user.
+        /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <returns>
         /// Task that represents the asynchronous peek operation. The task result is a tuple indicating
@@ -179,9 +179,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
+        /// A method call is invalid for the object's current state.
+        /// For example, the transaction used was already terminated: committed or aborted by the user.
+        /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <returns>
         /// Task that represents the asynchronous peek operation. The task result is a tuple indicating
@@ -208,9 +208,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
+        /// A method call is invalid for the object's current state.
+        /// For example, the transaction used was already terminated: committed or aborted by the user.
+        /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <returns>
         /// Task that represents the asynchronous peek operation. The task result is a tuple indicating
