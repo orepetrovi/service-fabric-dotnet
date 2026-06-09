@@ -134,7 +134,7 @@ namespace Microsoft.ServiceFabric.Data
         long CommitSequenceNumber { get; }
 
         /// <summary>
-        /// Commit the transaction.
+        /// Commits the transaction.
         /// </summary>
         /// <remarks>
         /// You cannot abort a transaction once it has been committed, because all modifications
@@ -156,7 +156,7 @@ namespace Microsoft.ServiceFabric.Data
         Task CommitAsync();
 
         /// <summary>
-        /// Abort (rolls back) the transaction.
+        /// Aborts the transaction, rolling back any uncommitted operations.
         /// </summary>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
