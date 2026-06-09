@@ -64,7 +64,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. The default is <see langword="null"/>.  If <see langword="null"/> is passed, a default timeout will be used.</param>
         /// 
         /// <remarks>
-        /// A <see cref="TryDequeueAsync"/> operation cannot return any value for which its <see cref="EnqueueAsync"/> has not yet been committed.
+        /// A <see cref="TryDequeueAsync"/> operation cannot return any value for which its enqueue has not yet been committed.
         /// This includes the transaction in which the value was enqueued; as a consequence, <see cref="IReliableConcurrentQueue{T}"/> does not support Read-Your-Writes.
         /// </remarks>
         /// 
@@ -87,7 +87,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// 
         /// <example>
-        /// This example shows how to use <see cref="EnqueueAsync"/> to enqueue a value with retry.
+        /// This example shows how to enqueue a value with retry.
         /// <code language="csharp">
         /// <![CDATA[
         /// protected override async Task RunAsync(CancellationToken cancellationToken)
@@ -279,7 +279,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
-        /// Gets the number of values in the <see cref="IReliableConcurrentQueue{T}"/>.
+        /// Gets the number of values in the queue.
         /// </summary>
         ///  
         /// <remarks>
