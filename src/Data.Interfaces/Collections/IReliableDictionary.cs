@@ -25,6 +25,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// When calling any asynchronous Reliable Collection method that takes an <see cref="ITransaction"/>, you must wait for completion of the returned Task before calling
     /// another method using the same transaction. See examples of transactions <see href="https://docs.microsoft.com/azure/service-fabric/service-fabric-work-with-reliable-collections">here</see>.</para>
     /// </remarks>
+    // todo: the <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception> text on
+    // the 14 overloads that take a TimeSpan timeout may over-promise rejection: Timeout.InfiniteTimeSpan has
+    // Ticks = -1 (strictly negative) and is a common wait-forever sentinel across .NET and Service Fabric APIs.
+    // Verify whether this interface accepts Timeout.InfiniteTimeSpan; if so, refine each <exception
+    // cref="ArgumentException"> description to exclude that sentinel (e.g. "is negative and not <see
+    // cref="Timeout.InfiniteTimeSpan"/>"). Note: AddAsync's <exception cref="ArgumentException"> body combines
+    // "A value with the same key already exists in the Reliable Dictionary, or <paramref name="timeout"/> is
+    // negative." - apply the same refinement to the timeout clause there.
     public interface IReliableDictionary<TKey, TValue> : IReliableCollection<KeyValuePair<TKey, TValue>>
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
