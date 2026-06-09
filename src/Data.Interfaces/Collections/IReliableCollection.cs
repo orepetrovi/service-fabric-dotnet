@@ -54,7 +54,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <exception cref="FabricNotPrimaryException">
         /// <para>Thrown when attempting to perform this operation
-        /// on a <cref name="IReliableCollection{T}"/> that is not in the <see cref="ReplicaRole.Primary"/> role.</para>
+        /// on a <see cref="IReliableCollection{T}"/> that is not in the <see cref="ReplicaRole.Primary"/> role.</para>
         /// </exception>
         /// <exception cref="TimeoutException">
         /// <para>Indicates that this operation failed to complete within the given timeout.</para>
