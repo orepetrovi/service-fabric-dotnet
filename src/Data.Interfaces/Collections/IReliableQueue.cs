@@ -213,7 +213,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Returns an async enumerable over the <see cref="IReliableQueue{T}"/>.
+        /// Returns an <see cref="IAsyncEnumerable{T}"/> over the <see cref="IReliableQueue{T}"/>.
         /// </summary>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
