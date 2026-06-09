@@ -33,6 +33,12 @@ namespace Microsoft.ServiceFabric.Data.Collections
     // todo: define exactly which exceptions are considered retriable in this context, so the <remarks> can name the
     // concrete exception types (or a <see cref> to a documented retriable-exception set) rather than the abstract term
     // "retriable exception".
+    // todo: verify whether FabricObjectClosedException (replica closed), FabricTransientException (transient
+    // failure, retry), and FabricException (non-retriable failure other than the above) apply to the EnqueueAsync,
+    // TryDequeueAsync, and TryPeekAsync overloads on this interface. Sibling IReliableConcurrentQueue documents
+    // all three on its queue operations, and IReliableDictionary documents FabricObjectClosedException broadly.
+    // Once domain knowledge confirms which exceptions each member throws directly, add the corresponding
+    // <exception> elements to each affected member.
     public interface IReliableQueue<T> : IReliableCollection<T>
     {
         /// <inheritdoc cref="EnqueueAsync(ITransaction, T, TimeSpan, CancellationToken)" path="/summary"/>
