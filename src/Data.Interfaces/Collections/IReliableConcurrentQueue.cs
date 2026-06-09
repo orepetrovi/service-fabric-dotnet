@@ -274,6 +274,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // `dequeueOutput.Value`, so it renders ValueType.ToString() (e.g.
         // "Microsoft.ServiceFabric.Data.ConditionalValue`1[System.Int64]") rather than the dequeued payload.
         // Update the example to log `dequeueOutput.Value`.
+        // todo: the interface <remarks> promises an "example" of peek-via-abort using TryDequeueAsync +
+        // ITransaction.Abort, but no such example exists in the <example> above (which shows the standard
+        // dequeue + CommitAsync retry pattern). Verify that aborting a TryDequeueAsync re-adds the value at
+        // the head of the queue (per the <remarks> paragraph above) and add a peek-via-abort <example>.
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
