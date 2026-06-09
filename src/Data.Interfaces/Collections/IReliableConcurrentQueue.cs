@@ -11,7 +11,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
     using System.Threading.Tasks;
 
     // todo: when queue capacity constraint is configurable, update the remark to link to it directly if possible
-    // todo: when retriable and non-retriable FabricNotReadableException are split (#5052175), update the exception documentation
+    // todo: when retriable and non-retriable FabricNotReadableException are split (#5052175), update the exception documentation.
+    //       Also verify whether FabricNotReadableException actually applies to EnqueueAsync (a write); the sibling
+    //       IReliableQueue<T>.EnqueueAsync documents only FabricNotPrimaryException on its writes, suggesting the
+    //       current <exception> may be incorrect for this member.
     /// <summary>
     /// Represents a reliable collection of persisted, replicated values with best-effort first-in first-out ordering.
     /// </summary>
