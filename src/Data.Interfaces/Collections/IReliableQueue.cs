@@ -13,7 +13,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <summary>
     /// Represents a reliable first-in, first-out collection of objects that are persisted and replicated.
     /// </summary>
-    /// <typeparam name="T">The type of the elements contained in the reliable queue.</typeparam>
     /// <remarks>
     /// <para>
     /// Values stored in this queue MUST NOT be mutated outside the context of an operation on the queue. It is
