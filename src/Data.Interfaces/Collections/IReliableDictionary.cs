@@ -45,6 +45,12 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// See <see href="https://docs.microsoft.com/azure/service-fabric/service-fabric-reliable-services-notifications">here</see> for more information. 
         /// </remarks>
         /// <value>The asynchronous rebuild notification callback.</value>
+        // todo: <remarks> first sentence references <see cref="NotifyDictionaryChangedEventArgs{TKey, TValue}"/>, but this
+        // property's setter receives <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/> per the Func
+        // signature below; NotifyDictionaryChangedEventArgs is the args type for the separate DictionaryChanged event.
+        // The intended sentence likely reads "NotifyDictionaryRebuildEventArgs ... can only be used within this
+        // callback." Verify the lifetime contract (both "can only be used within this callback" and "becomes invalid
+        // after the callback completes") against the runtime implementation before fixing the <remarks> inline.
         Func<IReliableDictionary<TKey, TValue>, NotifyDictionaryRebuildEventArgs<TKey, TValue>, Task> RebuildNotificationAsyncCallback
         {
             set;
