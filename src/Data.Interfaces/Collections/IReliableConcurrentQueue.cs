@@ -64,8 +64,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. The default is null.  If null is passed, a default timeout will be used.</param>
         /// 
-        /// <returns>Task that represents the asynchronous enqueue operation.</returns>
-        /// 
         /// <remarks>
         /// A <see cref="TryDequeueAsync"/> operation cannot return any value for which its <see cref="EnqueueAsync"/> has not yet been committed.
         /// This includes the transaction in which the value was enqueued; as a consequence, <see cref="IReliableConcurrentQueue{T}"/> does not support Read-Your-Writes.
