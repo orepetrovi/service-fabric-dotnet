@@ -95,8 +95,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task AddAsync(ITransaction tx, TKey key, TValue value, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Uses the specified functions to add a key/value pair to the Reliable Dictionary if the key does not already exist,
-        /// or to update a key/value pair in the Reliable Dictionary if the key already exists.
+        /// Returns the value associated with the specified key in the Reliable Dictionary after adding it using <paramref name="addValueFactory"/> if absent or updating it using <paramref name="updateValueFactory"/> if present.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to be added or whose value should be updated.</param>
@@ -116,8 +115,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             Func<TKey, TValue, TValue> updateValueFactory);
 
         /// <summary>
-        /// Adds a key/value pair to the Reliable Dictionary if the key does not already exist, or updates a key/value pair 
-        /// in the Reliable Dictionary by using the specified function if the key already exists.
+        /// Returns the value associated with the specified key in the Reliable Dictionary after adding <paramref name="addValue"/> if absent or updating it using <paramref name="updateValueFactory"/> if present.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to be added or whose value should be updated.</param>
@@ -137,8 +135,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             Func<TKey, TValue, TValue> updateValueFactory);
 
         /// <summary>
-        /// Uses the specified functions to add a key/value pair to the Reliable Dictionary if the key does not already exist,
-        /// or to update a key/value pair in the Reliable Dictionary if the key already exists.
+        /// Returns the value associated with the specified key in the Reliable Dictionary after adding it using <paramref name="addValueFactory"/> if absent or updating it using <paramref name="updateValueFactory"/> if present.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to be added or whose value should be updated.</param>
@@ -164,8 +161,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Adds a key/value pair to the Reliable Dictionary if the key does not already exist, or updates a key/value pair 
-        /// in the Reliable Dictionary by using the specified function if the key already exists.
+        /// Returns the value associated with the specified key in the Reliable Dictionary after adding <paramref name="addValue"/> if absent or updating it using <paramref name="updateValueFactory"/> if present.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to be added or whose value should be updated.</param>
@@ -365,7 +361,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             EnumerationMode enumerationMode);
 
         /// <summary>
-        /// Adds a key/value pair to the Reliable Dictionary by using the specified function, if the key does not already exist.
+        /// Returns the value associated with the specified key in the Reliable Dictionary, adding a value produced by <paramref name="valueFactory"/> if the key is not present.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
@@ -380,8 +376,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<TValue> GetOrAddAsync(ITransaction tx, TKey key, Func<TKey, TValue> valueFactory);
 
         /// <summary>
-        /// Adds a key/value pair to the Reliable Dictionary if the key does not already exist.
-        /// If the key exists no updates will be made to the value.
+        /// Returns the value associated with the specified key in the Reliable Dictionary, adding <paramref name="value"/> if the key is not present.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
@@ -396,7 +391,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<TValue> GetOrAddAsync(ITransaction tx, TKey key, TValue value);
 
         /// <summary>
-        /// Adds a key/value pair to the Reliable Dictionary by using the specified function, if the key does not already exist.
+        /// Returns the value associated with the specified key in the Reliable Dictionary, adding a value produced by <paramref name="valueFactory"/> if the key is not present.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
@@ -420,7 +415,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Adds a key/value pair to the Reliable Dictionary if the key does not already exist.
+        /// Returns the value associated with the specified key in the Reliable Dictionary, adding <paramref name="value"/> if the key is not present.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
