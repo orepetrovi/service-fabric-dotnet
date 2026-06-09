@@ -46,7 +46,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // IReliableConcurrentQueue<T>.EnqueueAsync, IReliableQueue<T> operations, and every IReliableDictionary
         // overload that accepts a transaction document ArgumentNullException for the tx parameter, but whether that
         // contract (or any other exception thrown directly by the implementation) applies here cannot be verified from
-        // this repository.
+        // this repository. In particular, verify whether TimeoutException applies (sibling parameterless members
+        // such as IReliableQueue<T>.EnqueueAsync and IReliableStateManager overloads document "The operation failed
+        // to complete within the default timeout.") and document it explicitly if so.
         Task<long> GetCountAsync(ITransaction tx);
 
         /// <summary>
