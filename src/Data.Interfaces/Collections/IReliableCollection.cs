@@ -16,7 +16,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// More information on Reliable Collections can be seen
     /// <see href="https://docs.microsoft.com/azure/service-fabric/service-fabric-reliable-services-reliable-collections">here</see>.
     /// </remarks>
-    /// <typeparam name="T">The type of the elements in the collection.</typeparam>
     public interface IReliableCollection<T> : IReliableState
     {
         /// <summary>
