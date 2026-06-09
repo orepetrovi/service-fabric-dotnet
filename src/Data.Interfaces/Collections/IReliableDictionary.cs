@@ -33,6 +33,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
     // cref="Timeout.InfiniteTimeSpan"/>"). Note: AddAsync's <exception cref="ArgumentException"> body combines
     // "A value with the same key already exists in the Reliable Dictionary, or <paramref name="timeout"/> is
     // negative." - apply the same refinement to the timeout clause there.
+    // todo: <exception cref="ArgumentNullException"> bodies on 26 members combine "<paramref name="key"/> is
+    // <see langword="null"/>" with "or cannot be serialized" in the same element. ArgumentNullException is for
+    // null arguments only; a serialization failure on a non-null key is conventionally surfaced as
+    // SerializationException, ArgumentException, or a domain-specific exception. The actual runtime exception
+    // cannot be determined from this repository. Verify the actual exception type for the "cannot be serialized"
+    // condition. If it is not ArgumentNullException, move the clause to its own <exception cref="..."> element
+    // with the correct type across all 26 sites. If it is ArgumentNullException, record the verification
+    // and leave the doc unchanged so this finding does not resurface.
     public interface IReliableDictionary<TKey, TValue> : IReliableCollection<KeyValuePair<TKey, TValue>>
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
