@@ -19,8 +19,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// highly recommended to make <typeparamref name="T"/> immutable in order to avoid accidental data corruption.
     /// </para>
     /// <para>
-    /// A transaction is the unit of concurrency: Users can have multiple transactions in-flight at any time, but for a given transaction each API must be called one at a time.
-    /// So all Reliable Collection APIs that take in a transaction and return a <see cref="Task"/> must be awaited one at a time.
+    /// A transaction is the unit of concurrency. Multiple transactions can be in-flight at any time, but operations within a given transaction must be called sequentially.
+    /// Reliable Collection APIs that take a transaction and return a <see cref="Task"/> must be awaited one at a time.
     /// </para>
     /// </remarks>
     /// <seealso cref="ITransaction"/>
@@ -30,7 +30,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Adds an object to the end of the reliable queue.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="item">The object to add to the end of the queue. The value can be <see langword="null"/> for reference types.</param>
+        /// <param name="item">The value to add. Can be <see langword="null"/> for reference types.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableQueue{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.</exception>
@@ -47,7 +47,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Adds an object to the end of the reliable queue.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="item">The object to add to the end of the queue. The value can be <see langword="null"/> for reference types.</param>
+        /// <param name="item">The value to add. Can be <see langword="null"/> for reference types.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
@@ -77,10 +77,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
-        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         /// <returns>
         /// The value removed from the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
+        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx);
 
         /// <summary>
@@ -100,10 +100,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
-        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         /// <returns>
         /// The value removed from the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
+        /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx, TimeSpan timeout,
             CancellationToken cancellationToken);
 
