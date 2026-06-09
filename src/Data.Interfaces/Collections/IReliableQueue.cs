@@ -220,13 +220,15 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // TimeoutException, TransactionFaultedException, and InvalidOperationException, but whether each applies
         // to CreateEnumerableAsync cannot be verified from this repository; add the corresponding <exception>
         // elements once domain knowledge confirms which exceptions this member throws directly.
-        // Additionally, the <summary>/<returns> do not document the enumerable's semantics - whether it represents
+        // Additionally, the <summary> does not document the enumerable's semantics - whether it represents
         // a snapshot or a live view, whether it is safe under concurrent reads/writes on the IReliableQueue<T>,
         // what ordering it provides, or how the enclosing transaction affects enumeration. Sibling
         // IReliableDictionary<TKey,TValue>.CreateEnumerableAsync documents this contract explicitly ("safe to use
         // concurrently with reads and writes... represents a snapshot consistent view"), but the corresponding
         // contract for IReliableQueue<T> cannot be verified from this repository; once domain knowledge is
-        // available, document these semantics in <remarks> or extend <summary>/<returns> accordingly.
+        // available, rewrite the <summary> to describe these semantics (snapshot vs. live view, concurrency
+        // safety, ordering, transaction scoping), and add a <returns> element only if it carries information
+        // beyond the rewritten <summary>.
         Task<IAsyncEnumerable<T>> CreateEnumerableAsync(ITransaction tx);
     }
 }
