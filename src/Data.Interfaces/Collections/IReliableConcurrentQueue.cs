@@ -281,6 +281,12 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // ITransaction.Abort, but no such example exists in the <example> above (which shows the standard
         // dequeue + CommitAsync retry pattern). Verify that aborting a TryDequeueAsync re-adds the value at
         // the head of the queue (per the <remarks> paragraph above) and add a peek-via-abort <example>.
+        // todo: the <summary> says TryDequeueAsync returns an "empty result" (HasValue=false) when no value
+        // became available within the given timeout, but <exception cref="TimeoutException"> documents that
+        // the operation throws in the same situation. The <example> above catches TimeoutException and also
+        // handles HasValue=false. The relationship between the timeout parameter and TimeoutException cannot
+        // be verified from this repository; correct either the <summary> or the <exception> element once
+        // domain knowledge is available.
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
