@@ -75,7 +75,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key to be added.</param>
         /// <param name="value">The value to be added. The value can be <see langword="null"/> for reference types.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException">A value with the same key already exists in the Reliable Dictionary, or <paramref name="timeout"/> is negative.</exception>
@@ -144,7 +144,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="key">The key to be added or whose value should be updated.</param>
         /// <param name="addValueFactory">The function used to generate a value for an absent key.</param>
         /// <param name="updateValueFactory">The function used to generate a new value for an existing key based on the key's existing value.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized, or <paramref name="addValueFactory"/> is <see langword="null"/>, or <paramref name="updateValueFactory"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
@@ -174,7 +174,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="key">The key to be added or whose value should be updated.</param>
         /// <param name="addValue">The value to be added for an absent key. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="updateValueFactory">The function used to generate a new value for an existing key based on the key's existing value.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized, or <paramref name="updateValueFactory"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
@@ -199,7 +199,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Removes all keys and values from the Reliable Dictionary.
         /// </summary>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
@@ -252,7 +252,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
@@ -276,7 +276,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
         /// <param name="lockMode">Type of locking to use for this read operation.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
@@ -427,7 +427,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
         /// <param name="valueFactory">The function used to generate a value for the key.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized, or <paramref name="valueFactory"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
@@ -455,7 +455,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
         /// <param name="value">The value to be added, if the key does not already exist.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
@@ -497,7 +497,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
         /// <param name="value">The value of the element to add. The value can be <see langword="null"/> for reference types.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
@@ -565,7 +565,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
@@ -596,7 +596,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
         /// <param name="lockMode">Type of locking to use for this read operation.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
@@ -644,7 +644,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
@@ -683,7 +683,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="key">The key whose value is compared with <paramref name="comparisonValue"/> and possibly replaced.</param>
         /// <param name="newValue">The value that replaces the value of the element that has the specified <paramref name="key"/> if the comparison results in equality.</param>
         /// <param name="comparisonValue">The value that is compared to the value of the element that has the specified <paramref name="key"/>.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
@@ -725,7 +725,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key whose value should be updated.</param>
         /// <param name="value">The value that replaces the value of the element that has the specified <paramref name="key"/>.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
