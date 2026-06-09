@@ -151,6 +151,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// ]]>
         /// </code>
         /// </example>
+        // todo: TryDequeueAsync's observable behavior toward uncommitted enqueues (in the same transaction or any other)
+        // cannot be verified from this repository - it may skip them, block until they commit or abort, or return
+        // HasValue=false once the timeout elapses. Document the observed behavior in <remarks> once domain knowledge is
+        // available.
         Task EnqueueAsync(ITransaction tx, T value, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
