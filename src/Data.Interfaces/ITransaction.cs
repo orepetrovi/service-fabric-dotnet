@@ -41,6 +41,9 @@ namespace Microsoft.ServiceFabric.Data
     /// <para>
     /// All <see cref="IReliableCollection{T}"/> APIs that accept a transaction and return a <see cref="Task"/> must be awaited one at a time.
     /// </para>
+    /// <para>
+    /// Disposing a transaction that has not been committed implicitly aborts it, rolling back its uncommitted operations and releasing the locks it holds. Disposal is idempotent, and any failure during the implicit abort is ignored.
+    /// </para>
     /// </remarks>
     /// <example>
     /// The following is an example of correct usage.
