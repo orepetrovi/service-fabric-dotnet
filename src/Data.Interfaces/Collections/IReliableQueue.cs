@@ -221,7 +221,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableQueue{T}"/> is not yet consistent.
         /// </exception>
-        /// <returns>IEnumerable that represents all the values.</returns>
+        /// <returns>A task whose result is an <see cref="IAsyncEnumerable{T}"/> over all values in the queue.</returns>
         Task<IAsyncEnumerable<T>> CreateEnumerableAsync(ITransaction tx);
     }
 }
