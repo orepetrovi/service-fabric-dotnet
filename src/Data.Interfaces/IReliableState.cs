@@ -8,7 +8,7 @@ namespace Microsoft.ServiceFabric.Data
     using System;
 
     /// <summary>
-    /// Defines methods for interacting with all reliable state in Service Fabric.
+    /// Represents reliable state managed by an <see cref="IReliableStateManager"/>.
     /// </summary>
     public interface IReliableState
     {
