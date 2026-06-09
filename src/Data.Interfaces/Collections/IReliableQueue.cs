@@ -41,7 +41,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
-        /// <returns>Task that represents the asynchronous enqueue operation.</returns>
         Task EnqueueAsync(ITransaction tx, T item);
 
         /// <summary>
@@ -63,7 +62,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <remarks>If a retriable exception is thrown by this method, it is recommended to dispose the transaction <paramref name="tx"/> and try again with a new transaction.</remarks>
-        /// <returns>Task that represents the asynchronous enqueue operation.</returns>
         Task EnqueueAsync(ITransaction tx, T item, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
