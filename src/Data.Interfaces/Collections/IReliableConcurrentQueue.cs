@@ -60,7 +60,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// 
         /// <param name="tx">The transaction in which to enqueue the value.</param>
         /// <param name="value">The value to add to the end of the queue. The value can be <see langword="null"/> for reference types.</param>
-        /// <param name="cancellationToken">Monitors for cancellation requests. Defaults to <see cref="CancellationToken.None"/>.</param>
+        /// <param name="cancellationToken">A token to monitor for cancellation requests. Defaults to <see cref="CancellationToken.None"/>.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. The default is <see langword="null"/>.  If <see langword="null"/> is passed, a default timeout will be used.</param>
         /// 
         /// <remarks>
@@ -163,7 +163,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// 
         /// <param name="tx">The transaction in which to dequeue the value.</param>
-        /// <param name="cancellationToken">Monitors for cancellation requests. Defaults to <see cref="CancellationToken.None"/>.</param>
+        /// <param name="cancellationToken">A token to monitor for cancellation requests. Defaults to <see cref="CancellationToken.None"/>.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete. The default is <see langword="null"/>.  If <see langword="null"/> is passed, a default timeout will be used.</param>
         /// 
         /// <returns>
