@@ -498,7 +498,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>A <see cref="ConditionalValue{TValue}"/> indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
+        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
         Task<ConditionalValue<TValue>> TryGetValueAsync(ITransaction tx, TKey key);
 
         /// <summary>
@@ -518,7 +518,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>A <see cref="ConditionalValue{TValue}"/> indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
+        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
         Task<ConditionalValue<TValue>> TryGetValueAsync(ITransaction tx, TKey key, LockMode lockMode);
 
         /// <summary>
@@ -541,7 +541,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>A <see cref="ConditionalValue{TValue}"/> indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
+        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
         Task<ConditionalValue<TValue>> TryGetValueAsync(
             ITransaction tx, 
             TKey key, 
@@ -569,7 +569,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>A <see cref="ConditionalValue{TValue}"/> indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
+        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
         Task<ConditionalValue<TValue>> TryGetValueAsync(
             ITransaction tx, 
             TKey key, 
@@ -588,7 +588,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>A <see cref="ConditionalValue{TValue}"/> indicating whether the key was removed from the Reliable Dictionary and, if so, the previous value.</returns>
+        /// <returns>A result indicating whether the key was removed from the Reliable Dictionary and, if so, the previous value.</returns>
         Task<ConditionalValue<TValue>> TryRemoveAsync(ITransaction tx, TKey key);
 
         /// <summary>
@@ -606,7 +606,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>A <see cref="ConditionalValue{TValue}"/> indicating whether the key was removed from the Reliable Dictionary and, if so, the previous value.</returns>
+        /// <returns>A result indicating whether the key was removed from the Reliable Dictionary and, if so, the previous value.</returns>
         Task<ConditionalValue<TValue>> TryRemoveAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
