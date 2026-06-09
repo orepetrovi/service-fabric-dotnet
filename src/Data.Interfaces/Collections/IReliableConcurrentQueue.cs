@@ -26,9 +26,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// and producers to a maximum of one each, while this queue imposes no such restriction.
     /// </para>
     /// <para>
-    /// This queue does not offer the same transaction isolation semantics as the other reliable data structures.  See the 
-    /// individual operations and properties (<see cref="EnqueueAsync"/>, <see cref="TryDequeueAsync"/> and <see cref="Count"/>) for details on what isolation, 
-    /// if any, they provide.
+    /// This queue does not offer the same transaction isolation semantics as
+    /// <see cref="IReliableDictionary{TKey,TValue}"/> and <see cref="IReliableQueue{T}"/>.
+    /// See the individual operations and properties (<see cref="EnqueueAsync"/>, <see cref="TryDequeueAsync"/>
+    /// and <see cref="Count"/>) for details on what isolation, if any, they provide.
     /// </para>
     /// <para>
     /// It is expected that values will be relatively short-lived in the queue; in other words, that the egress (<see cref="TryDequeueAsync"/>) rate is 
