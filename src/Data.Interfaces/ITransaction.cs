@@ -124,6 +124,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the sequence number assigned to the transaction when it was committed.
         /// </summary>
+        // todo: pre-commit behavior of CommitSequenceNumber (value returned before CommitAsync succeeds, or exception thrown)
+        // cannot be verified from this repository; document this in the summary or a <remarks> block once domain knowledge is available
         long CommitSequenceNumber { get; }
 
         /// <summary>
