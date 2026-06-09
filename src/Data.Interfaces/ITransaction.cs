@@ -27,7 +27,7 @@ namespace Microsoft.ServiceFabric.Data
     ///     </item>
     ///     <item>
     ///         <term>Isolation</term>
-    ///         <description>Modifications made by concurrent transactions must be isolated from the modifications made by any other concurrent transactions. The isolation level used for an operation within an <see cref="ITransaction"/> is determined by the <see cref="IReliableState"/> performing the operation.</description>
+    ///         <description>Modifications made by concurrent transactions must be isolated from the modifications made by any other concurrent transactions. The isolation level used for an operation is determined by the <see cref="IReliableState"/> performing the operation.</description>
     ///     </item>
     ///     <item>
     ///         <term>Durability</term>
