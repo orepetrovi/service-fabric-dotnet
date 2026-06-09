@@ -11,7 +11,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Represents a reliable first-in, first-out collection of objects that are persisted and replicated.
+    /// Represents a reliable first-in, first-out collection of persisted and replicated elements of type <typeparamref name="T"/>.
     /// </summary>
     /// <remarks>
     /// <para>
