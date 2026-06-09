@@ -10,7 +10,6 @@ namespace Microsoft.ServiceFabric.Data
     /// which supports an asynchronous iteration over a collection 
     /// of a specified type.
     /// </summary>
-    /// <typeparam name="T">The type of objects to enumerate.</typeparam>
     public interface IAsyncEnumerable<out T>
     {
         /// <summary>
