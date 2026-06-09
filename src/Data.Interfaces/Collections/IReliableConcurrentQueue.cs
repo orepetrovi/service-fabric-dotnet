@@ -78,7 +78,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// The operation was unable to be completed within the given timeout.  The transaction should be aborted and
         /// a new transaction should be created to retry.
         /// </exception>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
@@ -190,7 +190,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// The operation was unable to be completed within the given timeout.  The transaction should be aborted and
         /// a new transaction should be created to retry.
         /// </exception>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null. Do not handle this exception.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
