@@ -18,10 +18,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// </para>
     /// </summary>
     /// 
-    /// <typeparam name="T">
-    /// The type of the values contained in the reliable queue slim.
-    /// </typeparam>
-    /// 
     /// <remarks>
     /// <para>
     /// Intended as an alternative to <see cref="IReliableQueue{T}"/> for workloads where strict ordering is not required, as by relaxing
