@@ -222,6 +222,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableQueue{T}"/> is not yet consistent.
         /// </exception>
         /// <returns>A task whose result is an <see cref="IAsyncEnumerable{T}"/> over all values in the queue.</returns>
+        // todo: verify the <exception> block against the runtime implementation. Sibling read methods in this
+        // interface (e.g. TryPeekAsync overloads) systematically document ArgumentNullException (for tx),
+        // TimeoutException, TransactionFaultedException, and InvalidOperationException, but whether each applies
+        // to CreateEnumerableAsync cannot be verified from this repository; add the corresponding <exception>
+        // elements once domain knowledge confirms which exceptions this member throws directly.
         Task<IAsyncEnumerable<T>> CreateEnumerableAsync(ITransaction tx);
     }
 }
