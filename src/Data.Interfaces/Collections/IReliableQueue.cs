@@ -20,7 +20,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// </para>
     /// <para>
     /// A transaction is the unit of concurrency. Multiple transactions can be in-flight at any time, but operations within a given transaction must be called sequentially.
-    /// Reliable Collection APIs that take a transaction and return a <see cref="Task"/> must be awaited one at a time.
+    /// <see cref="IReliableCollection{T}"/> APIs that take a transaction and return a <see cref="Task"/> must be awaited one at a time.
     /// </para>
     /// </remarks>
     /// <seealso cref="ITransaction"/>
