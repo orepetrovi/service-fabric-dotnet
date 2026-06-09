@@ -162,8 +162,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="timeout">The amount of time to wait for the operation to complete. The default is null.  If null is passed, a default timeout will be used.</param>
         /// 
         /// <returns>
-        /// A task that represents the asynchronous dequeue operation. The task's result is a ConditionalValue of type <typeparamref name="T"/>.
-        /// If a value was dequeued within the given time, returns a ConditionalValue with HasValue as <see langword="true"/> and the Value as the dequeued item of type <typeparamref name="T"/>; otherwise returns a ConditionalValue with HasValue as <see langword="false"/>.
+        /// A task that represents the asynchronous dequeue operation. The task's result is a <see cref="ConditionalValue{T}"/> of type <typeparamref name="T"/>.
+        /// If a value was dequeued within the given time, returns a <see cref="ConditionalValue{T}"/> with HasValue as <see langword="true"/> and the Value as the dequeued item of type <typeparamref name="T"/>; otherwise returns a <see cref="ConditionalValue{T}"/> with HasValue as <see langword="false"/>.
         /// </returns>
         /// 
         /// <remarks>
