@@ -17,7 +17,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <remarks>
         /// The name uniquely identifies this reliable state within its owning <see cref="IReliableStateManager"/>,
-        /// across all <see cref="IReliableState"/> types - including unrelated types.
+        /// across all <see cref="IReliableState"/> types, including unrelated types.
         /// </remarks>
         Uri Name { get; }
     }
