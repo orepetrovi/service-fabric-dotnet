@@ -148,8 +148,11 @@ namespace Microsoft.ServiceFabric.Data
         void Abort();
 
         /// <summary>
-        /// Gets the identifier of the transaction.
+        /// Gets the identifier assigned to the transaction when it was created.
         /// </summary>
+        /// <remarks>
+        /// The identifier remains stable for the lifetime of the transaction, which makes it useful for correlating the transaction across its operations and diagnostic traces.
+        /// </remarks>
         long TransactionId { get; }
 
         /// <summary>
