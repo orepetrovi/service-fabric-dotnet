@@ -176,7 +176,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets a value identifying the transaction.
         /// </summary>
-        /// <returns>The transaction id.</returns>
         long TransactionId { get; }
 
         /// <summary>
