@@ -18,8 +18,9 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets the element at the current position of the enumerator.
         /// </summary>
         /// <remarks>
-        /// The value is undefined before the first call to <see cref="MoveNextAsync(CancellationToken)"/>
-        /// and after a <see cref="MoveNextAsync(CancellationToken)"/> operation completes with <see langword="false"/>.
+        /// The value is undefined when the enumerator is positioned before the first element — after creation
+        /// or <see cref="Reset"/> — and after <see cref="MoveNextAsync(CancellationToken)"/> completes with
+        /// <see langword="false"/>.
         /// </remarks>
         T Current { get; }
 
