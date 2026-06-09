@@ -67,7 +67,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. The default is <see langword="null"/>. If <see langword="null"/> is passed, a default timeout will be used.</param>
         /// 
         /// <remarks>
-        /// A <see cref="TryDequeueAsync"/> operation cannot return any value for which its enqueue has not yet been committed.
+        /// A <see cref="TryDequeueAsync"/> operation cannot return any value whose enqueue has not yet been committed.
         /// This includes the transaction in which the value was enqueued; as a consequence, the queue does not support Read-Your-Writes.
         /// </remarks>
         /// 
