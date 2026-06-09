@@ -157,6 +157,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // cannot be verified from this repository - it may skip them, block until they commit or abort, or return
         // HasValue=false once the timeout elapses. Document the observed behavior in <remarks> once domain knowledge is
         // available.
+        // todo: verify whether passing a negative TimeSpan for timeout throws ArgumentException, as sibling
+        // IReliableQueue<T>.EnqueueAsync(.., TimeSpan timeout, ..) documents. The validation contract cannot
+        // be verified from this repository; add an <exception cref="ArgumentException"> element once confirmed.
         Task EnqueueAsync(ITransaction tx, T value, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
@@ -291,7 +294,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // member omits the "before throwing a <see cref="TimeoutException"/>" clause that the same param
         // carries on EnqueueAsync; align both <param> descriptions once the timeout/<exception> contract
         // is resolved (the right wording depends on whether timeout expiry throws TimeoutException or
-        // returns HasValue=false).
+        // returns HasValue=false). Also verify whether passing a negative TimeSpan for timeout throws
+        // ArgumentException (sibling IReliableQueue<T>.TryDequeueAsync documents this on its TimeSpan
+        // overload); add an <exception cref="ArgumentException"> element once confirmed.
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
