@@ -59,9 +59,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Stages the enqueue of a value into the queue.
         /// </summary>
         /// 
-        /// <param name="tx">Transaction to associate this operation with.</param>
+        /// <param name="tx">The transaction in which to enqueue the value.</param>
         /// <param name="value">The value to add to the end of the queue. The value can be null for reference types.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
+        /// <param name="cancellationToken">Monitors for cancellation requests. Defaults to <see cref="CancellationToken.None"/>.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. The default is null.  If null is passed, a default timeout will be used.</param>
         /// 
         /// <remarks>
@@ -157,8 +157,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Returns the value dequeued from the queue, or an empty result if no value became available within the given timeout.
         /// </summary>
         /// 
-        /// <param name="tx">Transaction to associate this operation with.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
+        /// <param name="tx">The transaction in which to dequeue the value.</param>
+        /// <param name="cancellationToken">Monitors for cancellation requests. Defaults to <see cref="CancellationToken.None"/>.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete. The default is null.  If null is passed, a default timeout will be used.</param>
         /// 
         /// <returns>
