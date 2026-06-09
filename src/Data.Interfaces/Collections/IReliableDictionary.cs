@@ -29,17 +29,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
         /// <summary>
-        /// A function that is called when the Reliable Dictionary is being rebuilt during copy, restore or recovery.
+        /// Sets the function that is called when the Reliable Dictionary is being rebuilt during copy, restore or recovery.
         /// </summary>
         /// <remarks>
         /// <see cref="NotifyDictionaryChangedEventArgs{TKey, TValue}"/> can only be used within this callback.
         /// Once the asynchronous callback completes, the <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/> becomes invalid. 
         /// See <see href="https://docs.microsoft.com/azure/service-fabric/service-fabric-reliable-services-notifications">here</see> for more information. 
         /// </remarks>
-        /// <value>
-        /// The asynchronous rebuild notification function. 
-        /// Function takes in IReliableDictionary and NotifyDictionaryRebuildEventArgs token and returns a Task that represents the asynchronous processing of the rebuild notification.
-        /// </value>
+        /// <value>The asynchronous rebuild notification callback.</value>
         Func<IReliableDictionary<TKey, TValue>, NotifyDictionaryRebuildEventArgs<TKey, TValue>, Task> RebuildNotificationAsyncCallback
         {
             set;
