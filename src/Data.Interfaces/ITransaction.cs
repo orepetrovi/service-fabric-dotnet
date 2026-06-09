@@ -18,30 +18,20 @@ namespace Microsoft.ServiceFabric.Data
     /// A transaction must exhibit the following <see href="https://learn.microsoft.com/windows/win32/cossdk/acid-properties">ACID properties</see>:
     /// <list type="bullet">
     ///     <item>
-    ///         <description>
-    ///             Atomicity - A transaction must be an atomic unit of work; either all of its data modifications are
-    ///             performed, or none of them is performed.
-    ///         </description>
+    ///         <term>Atomicity</term>
+    ///         <description>A transaction must be an atomic unit of work; either all of its data modifications are performed, or none of them is performed.</description>
     ///     </item>
     ///     <item>
-    ///         <description>
-    ///             Consistency - When completed, a transaction must leave all data in a consistent state. All
-    ///             internal data structures must be correct at the end of the transaction.
-    ///         </description>
+    ///         <term>Consistency</term>
+    ///         <description>When completed, a transaction must leave all data in a consistent state. All internal data structures must be correct at the end of the transaction.</description>
     ///     </item>
     ///     <item>
-    ///         <description>
-    ///             Isolation - Modifications made by concurrent transactions must be isolated from the
-    ///             modifications made by any other concurrent transactions. 
-    ///             The isolation level used for an operation within an <see cref="ITransaction"/> is determined by the
-    ///             <see cref="IReliableState"/> performing the operation.
-    ///         </description>
+    ///         <term>Isolation</term>
+    ///         <description>Modifications made by concurrent transactions must be isolated from the modifications made by any other concurrent transactions. The isolation level used for an operation within an <see cref="ITransaction"/> is determined by the <see cref="IReliableState"/> performing the operation.</description>
     ///     </item>
     ///     <item>
-    ///         <description>
-    ///             Durability - After a transaction has completed, its effects are permanently in place in the system.
-    ///             The modifications persist even in the event of a system failure.
-    ///         </description>
+    ///         <term>Durability</term>
+    ///         <description>After a transaction has completed, its effects are permanently in place in the system. The modifications persist even in the event of a system failure.</description>
     ///     </item>
     /// </list>
     /// <para>
