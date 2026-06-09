@@ -13,9 +13,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     // todo: when queue capacity constraint is configurable, update the remark to link to it directly if possible
     // todo: when retriable and non-retriable FabricNotReadableException are split (#5052175), update the exception documentation
     /// <summary>
-    /// <para>
     /// Represents a reliable collection of persisted, replicated values with best-effort first-in first-out ordering.
-    /// </para>
     /// </summary>
     /// 
     /// <remarks>
@@ -58,9 +56,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         // todo: when queue capacity constraint is configurable, add QueueFullException to EnqueueAsync exceptions and document capacity behavior (including example)
 
         /// <summary>
-        /// <para>
         /// Stage the enqueue of a value into the queue.
-        /// </para>
         /// </summary>
         /// 
         /// <param name="tx">Transaction to associate this operation with.</param>
@@ -160,9 +156,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task EnqueueAsync(ITransaction tx, T value, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
-        /// <para>
         /// Tentatively dequeue a value from the queue. If the queue is empty, the dequeue operation will wait for an item to become available.
-        /// </para>
         /// </summary>
         /// 
         /// <param name="tx">Transaction to associate this operation with.</param>
@@ -278,9 +272,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
-        /// <para>
         /// Gets the number of values in the <see cref="IReliableConcurrentQueue{T}"/>.
-        /// </para>
         /// </summary>
         ///  
         /// <remarks>
