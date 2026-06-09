@@ -23,10 +23,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <para>
     /// Intended as an alternative to <see cref="IReliableQueue{T}"/> for workloads where strict ordering is not required, as by relaxing
     /// the ordering constraint, concurrency can be greatly improved.  <see cref="IReliableQueue{T}"/> restricts concurrent consumers
-    /// and producers to a maximum of one each, while <see cref="IReliableConcurrentQueue{T}"/> imposes no such restriction.
+    /// and producers to a maximum of one each, while this queue imposes no such restriction.
     /// </para>
     /// <para>
-    /// <see cref="IReliableConcurrentQueue{T}"/> does not offer the same transaction isolation semantics as the other reliable data structures.  See the 
+    /// This queue does not offer the same transaction isolation semantics as the other reliable data structures.  See the 
     /// individual operations and properties (<see cref="EnqueueAsync"/>, <see cref="TryDequeueAsync"/> and <see cref="Count"/>) for details on what isolation, 
     /// if any, they provide.
     /// </para>
@@ -41,7 +41,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// be related to the failure rate (failures may alter the queue's ordering) and the dequeue rate, but not the enqueue rate.
     /// </para>
     /// <para>
-    /// <see cref="IReliableConcurrentQueue{T}"/> does not offer a Peek operation, however by combining <see cref="TryDequeueAsync"/> and <see cref="ITransaction.Abort"/>
+    /// This queue does not offer a Peek operation, however by combining <see cref="TryDequeueAsync"/> and <see cref="ITransaction.Abort"/>
     /// the same semantic can be achieved.  See <see cref="TryDequeueAsync"/> for additional details and an example.
     /// </para>
     /// <para>
@@ -68,12 +68,12 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// 
         /// <remarks>
         /// A <see cref="TryDequeueAsync"/> operation cannot return any value for which its enqueue has not yet been committed.
-        /// This includes the transaction in which the value was enqueued; as a consequence, <see cref="IReliableConcurrentQueue{T}"/> does not support Read-Your-Writes.
+        /// This includes the transaction in which the value was enqueued; as a consequence, the queue does not support Read-Your-Writes.
         /// </remarks>
         /// 
         /// <exception cref="FabricNotPrimaryException">The replica is no longer in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="FabricNotReadableException">The replica is currently not readable.</exception>
-        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableConcurrentQueue{T}"/> was closed by the runtime.</exception>
+        /// <exception cref="FabricObjectClosedException">The queue was closed by the runtime.</exception>
         /// <exception cref="FabricTransientException">The replica saw a transient failure. Retry the operation on a new transaction.</exception>
         /// <exception cref="FabricException">The replica saw a non-retriable failure other than <see cref="FabricNotPrimaryException"/>, <see cref="FabricNotReadableException"/>, <see cref="FabricObjectClosedException"/>, or <see cref="FabricTransientException"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
@@ -187,7 +187,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// 
         /// <exception cref="FabricNotPrimaryException">The replica is no longer in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="FabricNotReadableException">The replica is currently not readable.</exception>
-        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableConcurrentQueue{T}"/> was closed by the runtime.</exception>
+        /// <exception cref="FabricObjectClosedException">The queue was closed by the runtime.</exception>
         /// <exception cref="FabricTransientException">The replica saw a transient failure. Retry the operation on a new transaction.</exception>
         /// <exception cref="FabricException">The replica saw a non-retriable failure other than <see cref="FabricNotPrimaryException"/>, <see cref="FabricNotReadableException"/>, <see cref="FabricObjectClosedException"/>, or <see cref="FabricTransientException"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
@@ -304,7 +304,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </para>
         /// </remarks>
         /// <exception cref="FabricNotReadableException">The replica is currently not readable.</exception>
-        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableConcurrentQueue{T}"/> was closed by the runtime.</exception>
+        /// <exception cref="FabricObjectClosedException">The queue was closed by the runtime.</exception>
         ///  
         /// <example>
         /// This example shows how to monitor the queue's count continuously, until the cancellation token is canceled.
