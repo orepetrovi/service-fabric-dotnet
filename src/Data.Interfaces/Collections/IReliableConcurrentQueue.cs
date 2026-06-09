@@ -41,7 +41,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// be related to the failure rate (failures may alter the queue's ordering) and the dequeue rate, but not the enqueue rate.
     /// </para>
     /// <para>
-    /// This queue does not offer a Peek operation, however by combining <see cref="TryDequeueAsync"/> and <see cref="ITransaction.Abort"/>
+    /// This queue does not offer a Peek operation; however, by combining <see cref="TryDequeueAsync"/> and <see cref="ITransaction.Abort"/>
     /// the same semantic can be achieved.  See <see cref="TryDequeueAsync"/> for additional details and an example.
     /// </para>
     /// <para>
@@ -296,7 +296,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <remarks>
         /// <para>
         /// This count represents the number of values currently visible to <see cref="TryDequeueAsync"/>.  Uncommitted enqueues will not
-        /// increase the count, however uncommitted dequeues will decrease the count.
+        /// increase the count; however, uncommitted dequeues will decrease the count.
         /// </para>
         /// <para>
         /// Note that this API does not take a transaction parameter.  Since the effects of <see cref="TryDequeueAsync"/> are not isolated
