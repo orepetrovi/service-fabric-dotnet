@@ -298,7 +298,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// Returns an <see cref="IAsyncEnumerable{T}"/> over the <see cref="IReliableDictionary{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="FabricNotReadableException">
@@ -319,12 +319,12 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</para>
         /// </remarks>
         /// <returns>
-        /// <para>A task that represents the asynchronous create enumerable operation. The task result is an enumerator for the Reliable Dictionary.</para>
+        /// <para>A task whose result is an <see cref="IAsyncEnumerable{T}"/> over the key/value pairs in the <see cref="IReliableDictionary{TKey,TValue}"/>.</para>
         /// </returns>
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(ITransaction txn);
 
         /// <summary>
-        /// Creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// Returns an <see cref="IAsyncEnumerable{T}"/> over the <see cref="IReliableDictionary{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="enumerationMode">One of the enumeration values that specifies the enumeration mode to use. The default is Unordered. Ordered enumeration is ascending only. </param>
@@ -346,12 +346,12 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</para>
         /// </remarks>
         /// <returns>
-        /// <para>A task that represents the asynchronous create enumerable operation. The task result is an enumerator for the Reliable Dictionary.</para>
+        /// <para>A task whose result is an <see cref="IAsyncEnumerable{T}"/> over the key/value pairs in the <see cref="IReliableDictionary{TKey,TValue}"/>.</para>
         /// </returns>
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(ITransaction txn, EnumerationMode enumerationMode);
 
         /// <summary>
-        /// Creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// Returns an <see cref="IAsyncEnumerable{T}"/> over the <see cref="IReliableDictionary{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">Predicate that filters the key-value pairs to include in the enumeration based on the key.</param>
@@ -374,7 +374,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</para>
         /// </remarks>
         /// <returns>
-        /// <para>A task that represents the asynchronous create enumerable operation. The task result is an enumerator for the Reliable Dictionary.</para>
+        /// <para>A task whose result is an <see cref="IAsyncEnumerable{T}"/> over the key/value pairs in the <see cref="IReliableDictionary{TKey,TValue}"/>.</para>
         /// </returns>
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(
             ITransaction txn, 
