@@ -16,7 +16,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <remarks>
     /// <para>
     /// Values stored in this queue MUST NOT be mutated outside the context of an operation on the queue. It is
-    /// highly recommended to make <typeparamref name="T"/> immutable in order to avoid accidental data corruption.
+    /// highly recommended to make <typeparamref name="T"/> immutable to avoid accidental data corruption.
     /// </para>
     /// <para>
     /// A transaction is the unit of concurrency. Multiple transactions can be in-flight at any time, but operations within
