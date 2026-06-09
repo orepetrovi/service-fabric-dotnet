@@ -12,7 +12,7 @@ namespace Microsoft.ServiceFabric.Data
     using Microsoft.ServiceFabric.Data.Collections;
 
     /// <summary>
-    /// A sequence of operations performed as a single logical unit of work.
+    /// Represents a sequence of operations performed as a single logical unit of work.
     /// </summary>
     /// <remarks>
     /// A transaction must exhibit the following ACID properties. (see: https://technet.microsoft.com/en-us/library/ms190612)
