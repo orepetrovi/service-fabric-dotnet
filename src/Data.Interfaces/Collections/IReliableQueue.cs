@@ -23,12 +23,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <see cref="IReliableCollection{T}"/> APIs that take a transaction and return a <see cref="Task"/> must be awaited one at a time.
     /// </para>
     /// <para>
-    /// // todo: define exactly which exceptions are considered retriable in this context.
     /// If a retriable exception is thrown by an operation on this queue, dispose the transaction and retry
     /// the operation with a new transaction.
     /// </para>
     /// </remarks>
     /// <seealso cref="ITransaction"/>
+    // todo: define exactly which exceptions are considered retriable in this context, so the <remarks> can name the
+    // concrete exception types (or a <see cref> to a documented retriable-exception set) rather than the abstract term
+    // "retriable exception".
     public interface IReliableQueue<T> : IReliableCollection<T>
     {
         /// <summary>
