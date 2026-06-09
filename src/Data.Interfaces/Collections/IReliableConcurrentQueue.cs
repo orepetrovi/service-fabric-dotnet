@@ -299,8 +299,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// increase the count; however, uncommitted dequeues will decrease the count.
         /// </para>
         /// <para>
-        /// Note that this API does not take a transaction parameter.  Since the effects of <see cref="TryDequeueAsync"/> are not isolated
-        /// from other transactions, the count also cannot be isolated from other transactions.  
+        /// Since the effects of <see cref="TryDequeueAsync"/> are not isolated from other transactions, the count also
+        /// cannot be isolated from other transactions.
         /// </para>
         /// </remarks>
         /// <exception cref="FabricNotReadableException">The replica is currently not readable.</exception>
