@@ -216,10 +216,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
@@ -236,10 +236,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
@@ -259,10 +259,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
@@ -283,10 +283,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
@@ -304,10 +304,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
@@ -331,10 +331,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="enumerationMode">The enumeration mode to use. The default is Unordered. Ordered enumeration is ascending only. </param>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
@@ -359,10 +359,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="filter">Predicate that filters the key-value pairs to include in the enumeration based on the key.</param>
         /// <param name="enumerationMode">The enumeration mode to use. The default is Unordered. Ordered enumeration is ascending only.</param>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
@@ -523,10 +523,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
@@ -546,10 +546,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
@@ -572,10 +572,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
@@ -603,10 +603,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
