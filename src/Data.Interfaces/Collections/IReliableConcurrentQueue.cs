@@ -286,7 +286,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// from other transactions, the count also cannot be isolated from other transactions.  
         /// </para>
         /// </remarks>
-        /// <value>The number of values in  the <see cref="IReliableConcurrentQueue{T}"/>.</value>
         /// <exception cref="FabricNotReadableException">The replica is currently not readable.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableConcurrentQueue{T}"/> was closed by the runtime.</exception>
         ///  
