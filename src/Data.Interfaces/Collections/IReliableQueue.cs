@@ -118,10 +118,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Exception indicates that the <see cref="IReliableQueue{T}"/> cannot serve reads at the moment.
-        /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One example for it being thrown in the <see cref="ReplicaRole.Primary"/> is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One example for it being thrown in the <see cref="ReplicaRole.ActiveSecondary"/> is that Reliable Queue's state is not yet consistent.
+        /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
+        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableQueue{T}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
@@ -146,10 +146,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Exception indicates that the <see cref="IReliableQueue{T}"/> cannot serve reads at the moment.
-        /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One example for it being thrown in the <see cref="ReplicaRole.Primary"/> is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One example for it being thrown in the <see cref="ReplicaRole.ActiveSecondary"/> is that Reliable Queue's state is not yet consistent.
+        /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
+        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableQueue{T}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
@@ -172,10 +172,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Exception indicates that the <see cref="IReliableQueue{T}"/> cannot serve reads at the moment.
-        /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One example for it being thrown in the <see cref="ReplicaRole.Primary"/> is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One example for it being thrown in the <see cref="ReplicaRole.ActiveSecondary"/> is that Reliable Queue's state is not yet consistent.
+        /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
+        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableQueue{T}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
@@ -201,10 +201,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Exception indicates that the <see cref="IReliableQueue{T}"/> cannot serve reads at the moment.
-        /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One example for it being thrown in the <see cref="ReplicaRole.Primary"/> is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One example for it being thrown in the <see cref="ReplicaRole.ActiveSecondary"/> is that Reliable Queue's state is not yet consistent.
+        /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
+        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableQueue{T}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
@@ -224,10 +224,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <exception cref="FabricNotReadableException">
-        /// Exception indicates that the <see cref="IReliableQueue{T}"/> cannot serve reads at the moment.
-        /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One example for it being thrown in the <see cref="ReplicaRole.Primary"/> is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One example for it being thrown in the <see cref="ReplicaRole.ActiveSecondary"/> is that Reliable Queue's state is not yet consistent.
+        /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
+        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableQueue{T}"/> is not yet consistent.
         /// </exception>
         /// <returns>IEnumerable that represents all the values.</returns>
         Task<IAsyncEnumerable<T>> CreateEnumerableAsync(ITransaction tx);
