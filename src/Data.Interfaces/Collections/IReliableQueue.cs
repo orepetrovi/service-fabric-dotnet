@@ -26,7 +26,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// </para>
     /// <para>
     /// If a retriable exception is thrown by an operation on this queue, dispose the transaction and retry
-    /// the operation with a new transaction.
+    /// with a new transaction.
     /// </para>
     /// </remarks>
     /// <seealso cref="ITransaction"/>
