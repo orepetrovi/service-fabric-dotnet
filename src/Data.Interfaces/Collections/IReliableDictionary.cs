@@ -43,8 +43,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         }
 
         /// <summary>
-        /// Occurs when the Reliable Dictionary changes.
-        /// For example, addition, update or removal of an item.
+        /// Occurs when the Reliable Dictionary changes, for example, an item is added, updated, or removed.
         /// </summary>
         event EventHandler<NotifyDictionaryChangedEventArgs<TKey, TValue>> DictionaryChanged;
 
