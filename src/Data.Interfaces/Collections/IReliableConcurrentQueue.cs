@@ -38,7 +38,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// equal to or greater than the ingress (<see cref="EnqueueAsync"/>) rate.  Violating this expectation 
     /// may worsen system performance.  A planned queue capacity constraint which will throttle incoming Enqueues once the capacity is reached
     /// will help in maintaining this property.
-    /// property.
     /// </para>
     /// <para>
     /// As the ordering of elements is not strictly guaranteed, assumptions about the ordering of any two values in the queue MUST NOT
