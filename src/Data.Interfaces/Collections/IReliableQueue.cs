@@ -23,6 +23,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <see cref="IReliableCollection{T}"/> APIs that take a transaction and return a <see cref="Task"/> must be awaited one at a time.
     /// </para>
     /// <para>
+    /// // todo: define exactly which exceptions are considered retriable in this context.
     /// If a retriable exception is thrown by an operation on this queue, dispose the transaction and retry
     /// the operation with a new transaction.
     /// </para>
@@ -31,7 +32,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     public interface IReliableQueue<T> : IReliableCollection<T>
     {
         /// <summary>
-        /// Adds an object to the end of the queue.
+        /// Adds a value to the end of the queue.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="item">The value to add. Can be <see langword="null"/> for reference types.</param>
@@ -47,7 +48,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task EnqueueAsync(ITransaction tx, T item);
 
         /// <summary>
-        /// Adds an object to the end of the queue.
+        /// Adds a value to the end of the queue.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="item">The value to add. Can be <see langword="null"/> for reference types.</param>
@@ -230,3 +231,4 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<IAsyncEnumerable<T>> CreateEnumerableAsync(ITransaction tx);
     }
 }
+
