@@ -341,7 +341,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Returns an <see cref="IAsyncEnumerable{T}"/> over the <see cref="IReliableDictionary{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
-        /// <param name="filter">Predicate that filters the key-value pairs to include in the enumeration based on the key.</param>
+        /// <param name="filter">A predicate that filters the key-value pairs to include in the enumeration based on the key.</param>
         /// <param name="enumerationMode">One of the enumeration values that specifies the enumeration mode to use.</param>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
