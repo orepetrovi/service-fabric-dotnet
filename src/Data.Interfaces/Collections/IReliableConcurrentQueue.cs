@@ -156,7 +156,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task EnqueueAsync(ITransaction tx, T value, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
-        /// Tentatively dequeues a value from the queue. If the queue is empty, the dequeue operation will wait for an item to become available.
+        /// Returns the value dequeued from the queue, or an empty result if no value became available within the given timeout.
         /// </summary>
         /// 
         /// <param name="tx">Transaction to associate this operation with.</param>
@@ -169,6 +169,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </returns>
         /// 
         /// <remarks>
+        /// <para>
+        /// If the queue is empty, the dequeue operation waits for an item to become available, subject to the given timeout.
+        /// </para>
         /// <para>
         /// While <see cref="TryDequeueAsync"/> can only return values for which the corresponding <see cref="EnqueueAsync"/> was committed, <see cref="TryDequeueAsync"/> operations are not isolated
         /// from one another.  Once a transaction has dequeued a value, other transactions cannot dequeue it, but are not blocked from dequeuing other values.
