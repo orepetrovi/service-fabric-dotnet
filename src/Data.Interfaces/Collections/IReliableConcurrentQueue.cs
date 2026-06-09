@@ -79,8 +79,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
+        /// For example, the transaction used was already terminated: committed or aborted by the user.
+        /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// 
         /// <example>
@@ -193,8 +193,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
+        /// For example, the transaction used was already terminated: committed or aborted by the user.
+        /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
         /// <example>
         /// This example shows how to dequeue and log infinitely with retry, until the cancellation token is canceled.  
