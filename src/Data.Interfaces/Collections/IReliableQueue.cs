@@ -31,7 +31,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="item">The value to add. Can be <see langword="null"/> for reference types.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableQueue{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
@@ -50,7 +50,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="item">The value to add. Can be <see langword="null"/> for reference types.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
@@ -68,7 +68,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Returns the value removed from the beginning of the reliable queue, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableQueue{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
@@ -89,7 +89,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
@@ -111,7 +111,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Returns the value at the beginning of the reliable queue without removing it, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
@@ -136,7 +136,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
@@ -163,7 +163,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="lockMode">The type of locking to use for this read operation.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
@@ -189,7 +189,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="lockMode">The type of locking to use for this read operation.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
