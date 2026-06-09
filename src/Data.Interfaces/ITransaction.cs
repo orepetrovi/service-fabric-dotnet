@@ -141,11 +141,7 @@ namespace Microsoft.ServiceFabric.Data
         /// have been persisted and replicated.
         /// </remarks>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
-        /// </exception>
+        /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
         /// <exception cref="FabricNotPrimaryException">
         /// The transaction includes updates to <see cref="IReliableState"/> and the <see cref="System.Fabric.ReplicaRole"/> is not Primary.
         /// Only Primary replicas are given write status.
@@ -156,11 +152,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Aborts the transaction, rolling back any uncommitted operations.
         /// </summary>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
-        /// </exception>
+        /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
         /// <exception cref="FabricNotPrimaryException">
         /// The transaction includes updates to <see cref="IReliableState"/> and the <see cref="System.Fabric.ReplicaRole"/> is not Primary.
         /// Only Primary replicas are given write status.
@@ -176,11 +168,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Returns the visibility sequence number for this transaction.
         /// </summary>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
-        /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
-        /// </exception>
+        /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
         /// <returns>The visibility sequence number.</returns>
         // todo: "visibility sequence number" semantics cannot be verified from this repository; rewrite the summary and
         // <returns> to describe what the returned value represents and how callers should use it once domain knowledge is available
