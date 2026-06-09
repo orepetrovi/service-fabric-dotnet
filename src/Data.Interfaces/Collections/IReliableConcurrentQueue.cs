@@ -49,8 +49,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// highly recommended to make <typeparamref name="T"/> immutable in order to avoid accidental data corruption.
     /// </para>
     /// <para>
-    /// A transaction is the unit of concurrency: Users can have multiple transactions in-flight at any time but for a given transaction each API must be called one at a time.
-    /// So all Reliable Collection APIs that take in an <see cref="ITransaction"/> and return a <see cref="Task"/>, must be awaited one at a time.
+    /// A transaction is the unit of concurrency: Users can have multiple transactions in-flight at any time, but for a given transaction each API must be called one at a time.
+    /// So all Reliable Collection APIs that take in an <see cref="ITransaction"/> and return a <see cref="Task"/> must be awaited one at a time.
     /// </para>
     /// </remarks>
     public interface IReliableConcurrentQueue<T> : IReliableState
@@ -179,7 +179,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// from one another.  Once a transaction has dequeued a value, other transactions cannot dequeue it, but are not blocked from dequeuing other values.
         /// </para>
         /// <para>
-        /// When a transaction or transactions including one or more <see cref="TryDequeueAsync"/> operations aborts, the dequeued values will be added back at
+        /// When a transaction or transactions including one or more <see cref="TryDequeueAsync"/> operations abort, the dequeued values will be added back at
         /// the head of the queue in an arbitrary order.  This will ensure that these values will be dequeued again soon, improving the fairness of the
         /// data structure, but without enforcing strict ordering (which would require reducing the allowed concurrency, as in <see cref="IReliableQueue{T}"/>).
         /// </para>
