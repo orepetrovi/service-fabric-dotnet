@@ -36,6 +36,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Sets the enumerator to its initial position, before the first element of the sequence.
         /// </summary>
         /// <exception cref="InvalidOperationException">The underlying collection was modified after the enumerator was created.</exception>
+        /// <exception cref="NotSupportedException">Resetting the enumerator is not supported.</exception>
         void Reset();
     }
 }
