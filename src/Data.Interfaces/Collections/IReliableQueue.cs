@@ -33,7 +33,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="item">The object to add to the end of the queue. The value can be null for reference types.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableQueue{T}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableQueue{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
@@ -55,7 +55,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
-        /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableQueue{T}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableQueue{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
@@ -72,7 +72,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableQueue{T}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableQueue{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
@@ -96,7 +96,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
-        /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableQueue{T}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableQueue{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
