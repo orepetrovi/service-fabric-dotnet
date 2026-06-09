@@ -10,7 +10,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     using System.Threading.Tasks;
 
     /// <summary>
-    /// <para>Defines methods for manipulating Reliable Collections.</para>
+    /// <para>Represents a Reliable Collection of elements of type <typeparamref name="T"/>.</para>
     /// </summary>
     /// <remarks>
     /// <para>More information on Reliable Collections can be seen
