@@ -62,6 +62,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// <para>A task that represents the asynchronous clear operation.</para>
         /// </returns>
+        // todo: ClearAsync has no timeout parameter, so the TimeoutException <exception> text's reference to "the given
+        // timeout" is misleading; the actual timeout source (implicit default, configurable replicator setting, or none)
+        // cannot be verified from this repository. Either rewrite the <exception> text to describe the actual default and
+        // its source, or remove the <exception> element if it is unreachable from this signature, once domain knowledge
+        // is available.
         Task ClearAsync();
     }
 }
