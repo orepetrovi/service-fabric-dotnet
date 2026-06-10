@@ -125,7 +125,8 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets the sequence number assigned to the transaction when it was committed.
         /// </summary>
         /// <remarks>
-        /// The value is <c>-1</c> until the transaction is committed, including when the transaction is aborted or faulted.
+        /// The value is <c>-1</c> before <see cref="CommitAsync"/> completes successfully, after <see cref="Abort"/>, or after the transaction is internally faulted.
+        /// For a successfully committed read-only transaction the value also remains <c>-1</c>.
         /// </remarks>
         long CommitSequenceNumber { get; }
 
