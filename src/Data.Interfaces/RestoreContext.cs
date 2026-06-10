@@ -64,6 +64,10 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FileNotFoundException">
         /// The expected backup files under the supplied restore directory are not found.
         /// </exception>
+        /// <exception cref="InvalidDataException">
+        /// For Reliable Services, the backup or checkpoint data in the supplied restore directory is corrupt, such as when a
+        /// backup file fails checksum verification or full-backup metadata is missing or inconsistent.
+        /// </exception>
         /// <exception cref="FabricException">
         /// The restore operation failed. The <see cref="FabricException.ErrorCode"/> property indicates the specific reason.
         /// <list type="bullet">
