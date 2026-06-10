@@ -201,6 +201,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets or sets the maximum stream size.
         /// </summary>
+        /// <value>
+        /// The default is 1024.
+        /// </value>
         /// <remarks>
         /// This property is deprecated.
         /// </remarks>
