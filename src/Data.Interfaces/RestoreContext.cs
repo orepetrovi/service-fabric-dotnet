@@ -48,7 +48,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </para>
         /// <para>
         /// For Reliable Services, this also occurs when <see cref="RestoreDescription.Policy"/> is set to <see cref="RestorePolicy.Safe"/>
-        /// but the input backup folder contains a version older than the state maintained in the current replica.
+        /// but the input backup folder contains a version that is not ahead of the state maintained in the current replica.
         /// </para>
         /// </exception>
         /// <exception cref="DirectoryNotFoundException">
@@ -103,7 +103,7 @@ namespace Microsoft.ServiceFabric.Data
         ///         <term><see cref="FabricErrorCode.RestoreSafeCheckFailed"/></term>
         ///         <description>
         ///         <see cref="RestorePolicy.Safe"/> is specified as part of <see cref="RestoreDescription"/> and
-        ///         the backup provided is older than the state currently present in the service.
+        ///         the backup provided is not ahead of the state currently present in the service.
         ///         </description>
         ///     </item>
         /// </list>
