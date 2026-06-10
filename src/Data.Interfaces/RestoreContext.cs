@@ -58,8 +58,8 @@ namespace Microsoft.ServiceFabric.Data
         /// The replica is closing.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// The call is made outside the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>, another call
-        /// to <see cref="RestoreAsync(RestoreDescription, CancellationToken)"/> is already in flight on the same replica, or the
+        /// The call is made outside the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>, another restore
+        /// is already in flight on the same replica, or the
         /// restore is otherwise invalid for the target partition. For example, the <see cref="ServicePartitionKind"/> of the
         /// partition from which the backup was taken differs from that of the current partition being restored.
         /// </exception>
@@ -117,7 +117,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// <para>
         /// This API must be called from the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>.
-        /// Only one call to <see cref="RestoreAsync(RestoreDescription, CancellationToken)"/> can be in flight per replica at a time.
+        /// Only one restore can be in flight per replica at a time.
         /// </para>
         /// <para>
         /// Exceptions thrown by this API differ depending on the underlying state provider. The exceptions that are currently documented for
