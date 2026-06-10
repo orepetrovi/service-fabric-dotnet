@@ -13,12 +13,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// Represents a Reliable Collection of elements of type <typeparamref name="T"/>.
     /// </summary>
     /// <seealso href="https://learn.microsoft.com/azure/service-fabric/service-fabric-reliable-services-reliable-collections">Reliable Collections</seealso>
-    // todo: this base interface has no type-level <remarks> documenting the transactional/concurrency contract,
-    // while sibling reliable-collection interfaces (IReliableQueue<T>, IReliableConcurrentQueue<T>) document a value-
-    // mutation prohibition and the "transaction is the unit of concurrency" / per-transaction await-serialization rule.
-    // Hoist the universal clauses to a <remarks> block here (or have subtypes <inheritdoc> from here) once domain
-    // knowledge confirms which clauses apply to every IReliableCollection<T> implementation rather than only to specific
-    // subtypes.
     public interface IReliableCollection<T> : IReliableState
     {
         /// <summary>
@@ -37,18 +31,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// In some instances, read operations, such as this one, can be performed from secondary replicas
         /// depending on the implementation of the <see cref="IReliableCollection{T}"/> used.
         /// </exception>
-        // todo: the FabricNotPrimaryException <exception> text is internally contradictory - sentence 1 says it is thrown
-        // when not Primary, while sentence 2 says reads such as this one can be served from secondary replicas; this
-        // also overlaps with FabricNotReadableException above, which already documents the secondary-readable case. The
-        // precise throw condition (and its relationship to FabricNotReadableException) cannot be verified from this
-        // repository; rewrite the <exception> text once domain knowledge is available.
-        // Additionally, verify the <exception> block against the runtime implementation - sibling members such as
-        // IReliableConcurrentQueue<T>.EnqueueAsync, IReliableQueue<T> operations, and every IReliableDictionary
-        // overload that accepts a transaction document ArgumentNullException for the tx parameter, but whether that
-        // contract (or any other exception thrown directly by the implementation) applies here cannot be verified from
-        // this repository. In particular, verify whether TimeoutException applies (sibling parameterless members
-        // such as IReliableQueue<T>.EnqueueAsync and IReliableStateManager overloads document "The operation failed
-        // to complete within the default timeout.") and document it explicitly if so.
         Task<long> GetCountAsync(ITransaction tx);
 
         /// <summary>
@@ -60,12 +42,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TimeoutException">
         /// The operation failed to complete within the default timeout.
         /// </exception>
-        // todo: ClearAsync has no timeout parameter, so the TimeoutException <exception> text's reference to "the given
-        // timeout" is misleading; the actual timeout source (implicit default, configurable replicator setting, or none)
-        // cannot be verified from this repository. Either rewrite the <exception> text to describe the actual default and
-        // its source, or remove the <exception> element if it is unreachable from this signature, once domain knowledge
-        // is available. Additionally, verify the full <exception> block against the runtime implementation - other
-        // exceptions thrown directly by the implementation may belong here.
         Task ClearAsync();
     }
 }
