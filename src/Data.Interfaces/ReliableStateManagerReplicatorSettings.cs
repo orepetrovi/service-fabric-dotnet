@@ -50,7 +50,8 @@ namespace Microsoft.ServiceFabric.Data
         /// replicators.
         /// </summary>
         /// <value>
-        /// The default is <c>"localhost:0"</c>, which picks a dynamic port number at runtime.
+        /// The default is the empty string, which causes the replicator to use <see cref="ReplicatorAddress"/>
+        /// for receiving information from other replicators.
         /// </value>
         /// <remarks>
         /// The <c>{ip}</c> part of the listen address can be obtained from <see cref="CodePackageActivationContext.ServiceListenAddress"/>.
