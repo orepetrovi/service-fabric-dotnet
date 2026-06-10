@@ -11,12 +11,12 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     public enum NotifyStateManagerChangedAction : int
     {
         /// <summary>
-        /// Indicates that a reliable state has been added to the state manager.
+        /// Indicates that an <see cref="IReliableState"/> has been added to the state manager.
         /// </summary>
         Add = 0,
 
         /// <summary>
-        /// Indicates that a reliable state has been removed from the state manager.
+        /// Indicates that an <see cref="IReliableState"/> has been removed from the state manager.
         /// </summary>
         Remove = 1,
 
