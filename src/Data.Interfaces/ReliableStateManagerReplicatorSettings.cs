@@ -227,7 +227,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 1024.
         /// </value>
         /// <remarks>
-        /// The value is specified in KB and must be a multiple of 4 and greater than 16.
+        /// The value is specified in KB and must be a multiple of 4 and at least 128.
         /// </remarks>
         public int? MaxRecordSizeInKB { get; set; }
 
