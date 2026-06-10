@@ -41,9 +41,6 @@ namespace Microsoft.ServiceFabric.Data
         /// The folder must contain at least one full backup and may include one or more incremental backups.
         /// UNC paths are supported.
         /// </remarks>
-        // TODO: Constructors do not validate backupFolderPath. The "non-null, non-empty, non-whitespace"
-        // contract is enforced only later by the restore pipeline. Consider validating here so the
-        // invariant matches the documentation, or document the deferred validation explicitly.
         public string BackupFolderPath
         {
             get
