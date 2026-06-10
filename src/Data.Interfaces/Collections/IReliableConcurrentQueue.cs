@@ -10,11 +10,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
     using System.Threading;
     using System.Threading.Tasks;
 
-    // todo: when queue capacity constraint is configurable, update the remark to link to it directly if possible
-    // todo: when retriable and non-retriable FabricNotReadableException are split (#5052175), update the exception documentation.
-    //       Also verify whether FabricNotReadableException actually applies to EnqueueAsync (a write); the sibling
-    //       IReliableQueue<T>.EnqueueAsync documents only FabricNotPrimaryException on its writes, suggesting the
-    //       current <exception> may be incorrect for this member.
     /// <summary>
     /// Represents a reliable collection of persisted, replicated values with best-effort first-in first-out ordering.
     /// </summary>
@@ -56,8 +51,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// </remarks>
     public interface IReliableConcurrentQueue<T> : IReliableState
     {
-        // todo: when queue capacity constraint is configurable, add QueueFullException to EnqueueAsync exceptions and document capacity behavior (including example)
-
         /// <summary>
         /// Stages the enqueue of a value into the queue.
         /// </summary>
@@ -153,13 +146,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// ]]>
         /// </code>
         /// </example>
-        // todo: TryDequeueAsync's observable behavior toward uncommitted enqueues (in the same transaction or any other)
-        // cannot be verified from this repository - it may skip them, block until they commit or abort, or return
-        // HasValue=false once the timeout elapses. Document the observed behavior in <remarks> once domain knowledge is
-        // available.
-        // todo: verify whether passing a negative TimeSpan for timeout throws ArgumentException, as sibling
-        // IReliableQueue<T>.EnqueueAsync(.., TimeSpan timeout, ..) documents. The validation contract cannot
-        // be verified from this repository; add an <exception cref="ArgumentException"> element once confirmed.
         Task EnqueueAsync(ITransaction tx, T value, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
@@ -277,26 +263,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// ]]>
         /// </code>
         /// </example>
-        // todo: the <example> above logs `dequeueOutput` (the ConditionalValue<T> wrapper) instead of
-        // `dequeueOutput.Value`, so it renders ValueType.ToString() (e.g.
-        // "Microsoft.ServiceFabric.Data.ConditionalValue`1[System.Int64]") rather than the dequeued payload.
-        // Update the example to log `dequeueOutput.Value`.
-        // todo: the interface <remarks> promises an "example" of peek-via-abort using TryDequeueAsync +
-        // ITransaction.Abort, but no such example exists in the <example> above (which shows the standard
-        // dequeue + CommitAsync retry pattern). Verify that aborting a TryDequeueAsync re-adds the value at
-        // the head of the queue (per the <remarks> paragraph above) and add a peek-via-abort <example>.
-        // todo: the <summary> says TryDequeueAsync returns an "empty result" (HasValue=false) when no value
-        // became available within the given timeout, but <exception cref="TimeoutException"> documents that
-        // the operation throws in the same situation. The <example> above catches TimeoutException and also
-        // handles HasValue=false. The relationship between the timeout parameter and TimeoutException cannot
-        // be verified from this repository; correct either the <summary> or the <exception> element once
-        // domain knowledge is available. Additionally, the <param name="timeout"> description on this
-        // member omits the "before throwing a <see cref="TimeoutException"/>" clause that the same param
-        // carries on EnqueueAsync; align both <param> descriptions once the timeout/<exception> contract
-        // is resolved (the right wording depends on whether timeout expiry throws TimeoutException or
-        // returns HasValue=false). Also verify whether passing a negative TimeSpan for timeout throws
-        // ArgumentException (sibling IReliableQueue<T>.TryDequeueAsync documents this on its TimeSpan
-        // overload); add an <exception cref="ArgumentException"> element once confirmed.
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
@@ -356,21 +322,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// ]]>
         /// </code>
         /// </example>
-        // todo: the <example> above calls Task.Run(...) into `var observer` and never awaits or returns it, so
-        // RunAsync returns immediately, leaving the spawned task orphaned - contradicting the lead-in's "monitor the
-        // queue's count continuously, until the cancellation token is canceled". Restructure the example as an awaited
-        // single-threaded loop matching the lead-in's contract.
-        // todo: the consistency/atomicity contract of Count cannot be verified from this repository - it is unclear
-        // whether reads are atomic point-in-time snapshots, eventually consistent (may lag committed mutations by some
-        // bounded or unbounded interval), or best-effort. Consumers using Count for back-pressure need this guarantee.
-        // Document the observed semantics in <remarks> once domain knowledge is available.
-        // Also verify whether Count is guaranteed to be non-negative, clamped at zero, or may become transiently
-        // negative when uncommitted dequeues are included, and document the signed range/value-domain contract once
-        // confirmed.
-        // todo: Count does not document FabricNotPrimaryException, but the sibling read API
-        // IReliableCollection<T>.GetCountAsync documents it. Whether Count actually throws this on a non-Primary
-        // replica cannot be verified from this repository; verify against the runtime implementation and add an
-        // <exception cref="FabricNotPrimaryException"> element if confirmed.
         long Count { get; }
     }
 }
