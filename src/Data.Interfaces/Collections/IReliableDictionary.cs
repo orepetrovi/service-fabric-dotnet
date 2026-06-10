@@ -25,22 +25,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// When calling any asynchronous Reliable Collection method that takes an <see cref="ITransaction"/>, you must wait for completion of the returned Task before calling
     /// another method using the same transaction. See examples of transactions <see href="https://docs.microsoft.com/azure/service-fabric/service-fabric-work-with-reliable-collections">here</see>.</para>
     /// </remarks>
-    // todo: the <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception> text on
-    // the 14 overloads that take a TimeSpan timeout may over-promise rejection: Timeout.InfiniteTimeSpan has
-    // Ticks = -1 (strictly negative) and is a common wait-forever sentinel across .NET and Service Fabric APIs.
-    // Verify whether this interface accepts Timeout.InfiniteTimeSpan; if so, refine each <exception
-    // cref="ArgumentException"> description to exclude that sentinel (e.g. "is negative and not <see
-    // cref="Timeout.InfiniteTimeSpan"/>"). Note: AddAsync's <exception cref="ArgumentException"> body combines
-    // "A value with the same key already exists in the Reliable Dictionary, or <paramref name="timeout"/> is
-    // negative." - apply the same refinement to the timeout clause there.
-    // todo: <exception cref="ArgumentNullException"> bodies on 26 members combine "<paramref name="key"/> is
-    // <see langword="null"/>" with "or cannot be serialized" in the same element. ArgumentNullException is for
-    // null arguments only; a serialization failure on a non-null key is conventionally surfaced as
-    // SerializationException, ArgumentException, or a domain-specific exception. The actual runtime exception
-    // cannot be determined from this repository. Verify the actual exception type for the "cannot be serialized"
-    // condition. If it is not ArgumentNullException, move the clause to its own <exception cref="..."> element
-    // with the correct type across all 26 sites. If it is ArgumentNullException, record the verification
-    // and leave the doc unchanged so this finding does not resurface.
     public interface IReliableDictionary<TKey, TValue> : IReliableCollection<KeyValuePair<TKey, TValue>>
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
@@ -53,12 +37,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// See <see href="https://docs.microsoft.com/azure/service-fabric/service-fabric-reliable-services-notifications">here</see> for more information. 
         /// </remarks>
         /// <value>The asynchronous rebuild notification callback.</value>
-        // todo: <remarks> first sentence references <see cref="NotifyDictionaryChangedEventArgs{TKey, TValue}"/>, but this
-        // property's setter receives <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/> per the Func
-        // signature below; NotifyDictionaryChangedEventArgs is the args type for the separate DictionaryChanged event.
-        // The intended sentence likely reads "NotifyDictionaryRebuildEventArgs ... can only be used within this
-        // callback." Verify the lifetime contract (both "can only be used within this callback" and "becomes invalid
-        // after the callback completes") against the runtime implementation before fixing the <remarks> inline.
         Func<IReliableDictionary<TKey, TValue>, NotifyDictionaryRebuildEventArgs<TKey, TValue>, Task> RebuildNotificationAsyncCallback
         {
             set;
@@ -203,10 +181,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        // todo: ClearAsync is missing <exception cref="FabricObjectClosedException"> that the other 29 state-touching
-        // members in this file all document. Verify against the runtime implementation: if ClearAsync also throws when
-        // the IReliableDictionary is closed or deleted, add the standard "The <see cref="IReliableDictionary{TKey,
-        // TValue}"/> is closed or deleted." element; otherwise document why this method alone is exempt.
         Task ClearAsync(TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
@@ -320,13 +294,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.
         /// </remarks>
         /// <returns>A task whose result is an <see cref="IAsyncEnumerable{T}"/> over the key/value pairs in the <see cref="IReliableDictionary{TKey,TValue}"/>.</returns>
-        // todo: <see cref="IAsyncEnumerable{T}"/> in the three CreateEnumerableAsync overloads silently resolves to
-        // System.Collections.Generic.IAsyncEnumerable<T> (imported at line 9), not the
-        // Microsoft.ServiceFabric.Data.IAsyncEnumerable<T> these methods return. BCL IAsyncEnumerable<T> has
-        // GetAsyncEnumerator(CancellationToken), so the .GetAsyncEnumerator cref also resolves silently to the
-        // wrong member. 9 sites: <summary>, <remarks>'s GetAsyncEnumerator, and <returns> on each overload. Fix
-        // (either): (a) requalify all 9 to <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}"/>, or
-        // (b) add `using Microsoft.ServiceFabric.Data;` and reorder per the existing using order.
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(ITransaction txn);
 
         /// <summary>
