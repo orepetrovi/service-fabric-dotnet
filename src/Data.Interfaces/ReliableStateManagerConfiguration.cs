@@ -41,7 +41,6 @@ public class ReliableStateManagerConfiguration
     /// </summary>
     /// <param name="replicatorSettings">The replicator settings used by the <see cref="IReliableStateManager"/>.</param>
     /// <param name="onInitializeStateSerializersEvent">A callback that registers custom state serializers via <see cref="IReliableStateManager.TryAddStateSerializer{T}(IStateSerializer{T})"/>.</param>
-    // todo: replicatorSettings is not validated; passing null leaves every replicator-settings source null (neither programmatic nor config-package), violating the documented mutually exclusive sources contract
     public ReliableStateManagerConfiguration(
         ReliableStateManagerReplicatorSettings replicatorSettings,
         Func<Task> onInitializeStateSerializersEvent = null)
