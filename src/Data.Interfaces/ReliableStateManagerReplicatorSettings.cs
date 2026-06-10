@@ -28,7 +28,7 @@ namespace Microsoft.ServiceFabric.Data
         /// an acknowledgment.
         /// </summary>
         /// <value>
-        /// The default is 5 milliseconds.
+        /// The default is 15 milliseconds.
         /// </value>
         public TimeSpan? BatchAcknowledgementInterval { get; set; }
 
