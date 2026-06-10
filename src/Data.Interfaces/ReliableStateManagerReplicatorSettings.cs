@@ -105,7 +105,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets the maximum replication message size.
         /// </summary>
         /// <value>
-        /// The default is 50 MB.
+        /// The default is 52428800 (50 MB).
         /// </value>
         /// <remarks>
         /// The value is specified in bytes.
