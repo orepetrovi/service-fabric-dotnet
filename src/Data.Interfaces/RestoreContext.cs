@@ -36,7 +36,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Restores the replica's state from the backup described by <paramref name="restoreDescription"/>.
+        /// Asynchronously restores the replica's state from the backup described by <paramref name="restoreDescription"/>.
         /// </summary>
         /// <exception cref="FabricMissingFullBackupException">
         /// The input backup folder does not contain a full backup.
