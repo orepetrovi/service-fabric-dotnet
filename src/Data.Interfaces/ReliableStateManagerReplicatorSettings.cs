@@ -268,6 +268,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets or sets a value that indicates whether the replicator is optimized for local SSD storage.
         /// </summary>
+        /// <value>
+        /// The default is <see langword="false"/>.
+        /// </value>
         /// <remarks>
         /// This property is deprecated.
         /// </remarks>
