@@ -159,8 +159,11 @@ namespace Microsoft.ServiceFabric.Data
         long TransactionId { get; }
 
         /// <summary>
-        /// Returns the visibility sequence number for this transaction.
+        /// Returns the sequence number at or below which this transaction observes committed state.
         /// </summary>
+        /// <remarks>
+        /// The first call establishes the snapshot the transaction reads from, ensuring its reads observe a consistent point in time even as concurrent transactions commit. Use the returned value to correlate this transaction's snapshot reads with other versioned operations.
+        /// </remarks>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
         Task<long> GetVisibilitySequenceNumberAsync();
