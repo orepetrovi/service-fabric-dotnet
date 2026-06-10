@@ -58,8 +58,10 @@ namespace Microsoft.ServiceFabric.Data
         /// The replica is closing.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// The current restore operation is not valid. For example, the <see cref="ServicePartitionKind"/>
-        /// of the partition from which the backup was taken differs from that of the current partition being restored.
+        /// The call is made outside the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>, another call
+        /// to <see cref="RestoreAsync(RestoreDescription, CancellationToken)"/> is already in flight on the same replica, or the
+        /// restore is otherwise invalid for the target partition. For example, the <see cref="ServicePartitionKind"/> of the
+        /// partition from which the backup was taken differs from that of the current partition being restored.
         /// </exception>
         /// <exception cref="FileNotFoundException">
         /// The expected backup files under the supplied restore directory are not found.
