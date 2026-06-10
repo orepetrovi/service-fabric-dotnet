@@ -30,21 +30,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// </para>
     /// </remarks>
     /// <seealso cref="ITransaction"/>
-    // todo: define exactly which exceptions are considered retriable in this context, so the <remarks> can name the
-    // concrete exception types (or a <see cref> to a documented retriable-exception set) rather than the abstract term
-    // "retriable exception".
-    // todo: verify whether FabricObjectClosedException (replica closed), FabricTransientException (transient
-    // failure, retry), and FabricException (non-retriable failure other than the above) apply to the EnqueueAsync,
-    // TryDequeueAsync, and TryPeekAsync overloads on this interface. Sibling IReliableConcurrentQueue documents
-    // all three on its queue operations, and IReliableDictionary documents FabricObjectClosedException broadly.
-    // Once domain knowledge confirms which exceptions each member throws directly, add the corresponding
-    // <exception> elements to each affected member.
-    // todo: the <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception> text on
-    // the four EnqueueAsync/TryDequeueAsync/TryPeekAsync overloads that take a TimeSpan timeout may
-    // over-promise rejection: Timeout.InfiniteTimeSpan has Ticks = -1 (strictly negative) and is a common
-    // wait-forever sentinel across .NET and Service Fabric APIs. Verify whether this interface accepts
-    // Timeout.InfiniteTimeSpan; if so, refine each <exception cref="ArgumentException"> description to
-    // exclude that sentinel (e.g. "is negative and not <see cref="Timeout.InfiniteTimeSpan"/>").
     public interface IReliableQueue<T> : IReliableCollection<T>
     {
         /// <inheritdoc cref="EnqueueAsync(ITransaction, T, TimeSpan, CancellationToken)" path="/summary"/>
@@ -221,26 +206,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableQueue{T}"/> is not yet consistent.
         /// </exception>
-        // todo: verify the <exception> block against the runtime implementation. Sibling read methods in this
-        // interface (e.g. TryPeekAsync overloads) systematically document ArgumentNullException (for tx),
-        // TimeoutException, TransactionFaultedException, and InvalidOperationException, but whether each applies
-        // to CreateEnumerableAsync cannot be verified from this repository; add the corresponding <exception>
-        // elements once domain knowledge confirms which exceptions this member throws directly.
-        // Additionally, the <summary> does not document the enumerable's semantics - whether it represents
-        // a snapshot or a live view, whether it is safe under concurrent reads/writes on the IReliableQueue<T>,
-        // what ordering it provides, or how the enclosing transaction affects enumeration. Sibling
-        // IReliableDictionary<TKey,TValue>.CreateEnumerableAsync documents this contract explicitly ("safe to use
-        // concurrently with reads and writes... represents a snapshot consistent view"), but the corresponding
-        // contract for IReliableQueue<T> cannot be verified from this repository; once domain knowledge is
-        // available, rewrite the <summary> to describe these semantics (snapshot vs. live view, concurrency
-        // safety, ordering, transaction scoping), and add a <returns> element only if it carries information
-        // beyond the rewritten <summary>. The rewritten <summary> must also disambiguate IAsyncEnumerable<T>
-        // as the Service Fabric custom Microsoft.ServiceFabric.Data.IAsyncEnumerable<T> (whose
-        // GetAsyncEnumerator() has no CancellationToken parameter and returns the custom
-        // Microsoft.ServiceFabric.Data.IAsyncEnumerator<T>) rather than the BCL
-        // System.Collections.Generic.IAsyncEnumerable<T> that await foreach binds to; sibling
-        // IReliableDictionary<TKey,TValue>.CreateEnumerableAsync makes this explicit by qualifying its cref as
-        // Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}.GetAsyncEnumerator.
         Task<IAsyncEnumerable<T>> CreateEnumerableAsync(ITransaction tx);
     }
 }
