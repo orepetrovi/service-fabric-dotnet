@@ -92,7 +92,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets the maximum size of the copy operation queue inside the replicator.
         /// </summary>
         /// <value>
-        /// The default is 1024.
+        /// The default is 16384.
         /// </value>
         /// <remarks>
         /// The value is the maximum number of operations in the copy operation queue and must be a power of 2.
