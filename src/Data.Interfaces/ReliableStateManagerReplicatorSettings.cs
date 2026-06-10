@@ -350,6 +350,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets or sets the time interval at which log truncation is initiated.
         /// </summary>
+        /// <value>
+        /// The default is 0.
+        /// </value>
         public int? LogTruncationIntervalSeconds { get; set; }
 
         /// <summary>
