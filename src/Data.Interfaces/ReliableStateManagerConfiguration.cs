@@ -78,8 +78,9 @@ public class ReliableStateManagerConfiguration
     /// Gets the name of the Settings.xml section that provides replicator security settings.
     /// </summary>
     /// <value>The section name. The default is <c>"ReplicatorSecurityConfig"</c> when none is supplied to the constructor. Returns <see langword="null"/> when a <see cref="ReliableStateManagerReplicatorSettings"/> instance was supplied to the constructor instead.</value>
-    /// <remarks>When this section is present in the Settings.xml of the config package specified by
-    /// <see cref="ConfigPackageName"/>, it is used to configure replicator security settings.</remarks>
+    /// <remarks>When this section in the Settings.xml of the config package specified by
+    /// <see cref="ConfigPackageName"/> contains security credentials, it is used to configure
+    /// replicator security settings.</remarks>
     public string ReplicatorSecuritySectionName { get; private set; }
 
     /// <summary>
