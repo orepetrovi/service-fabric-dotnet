@@ -21,16 +21,12 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="RestoreContext"/> struct.
         /// </summary>
-        // todo: stateProviderReplica is not validated; passing null (or using default(RestoreContext)) causes
-        // RestoreAsync to throw NullReferenceException instead of ArgumentNullException/InvalidOperationException
         public RestoreContext(IStateProviderReplica stateProviderReplica)
         {
             this.stateProviderReplica = stateProviderReplica;
         }
 
         /// <inheritdoc cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
-        // todo: throws NullReferenceException when invoked on default(RestoreContext) or after passing null to the constructor;
-        // see TODO on the constructor
         public Task RestoreAsync(RestoreDescription restoreDescription)
         {
             return this.stateProviderReplica.RestoreAsync(
@@ -124,8 +120,6 @@ namespace Microsoft.ServiceFabric.Data
         /// and the <c>ReliableCollectionsActorStateProvider</c> used for <c>StatePersistence.Persisted</c> on non-Windows .NET.
         /// </para>
         /// </remarks>
-        // todo: throws NullReferenceException when invoked on default(RestoreContext) or after passing null to the constructor;
-        // see TODO on the constructor
         public Task RestoreAsync(RestoreDescription restoreDescription, CancellationToken cancellationToken)
         {
             return this.stateProviderReplica.RestoreAsync(
