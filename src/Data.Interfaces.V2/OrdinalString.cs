@@ -51,7 +51,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="right">
         /// The second <see cref="OrdinalString"/> to compare</param>
         /// <returns>
-        /// <see cref="Boolean"/>
         /// <c>true</c> if the value of <c>left</c> is the same as the value of <c>right</c>; otherwise, <c>false</c>.
         /// </returns>
         public static bool operator ==(OrdinalString left, OrdinalString right)
@@ -67,7 +66,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="right">
         /// The second <see cref="OrdinalString"/> to compare</param>
         /// <returns>
-        /// <see cref="Boolean"/>
         /// <c>true</c> if the value of <c>left</c> is different from the value of <c>right</c>; otherwise, <c>false</c>.
         /// </returns>
         public static bool operator !=(OrdinalString left, OrdinalString right)
@@ -83,7 +81,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="right">
         /// The second <see cref="OrdinalString"/> to compare</param>
         /// <returns>
-        /// <see cref="Boolean"/>
         /// <c>true</c> if the value of <c>left</c> is smaller than the value of <c>right</c>; otherwise, <c>false</c>.
         /// </returns>
         public static bool operator <(OrdinalString left, OrdinalString right)
@@ -99,7 +96,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="right">
         /// The second <see cref="OrdinalString"/> to compare</param>
         /// <returns>
-        /// <see cref="Boolean"/>
         /// <c>true</c> if the value of <c>left</c> is greater than the value of <c>right</c>; otherwise, <c>false</c>.
         /// </returns>
         public static bool operator >(OrdinalString left, OrdinalString right)
@@ -115,7 +111,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="right">
         /// The second <see cref="OrdinalString"/> to compare</param>
         /// <returns>
-        /// <see cref="Boolean"/>
         /// <c>true</c> if the value of <c>left</c> is less than or equal to the value of <c>right</c>; otherwise, <c>false</c>.
         /// </returns>
         public static bool operator <=(OrdinalString left, OrdinalString right)
@@ -131,7 +126,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="right">
         /// The second <see cref="OrdinalString"/> to compare</param>
         /// <returns>
-        /// <see cref="Boolean"/>
         /// <c>true</c> if the value of <c>left</c> is greater than or equal to the value of <c>right</c>; otherwise, <c>false</c>.
         /// </returns>
         public static bool operator >=(OrdinalString left, OrdinalString right)
@@ -155,7 +149,6 @@ namespace Microsoft.ServiceFabric.Data
         /// The <see cref="OrdinalString"/> to compare to this instance.
         /// </param>
         /// <returns>
-        /// <see cref="Boolean"/>
         /// <c>true</c> if the value of the <c>value</c> parameter is the same as the value of this instance; 
         /// otherwise, <c>false</c>.
         /// </returns>
@@ -171,7 +164,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="obj">
         /// The object to compare with this instance.</param>
         /// <returns>
-        /// <see cref="Boolean"/>
         /// <c>true</c> if <c>obj</c> is an <see cref="OrdinalString"/> and its value is the same as this instance; 
         /// otherwise, <c>false</c>. If <c>obj</c> is <c>null</c>, the method returns <c>false</c>.
         /// </returns>
@@ -189,7 +181,6 @@ namespace Microsoft.ServiceFabric.Data
         /// Returns the hash code for this <see cref="OrdinalString"/>.
         /// </summary>
         /// <returns>
-        /// <see cref="Int32"/>
         /// A 32-bit signed integer hash code.
         /// </returns>
         public override int GetHashCode()
@@ -206,7 +197,6 @@ namespace Microsoft.ServiceFabric.Data
         /// The <see cref="OrdinalString"/> to compare with this instance.
         /// </param>
         /// <returns>
-        /// <see cref="Int32"/>
         /// A 32-bit signed integer that indicates whether this instance precedes, follows, or appears in the 
         /// same position in the sort order as the <c>other</c> parameter.
         /// </returns>
