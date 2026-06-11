@@ -47,7 +47,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task EnqueueAsync(ITransaction tx, T item);
 
         /// <summary>
-        /// Adds a value to the end of the queue.
+        /// Asynchronously adds a value to the end of the queue.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="item">The value to add. Can be <see langword="null"/> for reference types.</param>
@@ -80,7 +80,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx);
 
         /// <summary>
-        /// Returns the value removed from the beginning of the queue, or an empty result if the queue is empty.
+        /// Asynchronously returns the value removed from the beginning of the queue, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
@@ -167,7 +167,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, LockMode lockMode);
 
         /// <summary>
-        /// Returns the value at the beginning of the queue without removing it, or an empty result if the queue is empty.
+        /// Asynchronously returns the value at the beginning of the queue without removing it, or an empty result if the queue is empty.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
@@ -198,7 +198,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Returns an <see cref="IAsyncEnumerable{T}"/> over the <see cref="IReliableQueue{T}"/>.
+        /// Asynchronously returns an <see cref="IAsyncEnumerable{T}"/> over the <see cref="IReliableQueue{T}"/>.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
