@@ -39,7 +39,7 @@ namespace Microsoft.ServiceFabric.Data
     /// This makes transactions the unit of concurrency: Users can have multiple transactions in-flight at any time, but for a given transaction each API must be called one at a time.
     /// </para>
     /// <para>
-    /// All <see cref="IReliableCollection{T}"/> APIs that accept a transaction and return a <see cref="Task"/> must be awaited one at a time.
+    /// Every reliable data structure API (on <see cref="IReliableCollection{T}"/>, <see cref="IReliableConcurrentQueue{T}"/>, etc.) that accepts a transaction and returns a <see cref="Task"/> must be awaited one at a time.
     /// </para>
     /// <para>
     /// Disposing a transaction that has not been committed implicitly aborts it, rolling back its uncommitted operations and releasing the locks it holds. Disposal is idempotent, and any failure during the implicit abort is ignored.
@@ -112,7 +112,7 @@ namespace Microsoft.ServiceFabric.Data
     ///     taskList.Add(concurrentQueue.TryDequeueAsync(tx, cancellationToken));
     ///
     ///     // Both TryDequeueAsync calls run on the same transaction and are awaited together; per the await-serialization
-    ///     // rule documented on this interface, every IReliableCollection<T> API on a transaction must be awaited one at a time.
+    ///     // rule documented on this interface, every reliable data structure API (IReliableCollection<T>, IReliableConcurrentQueue<T>, etc.) on a transaction must be awaited one at a time.
     ///     await Task.WhenAll(taskList);
     ///     await tx.CommitAsync();
     /// }
