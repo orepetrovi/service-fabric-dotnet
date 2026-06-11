@@ -110,7 +110,7 @@ namespace Microsoft.ServiceFabric.Data
             /// <summary>
             /// Initializes a new instance of the <see cref="BackupVersion"/> struct.
             /// </summary>
-            /// <param name="epoch">The <see cref="System.Fabric.Epoch"/> in which the backup was taken.</param>
+            /// <param name="epoch">The <see cref="System.Fabric.Epoch"/> component of this version.</param>
             /// <param name="lsn">The logical sequence number (LSN) of this version.</param>
             public BackupVersion(Epoch epoch, long lsn)
             {
@@ -119,7 +119,7 @@ namespace Microsoft.ServiceFabric.Data
             }
 
             /// <summary>
-            /// Gets the <see cref="System.Fabric.Epoch"/> in which the backup was taken.
+            /// Gets the <see cref="System.Fabric.Epoch"/> component of this version.
             /// </summary>
             public Epoch Epoch { get { return this._epoch; } private set { this._epoch = value; } }
 
