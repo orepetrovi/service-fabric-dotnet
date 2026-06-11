@@ -46,10 +46,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Determines whether two specified <see cref="OrdinalString"/>s have the same value.
         /// </summary>
-        /// <param name="left">
-        /// The first <see cref="OrdinalString"/> to compare</param>
-        /// <param name="right">
-        /// The second <see cref="OrdinalString"/> to compare</param>
         /// <returns>
         /// <see langword="true"/> if the value of <c>left</c> is the same as the value of <c>right</c>; otherwise, <see langword="false"/>.
         /// </returns>
@@ -61,10 +57,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Determines whether two specified <see cref="OrdinalString"/>s have different values.
         /// </summary>
-        /// <param name="left">
-        /// The first <see cref="OrdinalString"/> to compare</param>
-        /// <param name="right">
-        /// The second <see cref="OrdinalString"/> to compare</param>
         /// <returns>
         /// <see langword="true"/> if the value of <c>left</c> is different from the value of <c>right</c>; otherwise, <see langword="false"/>.
         /// </returns>
@@ -76,10 +68,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Determines if the first <see cref="OrdinalString"/> is smaller than the second <see cref="OrdinalString"/>.
         /// </summary>
-        /// <param name="left">
-        /// The first <see cref="OrdinalString"/> to compare</param>
-        /// <param name="right">
-        /// The second <see cref="OrdinalString"/> to compare</param>
         /// <returns>
         /// <see langword="true"/> if the value of <c>left</c> is smaller than the value of <c>right</c>; otherwise, <see langword="false"/>.
         /// </returns>
@@ -91,10 +79,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Determines if the first <see cref="OrdinalString"/> is greater than the second <see cref="OrdinalString"/>.
         /// </summary>
-        /// <param name="left">
-        /// The first <see cref="OrdinalString"/> to compare</param>
-        /// <param name="right">
-        /// The second <see cref="OrdinalString"/> to compare</param>
         /// <returns>
         /// <see langword="true"/> if the value of <c>left</c> is greater than the value of <c>right</c>; otherwise, <see langword="false"/>.
         /// </returns>
@@ -106,10 +90,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Determines if the first <see cref="OrdinalString"/> is less than or equal to the second <see cref="OrdinalString"/>.
         /// </summary>
-        /// <param name="left">
-        /// The first <see cref="OrdinalString"/> to compare</param>
-        /// <param name="right">
-        /// The second <see cref="OrdinalString"/> to compare</param>
         /// <returns>
         /// <see langword="true"/> if the value of <c>left</c> is less than or equal to the value of <c>right</c>; otherwise, <see langword="false"/>.
         /// </returns>
@@ -121,10 +101,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Determines if the first <see cref="OrdinalString"/> is greater than or equal to the second <see cref="OrdinalString"/>.
         /// </summary>
-        /// <param name="left">
-        /// The first <see cref="OrdinalString"/> to compare</param>
-        /// <param name="right">
-        /// The second <see cref="OrdinalString"/> to compare</param>
         /// <returns>
         /// <see langword="true"/> if the value of <c>left</c> is greater than or equal to the value of <c>right</c>; otherwise, <see langword="false"/>.
         /// </returns>
