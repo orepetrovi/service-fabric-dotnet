@@ -211,11 +211,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// 
         ///                 if (dequeueOutput.HasValue)
         ///                 {
-        ///                     Console.WriteLine("Dequeue # " + dequeueOutput);
+        ///                     Console.WriteLine("Dequeue # " + dequeueOutput.Value);
         ///                 }
         ///                 else
         ///                 {
-        ///                     Console.WriteLine("Could not dequeue in the given time");
+        ///                     Console.WriteLine("Queue was empty");
         ///                 }
         ///             }
         ///         }
