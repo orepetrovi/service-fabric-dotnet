@@ -62,7 +62,7 @@ namespace Microsoft.ServiceFabric.Data
     public interface IStateSerializer<T>
     {
         /// <summary>
-        /// Returns a value of type <typeparamref name="T"/> deserialized from the given <see cref="BinaryReader"/>.
+        /// Returns a value of type <typeparamref name="T"/> deserialized from <paramref name="binaryReader"/>.
         /// </summary>
         /// <remarks>
         /// When accessing the <see cref="BinaryReader"/> base stream, care must be taken when moving the position in the stream.
@@ -71,7 +71,7 @@ namespace Microsoft.ServiceFabric.Data
         T Read(BinaryReader binaryReader);
 
         /// <summary>
-        /// Serializes a value and writes it to the given <see cref="BinaryWriter"/>.
+        /// Serializes the value and writes it to <paramref name="binaryWriter"/>.
         /// </summary>
         /// <remarks>
         /// When accessing the <see cref="BinaryWriter"/> base stream, care must be taken when moving the position in the stream.
