@@ -66,7 +66,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <remarks>
         /// When accessing the <see cref="BinaryReader"/> base stream, care must be taken when moving the position in the stream.
-        /// Reading must begin at the current stream position and end at the current position plus the length of your data.
+        /// Reading must begin at the current stream position and end at the current position plus the length of the serialized data.
         /// </remarks>
         T Read(BinaryReader binaryReader);
 
@@ -75,7 +75,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <remarks>
         /// When accessing the <see cref="BinaryWriter"/> base stream, care must be taken when moving the position in the stream.
-        /// Writing must begin at the current stream position and end at the current position plus the length of your data.
+        /// Writing must begin at the current stream position and end at the current position plus the length of the serialized data.
         /// </remarks>
         void Write(T value, BinaryWriter binaryWriter);
 
@@ -83,7 +83,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// <para>
         /// When accessing the <see cref="BinaryReader"/> base stream, care must be taken when moving the position in the stream.
-        /// Reading must begin at the current stream position and end at the current position plus the length of your data.
+        /// Reading must begin at the current stream position and end at the current position plus the length of the serialized data.
         /// </para>
         /// <para>
         /// The platform currently does not populate <paramref name="baseValue"/>; implementers can ignore it.
@@ -96,7 +96,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// <para>
         /// When accessing the <see cref="BinaryWriter"/> base stream, care must be taken when moving the position in the stream.
-        /// Writing must begin at the current stream position and end at the current position plus the length of your data.
+        /// Writing must begin at the current stream position and end at the current position plus the length of the serialized data.
         /// </para>
         /// <para>
         /// The platform currently does not populate <paramref name="baseValue"/>; implementers can ignore it.
