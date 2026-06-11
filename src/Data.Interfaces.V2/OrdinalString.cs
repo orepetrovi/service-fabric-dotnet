@@ -14,7 +14,7 @@ namespace Microsoft.ServiceFabric.Data
     /// <para>
     /// <see cref="OrdinalString"/> supports explicit conversion from <see cref="OrdinalString"/> to <see cref="string"/> and implicit conversion from <see cref="string"/> to <see cref="OrdinalString"/>.
     /// This implicit conversion from <see cref="string"/> to <see cref="OrdinalString"/> minimizes code changes when upstream code uses <see cref="string"/>.
-    /// However, to ensure that we have a well defined comparison behavior, we only allow explicit conversion from <see cref="OrdinalString"/> to <see cref="string"/>.
+    /// Conversion from <see cref="OrdinalString"/> to <see cref="string"/> is explicit to keep comparison behavior well-defined.
     /// </para>
     /// <para>
     /// The wrapped <see cref="string"/> can be <see langword="null"/>, which is the value of <c>default(OrdinalString)</c>. Conversions and <see cref="ToString"/> return the wrapped <see langword="null"/> unchanged, while equality and comparison apply <see cref="StringComparison.Ordinal"/> rules to a <see langword="null"/> value. <see cref="GetHashCode"/> throws because it dereferences the value.
