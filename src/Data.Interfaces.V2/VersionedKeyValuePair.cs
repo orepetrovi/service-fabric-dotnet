@@ -8,7 +8,7 @@ namespace Microsoft.ServiceFabric.Data
     using System.Collections.Generic;
 
     /// <summary>
-    /// Defines a key-value pair with a sequence number.
+    /// Represents a key-value pair together with the sequence number that identifies its version.
     /// </summary>
     public struct VersionedKeyValuePair<TKey, TValue>
     {
