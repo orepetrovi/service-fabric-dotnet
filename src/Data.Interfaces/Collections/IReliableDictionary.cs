@@ -295,7 +295,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(ITransaction txn, EnumerationMode enumerationMode);
 
         /// <summary>
-        /// Asynchronously returns an <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}"/> over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// Asynchronously returns an <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}"/> over the <see cref="IReliableDictionary{TKey, TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">A predicate that filters the key-value pairs to include in the enumeration based on the key.</param>
