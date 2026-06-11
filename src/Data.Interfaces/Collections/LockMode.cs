@@ -6,8 +6,8 @@
 namespace Microsoft.ServiceFabric.Data.Collections
 {
     /// <summary>
-    /// Specifies the lock mode a read operation on a reliable collection acquires, controlling how the read
-    /// interacts with concurrent transactions.
+    /// Specifies the lock mode a read operation on an <see cref="IReliableCollection{T}"/> acquires, controlling how the read
+    /// interacts with concurrent <see cref="ITransaction"/>s.
     /// </summary>
     public enum LockMode : int
     {
