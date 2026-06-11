@@ -72,7 +72,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Determines if the first <see cref="OrdinalString"/> is less than the second <see cref="OrdinalString"/>.
+        /// Determines whether the first <see cref="OrdinalString"/> is less than the second <see cref="OrdinalString"/>.
         /// </summary>
         /// <returns>
         /// <see langword="true"/> if the value of <paramref name="left"/> is less than the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
@@ -83,7 +83,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Determines if the first <see cref="OrdinalString"/> is greater than the second <see cref="OrdinalString"/>.
+        /// Determines whether the first <see cref="OrdinalString"/> is greater than the second <see cref="OrdinalString"/>.
         /// </summary>
         /// <returns>
         /// <see langword="true"/> if the value of <paramref name="left"/> is greater than the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
@@ -94,7 +94,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Determines if the first <see cref="OrdinalString"/> is less than or equal to the second <see cref="OrdinalString"/>.
+        /// Determines whether the first <see cref="OrdinalString"/> is less than or equal to the second <see cref="OrdinalString"/>.
         /// </summary>
         /// <returns>
         /// <see langword="true"/> if the value of <paramref name="left"/> is less than or equal to the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
@@ -105,7 +105,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Determines if the first <see cref="OrdinalString"/> is greater than or equal to the second <see cref="OrdinalString"/>.
+        /// Determines whether the first <see cref="OrdinalString"/> is greater than or equal to the second <see cref="OrdinalString"/>.
         /// </summary>
         /// <returns>
         /// <see langword="true"/> if the value of <paramref name="left"/> is greater than or equal to the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
