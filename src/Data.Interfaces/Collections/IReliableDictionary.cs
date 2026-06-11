@@ -596,8 +596,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
 
         /// <inheritdoc cref="SetAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="key">The key whose value should be updated.</param>
-        /// <param name="value">The value that replaces the value of the element that has the specified <paramref name="key"/>.</param>
+        /// <param name="key">The key to be added or whose value should be updated.</param>
+        /// <param name="value">The value to be added for an absent key or that replaces the value of an existing element.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
@@ -611,8 +611,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// in the Reliable Dictionary if the key already exists.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="key">The key whose value should be updated.</param>
-        /// <param name="value">The value that replaces the value of the element that has the specified <paramref name="key"/>.</param>
+        /// <param name="key">The key to be added or whose value should be updated.</param>
+        /// <param name="value">The value to be added for an absent key or that replaces the value of an existing element.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
