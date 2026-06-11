@@ -15,11 +15,11 @@ namespace Microsoft.ServiceFabric.Data
     /// Use <see cref="OrdinalString"/> instead of <see cref="string"/> as a Reliable Dictionary key to avoid data corruption and inconsistent enumeration caused by the default culture-sensitive string comparison.
     /// </para>
     /// <para>
-    /// This implicit conversion from <see cref="string"/> to <see cref="OrdinalString"/> minimizes code changes when upstream code uses <see cref="string"/>.
-    /// Conversion from <see cref="OrdinalString"/> to <see cref="string"/> is explicit to keep comparison behavior well-defined.
+    /// This implicit conversion from string to OrdinalString minimizes code changes when upstream code uses string.
+    /// Conversion from OrdinalString to string is explicit to keep comparison behavior well-defined.
     /// </para>
     /// <para>
-    /// The wrapped <see cref="string"/> can be <see langword="null"/>, which is the value of <c>default(OrdinalString)</c>. Conversions and <see cref="ToString"/> return the wrapped <see langword="null"/> unchanged, while equality and comparison apply <see cref="StringComparison.Ordinal"/> rules to a <see langword="null"/> value. <see cref="GetHashCode"/> throws because it dereferences the value.
+    /// The wrapped string can be <see langword="null"/>, which is the value of <c>default(OrdinalString)</c>. Conversions and <see cref="ToString"/> return the wrapped <see langword="null"/> unchanged, while equality and comparison apply <see cref="StringComparison.Ordinal"/> rules to a <see langword="null"/> value. <see cref="GetHashCode"/> throws because it dereferences the value.
     /// </para>
     /// </remarks>
     public struct OrdinalString : IEquatable<OrdinalString>, IComparable<OrdinalString>
