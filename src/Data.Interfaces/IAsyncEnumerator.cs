@@ -25,7 +25,7 @@ namespace Microsoft.ServiceFabric.Data
         T Current { get; }
 
         /// <summary>
-        /// Returns a value that indicates whether the enumerator was successfully advanced to the next element of the sequence.
+        /// Asynchronously returns a value that indicates whether the enumerator was successfully advanced to the next element of the sequence.
         /// </summary>
         /// <returns><see langword="true"/> if the enumerator was advanced to the next element; otherwise, <see langword="false"/>.</returns>
         /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
