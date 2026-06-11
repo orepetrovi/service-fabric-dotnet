@@ -52,7 +52,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     public interface IReliableConcurrentQueue<T> : IReliableState
     {
         /// <summary>
-        /// Stages the enqueue of a value into the queue.
+        /// Asynchronously stages the enqueue of a value into the queue.
         /// </summary>
         /// 
         /// <param name="tx">The transaction in which to enqueue the value.</param>
@@ -151,7 +151,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task EnqueueAsync(ITransaction tx, T value, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
-        /// Returns the value dequeued from the head of the queue, or an empty result if the queue is empty.
+        /// Asynchronously returns the value dequeued from the head of the queue, or an empty result if the queue is empty.
         /// </summary>
         /// 
         /// <param name="tx">The transaction in which to dequeue the value.</param>
