@@ -15,7 +15,6 @@ namespace Microsoft.ServiceFabric.Data
     /// Use <see cref="OrdinalString"/> instead of <see cref="string"/> as a Reliable Dictionary key to avoid data corruption and inconsistent enumeration caused by the default culture-sensitive string comparison.
     /// </para>
     /// <para>
-    /// <see cref="OrdinalString"/> supports explicit conversion from <see cref="OrdinalString"/> to <see cref="string"/> and implicit conversion from <see cref="string"/> to <see cref="OrdinalString"/>.
     /// This implicit conversion from <see cref="string"/> to <see cref="OrdinalString"/> minimizes code changes when upstream code uses <see cref="string"/>.
     /// Conversion from <see cref="OrdinalString"/> to <see cref="string"/> is explicit to keep comparison behavior well-defined.
     /// </para>
