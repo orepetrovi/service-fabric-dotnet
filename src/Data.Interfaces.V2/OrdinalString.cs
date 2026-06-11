@@ -27,7 +27,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="OrdinalString"/> struct.
         /// </summary>
-        /// <param name="value">The <see cref="string"/> to wrap. May be <see langword="null"/>.</param>
+        /// <param name="value">The value to wrap. May be <see langword="null"/>.</param>
         public OrdinalString(string value)
         {
             this.value = value;
