@@ -157,7 +157,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <returns>
         /// <see cref="Boolean"/>
         /// <c>true</c> if the value of the <c>value</c> parameter is the same as the value of this instance; 
-        /// otherwise, <c>false</c>. If <c>value</c> is <c>null</c>, the method returns <c>false</c>.
+        /// otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(OrdinalString value)
         {
