@@ -198,6 +198,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
+        /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
@@ -241,7 +242,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
-        /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
+        /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -455,6 +456,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="key">The key of the value to get.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
+        /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
@@ -502,7 +504,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
-        /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
+        /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="FabricNotReadableException">
