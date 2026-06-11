@@ -169,7 +169,7 @@ namespace Microsoft.ServiceFabric.Data
         /// be an <see cref="OrdinalString"/> object, have the same value.
         /// </summary>
         /// <param name="obj">
-        /// The <see cref="OrdinalString"/> to compare to this instance.</param>
+        /// The object to compare with this instance.</param>
         /// <returns>
         /// <see cref="Boolean"/>
         /// <c>true</c> if <c>obj</c> is an <see cref="OrdinalString"/> and its value is the same as this instance; 
