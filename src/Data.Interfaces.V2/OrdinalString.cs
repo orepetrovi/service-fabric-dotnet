@@ -72,10 +72,10 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Determines if the first <see cref="OrdinalString"/> is smaller than the second <see cref="OrdinalString"/>.
+        /// Determines if the first <see cref="OrdinalString"/> is less than the second <see cref="OrdinalString"/>.
         /// </summary>
         /// <returns>
-        /// <see langword="true"/> if the value of <paramref name="left"/> is smaller than the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the value of <paramref name="left"/> is less than the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool operator <(OrdinalString left, OrdinalString right)
         {
