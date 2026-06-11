@@ -14,7 +14,7 @@ namespace Microsoft.ServiceFabric.Data.Beta
 {
         
     /// <summary>
-    /// Defines isolation level options for single item primary reads within a transaction
+    /// Defines isolation levels for single-item primary reads within a transaction.
     /// </summary>
     /// <remarks>
     /// This setting governs only single-entity reads on the primary. Multi-entity reads, such as count and enumeration,
