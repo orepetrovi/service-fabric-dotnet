@@ -93,7 +93,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Represents the version of a backup as the <see cref="System.Fabric.Epoch"/> in which it was taken and the last logical sequence number it includes.
+        /// Represents a version of replicated state as an <see cref="System.Fabric.Epoch"/> and a logical sequence number (LSN).
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1815")]
         public struct BackupVersion : IComparable<BackupVersion>, IEquatable<BackupVersion>
@@ -111,7 +111,7 @@ namespace Microsoft.ServiceFabric.Data
             /// Initializes a new instance of the <see cref="BackupVersion"/> struct.
             /// </summary>
             /// <param name="epoch">The <see cref="System.Fabric.Epoch"/> in which the backup was taken.</param>
-            /// <param name="lsn">The last committed logical sequence number included in the backup.</param>
+            /// <param name="lsn">The logical sequence number (LSN) of this version.</param>
             public BackupVersion(Epoch epoch, long lsn)
             {
                 this._epoch = epoch;
@@ -125,7 +125,7 @@ namespace Microsoft.ServiceFabric.Data
 
 
             /// <summary>
-            /// Gets the last committed logical sequence number included in the backup.
+            /// Gets the logical sequence number (LSN) of this version.
             /// </summary>
             public long Lsn { get { return this._lsn; } private set { this._lsn = value; } }
 
