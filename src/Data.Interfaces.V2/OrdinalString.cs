@@ -36,7 +36,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Defines an explicit conversion of a given <see cref="OrdinalString"/> to the wrapped <see cref="string"/>, which may be <see langword="null"/>.
+        /// Returns the wrapped <see cref="string"/>, which may be <see langword="null"/>.
         /// </summary>
         public static explicit operator string(OrdinalString value)
         {
@@ -44,7 +44,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Defines an implicit conversion of a given <see cref="string"/>, which may be <see langword="null"/>, to an <see cref="OrdinalString"/>.
+        /// Returns an <see cref="OrdinalString"/> that wraps the given <see cref="string"/>, which may be <see langword="null"/>.
         /// </summary>
         public static implicit operator OrdinalString(string value)
         {
