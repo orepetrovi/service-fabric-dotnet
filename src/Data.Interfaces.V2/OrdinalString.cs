@@ -8,7 +8,7 @@ namespace Microsoft.ServiceFabric.Data
     using System;
 
     /// <summary>
-    /// <see cref="OrdinalString"/> is a wrapper of <see cref="string"/> that uses <see cref="StringComparison.Ordinal"/> for <see cref="IComparable{T}"/> and <see cref="IEquatable{T}"/> interface implementations.
+    /// Wraps a <see cref="string"/> to use <see cref="StringComparison.Ordinal"/> for <see cref="IComparable{T}"/> and <see cref="IEquatable{T}"/> interface implementations.
     /// </summary>
     /// <remarks>
     /// <see cref="OrdinalString"/> supports explicit conversion from <see cref="OrdinalString"/> to <see cref="string"/> and implicit conversion from <see cref="string"/> to <see cref="OrdinalString"/>.
