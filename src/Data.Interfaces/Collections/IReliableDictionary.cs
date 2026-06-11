@@ -316,7 +316,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// the returned instance to enumerate. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.
         /// </remarks>
-        /// <returns>A task whose result is an <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}"/> over the key/value pairs in the <see cref="IReliableDictionary{TKey,TValue}"/>.</returns>
+        /// <returns>The key/value pairs in the Reliable Dictionary.</returns>
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(
             ITransaction txn, 
             Func<TKey, bool> filter,
