@@ -109,40 +109,19 @@ namespace Microsoft.ServiceFabric.Data
             return left.CompareTo(right) >= 0;
         }
 
-        /// <summary>
-        /// Converts the value of this instance to a <see cref="string"/>.
-        /// </summary>
+        /// <inheritdoc/>
         public override string ToString()
         {
             return this.value;
         }
 
-        /// <summary>
-        /// Determines whether this instance and another specified <see cref="OrdinalString"/> object 
-        /// have the same value.
-        /// </summary>
-        /// <param name="value">
-        /// The <see cref="OrdinalString"/> to compare to this instance.
-        /// </param>
-        /// <returns>
-        /// <see langword="true"/> if the value of the <paramref name="value"/> parameter is the same as the value of this instance; 
-        /// otherwise, <see langword="false"/>.
-        /// </returns>
+        /// <inheritdoc/>
         public bool Equals(OrdinalString value)
         {
             return string.Equals(this.value, value.value, StringComparison.Ordinal);
         }
 
-        /// <summary>
-        /// Determines whether this instance and a specified <see cref="object"/>, which must also 
-        /// be an <see cref="OrdinalString"/> object, have the same value.
-        /// </summary>
-        /// <param name="obj">
-        /// The object to compare with this instance.</param>
-        /// <returns>
-        /// <see langword="true"/> if <paramref name="obj"/> is an <see cref="OrdinalString"/> and its value is the same as this instance; 
-        /// otherwise, <see langword="false"/>. If <paramref name="obj"/> is <see langword="null"/>, the method returns <see langword="false"/>.
-        /// </returns>
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             if (obj is OrdinalString other)
@@ -153,29 +132,13 @@ namespace Microsoft.ServiceFabric.Data
             return false;
         }
 
-        /// <summary>
-        /// Returns the hash code for this <see cref="OrdinalString"/>.
-        /// </summary>
-        /// <returns>
-        /// A 32-bit signed integer hash code.
-        /// </returns>
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return this.value.GetHashCode();
         }
 
-        /// <summary>
-        /// Compares this instance with a specified <see cref="OrdinalString"/> object and indicates 
-        /// whether this instance precedes, follows, or appears in the same position 
-        /// in the sort order as the specified <see cref="OrdinalString"/>.
-        /// </summary>
-        /// <param name="other">
-        /// The <see cref="OrdinalString"/> to compare with this instance.
-        /// </param>
-        /// <returns>
-        /// A 32-bit signed integer that indicates whether this instance precedes, follows, or appears in the 
-        /// same position in the sort order as the <paramref name="other"/> parameter.
-        /// </returns>
+        /// <inheritdoc/>
         public int CompareTo(OrdinalString other)
         {
             return string.CompareOrdinal(this.value, other.value);
