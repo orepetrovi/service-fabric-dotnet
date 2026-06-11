@@ -38,7 +38,7 @@ namespace Microsoft.ServiceFabric.Data
         public KeyValuePair<TKey, TValue> KeyValuePair => new KeyValuePair<TKey, TValue>(Key, Value);
 
         /// <summary>
-        /// Initializes a new instance of the VersionedKeyValuePair structure with the specified key, value, and sequence number.
+        /// Initializes a new instance of the <see cref="VersionedKeyValuePair{TKey, TValue}"/> struct with the specified key, value, and sequence number.
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
