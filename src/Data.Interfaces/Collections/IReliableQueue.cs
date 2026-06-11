@@ -200,12 +200,21 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Returns an <see cref="IAsyncEnumerable{T}"/> over the <see cref="IReliableQueue{T}"/>.
         /// </summary>
+        /// <param name="tx">The transaction to associate this operation with.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableQueue{T}"/> is not yet consistent.
         /// </exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// A method call is invalid for the object's current state.
+        /// For example, the transaction used was already terminated: committed or aborted by the user.
+        /// This exception typically indicates a bug in the service's use of transactions.
+        /// </exception>
+        /// <returns>An <see cref="IAsyncEnumerable{T}"/> over the values in the <see cref="IReliableQueue{T}"/>.</returns>
         Task<IAsyncEnumerable<T>> CreateEnumerableAsync(ITransaction tx);
     }
 }
