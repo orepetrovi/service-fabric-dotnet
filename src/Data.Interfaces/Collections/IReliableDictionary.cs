@@ -339,7 +339,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <inheritdoc cref="GetOrAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
-        /// <param name="value">The value to be added, if the key does not already exist.</param>
+        /// <param name="value">The value to be added, if the key does not already exist. The value can be <see langword="null"/> for reference types.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
@@ -378,7 +378,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
-        /// <param name="value">The value to be added, if the key does not already exist.</param>
+        /// <param name="value">The value to be added, if the key does not already exist. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
@@ -557,8 +557,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <inheritdoc cref="TryUpdateAsync(ITransaction, TKey, TValue, TValue, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key whose value is compared with <paramref name="comparisonValue"/> and possibly replaced.</param>
-        /// <param name="newValue">The value that replaces the value of the element that has the specified <paramref name="key"/> if the comparison results in equality.</param>
-        /// <param name="comparisonValue">The value that is compared to the value of the element that has the specified <paramref name="key"/>.</param>
+        /// <param name="newValue">The value that replaces the value of the element that has the specified <paramref name="key"/> if the comparison results in equality. The value can be <see langword="null"/> for reference types.</param>
+        /// <param name="comparisonValue">The value that is compared to the value of the element that has the specified <paramref name="key"/>. The value can be <see langword="null"/> for reference types.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
@@ -573,8 +573,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key whose value is compared with <paramref name="comparisonValue"/> and possibly replaced.</param>
-        /// <param name="newValue">The value that replaces the value of the element that has the specified <paramref name="key"/> if the comparison results in equality.</param>
-        /// <param name="comparisonValue">The value that is compared to the value of the element that has the specified <paramref name="key"/>.</param>
+        /// <param name="newValue">The value that replaces the value of the element that has the specified <paramref name="key"/> if the comparison results in equality. The value can be <see langword="null"/> for reference types.</param>
+        /// <param name="comparisonValue">The value that is compared to the value of the element that has the specified <paramref name="key"/>. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
@@ -597,7 +597,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <inheritdoc cref="SetAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to be added or whose value should be updated.</param>
-        /// <param name="value">The value to be added for an absent key or that replaces the value of an existing element.</param>
+        /// <param name="value">The value to be added for an absent key or that replaces the value of an existing element. The value can be <see langword="null"/> for reference types.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
@@ -612,7 +612,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to be added or whose value should be updated.</param>
-        /// <param name="value">The value to be added for an absent key or that replaces the value of an existing element.</param>
+        /// <param name="value">The value to be added for an absent key or that replaces the value of an existing element. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
