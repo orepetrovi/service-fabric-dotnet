@@ -156,7 +156,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// 
         /// <param name="tx">The transaction in which to dequeue the value.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests. Defaults to <see cref="CancellationToken.None"/>.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete. The default is <see langword="null"/>. If <see langword="null"/> is passed, a default timeout will be used.</param>
+        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. The default is <see langword="null"/>. If <see langword="null"/> is passed, a default timeout will be used.</param>
         /// 
         /// <returns>
         /// The dequeued value via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
