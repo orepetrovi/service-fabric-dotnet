@@ -47,7 +47,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Determines whether two specified <see cref="OrdinalString"/>s have the same value.
         /// </summary>
         /// <returns>
-        /// <see langword="true"/> if the value of <c>left</c> is the same as the value of <c>right</c>; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the value of <paramref name="left"/> is the same as the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool operator ==(OrdinalString left, OrdinalString right)
         {
@@ -58,7 +58,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Determines whether two specified <see cref="OrdinalString"/>s have different values.
         /// </summary>
         /// <returns>
-        /// <see langword="true"/> if the value of <c>left</c> is different from the value of <c>right</c>; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the value of <paramref name="left"/> is different from the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool operator !=(OrdinalString left, OrdinalString right)
         {
@@ -69,7 +69,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Determines if the first <see cref="OrdinalString"/> is smaller than the second <see cref="OrdinalString"/>.
         /// </summary>
         /// <returns>
-        /// <see langword="true"/> if the value of <c>left</c> is smaller than the value of <c>right</c>; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the value of <paramref name="left"/> is smaller than the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool operator <(OrdinalString left, OrdinalString right)
         {
@@ -80,7 +80,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Determines if the first <see cref="OrdinalString"/> is greater than the second <see cref="OrdinalString"/>.
         /// </summary>
         /// <returns>
-        /// <see langword="true"/> if the value of <c>left</c> is greater than the value of <c>right</c>; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the value of <paramref name="left"/> is greater than the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool operator >(OrdinalString left, OrdinalString right)
         {
@@ -91,7 +91,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Determines if the first <see cref="OrdinalString"/> is less than or equal to the second <see cref="OrdinalString"/>.
         /// </summary>
         /// <returns>
-        /// <see langword="true"/> if the value of <c>left</c> is less than or equal to the value of <c>right</c>; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the value of <paramref name="left"/> is less than or equal to the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool operator <=(OrdinalString left, OrdinalString right)
         {
@@ -102,7 +102,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Determines if the first <see cref="OrdinalString"/> is greater than or equal to the second <see cref="OrdinalString"/>.
         /// </summary>
         /// <returns>
-        /// <see langword="true"/> if the value of <c>left</c> is greater than or equal to the value of <c>right</c>; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the value of <paramref name="left"/> is greater than or equal to the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool operator >=(OrdinalString left, OrdinalString right)
         {
@@ -125,7 +125,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The <see cref="OrdinalString"/> to compare to this instance.
         /// </param>
         /// <returns>
-        /// <see langword="true"/> if the value of the <c>value</c> parameter is the same as the value of this instance; 
+        /// <see langword="true"/> if the value of the <paramref name="value"/> parameter is the same as the value of this instance; 
         /// otherwise, <see langword="false"/>.
         /// </returns>
         public bool Equals(OrdinalString value)
@@ -140,8 +140,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="obj">
         /// The object to compare with this instance.</param>
         /// <returns>
-        /// <see langword="true"/> if <c>obj</c> is an <see cref="OrdinalString"/> and its value is the same as this instance; 
-        /// otherwise, <see langword="false"/>. If <c>obj</c> is <see langword="null"/>, the method returns <see langword="false"/>.
+        /// <see langword="true"/> if <paramref name="obj"/> is an <see cref="OrdinalString"/> and its value is the same as this instance; 
+        /// otherwise, <see langword="false"/>. If <paramref name="obj"/> is <see langword="null"/>, the method returns <see langword="false"/>.
         /// </returns>
         public override bool Equals(object obj)
         {
@@ -174,7 +174,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </param>
         /// <returns>
         /// A 32-bit signed integer that indicates whether this instance precedes, follows, or appears in the 
-        /// same position in the sort order as the <c>other</c> parameter.
+        /// same position in the sort order as the <paramref name="other"/> parameter.
         /// </returns>
         public int CompareTo(OrdinalString other)
         {
