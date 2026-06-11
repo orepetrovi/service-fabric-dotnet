@@ -15,7 +15,7 @@ namespace Microsoft.ServiceFabric.Data
     /// </remarks>
     /// <example>
     /// In this example, the differential <c>Read</c> and <c>Write</c> overloads delegate to the simpler overloads.
-    /// The <c>baseValue</c> parameters on the second <c>Read</c> and <c>Write</c> overloads are not set by the platform and should be ignored.
+    /// The <c>baseValue</c> parameters on the differential <c>Read</c> and <c>Write</c> overloads are not set by the platform and should be ignored.
     /// <code language="csharp">
     /// class Order
     /// {
