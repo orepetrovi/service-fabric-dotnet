@@ -8,7 +8,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <summary>Specifies whether items returned during enumeration of a reliable collection are ordered.</summary>
     public enum EnumerationMode : int
     {
-        /// <summary>Returns results in arbitrary order, which is the fastest enumeration mode.</summary>
+        /// <summary>Returns results in arbitrary order.</summary>
         Unordered = 0,
 
         /// <summary>Returns results in ascending key order.</summary>
