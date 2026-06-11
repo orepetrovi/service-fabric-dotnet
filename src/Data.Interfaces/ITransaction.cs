@@ -131,7 +131,7 @@ namespace Microsoft.ServiceFabric.Data
         long CommitSequenceNumber { get; }
 
         /// <summary>
-        /// Commits the transaction.
+        /// Asynchronously commits the transaction.
         /// </summary>
         /// <remarks>
         /// A committed transaction cannot be aborted, because all modifications have been persisted and replicated.
@@ -161,7 +161,7 @@ namespace Microsoft.ServiceFabric.Data
         long TransactionId { get; }
 
         /// <summary>
-        /// Returns the sequence number at or below which this transaction observes committed state.
+        /// Asynchronously returns the sequence number at or below which this transaction observes committed state.
         /// </summary>
         /// <remarks>
         /// The first call establishes the snapshot the transaction reads from, ensuring its reads observe a consistent point in time even as concurrent transactions commit. Use the returned value to correlate this transaction's snapshot reads with other versioned operations.
