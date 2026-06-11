@@ -214,6 +214,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
+        /// <remarks>
+        /// The returned enumerable provides a snapshot-consistent view of the <see cref="IReliableQueue{T}"/>, traversing
+        /// its values in first-in, first-out order. <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> must be called on
+        /// the returned instance to enumerate.
+        /// </remarks>
         /// <returns>An <see cref="IAsyncEnumerable{T}"/> over the values in the <see cref="IReliableQueue{T}"/>.</returns>
         Task<IAsyncEnumerable<T>> CreateEnumerableAsync(ITransaction tx);
     }
