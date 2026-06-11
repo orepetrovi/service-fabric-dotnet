@@ -38,7 +38,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets the directory used to restore the replica's state.
         /// </summary>
         /// <remarks>
-        /// The folder must contain at least one full backup and may include one or more incremental backups.
+        /// The folder must contain exactly one full backup and may include any number of incremental backups.
         /// UNC paths are supported.
         /// </remarks>
         public string BackupFolderPath
