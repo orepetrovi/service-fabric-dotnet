@@ -50,7 +50,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Determines whether two specified <see cref="OrdinalString"/>s have the same value.
+        /// Determines whether two specified <see cref="OrdinalString"/> values have the same value.
         /// </summary>
         /// <returns>
         /// <see langword="true"/> if the value of <paramref name="left"/> is the same as the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
@@ -61,7 +61,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Determines whether two specified <see cref="OrdinalString"/>s have different values.
+        /// Determines whether two specified <see cref="OrdinalString"/> values have different values.
         /// </summary>
         /// <returns>
         /// <see langword="true"/> if the value of <paramref name="left"/> is different from the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
