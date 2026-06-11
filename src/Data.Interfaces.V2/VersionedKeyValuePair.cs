@@ -10,8 +10,6 @@ namespace Microsoft.ServiceFabric.Data
     /// <summary>
     /// Defines a key-value pair with a sequence number.
     /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TValue"></typeparam>
     public struct VersionedKeyValuePair<TKey, TValue>
     {
         /// <summary>
