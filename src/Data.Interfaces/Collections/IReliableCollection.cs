@@ -16,7 +16,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     public interface IReliableCollection<T> : IReliableState
     {
         /// <summary>
-        /// Returns the number of elements in the <see cref="IReliableCollection{T}"/>.
+        /// Asynchronously returns the number of elements in the <see cref="IReliableCollection{T}"/>.
         /// </summary>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableCollection{T}"/> cannot serve reads.
@@ -34,7 +34,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<long> GetCountAsync(ITransaction tx);
 
         /// <summary>
-        /// Removes all state from the <see cref="IReliableCollection{T}"/>, including replicated and persisted state.
+        /// Asynchronously removes all state from the <see cref="IReliableCollection{T}"/>, including replicated and persisted state.
         /// </summary>
         /// <exception cref="FabricNotPrimaryException">
         /// The <see cref="IReliableCollection{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.
