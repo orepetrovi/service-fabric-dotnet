@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Fabric;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,11 +15,11 @@ namespace Microsoft.ServiceFabric.Data.Beta
 {
         
     /// <summary>
-    /// Defines isolation levels for single-entity primary reads within a transaction.
+    /// Defines isolation levels for single-entity reads on a <see cref="ReplicaRole.Primary"/> replica within an <see cref="ITransaction"/>.
     /// </summary>
     /// <remarks>
     /// This setting governs only single-entity reads on the primary. Multi-entity reads, such as count and enumeration,
-    /// and all reads on secondary replicas always use <see cref="Snapshot"/> regardless of this setting.
+    /// and all reads on <see cref="ReplicaRole.ActiveSecondary"/> replicas always use <see cref="Snapshot"/> regardless of this setting.
     /// </remarks>
     public enum IsolationLevel
     {
