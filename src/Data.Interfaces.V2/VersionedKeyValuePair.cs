@@ -23,7 +23,7 @@ namespace Microsoft.ServiceFabric.Data
         public TValue Value { get; }
 
         /// <summary>
-        /// Gets the sequence number.
+        /// Gets the sequence number that identifies the version of the <see cref="Key"/>.
         /// </summary>
         public long SequenceNumber => VersionedKey.SequenceNumber;
 
