@@ -149,7 +149,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task EnqueueAsync(ITransaction tx, T value, CancellationToken cancellationToken = default(CancellationToken), TimeSpan? timeout = null);
 
         /// <summary>
-        /// Returns the value dequeued from the queue, or an empty result if no value became available within the given timeout.
+        /// Returns the value dequeued from the head of the queue, or an empty result if the queue is empty.
         /// </summary>
         /// 
         /// <param name="tx">The transaction in which to dequeue the value.</param>
@@ -157,12 +157,12 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="timeout">The amount of time to wait for the operation to complete. The default is <see langword="null"/>. If <see langword="null"/> is passed, a default timeout will be used.</param>
         /// 
         /// <returns>
-        /// The dequeued value via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when one became available before the timeout; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
+        /// The dequeued value via <see cref="ConditionalValue{T}.Value"/> with <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty; otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
         /// </returns>
         /// 
         /// <remarks>
         /// <para>
-        /// If the queue is empty, the dequeue operation waits for a value to become available, subject to the given timeout.
+        /// If the queue is empty, the dequeue operation returns an empty result immediately rather than waiting for a value to become available.
         /// </para>
         /// <para>
         /// While <see cref="TryDequeueAsync"/> can only return values for which the corresponding <see cref="EnqueueAsync"/> was committed, <see cref="TryDequeueAsync"/> operations are not isolated
