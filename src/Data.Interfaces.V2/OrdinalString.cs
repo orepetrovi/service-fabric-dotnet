@@ -1,4 +1,4 @@
-﻿// ------------------------------------------------------------
+// ------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
@@ -8,7 +8,7 @@ namespace Microsoft.ServiceFabric.Data
     using System;
 
     /// <summary>
-    /// <see cref="OrdinalString"/> is a wrapper of <see cref="string"/> that uses <see cref="StringComparison.Ordinal"/> for <see cref="IComparable"/> and <see cref="IEquatable{T}"/> interface implementations.
+    /// <see cref="OrdinalString"/> is a wrapper of <see cref="string"/> that uses <see cref="StringComparison.Ordinal"/> for <see cref="IComparable{T}"/> and <see cref="IEquatable{T}"/> interface implementations.
     /// </summary>
     /// <remarks>
     /// <see cref="OrdinalString"/> supports explicit conversion from <see cref="OrdinalString"/> to <see cref="string"/> and implicit conversion from <see cref="string"/> to <see cref="OrdinalString"/>.
