@@ -11,9 +11,14 @@ namespace Microsoft.ServiceFabric.Data
     /// Wraps a <see cref="string"/> to use <see cref="StringComparison.Ordinal"/> for <see cref="IComparable{T}"/> and <see cref="IEquatable{T}"/> interface implementations.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// <see cref="OrdinalString"/> supports explicit conversion from <see cref="OrdinalString"/> to <see cref="string"/> and implicit conversion from <see cref="string"/> to <see cref="OrdinalString"/>.
     /// This implicit conversion from <see cref="string"/> to <see cref="OrdinalString"/> is implemented to help the customer minimize code change if string was used in upstream code. 
     /// However, to ensure that we have a well defined comparison behavior, we only allow explicit conversion from <see cref="OrdinalString"/> to <see cref="string"/>.
+    /// </para>
+    /// <para>
+    /// The wrapped <see cref="string"/> can be <see langword="null"/>, which is the value of <c>default(OrdinalString)</c>. Conversions, <see cref="ToString"/>, equality, and comparison preserve <see cref="StringComparison.Ordinal"/> semantics for a <see langword="null"/> value, but <see cref="GetHashCode"/> throws because it dereferences the value.
+    /// </para>
     /// </remarks>
     public struct OrdinalString : IEquatable<OrdinalString>, IComparable<OrdinalString>
     {
@@ -22,13 +27,14 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="OrdinalString"/> struct.
         /// </summary>
+        /// <param name="value">The <see cref="string"/> to wrap. May be <see langword="null"/>.</param>
         public OrdinalString(string value)
         {
             this.value = value;
         }
 
         /// <summary>
-        /// Defines an explicit conversion of a given <see cref="OrdinalString"/> to a <see cref="string"/>.
+        /// Defines an explicit conversion of a given <see cref="OrdinalString"/> to the wrapped <see cref="string"/>, which may be <see langword="null"/>.
         /// </summary>
         public static explicit operator string(OrdinalString value)
         {
@@ -36,7 +42,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Defines an implicit conversion of a given <see cref="string"/> to an <see cref="OrdinalString"/>.
+        /// Defines an implicit conversion of a given <see cref="string"/>, which may be <see langword="null"/>, to an <see cref="OrdinalString"/>.
         /// </summary>
         public static implicit operator OrdinalString(string value)
         {
@@ -110,12 +116,14 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <inheritdoc/>
+        /// <remarks>Returns <see langword="null"/> when the wrapped <see cref="string"/> is <see langword="null"/>.</remarks>
         public override string ToString()
         {
             return this.value;
         }
 
         /// <inheritdoc/>
+        /// <remarks>Two <see langword="null"/> wrapped values are equal.</remarks>
         public bool Equals(OrdinalString value)
         {
             return string.Equals(this.value, value.value, StringComparison.Ordinal);
@@ -142,6 +150,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <inheritdoc/>
+        /// <remarks>A <see langword="null"/> wrapped value sorts before any non-<see langword="null"/> value.</remarks>
         public int CompareTo(OrdinalString other)
         {
             return string.CompareOrdinal(this.value, other.value);
