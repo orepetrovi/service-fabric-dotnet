@@ -52,7 +52,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </para>
         /// </exception>
         /// <exception cref="DirectoryNotFoundException">
-        /// The supplied restore directory does not exist.
+        /// The supplied backup folder does not exist.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">
         /// The replica is closing.
@@ -64,10 +64,10 @@ namespace Microsoft.ServiceFabric.Data
         /// partition from which the backup was taken differs from that of the current partition being restored.
         /// </exception>
         /// <exception cref="FileNotFoundException">
-        /// The expected backup files under the supplied restore directory are not found.
+        /// The expected backup files under the supplied backup folder are not found.
         /// </exception>
         /// <exception cref="InvalidDataException">
-        /// For Reliable Services, the backup or checkpoint data in the supplied restore directory is corrupt, such as when a
+        /// For Reliable Services, the backup or checkpoint data in the supplied backup folder is corrupt, such as when a
         /// backup file fails checksum verification or full-backup metadata is missing or inconsistent.
         /// </exception>
         /// <exception cref="FabricException">
@@ -76,27 +76,27 @@ namespace Microsoft.ServiceFabric.Data
         ///     <item>
         ///         <term><see cref="FabricErrorCode.InvalidBackup"/></term>
         ///         <description>
-        ///         The backup files supplied in the restore directory are either missing or contain extra unexpected files.
+        ///         The backup files supplied in the backup folder are either missing or contain extra unexpected files.
         ///         </description>
         ///     </item>
         ///     <item>
         ///         <term><see cref="FabricErrorCode.InvalidRestoreData"/></term>
         ///         <description>
-        ///         The metadata files (restore.dat) present in the restore directory are either corrupt or contain invalid information.
+        ///         The metadata files (restore.dat) present in the backup folder are either corrupt or contain invalid information.
         ///         </description>
         ///     </item>
         ///     <item>
         ///         <term><see cref="FabricErrorCode.InvalidBackupChain"/></term>
         ///         <description>
         ///         The backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
-        ///         supplied in the restore directory is broken. 
+        ///         supplied in the backup folder is broken. 
         ///         </description>
         ///     </item>
         ///     <item>
         ///         <term><see cref="FabricErrorCode.DuplicateBackups"/></term>
         ///         <description>
         ///         The backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
-        ///         supplied in the restore directory contains duplicate backups. 
+        ///         supplied in the backup folder contains duplicate backups. 
         ///         </description>
         ///     </item>
         ///     <item>
