@@ -13,7 +13,7 @@ namespace Microsoft.ServiceFabric.Data
     /// <remarks>
     /// <para>
     /// <see cref="OrdinalString"/> supports explicit conversion from <see cref="OrdinalString"/> to <see cref="string"/> and implicit conversion from <see cref="string"/> to <see cref="OrdinalString"/>.
-    /// This implicit conversion from <see cref="string"/> to <see cref="OrdinalString"/> is implemented to help the customer minimize code change if string was used in upstream code. 
+    /// This implicit conversion from <see cref="string"/> to <see cref="OrdinalString"/> minimizes code changes when upstream code uses <see cref="string"/>.
     /// However, to ensure that we have a well defined comparison behavior, we only allow explicit conversion from <see cref="OrdinalString"/> to <see cref="string"/>.
     /// </para>
     /// <para>
