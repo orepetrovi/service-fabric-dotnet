@@ -17,7 +17,7 @@ namespace Microsoft.ServiceFabric.Data
     /// However, to ensure that we have a well defined comparison behavior, we only allow explicit conversion from <see cref="OrdinalString"/> to <see cref="string"/>.
     /// </para>
     /// <para>
-    /// The wrapped <see cref="string"/> can be <see langword="null"/>, which is the value of <c>default(OrdinalString)</c>. Conversions, <see cref="ToString"/>, equality, and comparison preserve <see cref="StringComparison.Ordinal"/> semantics for a <see langword="null"/> value, but <see cref="GetHashCode"/> throws because it dereferences the value.
+    /// The wrapped <see cref="string"/> can be <see langword="null"/>, which is the value of <c>default(OrdinalString)</c>. Conversions and <see cref="ToString"/> return the wrapped <see langword="null"/> unchanged, while equality and comparison apply <see cref="StringComparison.Ordinal"/> rules to a <see langword="null"/> value. <see cref="GetHashCode"/> throws because it dereferences the value.
     /// </para>
     /// </remarks>
     public struct OrdinalString : IEquatable<OrdinalString>, IComparable<OrdinalString>
