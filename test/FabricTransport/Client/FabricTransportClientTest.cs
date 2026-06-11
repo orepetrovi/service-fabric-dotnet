@@ -16,7 +16,7 @@ namespace Microsoft.ServiceFabric.FabricTransport.Client;
 
 public abstract class FabricTransportClientTest
 {
-    readonly FabricTransportClient sut = new TestClient();
+    readonly FabricTransportClient sut = Type<FabricTransportClient>.New();
 
     // Constructor parameters
     readonly FabricTransportSettings transportSettings = new();
@@ -126,18 +126,21 @@ public abstract class FabricTransportClientTest
         // Method parameters
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
 
-        readonly IFabricTransportClient2 nativeClient = Mock.Of<IFabricTransportClient2>();
+        readonly Mock<IFabricTransportClient2> nativeClient = new();
+        readonly uint connectTimeoutMs = fuzzy.UInt32();
 
-        public CloseAsync() => sut.Field<IFabricTransportClient2>().Set(nativeClient);
+        public CloseAsync()
+        {
+            sut.Field<IFabricTransportClient2>().Set(nativeClient.Object);
+            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs) });
+        }
 
         [Fact]
         public async Task InvokesBeginCloseAndEndCloseOnNativeClient()
         {
-            uint connectTimeoutMs = fuzzy.UInt32();
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs) });
             IFabricAsyncOperationCallback capturedCallback = null;
             var context = Mock.Of<IFabricAsyncOperationContext>();
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Callback<uint, IFabricAsyncOperationCallback>((_, cb) => capturedCallback = cb)
                 .Returns(context);
@@ -146,20 +149,18 @@ public abstract class FabricTransportClientTest
             capturedCallback.Invoke(context);
             await task;
 
-            Mock.Get(nativeClient).Verify(
+            nativeClient.Verify(
                 _ => _.BeginClose(It.IsAny<uint>(), It.IsAny<IFabricAsyncOperationCallback>()),
                 Times.Once);
-            Mock.Get(nativeClient).Verify(_ => _.EndClose(context), Times.Once);
-            Mock.Get(nativeClient).Verify(_ => _.EndClose(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
+            nativeClient.Verify(_ => _.EndClose(context), Times.Once);
+            nativeClient.Verify(_ => _.EndClose(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. CloseAsync ignores cancellationToken.
         public void UsesCancellationToken()
         {
-            uint connectTimeoutMs = fuzzy.UInt32();
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs) });
             var context = Mock.Of<IFabricAsyncOperationContext>();
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Returns(context);
             using var cts = new CancellationTokenSource();
@@ -179,13 +180,13 @@ public abstract class FabricTransportClientTest
             // no injection seam exposes the argument, so the operationName cannot be observed.
             throw new NotImplementedException();
 
+        // IsSecurityMismatch's full branch matrix is exercised once through OpenAsync. These two
+        // tests prove only that CloseAsync routes through the helper: true wraps, false rethrows.
         [Fact]
         public async Task WrapsFabricCannotConnectExceptionAsConnectionDeniedWhenSecurityMismatch()
         {
-            uint connectTimeoutMs = fuzzy.UInt32();
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs) });
-            sut.Property<string>().Set("Secure");
-            _ = Mock.Get(nativeClient)
+            sut.Property<string>().Set(fuzzy.String() + Helper.Secure);
+            _ = nativeClient
                 .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
@@ -195,56 +196,19 @@ public abstract class FabricTransportClientTest
         [Fact]
         public async Task RethrowsFabricCannotConnectExceptionWhenNotSecurityMismatch()
         {
-            uint connectTimeoutMs = fuzzy.UInt32();
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs) });
             sut.Property<string>().Set(fuzzy.Int64().ToString()); // Digits-only so it never contains the "Secure" marker checked by the SUT.
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
             _ = await Assert.ThrowsAsync<FabricCannotConnectException>(() => sut.CloseAsync(cancellation));
-        }
-
-        [Fact]
-        public async Task RethrowsFabricCannotConnectExceptionWhenSecureAddressAndNonNoneCredentials()
-        {
-            uint connectTimeoutMs = fuzzy.UInt32();
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs), SecurityCredentials = new X509Credentials() });
-            sut.Property<string>().Set("Secure");
-            _ = Mock.Get(nativeClient)
-                .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
-                .Throws(new FabricCannotConnectException(fuzzy.String()));
-
-            _ = await Assert.ThrowsAsync<FabricCannotConnectException>(() => sut.CloseAsync(cancellation));
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. IsSecurityMismatch dereferences SecurityCredentials without a null check.
-        public async Task WrapsFabricCannotConnectExceptionAsConnectionDeniedWhenSecureAddressAndNullCredentials()
-        {
-            // Null SecurityCredentials is treated as no credentials everywhere else in the SUT
-            // (FabricTransportSettings defaults SecurityCredentials to NoneSecurityCredentials and
-            // FabricTransportSettingsExtension converts null as no native credentials), so a secure
-            // address combined with null credentials is a security mismatch and should be wrapped
-            // as FabricConnectionDeniedException. IsSecurityMismatch, however, dereferences
-            // settings.SecurityCredentials.CredentialType without a null check and throws
-            // NullReferenceException, so this test cannot pass against the current SUT.
-            uint connectTimeoutMs = fuzzy.UInt32();
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs), SecurityCredentials = null });
-            sut.Property<string>().Set("Secure");
-            _ = Mock.Get(nativeClient)
-                .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
-                .Throws(new FabricCannotConnectException(fuzzy.String()));
-
-            _ = await Assert.ThrowsAsync<FabricConnectionDeniedException>(() => sut.CloseAsync(cancellation));
         }
 
         [Fact]
         public async Task RethrowsOtherExceptions()
         {
-            uint connectTimeoutMs = fuzzy.UInt32();
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs) });
             var expected = new InvalidOperationException(fuzzy.String());
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(expected);
 
@@ -299,18 +263,21 @@ public abstract class FabricTransportClientTest
         // Method parameters
         readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
 
-        readonly IFabricTransportClient2 nativeClient = Mock.Of<IFabricTransportClient2>();
+        readonly Mock<IFabricTransportClient2> nativeClient = new();
+        readonly uint connectTimeoutMs = fuzzy.UInt32();
 
-        public OpenAsync() => sut.Field<IFabricTransportClient2>().Set(nativeClient);
+        public OpenAsync()
+        {
+            sut.Field<IFabricTransportClient2>().Set(nativeClient.Object);
+            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs) });
+        }
 
         [Fact]
         public async Task InvokesBeginOpenAndEndOpenOnNativeClient()
         {
-            uint connectTimeoutMs = fuzzy.UInt32();
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs) });
             IFabricAsyncOperationCallback capturedCallback = null;
             var context = Mock.Of<IFabricAsyncOperationContext>();
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Callback<uint, IFabricAsyncOperationCallback>((_, cb) => capturedCallback = cb)
                 .Returns(context);
@@ -319,20 +286,18 @@ public abstract class FabricTransportClientTest
             capturedCallback.Invoke(context);
             await task;
 
-            Mock.Get(nativeClient).Verify(
+            nativeClient.Verify(
                 _ => _.BeginOpen(It.IsAny<uint>(), It.IsAny<IFabricAsyncOperationCallback>()),
                 Times.Once);
-            Mock.Get(nativeClient).Verify(_ => _.EndOpen(context), Times.Once);
-            Mock.Get(nativeClient).Verify(_ => _.EndOpen(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
+            nativeClient.Verify(_ => _.EndOpen(context), Times.Once);
+            nativeClient.Verify(_ => _.EndOpen(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
         }
 
         [Fact]
         public void UsesCancellationToken()
         {
-            uint connectTimeoutMs = fuzzy.UInt32();
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs) });
             var context = Mock.Of<IFabricAsyncOperationContext>();
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Returns(context);
             using var cts = new CancellationTokenSource();
@@ -346,10 +311,8 @@ public abstract class FabricTransportClientTest
         [Fact]
         public async Task WrapsFabricCannotConnectExceptionAsConnectionDeniedWhenSecurityMismatch()
         {
-            uint connectTimeoutMs = fuzzy.UInt32();
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs) });
-            sut.Property<string>().Set("Secure");
-            _ = Mock.Get(nativeClient)
+            sut.Property<string>().Set(fuzzy.String() + Helper.Secure);
+            _ = nativeClient
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
@@ -359,10 +322,8 @@ public abstract class FabricTransportClientTest
         [Fact]
         public async Task RethrowsFabricCannotConnectExceptionWhenNotSecurityMismatch()
         {
-            uint connectTimeoutMs = fuzzy.UInt32();
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs) });
             sut.Property<string>().Set(fuzzy.Int64().ToString()); // Digits-only so it never contains the "Secure" marker checked by the SUT.
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
@@ -372,10 +333,9 @@ public abstract class FabricTransportClientTest
         [Fact]
         public async Task RethrowsFabricCannotConnectExceptionWhenSecureAddressAndNonNoneCredentials()
         {
-            uint connectTimeoutMs = fuzzy.UInt32();
             sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs), SecurityCredentials = new X509Credentials() });
-            sut.Property<string>().Set("Secure");
-            _ = Mock.Get(nativeClient)
+            sut.Property<string>().Set(fuzzy.String() + Helper.Secure);
+            _ = nativeClient
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
@@ -392,10 +352,9 @@ public abstract class FabricTransportClientTest
             // as FabricConnectionDeniedException. IsSecurityMismatch, however, dereferences
             // settings.SecurityCredentials.CredentialType without a null check and throws
             // NullReferenceException, so this test cannot pass against the current SUT.
-            uint connectTimeoutMs = fuzzy.UInt32();
             sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs), SecurityCredentials = null });
-            sut.Property<string>().Set("Secure");
-            _ = Mock.Get(nativeClient)
+            sut.Property<string>().Set(fuzzy.String() + Helper.Secure);
+            _ = nativeClient
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
@@ -405,10 +364,8 @@ public abstract class FabricTransportClientTest
         [Fact]
         public async Task RethrowsOtherExceptions()
         {
-            uint connectTimeoutMs = fuzzy.UInt32();
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { ConnectTimeout = TimeSpan.FromMilliseconds(connectTimeoutMs) });
             var expected = new InvalidOperationException(fuzzy.String());
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(expected);
 
@@ -437,11 +394,11 @@ public abstract class FabricTransportClientTest
         readonly TimeSpan timeout = fuzzy.TimeSpan().Milliseconds();
         readonly Guid requestId = Guid.NewGuid();
 
-        readonly IFabricTransportClient2 nativeClient = Mock.Of<IFabricTransportClient2>();
+        readonly Mock<IFabricTransportClient2> nativeClient = new();
 
         public RequestResponseAsync()
         {
-            sut.Field<IFabricTransportClient2>().Set(nativeClient);
+            sut.Field<IFabricTransportClient2>().Set(nativeClient.Object);
             sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings());
         }
 
@@ -452,7 +409,7 @@ public abstract class FabricTransportClientTest
             IFabricTransportMessage capturedNativeMessage = null;
             var context = Mock.Of<IFabricAsyncOperationContext>();
             var nativeResponse = Mock.Of<IFabricTransportMessage>();
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.BeginRequest(
                     It.IsAny<IFabricTransportMessage>(),
                     (uint)timeout.TotalMilliseconds,
@@ -460,7 +417,7 @@ public abstract class FabricTransportClientTest
                 .Callback<IFabricTransportMessage, uint, IFabricAsyncOperationCallback>(
                     (m, _, cb) => { capturedNativeMessage = m; capturedCallback = cb; })
                 .Returns(context);
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.EndRequest(context))
                 .Returns(nativeResponse);
 
@@ -468,21 +425,21 @@ public abstract class FabricTransportClientTest
             capturedCallback.Invoke(context);
             FabricTransportMessage result = await task;
 
-            Mock.Get(nativeClient).Verify(
+            nativeClient.Verify(
                 _ => _.BeginRequest(
                     It.IsAny<IFabricTransportMessage>(),
                     It.IsAny<uint>(),
                     It.IsAny<IFabricAsyncOperationCallback>()),
                 Times.Once);
-            Mock.Get(nativeClient).Verify(
+            nativeClient.Verify(
                 _ => _.BeginRequestWithId(
                     It.IsAny<Guid>(),
                     It.IsAny<IFabricTransportMessage>(),
                     It.IsAny<uint>(),
                     It.IsAny<IFabricAsyncOperationCallback>()),
                 Times.Never);
-            Mock.Get(nativeClient).Verify(_ => _.EndRequest(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
-            Mock.Get(nativeClient).Verify(_ => _.EndRequestWithId(It.IsAny<IFabricAsyncOperationContext>()), Times.Never);
+            nativeClient.Verify(_ => _.EndRequest(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
+            nativeClient.Verify(_ => _.EndRequestWithId(It.IsAny<IFabricAsyncOperationContext>()), Times.Never);
             var wrapper = (NativeFabricTransportMessage)capturedNativeMessage;
             Assert.Same(requestMessage, wrapper.Field<FabricTransportMessage>().Value);
             Assert.Same(nativeResponse, result.Field<IFabricTransportMessage>().Value);
@@ -495,7 +452,7 @@ public abstract class FabricTransportClientTest
             IFabricTransportMessage capturedNativeMessage = null;
             var context = Mock.Of<IFabricAsyncOperationContext>();
             var nativeResponse = Mock.Of<IFabricTransportMessage>();
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.BeginRequestWithId(
                     requestId,
                     It.IsAny<IFabricTransportMessage>(),
@@ -504,7 +461,7 @@ public abstract class FabricTransportClientTest
                 .Callback<Guid, IFabricTransportMessage, uint, IFabricAsyncOperationCallback>(
                     (_, m, _, cb) => { capturedNativeMessage = m; capturedCallback = cb; })
                 .Returns(context);
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.EndRequestWithId(context))
                 .Returns(nativeResponse);
 
@@ -512,21 +469,21 @@ public abstract class FabricTransportClientTest
             capturedCallback.Invoke(context);
             FabricTransportMessage result = await task;
 
-            Mock.Get(nativeClient).Verify(
+            nativeClient.Verify(
                 _ => _.BeginRequestWithId(
                     It.IsAny<Guid>(),
                     It.IsAny<IFabricTransportMessage>(),
                     It.IsAny<uint>(),
                     It.IsAny<IFabricAsyncOperationCallback>()),
                 Times.Once);
-            Mock.Get(nativeClient).Verify(
+            nativeClient.Verify(
                 _ => _.BeginRequest(
                     It.IsAny<IFabricTransportMessage>(),
                     It.IsAny<uint>(),
                     It.IsAny<IFabricAsyncOperationCallback>()),
                 Times.Never);
-            Mock.Get(nativeClient).Verify(_ => _.EndRequestWithId(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
-            Mock.Get(nativeClient).Verify(_ => _.EndRequest(It.IsAny<IFabricAsyncOperationContext>()), Times.Never);
+            nativeClient.Verify(_ => _.EndRequestWithId(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
+            nativeClient.Verify(_ => _.EndRequest(It.IsAny<IFabricAsyncOperationContext>()), Times.Never);
             var wrapper = (NativeFabricTransportMessage)capturedNativeMessage;
             Assert.Same(requestMessage, wrapper.Field<FabricTransportMessage>().Value);
             Assert.Same(nativeResponse, result.Field<IFabricTransportMessage>().Value);
@@ -544,11 +501,13 @@ public abstract class FabricTransportClientTest
             Assert.Equal(nameof(requestMessage), exception.ParamName);
         }
 
+        // IsSecurityMismatch's full branch matrix is exercised once through OpenAsync. These two
+        // tests prove only that RequestResponseAsync routes through the helper: true wraps, false rethrows.
         [Fact]
         public async Task WrapsFabricCannotConnectExceptionAsConnectionDeniedWhenSecurityMismatch()
         {
-            sut.Property<string>().Set("Secure");
-            _ = Mock.Get(nativeClient)
+            sut.Property<string>().Set(fuzzy.String() + Helper.Secure);
+            _ = nativeClient
                 .Setup(_ => _.BeginRequest(
                     It.IsAny<IFabricTransportMessage>(),
                     (uint)timeout.TotalMilliseconds,
@@ -562,7 +521,7 @@ public abstract class FabricTransportClientTest
         public async Task RethrowsFabricCannotConnectExceptionWhenNotSecurityMismatch()
         {
             sut.Property<string>().Set(fuzzy.Int64().ToString()); // Digits-only so it never contains the "Secure" marker checked by the SUT.
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.BeginRequest(
                     It.IsAny<IFabricTransportMessage>(),
                     (uint)timeout.TotalMilliseconds,
@@ -570,50 +529,13 @@ public abstract class FabricTransportClientTest
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
             _ = await Assert.ThrowsAsync<FabricCannotConnectException>(() => sut.RequestResponseAsync(requestMessage, timeout));
-        }
-
-        [Fact]
-        public async Task RethrowsFabricCannotConnectExceptionWhenSecureAddressAndNonNoneCredentials()
-        {
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { SecurityCredentials = new X509Credentials() });
-            sut.Property<string>().Set("Secure");
-            _ = Mock.Get(nativeClient)
-                .Setup(_ => _.BeginRequest(
-                    It.IsAny<IFabricTransportMessage>(),
-                    (uint)timeout.TotalMilliseconds,
-                    It.IsAny<IFabricAsyncOperationCallback>()))
-                .Throws(new FabricCannotConnectException(fuzzy.String()));
-
-            _ = await Assert.ThrowsAsync<FabricCannotConnectException>(() => sut.RequestResponseAsync(requestMessage, timeout));
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. IsSecurityMismatch dereferences SecurityCredentials without a null check.
-        public async Task WrapsFabricCannotConnectExceptionAsConnectionDeniedWhenSecureAddressAndNullCredentials()
-        {
-            // Null SecurityCredentials is treated as no credentials everywhere else in the SUT
-            // (FabricTransportSettings defaults SecurityCredentials to NoneSecurityCredentials and
-            // FabricTransportSettingsExtension converts null as no native credentials), so a secure
-            // address combined with null credentials is a security mismatch and should be wrapped
-            // as FabricConnectionDeniedException. IsSecurityMismatch, however, dereferences
-            // settings.SecurityCredentials.CredentialType without a null check and throws
-            // NullReferenceException, so this test cannot pass against the current SUT.
-            sut.Field<FabricTransportSettings>().Set(new FabricTransportSettings { SecurityCredentials = null });
-            sut.Property<string>().Set("Secure");
-            _ = Mock.Get(nativeClient)
-                .Setup(_ => _.BeginRequest(
-                    It.IsAny<IFabricTransportMessage>(),
-                    (uint)timeout.TotalMilliseconds,
-                    It.IsAny<IFabricAsyncOperationCallback>()))
-                .Throws(new FabricCannotConnectException(fuzzy.String()));
-
-            _ = await Assert.ThrowsAsync<FabricConnectionDeniedException>(() => sut.RequestResponseAsync(requestMessage, timeout));
         }
 
         [Fact]
         public async Task RethrowsOtherExceptions()
         {
             var expected = new InvalidOperationException(fuzzy.String());
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.BeginRequest(
                     It.IsAny<IFabricTransportMessage>(),
                     (uint)timeout.TotalMilliseconds,
@@ -644,16 +566,16 @@ public abstract class FabricTransportClientTest
         [Fact]
         public void InvokesSendOnNativeClient()
         {
-            var nativeClient = Mock.Of<IFabricTransportClient2>();
-            sut.Field<IFabricTransportClient2>().Set(nativeClient);
+            Mock<IFabricTransportClient2> nativeClient = new();
+            sut.Field<IFabricTransportClient2>().Set(nativeClient.Object);
             IFabricTransportMessage sent = null;
-            _ = Mock.Get(nativeClient)
+            _ = nativeClient
                 .Setup(_ => _.Send(It.IsAny<IFabricTransportMessage>()))
                 .Callback((IFabricTransportMessage actual) => sent = actual);
 
             sut.SendOneWay(message);
 
-            Mock.Get(nativeClient).Verify(_ => _.Send(It.IsAny<IFabricTransportMessage>()), Times.Once);
+            nativeClient.Verify(_ => _.Send(It.IsAny<IFabricTransportMessage>()), Times.Once);
             var wrapper = (NativeFabricTransportMessage)sent;
             Assert.Same(message, wrapper.Field<FabricTransportMessage>().Value);
         }
@@ -680,10 +602,6 @@ public abstract class FabricTransportClientTest
             sut.Field<FabricTransportSettings>().Set(expected);
             Assert.Same(expected, sut.Settings);
         }
-    }
-
-    sealed class TestClient: FabricTransportClient
-    {
     }
 
     static FabricTransportMessage CreateMessage() => new(
