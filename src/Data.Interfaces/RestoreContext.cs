@@ -88,15 +88,15 @@ namespace Microsoft.ServiceFabric.Data
         ///     <item>
         ///         <term><see cref="FabricErrorCode.InvalidBackupChain"/></term>
         ///         <description>
-        ///         The backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
-        ///         supplied in the backup folder is broken. 
+        ///         The backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it)
+        ///         supplied in the backup folder is broken.
         ///         </description>
         ///     </item>
         ///     <item>
         ///         <term><see cref="FabricErrorCode.DuplicateBackups"/></term>
         ///         <description>
-        ///         The backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it) 
-        ///         supplied in the backup folder contains duplicate backups. 
+        ///         The backup chain (i.e. one full backup and zero or more contiguous incremental backups that were taken after it)
+        ///         supplied in the backup folder contains duplicate backups.
         ///         </description>
         ///     </item>
         ///     <item>
