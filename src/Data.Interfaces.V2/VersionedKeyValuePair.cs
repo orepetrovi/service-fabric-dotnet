@@ -28,12 +28,12 @@ namespace Microsoft.ServiceFabric.Data
         public long SequenceNumber => VersionedKey.SequenceNumber;
 
         /// <summary>
-        /// Gets the versioned key.
+        /// Gets the <see cref="VersionedKey{TKey}"/>.
         /// </summary>
         public VersionedKey<TKey> VersionedKey { get; }
 
         /// <summary>
-        /// Gets the key-value pair.
+        /// Gets the <see cref="KeyValuePair{TKey, TValue}"/>.
         /// </summary>
         public KeyValuePair<TKey, TValue> KeyValuePair => new KeyValuePair<TKey, TValue>(Key, Value);
 
