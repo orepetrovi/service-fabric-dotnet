@@ -133,6 +133,9 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <inheritdoc/>
+        /// <exception cref="NullReferenceException">
+        /// The <see cref="OrdinalString"/> is <c>default(OrdinalString)</c> or was created from a <see langword="null"/> <see cref="string"/>.
+        /// </exception>
         public override int GetHashCode()
         {
             return this.value.GetHashCode();
