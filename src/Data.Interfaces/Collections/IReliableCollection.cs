@@ -36,6 +36,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Asynchronously removes all state from the <see cref="IReliableCollection{T}"/>, including replicated and persisted state.
         /// </summary>
+        /// <remarks>
+        /// Not every <see cref="IReliableCollection{T}"/> implementation supports clearing.
+        /// </remarks>
         /// <exception cref="FabricNotPrimaryException">
         /// The <see cref="IReliableCollection{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.
         /// </exception>
