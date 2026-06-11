@@ -301,7 +301,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Returns an <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}"/> over the <see cref="IReliableDictionary{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
-        /// <param name="enumerationMode">One of the enumeration values that specifies the enumeration mode to use.</param>
+        /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
@@ -326,7 +326,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">A predicate that filters the key-value pairs to include in the enumeration based on the key.</param>
-        /// <param name="enumerationMode">One of the enumeration values that specifies the enumeration mode to use.</param>
+        /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
