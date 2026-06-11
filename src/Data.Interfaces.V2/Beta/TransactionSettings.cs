@@ -29,7 +29,7 @@ namespace Microsoft.ServiceFabric.Data.Beta
         ReadRepeatable = 0,
 
         /// <summary>
-        /// Reads each entity from a consistent snapshot taken when the transaction started, without acquiring read locks.
+        /// Reads each entity from a consistent snapshot established when snapshot reading begins, without acquiring read locks.
         /// </summary>
         Snapshot = 1
     }
