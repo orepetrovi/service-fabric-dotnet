@@ -18,27 +18,27 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     public enum NotifyDictionaryChangedAction : int
     {
         /// <summary>
-        /// A key/value pair was added; cast to <see cref="NotifyDictionaryItemAddedEventArgs{TKey, TValue}"/>.
+        /// Specifies that a key/value pair was added; cast to <see cref="NotifyDictionaryItemAddedEventArgs{TKey, TValue}"/>.
         /// </summary>
         Add = 0,
 
         /// <summary>
-        /// A key's value was replaced; cast to <see cref="NotifyDictionaryItemUpdatedEventArgs{TKey, TValue}"/>.
+        /// Specifies that a key's value was replaced; cast to <see cref="NotifyDictionaryItemUpdatedEventArgs{TKey, TValue}"/>.
         /// </summary>
         Update = 1,
 
         /// <summary>
-        /// A key was removed; cast to <see cref="NotifyDictionaryItemRemovedEventArgs{TKey, TValue}"/>.
+        /// Specifies that a key was removed; cast to <see cref="NotifyDictionaryItemRemovedEventArgs{TKey, TValue}"/>.
         /// </summary>
         Remove = 2,
 
         /// <summary>
-        /// All entries were removed by a clear operation; cast to <see cref="NotifyDictionaryClearEventArgs{TKey, TValue}"/>.
+        /// Specifies that all entries were removed by a clear operation; cast to <see cref="NotifyDictionaryClearEventArgs{TKey, TValue}"/>.
         /// </summary>
         Clear = 3,
 
         /// <summary>
-        /// The reliable dictionary was repopulated from copy, restore, or recovery; cast to <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/>.
+        /// Specifies that the reliable dictionary was repopulated from copy, restore, or recovery; cast to <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/>.
         /// Delivered through <see cref="Collections.IReliableDictionary{TKey, TValue}.RebuildNotificationAsyncCallback"/>, not the <see cref="Collections.IReliableDictionary{TKey, TValue}.DictionaryChanged"/> event.
         /// </summary>
         Rebuild = 4
