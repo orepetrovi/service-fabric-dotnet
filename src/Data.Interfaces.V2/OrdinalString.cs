@@ -8,7 +8,7 @@ namespace Microsoft.ServiceFabric.Data
     using System;
 
     /// <summary>
-    /// Wraps a <see cref="string"/> to use <see cref="StringComparison.Ordinal"/> for <see cref="IComparable{T}"/> and <see cref="IEquatable{T}"/> interface implementations.
+    /// Wraps a <see cref="string"/> to use <see cref="StringComparison.Ordinal"/> for <see cref="IComparable{T}"/> and <see cref="IEquatable{T}"/> implementations.
     /// </summary>
     /// <remarks>
     /// <para>
