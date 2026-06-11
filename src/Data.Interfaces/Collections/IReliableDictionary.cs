@@ -47,9 +47,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         event EventHandler<NotifyDictionaryChangedEventArgs<TKey, TValue>> DictionaryChanged;
 
-        /// <summary>
-        /// Asynchronously adds the specified key/value pair to the Reliable Dictionary.
-        /// </summary>
+        /// <inheritdoc cref="AddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to be added.</param>
         /// <param name="value">The value to be added. The value can be <see langword="null"/> for reference types.</param>
@@ -80,9 +78,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         Task AddAsync(ITransaction tx, TKey key, TValue value, TimeSpan timeout, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Asynchronously returns the value associated with the specified key in the Reliable Dictionary after adding it using <paramref name="addValueFactory"/> if absent or updating it using <paramref name="updateValueFactory"/> if present.
-        /// </summary>
+        /// <inheritdoc cref="AddOrUpdateAsync(ITransaction, TKey, Func{TKey, TValue}, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to be added or whose value should be updated.</param>
         /// <param name="addValueFactory">The function used to generate a value for an absent key.</param>
@@ -93,16 +89,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>The new value for the key: the result of <paramref name="addValueFactory"/> if the key was absent, or the result of <paramref name="updateValueFactory"/> if the key was present.</returns>
+        /// <inheritdoc cref="AddOrUpdateAsync(ITransaction, TKey, Func{TKey, TValue}, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)" path="/returns"/>
         Task<TValue> AddOrUpdateAsync(
             ITransaction tx, 
             TKey key, 
             Func<TKey, TValue> addValueFactory,
             Func<TKey, TValue, TValue> updateValueFactory);
 
-        /// <summary>
-        /// Asynchronously returns the value associated with the specified key in the Reliable Dictionary after adding <paramref name="addValue"/> if absent or updating it using <paramref name="updateValueFactory"/> if present.
-        /// </summary>
+        /// <inheritdoc cref="AddOrUpdateAsync(ITransaction, TKey, TValue, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to be added or whose value should be updated.</param>
         /// <param name="addValue">The value to be added for an absent key. The value can be <see langword="null"/> for reference types.</param>
@@ -113,7 +107,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>The new value for the key: <paramref name="addValue"/> if the key was absent, or the result of <paramref name="updateValueFactory"/> if the key was present.</returns>
+        /// <inheritdoc cref="AddOrUpdateAsync(ITransaction, TKey, TValue, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)" path="/returns"/>
         Task<TValue> AddOrUpdateAsync(
             ITransaction tx, 
             TKey key, 
@@ -183,9 +177,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         Task ClearAsync(TimeSpan timeout, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Asynchronously returns a value indicating whether the Reliable Dictionary contains the specified key.
-        /// </summary>
+        /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
@@ -199,12 +191,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns><see langword="true"/> if the Reliable Dictionary contains the key; otherwise, <see langword="false"/>.</returns>
+        /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key);
 
-        /// <summary>
-        /// Asynchronously returns a value indicating whether the Reliable Dictionary contains the specified key.
-        /// </summary>
+        /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
@@ -219,12 +209,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns><see langword="true"/> if the Reliable Dictionary contains the key; otherwise, <see langword="false"/>.</returns>
+        /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key, LockMode lockMode);
 
-        /// <summary>
-        /// Asynchronously returns a value indicating whether the Reliable Dictionary contains the specified key.
-        /// </summary>
+        /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
@@ -242,7 +230,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns><see langword="true"/> if the Reliable Dictionary contains the key; otherwise, <see langword="false"/>.</returns>
+        /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
@@ -274,9 +262,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             TimeSpan timeout,
             CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Asynchronously returns an <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}"/> over the <see cref="IReliableDictionary{TKey,TValue}"/>.
-        /// </summary>
+        /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/summary"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -288,18 +274,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <remarks>
-        /// The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
-        /// It represents a snapshot consistent view. <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}.GetAsyncEnumerator"/> must be called on
-        /// the returned instance to enumerate. Example usage can be
-        /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.
-        /// </remarks>
-        /// <returns>A task whose result is an <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}"/> over the key/value pairs in the <see cref="IReliableDictionary{TKey,TValue}"/>.</returns>
+        /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/remarks"/>
+        /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/returns"/>
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(ITransaction txn);
 
-        /// <summary>
-        /// Asynchronously returns an <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}"/> over the <see cref="IReliableDictionary{TKey,TValue}"/>.
-        /// </summary>
+        /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/summary"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
@@ -312,13 +291,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <remarks>
-        /// The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
-        /// It represents a snapshot consistent view. <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}.GetAsyncEnumerator"/> must be called on
-        /// the returned instance to enumerate. Example usage can be
-        /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.
-        /// </remarks>
-        /// <returns>A task whose result is an <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}"/> over the key/value pairs in the <see cref="IReliableDictionary{TKey,TValue}"/>.</returns>
+        /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/remarks"/>
+        /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/returns"/>
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(ITransaction txn, EnumerationMode enumerationMode);
 
         /// <summary>
@@ -349,9 +323,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             Func<TKey, bool> filter,
             EnumerationMode enumerationMode);
 
-        /// <summary>
-        /// Asynchronously returns the value associated with the specified key in the Reliable Dictionary, adding a value produced by <paramref name="valueFactory"/> if the key is not present.
-        /// </summary>
+        /// <inheritdoc cref="GetOrAddAsync(ITransaction, TKey, Func{TKey, TValue}, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
         /// <param name="valueFactory">The function used to generate a value for the key.</param>
@@ -361,12 +333,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>The value associated with the key: the existing value if the key was already present, or the value returned by <paramref name="valueFactory"/> otherwise.</returns>
+        /// <inheritdoc cref="GetOrAddAsync(ITransaction, TKey, Func{TKey, TValue}, TimeSpan, CancellationToken)" path="/returns"/>
         Task<TValue> GetOrAddAsync(ITransaction tx, TKey key, Func<TKey, TValue> valueFactory);
 
-        /// <summary>
-        /// Asynchronously returns the value associated with the specified key in the Reliable Dictionary, adding <paramref name="value"/> if the key is not present.
-        /// </summary>
+        /// <inheritdoc cref="GetOrAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
         /// <param name="value">The value to be added, if the key does not already exist.</param>
@@ -376,7 +346,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>The value associated with the key: the existing value if the key was already present, or <paramref name="value"/> otherwise.</returns>
+        /// <inheritdoc cref="GetOrAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/returns"/>
         Task<TValue> GetOrAddAsync(ITransaction tx, TKey key, TValue value);
 
         /// <summary>
@@ -427,9 +397,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             TimeSpan timeout,
             CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Asynchronously returns a value indicating whether the specified key and value were added to the Reliable Dictionary.
-        /// </summary>
+        /// <inheritdoc cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
         /// <param name="value">The value of the element to add. The value can be <see langword="null"/> for reference types.</param>
@@ -439,7 +407,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns><see langword="true"/> if the key/value pair was added; otherwise, <see langword="false"/>.</returns>
+        /// <inheritdoc cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> TryAddAsync(ITransaction tx, TKey key, TValue value);
 
         /// <summary>
@@ -466,9 +434,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             TimeSpan timeout,
             CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Asynchronously returns the value associated with the specified key from the Reliable Dictionary, or an empty result if the key was not found.
-        /// </summary>
+        /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
@@ -482,12 +448,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
+        /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<TValue>> TryGetValueAsync(ITransaction tx, TKey key);
 
-        /// <summary>
-        /// Asynchronously returns the value associated with the specified key from the Reliable Dictionary, or an empty result if the key was not found.
-        /// </summary>
+        /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
@@ -502,12 +466,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
+        /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<TValue>> TryGetValueAsync(ITransaction tx, TKey key, LockMode lockMode);
 
-        /// <summary>
-        /// Asynchronously returns the value associated with the specified key from the Reliable Dictionary, or an empty result if the key was not found.
-        /// </summary>
+        /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
@@ -525,7 +487,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
+        /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<TValue>> TryGetValueAsync(
             ITransaction tx, 
             TKey key, 
@@ -561,9 +523,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             TimeSpan timeout, 
             CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Asynchronously returns the value removed from the Reliable Dictionary, or an empty result if the specified key was not found.
-        /// </summary>
+        /// <inheritdoc cref="TryRemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
@@ -572,7 +532,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>A result indicating whether the key was removed from the Reliable Dictionary and, if so, the previous value.</returns>
+        /// <inheritdoc cref="TryRemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<TValue>> TryRemoveAsync(ITransaction tx, TKey key);
 
         /// <summary>
@@ -593,9 +553,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>A result indicating whether the key was removed from the Reliable Dictionary and, if so, the previous value.</returns>
         Task<ConditionalValue<TValue>> TryRemoveAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Asynchronously returns a value indicating whether the value for the specified key was atomically updated from <paramref name="comparisonValue"/> to <paramref name="newValue"/>.
-        /// </summary>
+        /// <inheritdoc cref="TryUpdateAsync(ITransaction, TKey, TValue, TValue, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key whose value is compared with <paramref name="comparisonValue"/> and possibly replaced.</param>
         /// <param name="newValue">The value that replaces the value of the element that has the specified <paramref name="key"/> if the comparison results in equality.</param>
@@ -606,7 +564,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
+        /// <inheritdoc cref="TryUpdateAsync(ITransaction, TKey, TValue, TValue, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, TValue comparisonValue);
 
         /// <summary>
@@ -635,10 +593,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             TimeSpan timeout,
             CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Asynchronously adds a key/value pair to the Reliable Dictionary if the key does not already exist, or updates a key/value pair
-        /// in the Reliable Dictionary if the key already exists.
-        /// </summary>
+        /// <inheritdoc cref="SetAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key whose value should be updated.</param>
         /// <param name="value">The value that replaces the value of the element that has the specified <paramref name="key"/>.</param>
