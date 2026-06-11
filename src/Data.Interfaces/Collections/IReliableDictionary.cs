@@ -32,7 +32,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Sets the function that is called when the Reliable Dictionary is being rebuilt during copy, restore or recovery.
         /// </summary>
         /// <remarks>
-        /// <see cref="NotifyDictionaryChangedEventArgs{TKey, TValue}"/> can only be used within this callback.
+        /// <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/> can only be used within this callback.
         /// Once the asynchronous callback completes, the <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/> becomes invalid. 
         /// See <see href="https://docs.microsoft.com/azure/service-fabric/service-fabric-reliable-services-notifications">here</see> for more information. 
         /// </remarks>
