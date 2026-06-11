@@ -36,7 +36,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Once the asynchronous callback completes, the <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/> becomes invalid. 
         /// See <see href="https://docs.microsoft.com/azure/service-fabric/service-fabric-reliable-services-notifications">here</see> for more information. 
         /// </remarks>
-        /// <value>The asynchronous rebuild notification callback.</value>
         Func<IReliableDictionary<TKey, TValue>, NotifyDictionaryRebuildEventArgs<TKey, TValue>, Task> RebuildNotificationAsyncCallback
         {
             set;
