@@ -73,6 +73,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricException">The replica saw a non-retriable failure other than <see cref="FabricNotPrimaryException"/>, <see cref="FabricNotReadableException"/>, <see cref="FabricObjectClosedException"/>, or <see cref="FabricTransientException"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="tx"/> is not a valid transaction, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
@@ -184,6 +185,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricException">The replica saw a non-retriable failure other than <see cref="FabricNotPrimaryException"/>, <see cref="FabricNotReadableException"/>, <see cref="FabricObjectClosedException"/>, or <see cref="FabricTransientException"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="tx"/> is not a valid transaction, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
