@@ -124,11 +124,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Asynchronously restores a backup taken by <see cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/> or 
         /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>.
         /// </summary>
-        /// <param name="backupFolderPath">
-        /// The directory where the replica is to be restored from.
-        /// This parameter cannot be null, empty or contain just whitespace. 
-        /// UNC paths may also be provided.
-        /// </param>
+        /// <param name="backupFolderPath">The directory to restore the replica from. UNC paths are supported.</param>
         /// <remarks>
         /// A safe restore will be performed, meaning the restore will only be completed if the data to restore is ahead of state of the current replica.
         /// </remarks>
@@ -140,11 +136,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Asynchronously restores a backup taken by <see cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/> or 
         /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>.
         /// </summary>
-        /// <param name="backupFolderPath">
-        /// The directory where the replica is to be restored from.
-        /// This parameter cannot be null, empty or contain just whitespace. 
-        /// UNC paths may also be provided.
-        /// </param>
+        /// <param name="backupFolderPath">The directory to restore the replica from. UNC paths are supported.</param>
         /// <param name="restorePolicy">One of the enumeration values that specifies the policy applied when restoring from backup.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentException"><paramref name="backupFolderPath"/> is <see langword="null"/>, empty, whitespace, or is not a valid backup folder.</exception>
