@@ -34,7 +34,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="key">The key of the element's sequence number to get.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
@@ -61,7 +60,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="lockMode">Type of locking to use for this read operation.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
@@ -122,7 +120,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="key">The key of the versioned element to get.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
@@ -149,7 +146,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="lockMode">Type of locking to use for this read operation.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
@@ -254,7 +250,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="checkSequenceNumber">The expected sequence number of the element to be removed.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
