@@ -49,8 +49,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="partition">The partition this replica belongs to.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>
-        /// Task that represents the asynchronous open operation. The result contains the replicator
-        /// responsible for replicating state between other state provider replicas in the partition.
+        /// The replicator responsible for replicating state between other state provider replicas in the partition.
         /// </returns>
         Task<IReplicator> OpenAsync(ReplicaOpenMode openMode, IStatefulServicePartition partition,
             CancellationToken cancellationToken);
@@ -60,7 +59,6 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <param name="newRole">The new replica role, such as primary or secondary.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>Task that represents the asynchronous change role operation.</returns>
         Task ChangeRoleAsync(ReplicaRole newRole, CancellationToken cancellationToken);
 
         /// <summary>
@@ -71,7 +69,6 @@ namespace Microsoft.ServiceFabric.Data
         /// due to load balancing, or a transient fault is detected.
         /// </remarks>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>Task that represents the asynchronous close operation.</returns>
         Task CloseAsync(CancellationToken cancellationToken);
 
         /// <summary>
@@ -87,7 +84,6 @@ namespace Microsoft.ServiceFabric.Data
         /// Asynchronously performs a full backup of all reliable state managed by this replica.
         /// </summary>
         /// <param name="backupCallback">Callback to be called when the backup folder has been created locally and is ready to be moved out of the node.</param>
-        /// <returns>Task that represents the asynchronous backup operation.</returns>
         /// <remarks>
         /// A full backup will be performed with no timeout. To specify a timeout, use the
         /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/> overload.
@@ -103,7 +99,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="timeout">The timeout for this operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <param name="backupCallback">Callback to be called when the backup folder has been created locally and is ready to be moved out of the node.</param>
-        /// <returns>Task that represents the asynchronous backup operation.</returns>
         /// <remarks>
         /// The Boolean returned by <paramref name="backupCallback"/> indicates whether the service successfully moved the backup folder to an external location.
         /// </remarks>
@@ -126,7 +121,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// A safe restore will be performed, meaning the restore will only be completed if the data to restore is ahead of state of the current replica.
         /// </remarks>
-        /// <returns>Task that represents the asynchronous restore operation.</returns>
         Task RestoreAsync(string backupFolderPath);
 
         /// <summary>
@@ -140,7 +134,6 @@ namespace Microsoft.ServiceFabric.Data
         /// UNC paths may also be provided.
         /// </param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>Task that represents the asynchronous restore operation.</returns>
         Task RestoreAsync(
             string backupFolderPath,
             RestorePolicy restorePolicy,
