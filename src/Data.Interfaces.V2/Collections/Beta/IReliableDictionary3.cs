@@ -27,9 +27,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
     public interface IReliableDictionary3<TKey, TValue> : IReliableDictionary2<TKey, TValue>
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
-        /// <summary>
-        /// (Beta) Asynchronously attempts to get the sequence number associated with the specified key from the Reliable Dictionary.
-        /// </summary>
+        /// <inheritdoc cref="TryGetSequenceNumberAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element whose sequence number is to be retrieved.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
@@ -47,14 +45,12 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its sequence number.</returns>
+        /// <inheritdoc cref="TryGetSequenceNumberAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
             TKey key);
 
-        /// <summary>
-        /// (Beta) Asynchronously attempts to get the sequence number associated with the specified key from the Reliable Dictionary.
-        /// </summary>
+        /// <inheritdoc cref="TryGetSequenceNumberAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element whose sequence number is to be retrieved.</param>
         /// <param name="lockMode">The type of locking to use for this read operation.</param>
@@ -74,7 +70,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its sequence number.</returns>
+        /// <inheritdoc cref="TryGetSequenceNumberAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
             TKey key,
@@ -114,9 +110,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             CancellationToken cancellationToken);
 
 
-        /// <summary>
-        /// (Beta) Asynchronously attempts to get the versioned element associated with the specified key from the Reliable Dictionary.
-        /// </summary>
+        /// <inheritdoc cref="TryGetVersionedKeyValuePairAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the versioned element to get.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
@@ -134,14 +128,12 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its value and sequence number.</returns>
+        /// <inheritdoc cref="TryGetVersionedKeyValuePairAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
             TKey key);
 
-        /// <summary>
-        /// (Beta) Asynchronously attempts to get the versioned element associated with the specified key from the Reliable Dictionary.
-        /// </summary>
+        /// <inheritdoc cref="TryGetVersionedKeyValuePairAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the versioned element to get.</param>
         /// <param name="lockMode">The type of locking to use for this read operation.</param>
@@ -161,7 +153,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its value and sequence number.</returns>
+        /// <inheritdoc cref="TryGetVersionedKeyValuePairAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
             TKey key,
@@ -200,9 +192,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             TimeSpan timeout,
             CancellationToken cancellationToken);
 
-        /// <summary>
-        /// (Beta) Asynchronously attempts to update the value for the specified key if its current sequence number matches <paramref name="checkSequenceNumber"/>.
-        /// </summary>
+        /// <inheritdoc cref="TryUpdateAsync(ITransaction, TKey, TValue, long, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to be updated.</param>
         /// <param name="newValue">The value to be updated to if the specified <paramref name="key"/> has the expected <paramref name="checkSequenceNumber"/>.</param>
@@ -217,7 +207,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
+        /// <inheritdoc cref="TryUpdateAsync(ITransaction, TKey, TValue, long, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber);
 
         /// <summary>
@@ -244,9 +234,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// (Beta) Asynchronously attempts to remove the value with the specified key if its current sequence number matches <paramref name="checkSequenceNumber"/>.
-        /// </summary>
+        /// <inheritdoc cref="TryRemoveAsync(ITransaction, TKey, long, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
         /// <param name="checkSequenceNumber">The expected sequence number of the element to be removed.</param>
@@ -260,9 +248,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>
-        /// <see langword="true"/> if the element with the matching sequence number was removed; otherwise, <see langword="false"/>.
-        /// </returns>
+        /// <inheritdoc cref="TryRemoveAsync(ITransaction, TKey, long, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber);
 
         /// <summary>
@@ -290,9 +276,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </returns>
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned keys.
-        /// </summary>
+        /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/summary"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -308,14 +292,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
-        /// It represents a snapshot consistent view.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned keys.</returns>
+        /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn);
 
-        /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned keys.
-        /// </summary>
+        /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/summary"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> or <paramref name="firstKey"/> is <see langword="null"/>.</exception>
@@ -332,9 +313,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
-        /// It represents a snapshot consistent view.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned keys.</returns>
+        /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey);
 
         /// <summary>
@@ -363,9 +343,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned keys.</returns>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
-        /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
-        /// </summary>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -381,15 +359,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
-        /// It represents a snapshot consistent view. Example usage can be
-        /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned key/value pairs.</returns>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn);
 
-        /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
-        /// </summary>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> or <paramref name="firstKey"/> is <see langword="null"/>.</exception>
@@ -406,15 +380,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
-        /// It represents a snapshot consistent view. Example usage can be
-        /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned key/value pairs.</returns>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey);
 
-        /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
-        /// </summary>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
         /// <param name="lastKey">The inclusive key to stop enumerating at in ordered enumeration.</param>
@@ -433,15 +403,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
-        /// It represents a snapshot consistent view. Example usage can be
-        /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned key/value pairs.</returns>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
-        /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
-        /// </summary>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
@@ -458,15 +424,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
-        /// It represents a snapshot consistent view. Example usage can be
-        /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned key/value pairs.</returns>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter);
 
-        /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
-        /// </summary>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
         /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
@@ -484,10 +446,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
-        /// It represents a snapshot consistent view. Example usage can be
-        /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned key/value pairs.</returns>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter, TKey firstKey);
 
         /// <summary>
