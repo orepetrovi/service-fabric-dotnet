@@ -69,7 +69,7 @@ namespace Microsoft.ServiceFabric.Data
         ITransaction CreateTransaction();
 
         /// <summary>
-        /// Gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
+        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
         /// and returns it if it doesn't already exist.
         /// </summary>
         /// <remarks>
@@ -111,7 +111,7 @@ namespace Microsoft.ServiceFabric.Data
         Task<T> GetOrAddAsync<T>(ITransaction tx, Uri name, TimeSpan timeout) where T : IReliableState;
 
         /// <summary>
-        /// Gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
+        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
         /// and returns it if it doesn't already exist.
         /// </summary>
         /// <remarks>
@@ -152,7 +152,7 @@ namespace Microsoft.ServiceFabric.Data
         Task<T> GetOrAddAsync<T>(ITransaction tx, Uri name) where T : IReliableState;
 
         /// <summary>
-        /// Gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
+        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
         /// and returns it if it doesn't already exist.
         /// </summary>
         /// <remarks>
@@ -188,7 +188,7 @@ namespace Microsoft.ServiceFabric.Data
         Task<T> GetOrAddAsync<T>(Uri name, TimeSpan timeout) where T : IReliableState;
 
         /// <summary>
-        /// Gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
+        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
         /// and returns it if it doesn't already exist.
         /// </summary>
         /// <remarks>
@@ -223,7 +223,7 @@ namespace Microsoft.ServiceFabric.Data
         Task<T> GetOrAddAsync<T>(Uri name) where T : IReliableState;
 
         /// <summary>
-        /// Gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
+        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
         /// and returns it if it doesn't already exist.
         /// </summary>
         /// <remarks>
@@ -265,7 +265,7 @@ namespace Microsoft.ServiceFabric.Data
         Task<T> GetOrAddAsync<T>(ITransaction tx, string name, TimeSpan timeout) where T : IReliableState;
 
         /// <summary>
-        /// Gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
+        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
         /// and returns it if it doesn't already exist.
         /// </summary>
         /// <remarks>
@@ -306,7 +306,7 @@ namespace Microsoft.ServiceFabric.Data
         Task<T> GetOrAddAsync<T>(ITransaction tx, string name) where T : IReliableState;
 
         /// <summary>
-        /// Gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
+        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
         /// and returns it if it doesn't already exist.
         /// </summary>
         /// <remarks>
@@ -342,7 +342,7 @@ namespace Microsoft.ServiceFabric.Data
         Task<T> GetOrAddAsync<T>(string name, TimeSpan timeout) where T : IReliableState;
 
         /// <summary>
-        /// Gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
+        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
         /// and returns it if it doesn't already exist.
         /// </summary>
         /// <remarks>
@@ -377,7 +377,7 @@ namespace Microsoft.ServiceFabric.Data
         Task<T> GetOrAddAsync<T>(string name) where T : IReliableState;
 
         /// <summary>
-        /// Removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
+        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
         /// permanently removed from persistent storage and all replicas when the transaction is committed.
         /// </summary>
         /// <remarks>
@@ -402,7 +402,7 @@ namespace Microsoft.ServiceFabric.Data
         Task RemoveAsync(ITransaction tx, Uri name, TimeSpan timeout);
 
         /// <summary>
-        /// Removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
+        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
         /// permanently removed from persistent storage and all replicas when the transaction is committed.
         /// </summary>
         /// <remarks>
@@ -426,7 +426,7 @@ namespace Microsoft.ServiceFabric.Data
         Task RemoveAsync(ITransaction tx, Uri name);
 
         /// <summary>
-        /// Removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
+        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
         /// permanently removed from persistent storage and all replicas.
         /// </summary>
         /// <remarks>
@@ -445,7 +445,7 @@ namespace Microsoft.ServiceFabric.Data
         Task RemoveAsync(Uri name, TimeSpan timeout);
 
         /// <summary>
-        /// Removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
+        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
         /// permanently removed from persistent storage and all replicas.
         /// </summary>
         /// <remarks>
@@ -463,7 +463,7 @@ namespace Microsoft.ServiceFabric.Data
         Task RemoveAsync(Uri name);
 
         /// <summary>
-        /// Removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
+        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
         /// permanently removed from persistent storage and all replicas when the transaction is committed.
         /// </summary>
         /// <remarks>
@@ -488,7 +488,7 @@ namespace Microsoft.ServiceFabric.Data
         Task RemoveAsync(ITransaction tx, string name, TimeSpan timeout);
 
         /// <summary>
-        /// Removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
+        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
         /// permanently removed from persistent storage and all replicas when the transaction is committed.
         /// </summary>
         /// <remarks>
@@ -512,7 +512,7 @@ namespace Microsoft.ServiceFabric.Data
         Task RemoveAsync(ITransaction tx, string name);
 
         /// <summary>
-        /// Removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
+        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
         /// permanently removed from persistent storage and all replicas.
         /// </summary>
         /// <remarks>
@@ -531,7 +531,7 @@ namespace Microsoft.ServiceFabric.Data
         Task RemoveAsync(string name, TimeSpan timeout);
 
         /// <summary>
-        /// Removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
+        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
         /// permanently removed from persistent storage and all replicas.
         /// </summary>
         /// <remarks>
@@ -549,7 +549,7 @@ namespace Microsoft.ServiceFabric.Data
         Task RemoveAsync(string name);
 
         /// <summary>
-        /// Attempts to get an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name.
+        /// Asynchronously attempts to get an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name.
         /// </summary>
         /// <typeparam name="T">
         /// When specifying the type, you may ask for either a concrete type or an interface type. The retrieved object will
@@ -571,7 +571,7 @@ namespace Microsoft.ServiceFabric.Data
         Task<ConditionalValue<T>> TryGetAsync<T>(Uri name) where T : IReliableState;
 
         /// <summary>
-        /// Attempts to get an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name.
+        /// Asynchronously attempts to get an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name.
         /// </summary>
         /// <typeparam name="T">
         /// When specifying the type, you may ask for either a concrete type or an interface type. The retrieved object will
