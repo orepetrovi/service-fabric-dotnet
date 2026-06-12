@@ -37,7 +37,7 @@ namespace Microsoft.ServiceFabric.Data
         /// No complex processing should be done during <see cref="Initialize(StatefulServiceInitializationParameters)"/>. Expensive or
         /// long-running initialization should be done in <see cref="OpenAsync(ReplicaOpenMode, IStatefulServicePartition, CancellationToken)"/>.
         /// </remarks>
-        /// <param name="initializationParameters">Service initialization information such as service name, partition id, replica id, and code package information.</param>
+        /// <param name="initializationParameters">The service initialization information such as service name, partition id, replica id, and code package information.</param>
         void Initialize(StatefulServiceInitializationParameters initializationParameters);
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Asynchronously performs a full backup of all reliable state managed by this replica.
         /// </summary>
-        /// <param name="backupCallback">Callback to be called when the backup folder has been created locally and is ready to be moved out of the node.</param>
+        /// <param name="backupCallback">The callback invoked when the backup folder has been created locally and is ready to be moved out of the node.</param>
         /// <remarks>
         /// A full backup will be performed with no timeout. To specify a timeout, use the
         /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/> overload.
@@ -99,7 +99,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="option">One of the enumeration values that specifies the type of backup to perform.</param>
         /// <param name="timeout">The timeout for this operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <param name="backupCallback">Callback to be called when the backup folder has been created locally and is ready to be moved out of the node.</param>
+        /// <param name="backupCallback">The callback invoked when the backup folder has been created locally and is ready to be moved out of the node.</param>
         /// <remarks>
         /// The Boolean returned by <paramref name="backupCallback"/> indicates whether the service successfully moved the backup folder to an external location.
         /// </remarks>
