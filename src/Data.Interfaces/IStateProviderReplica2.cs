@@ -17,9 +17,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Sets the callback invoked after the framework restores the replica's state following data loss.
         /// </summary>
-        /// <value>
-        /// Function called when the replica's state has been restored successfully by the framework
-        /// </value>
         Func<CancellationToken, Task> OnRestoreCompletedAsync { set; }
     }
 }
