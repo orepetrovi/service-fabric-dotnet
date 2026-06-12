@@ -34,7 +34,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
         /// <returns>
         /// Task that represents the asynchronous remove operation. The task result is a bool indicating
         /// whether the key was removed from the Reliable Dictionary.
