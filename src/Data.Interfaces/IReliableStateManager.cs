@@ -77,7 +77,7 @@ namespace Microsoft.ServiceFabric.Data
         /// When specifying the <see cref="IReliableState"/> type, you may ask for either a class type or an interface type.
         /// <para>
         /// If specifying a class type, the system will attempt to return an instance of that type. 
-        /// If an instance of that type cannot be instantiated (e.g., abstract class, no suitable constructor), an ArgumentException is thrown.
+        /// If an instance of that type cannot be instantiated (e.g., abstract class, no suitable constructor), an <see cref="ArgumentException"/> is thrown.
         /// </para>
         /// <para>
         /// If specifying an interface type, the manager will attempt to resolve the interface to a concrete type.
