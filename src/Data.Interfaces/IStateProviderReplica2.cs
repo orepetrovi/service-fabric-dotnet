@@ -15,7 +15,7 @@ namespace Microsoft.ServiceFabric.Data
     public interface IStateProviderReplica2 : IStateProviderReplica
     {
         /// <summary>
-        /// Function called after restore has been performed on the replica.
+        /// Sets the callback invoked after the framework restores the replica's state following data loss.
         /// </summary>
         /// <value>
         /// Function called when the replica's state has been restored successfully by the framework
