@@ -84,7 +84,7 @@ namespace Microsoft.ServiceFabric.Data
         void Abort();
 
         /// <summary>
-        /// Asynchronously performs a full backup of all reliable state managed by this <see cref="IReliableStateManager"/>.
+        /// Asynchronously performs a full backup of all reliable state managed by this replica.
         /// </summary>
         /// <param name="backupCallback">Callback to be called when the backup folder has been created locally and is ready to be moved out of the node.</param>
         /// <returns>Task that represents the asynchronous backup operation.</returns>
@@ -98,7 +98,7 @@ namespace Microsoft.ServiceFabric.Data
         Task BackupAsync(Func<BackupInfo, CancellationToken, Task<bool>> backupCallback);
 
         /// <summary>
-        /// Asynchronously performs a backup of all reliable state managed by this <see cref="IReliableStateManager"/>.
+        /// Asynchronously performs a backup of all reliable state managed by this replica.
         /// </summary>
         /// <param name="option">The type of backup to perform.</param>
         /// <param name="timeout">The timeout for this operation.</param>
