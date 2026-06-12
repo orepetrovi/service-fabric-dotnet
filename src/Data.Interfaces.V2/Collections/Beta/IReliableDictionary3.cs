@@ -291,7 +291,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned keys.
+        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned keys.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
@@ -310,11 +310,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned keys.</returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned keys.</returns>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned keys.
+        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned keys.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
@@ -334,11 +334,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned keys.</returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned keys.</returns>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned keys.
+        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned keys.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
@@ -360,11 +360,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned keys.</returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned keys.</returns>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned key/value pairs.
+        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
@@ -384,11 +384,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned key/value pairs.
+        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
@@ -409,11 +409,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned key/value pairs.
+        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
@@ -436,11 +436,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned key/value pairs.
+        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
@@ -461,11 +461,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned key/value pairs.
+        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
@@ -487,11 +487,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter, TKey firstKey);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned key/value pairs.
+        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
@@ -515,7 +515,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter, TKey firstKey, TKey lastKey);
     }
 }
