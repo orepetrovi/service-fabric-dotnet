@@ -7,6 +7,7 @@ namespace Microsoft.ServiceFabric.Data
 {
     using System;
     using System.Fabric;
+    using System.Runtime.Serialization;
     using System.Threading.Tasks;
 
     using Microsoft.ServiceFabric.Data.Notifications;
@@ -45,7 +46,7 @@ namespace Microsoft.ServiceFabric.Data
         /// When a reliable collection needs to serialize an object, it asks the state manager for a serializer for the given type.
         /// The state manager will first check if there is a custom serializer registered for the input type. If not, it will check if one of the built-in
         /// serializers can serialize the type. The state manager has built-in serializers for the following types: guid, bool, byte, sbyte, char, decimal, double,
-        /// float, int, uint, long, ulong, short, ushort and string. If not, it will use <see cref="System.Runtime.Serialization.DataContractSerializer"/>.
+        /// float, int, uint, long, ulong, short, ushort and string. If not, it will use <see cref="DataContractSerializer"/>.
         /// </para>
         /// <para>
         /// Serializers must be infinitely forwards and backwards compatible. For the types that are using built-in serializers, Service Fabric ensures
@@ -99,14 +100,14 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An instance of the type <typeparamref name="T"/> cannot be created, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when a method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         Task<T> GetOrAddAsync<T>(ITransaction tx, Uri name, TimeSpan timeout) where T : IReliableState;
 
         /// <summary>
@@ -139,14 +140,14 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An instance of the type <typeparamref name="T"/> cannot be created, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when a method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         Task<T> GetOrAddAsync<T>(ITransaction tx, Uri name) where T : IReliableState;
 
         /// <summary>
@@ -179,8 +180,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An instance of the type <typeparamref name="T"/> cannot be created, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task<T> GetOrAddAsync<T>(Uri name, TimeSpan timeout) where T : IReliableState;
 
@@ -213,8 +214,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An instance of the type <typeparamref name="T"/> cannot be created, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task<T> GetOrAddAsync<T>(Uri name) where T : IReliableState;
 
@@ -249,14 +250,14 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An instance of the type <typeparamref name="T"/> cannot be created, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when a method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         Task<T> GetOrAddAsync<T>(ITransaction tx, string name, TimeSpan timeout) where T : IReliableState;
 
         /// <summary>
@@ -289,14 +290,14 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An instance of the type <typeparamref name="T"/> cannot be created, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when a method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         Task<T> GetOrAddAsync<T>(ITransaction tx, string name) where T : IReliableState;
 
         /// <summary>
@@ -329,8 +330,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An instance of the type <typeparamref name="T"/> cannot be created, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task<T> GetOrAddAsync<T>(string name, TimeSpan timeout) where T : IReliableState;
 
@@ -363,8 +364,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An instance of the type <typeparamref name="T"/> cannot be created, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task<T> GetOrAddAsync<T>(string name) where T : IReliableState;
 
@@ -382,14 +383,14 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when a method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         Task RemoveAsync(ITransaction tx, Uri name, TimeSpan timeout);
 
         /// <summary>
@@ -405,14 +406,14 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when a method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         Task RemoveAsync(ITransaction tx, Uri name);
 
         /// <summary>
@@ -428,8 +429,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task RemoveAsync(Uri name, TimeSpan timeout);
 
@@ -445,8 +446,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task RemoveAsync(Uri name);
 
@@ -464,14 +465,14 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when a method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         Task RemoveAsync(ITransaction tx, string name, TimeSpan timeout);
 
         /// <summary>
@@ -487,14 +488,14 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when a method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         Task RemoveAsync(ITransaction tx, string name);
 
         /// <summary>
@@ -510,8 +511,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task RemoveAsync(string name, TimeSpan timeout);
 
@@ -527,8 +528,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricNotPrimaryException">Thrown when the <see cref="IReliableStateManager"/> is not in  <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task RemoveAsync(string name);
 
@@ -545,11 +546,11 @@ namespace Microsoft.ServiceFabric.Data
         /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">The <see cref="IReliableState"/> instance is not convertible to type <typeparamref name="T"/>.</exception>
-        /// <exception cref="System.Fabric.FabricNotReadableException">
+        /// <exception cref="FabricNotReadableException">
         /// Exception indicates that the State Manager cannot retrive a reliable collection.
         /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
         /// For example, when a <see cref="ReplicaRole.Primary"/> or <see cref="ReplicaRole.ActiveSecondary"/> looses <see cref="IStatefulServicePartition.ReadStatus"/>.</exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         /// <returns>A <see cref="ConditionalValue{T}"/> indicating whether the <see cref="IReliableState"/> was found, and containing the instance if it was.</returns>
         Task<ConditionalValue<T>> TryGetAsync<T>(Uri name) where T : IReliableState;
@@ -567,11 +568,11 @@ namespace Microsoft.ServiceFabric.Data
         /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is null.</exception>
         /// <exception cref="ArgumentException">The <see cref="IReliableState"/> instance is not convertible to type <typeparamref name="T"/>.</exception>
-        /// <exception cref="System.Fabric.FabricNotReadableException">
+        /// <exception cref="FabricNotReadableException">
         /// Exception indicates that the State Manager cannot retrive a reliable collection.
         /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
         /// For example, when a <see cref="ReplicaRole.Primary"/> or <see cref="ReplicaRole.ActiveSecondary"/> looses <see cref="IStatefulServicePartition.ReadStatus"/>.</exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
+        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         /// <returns>A <see cref="ConditionalValue{T}"/> indicating whether the <see cref="IReliableState"/> was found, and containing the instance if it was.</returns>
         Task<ConditionalValue<T>> TryGetAsync<T>(string name) where T : IReliableState;
