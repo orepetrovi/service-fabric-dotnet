@@ -106,28 +106,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task<T> GetOrAddAsync<T>(ITransaction tx, Uri name, TimeSpan timeout) where T : IReliableState;
 
-        /// <summary>
-        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
-        /// and returns it if it doesn't already exist.
-        /// </summary>
-        /// <remarks>
-        /// This is an atomic operation. When an <see cref="IReliableState"/> needs to be created, it will either complete and return successfully
-        /// or it will not be created. If this method throws an exception, the transaction must be aborted.
-        /// </remarks>
-        /// <typeparam name="T">
-        /// When specifying the <see cref="IReliableState"/> type, you may ask for either a class type or an interface type.
-        /// <para>
-        /// If specifying a class type, the system will attempt to return an instance of that type. 
-        /// If an instance of that type cannot be instantiated (e.g., abstract class, no suitable constructor), an ArgumentException is thrown.
-        /// </para>
-        /// <para>
-        /// If specifying an interface type, the manager will attempt to resolve the interface to a concrete type.
-        /// If type mapping is specified by the user, this method will use the user-specified mapping to resolve the type (not yet supported).
-        /// If type mapping is not specified by the user this method will select the default implementation for the interface given.
-        /// If the given interface type does not have a default implementation, or a user-specified mapping for the type is not provided or the type
-        /// is invalid, this method will throw ArgumentException.
-        /// </para>
-        /// </typeparam>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="name">
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
@@ -146,28 +127,12 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task<T> GetOrAddAsync<T>(ITransaction tx, Uri name) where T : IReliableState;
 
-        /// <summary>
-        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
-        /// and returns it if it doesn't already exist.
-        /// </summary>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <remarks>
         /// This is an atomic operation. When an <see cref="IReliableState"/> needs to be created, it will either complete and return successfully
         /// or it will not be created.
         /// </remarks>
-        /// <typeparam name="T">
-        /// When specifying the <see cref="IReliableState"/> type, you may ask for either a class type or an interface type.
-        /// <para>
-        /// If specifying a class type, the system will attempt to return an instance of that type. 
-        /// If an instance of that type cannot be instantiated (e.g., abstract class, no suitable constructor), an ArgumentException is thrown.
-        /// </para>
-        /// <para>
-        /// If specifying an interface type, the manager will attempt to resolve the interface to a concrete type.
-        /// If type mapping is specified by the user, this method will use the user-specified mapping to resolve the type (not yet supported).
-        /// If type mapping is not specified by the user this method will select the default implementation for the interface given.
-        /// If the given interface type does not have a default implementation, or a user-specified mapping for the type is not provided or the type
-        /// is invalid, this method will throw ArgumentException.
-        /// </para>
-        /// </typeparam>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
         /// <param name="name">
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
         /// across <see cref="IReliableState"/> types, including unrelated types.
@@ -181,28 +146,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task<T> GetOrAddAsync<T>(Uri name, TimeSpan timeout) where T : IReliableState;
 
-        /// <summary>
-        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
-        /// and returns it if it doesn't already exist.
-        /// </summary>
-        /// <remarks>
-        /// This is an atomic operation. When an <see cref="IReliableState"/> needs to be created, it will either complete and return successfully
-        /// or it will not be created.
-        /// </remarks>
-        /// <typeparam name="T">
-        /// When specifying the <see cref="IReliableState"/> type, you may ask for either a class type or an interface type.
-        /// <para>
-        /// If specifying a class type, the system will attempt to return an instance of that type. 
-        /// If an instance of that type cannot be instantiated (e.g., abstract class, no suitable constructor), an ArgumentException is thrown.
-        /// </para>
-        /// <para>
-        /// If specifying an interface type, the manager will attempt to resolve the interface to a concrete type.
-        /// If type mapping is specified by the user, this method will use the user-specified mapping to resolve the type (not yet supported).
-        /// If type mapping is not specified by the user this method will select the default implementation for the interface given.
-        /// If the given interface type does not have a default implementation, or a user-specified mapping for the type is not provided or the type
-        /// is invalid, this method will throw ArgumentException.
-        /// </para>
-        /// </typeparam>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc cref="GetOrAddAsync{T}(Uri, TimeSpan)" path="/remarks"/>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
         /// <param name="name">
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
         /// across <see cref="IReliableState"/> types, including unrelated types.
@@ -215,28 +161,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task<T> GetOrAddAsync<T>(Uri name) where T : IReliableState;
 
-        /// <summary>
-        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
-        /// and returns it if it doesn't already exist.
-        /// </summary>
-        /// <remarks>
-        /// This is an atomic operation. When an <see cref="IReliableState"/> needs to be created, it will either complete and return successfully
-        /// or it will not be created. If this method throws an exception, the transaction must be aborted.
-        /// </remarks>
-        /// <typeparam name="T">
-        /// When specifying the <see cref="IReliableState"/> type, you may ask for either a class type or an interface type.
-        /// <para>
-        /// If specifying a class type, the system will attempt to return an instance of that type. 
-        /// If an instance of that type cannot be instantiated (e.g., abstract class, no suitable constructor), an ArgumentException is thrown.
-        /// </para>
-        /// <para>
-        /// If specifying an interface type, the manager will attempt to resolve the interface to a concrete type.
-        /// If type mapping is specified by the user, this method will use the user-specified mapping to resolve the type (not yet supported).
-        /// If type mapping is not specified by the user this method will select the default implementation for the interface given.
-        /// If the given interface type does not have a default implementation, or a user-specified mapping for the type is not provided or the type
-        /// is invalid, this method will throw ArgumentException.
-        /// </para>
-        /// </typeparam>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="name">
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
@@ -257,28 +184,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task<T> GetOrAddAsync<T>(ITransaction tx, string name, TimeSpan timeout) where T : IReliableState;
 
-        /// <summary>
-        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
-        /// and returns it if it doesn't already exist.
-        /// </summary>
-        /// <remarks>
-        /// This is an atomic operation. When an <see cref="IReliableState"/> needs to be created, it will either complete and return successfully
-        /// or it will not be created. If this method throws an exception, the transaction must be aborted.
-        /// </remarks>
-        /// <typeparam name="T">
-        /// When specifying the <see cref="IReliableState"/> type, you may ask for either a class type or an interface type.
-        /// <para>
-        /// If specifying a class type, the system will attempt to return an instance of that type. 
-        /// If an instance of that type cannot be instantiated (e.g., abstract class, no suitable constructor), an ArgumentException is thrown.
-        /// </para>
-        /// <para>
-        /// If specifying an interface type, the manager will attempt to resolve the interface to a concrete type.
-        /// If type mapping is specified by the user, this method will use the user-specified mapping to resolve the type (not yet supported).
-        /// If type mapping is not specified by the user this method will select the default implementation for the interface given.
-        /// If the given interface type does not have a default implementation, or a user-specified mapping for the type is not provided or the type
-        /// is invalid, this method will throw ArgumentException.
-        /// </para>
-        /// </typeparam>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="name">
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
@@ -298,28 +206,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task<T> GetOrAddAsync<T>(ITransaction tx, string name) where T : IReliableState;
 
-        /// <summary>
-        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
-        /// and returns it if it doesn't already exist.
-        /// </summary>
-        /// <remarks>
-        /// This is an atomic operation. When an <see cref="IReliableState"/> needs to be created, it will either complete and return successfully
-        /// or it will not be created.
-        /// </remarks>
-        /// <typeparam name="T">
-        /// When specifying the <see cref="IReliableState"/> type, you may ask for either a class type or an interface type.
-        /// <para>
-        /// If specifying a class type, the system will attempt to return an instance of that type. 
-        /// If an instance of that type cannot be instantiated (e.g., abstract class, no suitable constructor), an ArgumentException is thrown.
-        /// </para>
-        /// <para>
-        /// If specifying an interface type, the manager will attempt to resolve the interface to a concrete type.
-        /// If type mapping is specified by the user, this method will use the user-specified mapping to resolve the type (not yet supported).
-        /// If type mapping is not specified by the user this method will select the default implementation for the interface given.
-        /// If the given interface type does not have a default implementation, or a user-specified mapping for the type is not provided or the type
-        /// is invalid, this method will throw ArgumentException.
-        /// </para>
-        /// </typeparam>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc cref="GetOrAddAsync{T}(Uri, TimeSpan)" path="/remarks"/>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
         /// <param name="name">
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
         /// across <see cref="IReliableState"/> types, including unrelated types.
@@ -333,28 +222,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task<T> GetOrAddAsync<T>(string name, TimeSpan timeout) where T : IReliableState;
 
-        /// <summary>
-        /// Asynchronously gets an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name if it exists, or creates one
-        /// and returns it if it doesn't already exist.
-        /// </summary>
-        /// <remarks>
-        /// This is an atomic operation. When an <see cref="IReliableState"/> needs to be created, it will either complete and return successfully
-        /// or it will not be created.
-        /// </remarks>
-        /// <typeparam name="T">
-        /// When specifying the <see cref="IReliableState"/> type, you may ask for either a class type or an interface type.
-        /// <para>
-        /// If specifying a class type, the system will attempt to return an instance of that type. 
-        /// If an instance of that type cannot be instantiated (e.g., abstract class, no suitable constructor), an ArgumentException is thrown.
-        /// </para>
-        /// <para>
-        /// If specifying an interface type, the manager will attempt to resolve the interface to a concrete type.
-        /// If type mapping is specified by the user, this method will use the user-specified mapping to resolve the type (not yet supported).
-        /// If type mapping is not specified by the user this method will select the default implementation for the interface given.
-        /// If the given interface type does not have a default implementation, or a user-specified mapping for the type is not provided or the type
-        /// is invalid, this method will throw ArgumentException.
-        /// </para>
-        /// </typeparam>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc cref="GetOrAddAsync{T}(Uri, TimeSpan)" path="/remarks"/>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
         /// <param name="name">
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
         /// across <see cref="IReliableState"/> types, including unrelated types.
@@ -391,14 +261,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task RemoveAsync(ITransaction tx, Uri name, TimeSpan timeout);
 
-        /// <summary>
-        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
-        /// permanently removed from persistent storage and all replicas when the transaction is committed.
-        /// </summary>
-        /// <remarks>
-        /// This is an atomic operation. The <see cref="IReliableState"/> will be successfully removed along with all state
-        /// or be left in-tact. If this method throws an exception, the transaction must be aborted.
-        /// </remarks>
+        /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -432,14 +296,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task RemoveAsync(Uri name, TimeSpan timeout);
 
-        /// <summary>
-        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
-        /// permanently removed from persistent storage and all replicas.
-        /// </summary>
-        /// <remarks>
-        /// This is an atomic operation. The <see cref="IReliableState"/> will be successfully removed along with all state
-        /// or be left in-tact.
-        /// </remarks>
+        /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/remarks"/>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist.</exception>
@@ -449,14 +307,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task RemoveAsync(Uri name);
 
-        /// <summary>
-        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
-        /// permanently removed from persistent storage and all replicas when the transaction is committed.
-        /// </summary>
-        /// <remarks>
-        /// This is an atomic operation. The <see cref="IReliableState"/> will be successfully removed along with all state
-        /// or be left in-tact. If this method throws an exception, the transaction must be aborted.
-        /// </remarks>
+        /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
@@ -474,14 +326,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task RemoveAsync(ITransaction tx, string name, TimeSpan timeout);
 
-        /// <summary>
-        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
-        /// permanently removed from persistent storage and all replicas when the transaction is committed.
-        /// </summary>
-        /// <remarks>
-        /// This is an atomic operation. The <see cref="IReliableState"/> will be successfully removed along with all state
-        /// or be left in-tact. If this method throws an exception, the transaction must be aborted.
-        /// </remarks>
+        /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
@@ -498,14 +344,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task RemoveAsync(ITransaction tx, string name);
 
-        /// <summary>
-        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
-        /// permanently removed from persistent storage and all replicas.
-        /// </summary>
-        /// <remarks>
-        /// This is an atomic operation. The <see cref="IReliableState"/> will be successfully removed along with all state
-        /// or be left in-tact.
-        /// </remarks>
+        /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/remarks"/>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist, or <paramref name="timeout"/> is negative.</exception>
@@ -516,14 +356,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
         Task RemoveAsync(string name, TimeSpan timeout);
 
-        /// <summary>
-        /// Asynchronously removes the <see cref="IReliableState"/> with the given name from this state manager. The state is
-        /// permanently removed from persistent storage and all replicas.
-        /// </summary>
-        /// <remarks>
-        /// This is an atomic operation. The <see cref="IReliableState"/> will be successfully removed along with all state
-        /// or be left in-tact.
-        /// </remarks>
+        /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/remarks"/>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
