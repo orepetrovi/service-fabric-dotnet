@@ -110,6 +110,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is negative (other than <see cref="Timeout.InfiniteTimeSpan"/>) or greater than <see cref="Int32.MaxValue"/> milliseconds.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="backupCallback"/> returned <see langword="false"/>; the backup is marked unsuccessful.</exception>
         /// <exception cref="TimeoutException">The backup did not complete within <paramref name="timeout"/>.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The replica is not a Primary, or is no longer the Primary.</exception>
         /// <exception cref="FabricBackupInProgressException">Another backup is already in progress.</exception>
         Task BackupAsync(
