@@ -253,7 +253,9 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
+        /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
