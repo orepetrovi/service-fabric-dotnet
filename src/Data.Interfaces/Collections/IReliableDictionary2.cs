@@ -11,7 +11,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Represents a Reliable Collection of key/value pairs that are persisted and replicated.
+    /// Represents a Reliable Collection of key/value pairs that are persisted and replicated, adding ordered key enumeration
+    /// via <see cref="CreateKeyEnumerableAsync(ITransaction)"/> and a non-transactional <see cref="Count"/>.
     /// </summary>
     /// <inheritdoc cref="IReliableDictionary{TKey,TValue}" path="/remarks"/>
     public interface IReliableDictionary2<TKey, TValue> : IReliableDictionary<TKey, TValue>
