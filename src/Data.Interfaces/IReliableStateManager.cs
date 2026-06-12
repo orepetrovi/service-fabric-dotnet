@@ -552,7 +552,7 @@ namespace Microsoft.ServiceFabric.Data
         /// For example, when a <see cref="ReplicaRole.Primary"/> or <see cref="ReplicaRole.ActiveSecondary"/> looses <see cref="IStatefulServicePartition.ReadStatus"/>.</exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
-        /// <returns>A <see cref="ConditionalValue{T}"/> indicating whether the <see cref="IReliableState"/> was found, and containing the instance if it was.</returns>
+        /// <returns>A value indicating whether the <see cref="IReliableState"/> was found, and containing the instance if it was.</returns>
         Task<ConditionalValue<T>> TryGetAsync<T>(Uri name) where T : IReliableState;
 
         /// <summary>
@@ -574,7 +574,7 @@ namespace Microsoft.ServiceFabric.Data
         /// For example, when a <see cref="ReplicaRole.Primary"/> or <see cref="ReplicaRole.ActiveSecondary"/> looses <see cref="IStatefulServicePartition.ReadStatus"/>.</exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
-        /// <returns>A <see cref="ConditionalValue{T}"/> indicating whether the <see cref="IReliableState"/> was found, and containing the instance if it was.</returns>
+        /// <returns>A value indicating whether the <see cref="IReliableState"/> was found, and containing the instance if it was.</returns>
         Task<ConditionalValue<T>> TryGetAsync<T>(string name) where T : IReliableState;
     }
 }
