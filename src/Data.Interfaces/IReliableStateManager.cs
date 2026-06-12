@@ -107,7 +107,6 @@ namespace Microsoft.ServiceFabric.Data
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
-        /// <returns>Task that represents the asynchronous operation. The task result is the reliable state instance.</returns>
         Task<T> GetOrAddAsync<T>(ITransaction tx, Uri name, TimeSpan timeout) where T : IReliableState;
 
         /// <summary>
@@ -148,7 +147,6 @@ namespace Microsoft.ServiceFabric.Data
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
-        /// <returns>Task that represents the asynchronous operation. The task result is the reliable state instance.</returns>
         Task<T> GetOrAddAsync<T>(ITransaction tx, Uri name) where T : IReliableState;
 
         /// <summary>
@@ -184,7 +182,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
-        /// <returns>Task that represents the asynchronous operation. The task result is the reliable state instance.</returns>
         Task<T> GetOrAddAsync<T>(Uri name, TimeSpan timeout) where T : IReliableState;
 
         /// <summary>
@@ -219,7 +216,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
-        /// <returns>Task that represents the asynchronous operation. The task result is the reliable state instance.</returns>
         Task<T> GetOrAddAsync<T>(Uri name) where T : IReliableState;
 
         /// <summary>
@@ -261,7 +257,6 @@ namespace Microsoft.ServiceFabric.Data
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
-        /// <returns>Task that represents the asynchronous operation. The task result is the reliable state instance.</returns>
         Task<T> GetOrAddAsync<T>(ITransaction tx, string name, TimeSpan timeout) where T : IReliableState;
 
         /// <summary>
@@ -302,7 +297,6 @@ namespace Microsoft.ServiceFabric.Data
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
-        /// <returns>Task that represents the asynchronous operation. The task result is the reliable state instance.</returns>
         Task<T> GetOrAddAsync<T>(ITransaction tx, string name) where T : IReliableState;
 
         /// <summary>
@@ -338,7 +332,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
-        /// <returns>Task that represents the asynchronous operation. The task result is the reliable state instance.</returns>
         Task<T> GetOrAddAsync<T>(string name, TimeSpan timeout) where T : IReliableState;
 
         /// <summary>
@@ -373,7 +366,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
-        /// <returns>Task that represents the asynchronous operation. The task result is the reliable state instance.</returns>
         Task<T> GetOrAddAsync<T>(string name) where T : IReliableState;
 
         /// <summary>
@@ -398,7 +390,6 @@ namespace Microsoft.ServiceFabric.Data
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
-        /// <returns>Task that represents the asynchronous remove operation.</returns>
         Task RemoveAsync(ITransaction tx, Uri name, TimeSpan timeout);
 
         /// <summary>
@@ -422,7 +413,6 @@ namespace Microsoft.ServiceFabric.Data
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
-        /// <returns>Task that represents the asynchronous remove operation.</returns>
         Task RemoveAsync(ITransaction tx, Uri name);
 
         /// <summary>
@@ -441,7 +431,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
-        /// <returns>Task that represents the asynchronous remove operation.</returns>
         Task RemoveAsync(Uri name, TimeSpan timeout);
 
         /// <summary>
@@ -459,7 +448,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
-        /// <returns>Task that represents the asynchronous remove operation.</returns>
         Task RemoveAsync(Uri name);
 
         /// <summary>
@@ -484,7 +472,6 @@ namespace Microsoft.ServiceFabric.Data
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
-        /// <returns>Task that represents the asynchronous remove operation.</returns>
         Task RemoveAsync(ITransaction tx, string name, TimeSpan timeout);
 
         /// <summary>
@@ -508,7 +495,6 @@ namespace Microsoft.ServiceFabric.Data
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
-        /// <returns>Task that represents the asynchronous remove operation.</returns>
         Task RemoveAsync(ITransaction tx, string name);
 
         /// <summary>
@@ -527,7 +513,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
-        /// <returns>Task that represents the asynchronous remove operation.</returns>
         Task RemoveAsync(string name, TimeSpan timeout);
 
         /// <summary>
@@ -545,7 +530,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="System.Fabric.FabricNotPrimaryException">Thrown when the <see cref="Microsoft.ServiceFabric.Data.IReliableStateManager"/> is not in  <see cref="System.Fabric.ReplicaRole.Primary"/>.</exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
-        /// <returns>Task that represents the asynchronous remove operation.</returns>
         Task RemoveAsync(string name);
 
         /// <summary>
@@ -567,7 +551,7 @@ namespace Microsoft.ServiceFabric.Data
         /// For example, when a <see cref="ReplicaRole.Primary"/> or <see cref="ReplicaRole.ActiveSecondary"/> looses <see cref="IStatefulServicePartition.ReadStatus"/>.</exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
-        /// <returns>Task that represents the asynchronous operation. The task result is a tuple indicating whether the reliable state was found, and if so the instance.</returns>
+        /// <returns>A <see cref="ConditionalValue{T}"/> indicating whether the <see cref="IReliableState"/> was found, and containing the instance if it was.</returns>
         Task<ConditionalValue<T>> TryGetAsync<T>(Uri name) where T : IReliableState;
 
         /// <summary>
@@ -589,7 +573,7 @@ namespace Microsoft.ServiceFabric.Data
         /// For example, when a <see cref="ReplicaRole.Primary"/> or <see cref="ReplicaRole.ActiveSecondary"/> looses <see cref="IStatefulServicePartition.ReadStatus"/>.</exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
-        /// <returns>Task that represents the asynchronous operation. The task result is a tuple indicating whether the reliable state was found, and if so the instance.</returns>
+        /// <returns>A <see cref="ConditionalValue{T}"/> indicating whether the <see cref="IReliableState"/> was found, and containing the instance if it was.</returns>
         Task<ConditionalValue<T>> TryGetAsync<T>(string name) where T : IReliableState;
     }
 }
