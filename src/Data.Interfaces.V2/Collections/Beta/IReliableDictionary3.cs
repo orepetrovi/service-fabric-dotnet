@@ -85,7 +85,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative, or <paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
@@ -165,7 +165,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative, or <paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
@@ -215,7 +215,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
@@ -253,7 +253,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
