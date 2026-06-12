@@ -31,7 +31,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
         /// <summary>
-        /// (Beta) Attempts to get the sequence number associated with the specified key from the Reliable Dictionary.
+        /// (Beta) Asynchronously attempts to get the sequence number associated with the specified key from the Reliable Dictionary.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element's sequence number to get.</param>
@@ -60,7 +60,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             TKey key);
 
         /// <summary>
-        /// (Beta) Attempts to get the sequence number associated with the specified key from the Reliable Dictionary.
+        /// (Beta) Asynchronously attempts to get the sequence number associated with the specified key from the Reliable Dictionary.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element's sequence number to get.</param>
@@ -91,7 +91,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             LockMode lockMode);
 
         /// <summary>
-        /// (Beta) Attempts to get the sequence number associated with the specified key from the Reliable Dictionary.
+        /// (Beta) Asynchronously attempts to get the sequence number associated with the specified key from the Reliable Dictionary.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element's sequence number to get.</param>
@@ -128,7 +128,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
 
 
         /// <summary>
-        /// (Beta) Attempts to get the versioned element associated with the specified key from the Reliable Dictionary.
+        /// (Beta) Asynchronously attempts to get the versioned element associated with the specified key from the Reliable Dictionary.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the versioned element to get.</param>
@@ -157,7 +157,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             TKey key);
 
         /// <summary>
-        /// (Beta) Attempts to get the versioned element associated with the specified key from the Reliable Dictionary.
+        /// (Beta) Asynchronously attempts to get the versioned element associated with the specified key from the Reliable Dictionary.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the versioned element to get.</param>
@@ -188,7 +188,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             LockMode lockMode);
 
         /// <summary>
-        /// (Beta) Attempts to get the versioned element associated with the specified key from the Reliable Dictionary.
+        /// (Beta) Asynchronously attempts to get the versioned element associated with the specified key from the Reliable Dictionary.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the versioned element to get.</param>
@@ -224,7 +224,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// (Beta) Attempts to update the value for the specified key given the sequence number is matching.
+        /// (Beta) Asynchronously attempts to update the value for the specified key given the sequence number is matching.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to be updated.</param>
@@ -244,7 +244,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber);
 
         /// <summary>
-        /// (Beta) Attempts to update the value for the specified key given the sequence number is matching.
+        /// (Beta) Asynchronously attempts to update the value for the specified key given the sequence number is matching.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to be updated.</param>
@@ -268,7 +268,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
-        /// (Beta) Attempts to remove the value with the specified key given the sequence number is matching.
+        /// (Beta) Asynchronously attempts to remove the value with the specified key given the sequence number is matching.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
@@ -290,7 +290,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber);
 
         /// <summary>
-        /// (Beta) Attempts to remove the value with the specified key given the sequence number is matching.
+        /// (Beta) Asynchronously attempts to remove the value with the specified key given the sequence number is matching.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
@@ -315,7 +315,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
-        /// (Beta) Creates an async enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned keys.
+        /// (Beta) Asynchronously creates an async enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned keys.
         /// </summary>
         /// <param name="txn">Transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
@@ -340,7 +340,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn);
 
         /// <summary>
-        /// (Beta) Creates an async enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned keys.
+        /// (Beta) Asynchronously creates an async enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned keys.
         /// </summary>
         /// <param name="txn">Transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
@@ -366,7 +366,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey);
 
         /// <summary>
-        /// (Beta) Creates an async enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned keys.
+        /// (Beta) Asynchronously creates an async enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/> to enumerate the versioned keys.
         /// </summary>
         /// <param name="txn">Transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
@@ -393,7 +393,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
         /// <summary>
-        /// (Beta) Creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
@@ -424,7 +424,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn);
 
         /// <summary>
-        /// (Beta) Creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
@@ -456,7 +456,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey);
 
         /// <summary>
-        /// (Beta) Creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
@@ -489,7 +489,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
         /// <summary>
-        /// (Beta) Creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">Predicate that filters the versioned key-value pairs to include in the enumeration based on the key.</param>
@@ -521,7 +521,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter);
 
         /// <summary>
-        /// (Beta) Creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">Predicate that filters the versioned key-value pairs to include in the enumeration based on the key.</param>
@@ -554,7 +554,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter, TKey firstKey);
 
         /// <summary>
-        /// (Beta) Creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">Predicate that filters the versioned key-value pairs to include in the enumeration based on the key.</param>
