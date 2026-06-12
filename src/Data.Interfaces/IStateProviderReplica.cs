@@ -113,6 +113,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The replica is not a Primary, or is no longer the Primary.</exception>
         /// <exception cref="FabricBackupInProgressException">Another backup is already in progress.</exception>
+        /// <exception cref="FabricMissingFullBackupException"><paramref name="option"/> is <see cref="BackupOption.Incremental"/> but no valid full backup exists to build upon.</exception>
         Task BackupAsync(
             BackupOption option,
             TimeSpan timeout,
