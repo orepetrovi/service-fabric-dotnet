@@ -39,18 +39,18 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its sequence number.</returns>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
@@ -66,18 +66,18 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its sequence number.</returns>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
@@ -97,18 +97,18 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its sequence number.</returns>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
@@ -127,18 +127,18 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its value and sequence number.</returns>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
@@ -154,18 +154,18 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its value and sequence number.</returns>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
@@ -185,18 +185,18 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its value and sequence number.</returns>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
@@ -214,14 +214,14 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="checkSequenceNumber">The expected sequence number of the element to be updated.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber);
 
@@ -238,14 +238,14 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
-        /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
@@ -258,14 +258,14 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
-        /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>
         /// <see langword="true"/> if the element with the matching sequence number was removed; otherwise, <see langword="false"/>.
         /// </returns>
@@ -283,14 +283,14 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
-        /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>
         /// <see langword="true"/> if the element with the matching sequence number was removed; otherwise, <see langword="false"/>.
         /// </returns>
@@ -302,18 +302,18 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="txn">Transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Exception indicates that the Reliable Dictionary cannot serve reads at the moment.
+        /// The Reliable Dictionary cannot serve reads at the moment.
         /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
         /// One example for it being thrown in the <see cref="ReplicaRole.Primary"/> is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One example for it being thrown in the <see cref="ReplicaRole.ActiveSecondary"/> is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>
         /// The enumerable returned from the <see cref="IReliableDictionary3{TKey,TValue}"/> is safe to use concurrently with reads and writes
         /// to the dictionary. It represents a snapshot consistent view of the dictionary.
@@ -328,18 +328,18 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Exception indicates that the Reliable Dictionary cannot serve reads at the moment.
+        /// The Reliable Dictionary cannot serve reads at the moment.
         /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
         /// One example for it being thrown in the <see cref="ReplicaRole.Primary"/> is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One example for it being thrown in the <see cref="ReplicaRole.ActiveSecondary"/> is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>
         /// The enumerable returned from the <see cref="IReliableDictionary3{TKey,TValue}"/> is safe to use concurrently with reads and writes
         /// to the dictionary. It represents a snapshot consistent view of the dictionary.
@@ -355,18 +355,18 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="lastKey">The key to stop enumerating at in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Exception indicates that the Reliable Dictionary cannot serve reads at the moment.
+        /// The Reliable Dictionary cannot serve reads at the moment.
         /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
         /// One example for it being thrown in the <see cref="ReplicaRole.Primary"/> is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One example for it being thrown in the <see cref="ReplicaRole.ActiveSecondary"/> is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>
         /// The enumerable returned from the <see cref="IReliableDictionary3{TKey,TValue}"/> is safe to use concurrently with reads and writes
         /// to the dictionary. It represents a snapshot consistent view of the dictionary.
@@ -380,19 +380,19 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">
-        /// <para>Indicates that the Reliable Dictionary is closed or deleted.</para>
+        /// <para>The Reliable Dictionary is closed or deleted.</para>
         /// </exception>
         /// <remarks>
         /// <para>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
@@ -410,19 +410,19 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">
-        /// <para>Indicates that the Reliable Dictionary is closed or deleted.</para>
+        /// <para>The Reliable Dictionary is closed or deleted.</para>
         /// </exception>
         /// <remarks>
         /// <para>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
@@ -441,19 +441,19 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="lastKey">The key to stop enumerating at in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">
-        /// <para>Indicates that the Reliable Dictionary is closed or deleted.</para>
+        /// <para>The Reliable Dictionary is closed or deleted.</para>
         /// </exception>
         /// <remarks>
         /// <para>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
@@ -471,19 +471,19 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="filter">Predicate that filters the versioned key-value pairs to include in the enumeration based on the key.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">
-        /// <para>Indicates that the Reliable Dictionary is closed or deleted.</para>
+        /// <para>The Reliable Dictionary is closed or deleted.</para>
         /// </exception>
         /// <remarks>
         /// <para>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
@@ -502,19 +502,19 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">
-        /// <para>Indicates that the Reliable Dictionary is closed or deleted.</para>
+        /// <para>The Reliable Dictionary is closed or deleted.</para>
         /// </exception>
         /// <remarks>
         /// <para>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
@@ -534,19 +534,19 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="lastKey">The key to stop enumerating at in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Indicates that the IReliableDictionary cannot serve reads at the moment.
+        /// The IReliableDictionary cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when a method call is invalid for the object's current state.
+        /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">
-        /// <para>Indicates that the Reliable Dictionary is closed or deleted.</para>
+        /// <para>The Reliable Dictionary is closed or deleted.</para>
         /// </exception>
         /// <remarks>
         /// <para>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
