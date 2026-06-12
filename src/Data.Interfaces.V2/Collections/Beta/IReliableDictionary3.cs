@@ -45,7 +45,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <inheritdoc cref="TryGetSequenceNumberAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
             TKey key);
@@ -70,14 +69,13 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <inheritdoc cref="TryGetSequenceNumberAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
             TKey key,
             LockMode lockMode);
 
         /// <summary>
-        /// (Beta) Asynchronously attempts to get the sequence number associated with the specified key from the Reliable Dictionary.
+        /// (Beta) Asynchronously attempts to get the sequence number associated with the specified key from the Reliable Dictionary and returns a result indicating whether the key was found and, if so, its sequence number.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element whose sequence number is to be retrieved.</param>
@@ -101,7 +99,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its sequence number.</returns>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
             TKey key,
@@ -128,7 +125,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <inheritdoc cref="TryGetVersionedKeyValuePairAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
             TKey key);
@@ -153,14 +149,13 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <inheritdoc cref="TryGetVersionedKeyValuePairAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
             TKey key,
             LockMode lockMode);
 
         /// <summary>
-        /// (Beta) Asynchronously attempts to get the versioned element associated with the specified key from the Reliable Dictionary.
+        /// (Beta) Asynchronously attempts to get the versioned element associated with the specified key from the Reliable Dictionary and returns a result indicating whether the key was found and, if so, its value and sequence number.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the versioned element to get.</param>
@@ -184,7 +179,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its value and sequence number.</returns>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
             TKey key,
@@ -207,11 +201,10 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <inheritdoc cref="TryUpdateAsync(ITransaction, TKey, TValue, long, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber);
 
         /// <summary>
-        /// (Beta) Asynchronously attempts to update the value for the specified key if its current sequence number matches <paramref name="checkSequenceNumber"/>.
+        /// (Beta) Asynchronously attempts to update the value for the specified key if its current sequence number matches <paramref name="checkSequenceNumber"/> and returns <see langword="true"/> if the value was updated; otherwise returns <see langword="false"/>.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to be updated.</param>
@@ -231,7 +224,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <inheritdoc cref="TryRemoveAsync(ITransaction, TKey, long, TimeSpan, CancellationToken)" path="/summary"/>
@@ -248,11 +240,10 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <inheritdoc cref="TryRemoveAsync(ITransaction, TKey, long, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber);
 
         /// <summary>
-        /// (Beta) Asynchronously attempts to remove the value with the specified key if its current sequence number matches <paramref name="checkSequenceNumber"/>.
+        /// (Beta) Asynchronously attempts to remove the value with the specified key if its current sequence number matches <paramref name="checkSequenceNumber"/> and returns <see langword="true"/> if the element was removed; otherwise returns <see langword="false"/>.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
@@ -271,9 +262,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>
-        /// <see langword="true"/> if the element with the matching sequence number was removed; otherwise, <see langword="false"/>.
-        /// </returns>
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/summary"/>
