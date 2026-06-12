@@ -189,7 +189,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <inheritdoc cref="TryUpdateAsync(ITransaction, TKey, TValue, long, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to be updated.</param>
-        /// <param name="newValue">The value to be updated to if the specified <paramref name="key"/> has the expected <paramref name="checkSequenceNumber"/>.</param>
+        /// <param name="newValue">The value to be updated to if the specified <paramref name="key"/> has the expected <paramref name="checkSequenceNumber"/>. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="checkSequenceNumber">The expected sequence number of the element to be updated.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
@@ -208,7 +208,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to be updated.</param>
-        /// <param name="newValue">The value to be updated to if the specified <paramref name="key"/> has the expected <paramref name="checkSequenceNumber"/>.</param>
+        /// <param name="newValue">The value to be updated to if the specified <paramref name="key"/> has the expected <paramref name="checkSequenceNumber"/>. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="checkSequenceNumber">The expected sequence number of the element to be updated.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
