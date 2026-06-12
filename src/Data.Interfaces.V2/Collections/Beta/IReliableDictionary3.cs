@@ -59,6 +59,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="key">The key of the element's sequence number to get.</param>
         /// <param name="lockMode">Type of locking to use for this read operation.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
+        /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The IReliableDictionary cannot serve reads at the moment.
@@ -88,7 +89,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
-        /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
+        /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative, or <paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -145,6 +146,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="key">The key of the versioned element to get.</param>
         /// <param name="lockMode">Type of locking to use for this read operation.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
+        /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The IReliableDictionary cannot serve reads at the moment.
@@ -174,7 +176,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
-        /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
+        /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative, or <paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
