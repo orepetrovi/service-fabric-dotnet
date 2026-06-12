@@ -14,23 +14,25 @@ namespace Microsoft.ServiceFabric.Services.Runtime;
 
 public abstract class StatelessServiceInstanceFactoryTest
 {
-    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+    readonly IStatelessServiceFactory sut;
 
     // Constructor parameters
     readonly RuntimeContext runtimeContext;
     readonly Func<StatelessServiceContext, StatelessService> serviceFactory;
 
+    // Test fixture
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
     protected StatelessServiceInstanceFactoryTest()
     {
-        runtimeContext = Mock.Of<RuntimeContext>(ctx => 
+        runtimeContext = Mock.Of<RuntimeContext>(ctx =>
             ctx.NodeContext == fuzzy.NodeContext() &&
             ctx.CodePackageContext == fuzzy.ICodePackageActivationContext());
-            
-        serviceFactory = Mock.Of<Func<StatelessServiceContext, StatelessService>>();
-    }
 
-    StatelessServiceInstanceFactory CreateSut() =>
-        new StatelessServiceInstanceFactory(runtimeContext, serviceFactory);
+        serviceFactory = Mock.Of<Func<StatelessServiceContext, StatelessService>>();
+
+        sut = new StatelessServiceInstanceFactory(runtimeContext, serviceFactory);
+    }
 
     public sealed class Constructor : StatelessServiceInstanceFactoryTest
     {
@@ -59,24 +61,22 @@ public abstract class StatelessServiceInstanceFactoryTest
         readonly Guid partitionId = Guid.NewGuid();
         readonly long instanceId = fuzzy.Int64();
 
-        readonly Mock<StatelessService> mockService;
+        readonly Mock<StatelessService> service;
         StatelessServiceContext actualServiceContext;
 
         public CreateInstance()
         {
-            mockService = new Mock<StatelessService>(fuzzy.StatelessServiceContext()) { DefaultValue = DefaultValue.Mock };
+            service = new Mock<StatelessService>(fuzzy.StatelessServiceContext()) { DefaultValue = DefaultValue.Mock };
 
             Mock.Get(serviceFactory)
                 .Setup(f => f(It.IsAny<StatelessServiceContext>()))
                 .Callback((StatelessServiceContext ctx) => actualServiceContext = ctx)
-                .Returns(mockService.Object);
+                .Returns(service.Object);
         }
 
         [Fact]
         public void InvokesServiceFactory()
         {
-            IStatelessServiceFactory sut = CreateSut();
-
             sut.CreateInstance(serviceTypeName, serviceName, initializationData, partitionId, instanceId);
 
             Assert.Same(runtimeContext.NodeContext, actualServiceContext.NodeContext);
@@ -91,13 +91,11 @@ public abstract class StatelessServiceInstanceFactoryTest
         [Fact]
         public void ReturnsStatelessServiceInstance()
         {
-            IStatelessServiceFactory sut = CreateSut();
-
             IStatelessServiceInstance result = sut.CreateInstance(serviceTypeName, serviceName, initializationData, partitionId, instanceId);
 
             var adapter = Assert.IsType<StatelessServiceInstanceAdapter>(result);
-            Assert.Same(mockService.Object, adapter.Field<IStatelessUserServiceInstance>().Value);
-            Assert.Same(mockService.Object.Context, adapter.Field<StatelessServiceContext>().Value);
+            Assert.Same(service.Object, adapter.Field<IStatelessUserServiceInstance>().Value);
+            Assert.Same(service.Object.Context, adapter.Field<StatelessServiceContext>().Value);
         }
 
         [Fact]
@@ -106,8 +104,6 @@ public abstract class StatelessServiceInstanceFactoryTest
             Mock.Get(serviceFactory)
                 .Setup(f => f(It.IsAny<StatelessServiceContext>()))
                 .Returns((StatelessService)null);
-
-            IStatelessServiceFactory sut = CreateSut();
 
             Assert.Throws<InvalidOperationException>(() =>
                 sut.CreateInstance(serviceTypeName, serviceName, initializationData, partitionId, instanceId));
@@ -119,12 +115,14 @@ public abstract class StatelessServiceInstanceFactoryTest
         [Fact]
         public void DisposesRuntimeContext()
         {
-            var runtimeContextMock = Mock.Get(runtimeContext);
+            var codePackageContext = new Mock<ICodePackageActivationContext>();
+            var runtimeContext = new RuntimeContext();
+            runtimeContext.Field<ICodePackageActivationContext>().Set(codePackageContext.Object);
 
-            var sut = CreateSut();
+            var sut = new StatelessServiceInstanceFactory(runtimeContext, serviceFactory);
             sut.Dispose();
 
-            runtimeContextMock.Verify(c => c.Dispose(), Times.Once);
+            codePackageContext.Verify(c => c.Dispose(), Times.Once);
         }
     }
 }

@@ -3,12 +3,12 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
-
 using System;
 using System.Fabric;
 
 namespace Microsoft.ServiceFabric.Services.Runtime;
-internal class StatefulServiceReplicaFactory : IStatefulServiceFactory, IDisposable
+
+class StatefulServiceReplicaFactory : IStatefulServiceFactory, IDisposable
 {
     readonly Func<StatefulServiceContext, StatefulServiceBase> serviceFactory;
     readonly RuntimeContext runtimeContext;

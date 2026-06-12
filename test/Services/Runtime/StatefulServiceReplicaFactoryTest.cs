@@ -15,11 +15,14 @@ namespace Microsoft.ServiceFabric.Services.Runtime;
 
 public abstract class StatefulServiceReplicaFactoryTest
 {
-    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+    readonly IStatefulServiceFactory sut;
 
     // Constructor parameters
     readonly RuntimeContext runtimeContext;
     readonly Func<StatefulServiceContext, StatefulServiceBase> serviceFactory;
+
+    // Test fixture
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
     protected StatefulServiceReplicaFactoryTest()
     {
@@ -28,10 +31,9 @@ public abstract class StatefulServiceReplicaFactoryTest
             ctx.CodePackageContext == fuzzy.ICodePackageActivationContext());
 
         serviceFactory = Mock.Of<Func<StatefulServiceContext, StatefulServiceBase>>();
-    }
 
-    StatefulServiceReplicaFactory CreateSut() =>
-        new StatefulServiceReplicaFactory(runtimeContext, serviceFactory);
+        sut = new StatefulServiceReplicaFactory(runtimeContext, serviceFactory);
+    }
 
     public sealed class Constructor : StatefulServiceReplicaFactoryTest
     {
@@ -60,12 +62,12 @@ public abstract class StatefulServiceReplicaFactoryTest
         readonly Guid partitionId = Guid.NewGuid();
         readonly long replicaId = fuzzy.Int64();
 
-        readonly Mock<StatefulServiceBase> mockService;
+        readonly Mock<StatefulServiceBase> service;
         StatefulServiceContext actualServiceContext;
 
         public CreateReplica()
         {
-            mockService = new Mock<StatefulServiceBase>(
+            service = new Mock<StatefulServiceBase>(
                 fuzzy.StatefulServiceContext(),
                 Mock.Of<IStateProviderReplica>())
             {
@@ -75,14 +77,12 @@ public abstract class StatefulServiceReplicaFactoryTest
             Mock.Get(serviceFactory)
                 .Setup(f => f(It.IsAny<StatefulServiceContext>()))
                 .Callback((StatefulServiceContext ctx) => actualServiceContext = ctx)
-                .Returns(mockService.Object);
+                .Returns(service.Object);
         }
 
         [Fact]
         public void InvokesServiceFactory()
         {
-            IStatefulServiceFactory sut = CreateSut();
-
             sut.CreateReplica(serviceTypeName, serviceName, initializationData, partitionId, replicaId);
 
             Assert.Same(runtimeContext.NodeContext, actualServiceContext.NodeContext);
@@ -97,13 +97,11 @@ public abstract class StatefulServiceReplicaFactoryTest
         [Fact]
         public void ReturnsStatefulServiceReplica()
         {
-            IStatefulServiceFactory sut = CreateSut();
-
             IStatefulServiceReplica result = sut.CreateReplica(serviceTypeName, serviceName, initializationData, partitionId, replicaId);
 
             var adapter = Assert.IsType<StatefulServiceReplicaAdapter>(result);
-            Assert.Same(mockService.Object, adapter.Field<IStatefulUserServiceReplica>().Value);
-            Assert.Same(mockService.Object.Context, adapter.Field<StatefulServiceContext>().Value);
+            Assert.Same(service.Object, adapter.Field<IStatefulUserServiceReplica>().Value);
+            Assert.Same(service.Object.Context, adapter.Field<StatefulServiceContext>().Value);
         }
 
         [Fact]
@@ -112,8 +110,6 @@ public abstract class StatefulServiceReplicaFactoryTest
             Mock.Get(serviceFactory)
                 .Setup(f => f(It.IsAny<StatefulServiceContext>()))
                 .Returns((StatefulServiceBase)null);
-
-            IStatefulServiceFactory sut = CreateSut();
 
             Assert.Throws<InvalidOperationException>(() =>
                 sut.CreateReplica(serviceTypeName, serviceName, initializationData, partitionId, replicaId));
@@ -125,12 +121,14 @@ public abstract class StatefulServiceReplicaFactoryTest
         [Fact]
         public void DisposesRuntimeContext()
         {
-            var runtimeContextMock = Mock.Get(runtimeContext);
+            var codePackageContext = new Mock<ICodePackageActivationContext>();
+            var runtimeContext = new RuntimeContext();
+            runtimeContext.Field<ICodePackageActivationContext>().Set(codePackageContext.Object);
 
-            var sut = CreateSut();
+            var sut = new StatefulServiceReplicaFactory(runtimeContext, serviceFactory);
             sut.Dispose();
 
-            runtimeContextMock.Verify(c => c.Dispose(), Times.Once);
+            codePackageContext.Verify(c => c.Dispose(), Times.Once);
         }
     }
 }

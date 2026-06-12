@@ -3,11 +3,11 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
-
 using System;
 using System.Fabric;
 
 namespace Microsoft.ServiceFabric.Services.Runtime;
+
 class StatelessServiceInstanceFactory : IStatelessServiceFactory, IDisposable
 {
     readonly Func<StatelessServiceContext, StatelessService> serviceFactory;
@@ -37,7 +37,7 @@ class StatelessServiceInstanceFactory : IStatelessServiceFactory, IDisposable
             partitionId,
             instanceId);
 
-        StatelessService service = serviceFactory(instanceContext) ?? throw new InvalidOperationException($"{nameof(serviceFactory)} return null");
+        StatelessService service = serviceFactory(instanceContext) ?? throw new InvalidOperationException($"{nameof(serviceFactory)} returned null");
         return new StatelessServiceInstanceAdapter(service.Context, service);
     }
 
