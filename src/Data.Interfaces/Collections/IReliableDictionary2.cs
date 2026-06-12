@@ -37,7 +37,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// One example for it being thrown in the <see cref="ReplicaRole.Primary"/> is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One example for it being thrown in the <see cref="ReplicaRole.ActiveSecondary"/> is that Reliable Collection's state is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
