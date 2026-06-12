@@ -308,7 +308,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
+        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned keys.</returns>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn);
@@ -332,7 +332,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
+        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned keys.</returns>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey);
@@ -358,7 +358,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
+        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned keys.</returns>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
@@ -381,7 +381,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
+        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
@@ -406,7 +406,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
+        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
@@ -433,7 +433,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
+        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
@@ -458,7 +458,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
+        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
@@ -484,7 +484,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
+        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
@@ -512,7 +512,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
+        /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
