@@ -83,10 +83,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="txn">Transaction to associate this operation with.</param>
         /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
-        /// <param name="timeout">
-        /// The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks. The default is 4 seconds.
-        /// </param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default is None.</param>
+        /// <param name="timeout">This parameter is ignored.</param>
+        /// <param name="cancellationToken">This parameter is ignored.</param>
         /// <exception cref="FabricNotReadableException">
         /// Exception indicates that the Reliable Dictionary cannot serve reads at the moment.
         /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
