@@ -85,7 +85,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="backupCallback">Callback to be called when the backup folder has been created locally and is ready to be moved out of the node.</param>
         /// <returns>Task that represents the asynchronous backup operation.</returns>
         /// <remarks>
-        /// A FULL backup will be performed with a one-hour timeout.
+        /// A full backup will be performed with no timeout. To specify a timeout, use the
+        /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/> overload.
         /// Boolean returned by the backupCallback indicate whether the service was able to successfully move the backup folder to an external location.
         /// If false is returned, BackupAsync throws InvalidOperationException with the relevant message indicating backupCallback returned false.
         /// Also, backup will be marked as unsuccessful.
