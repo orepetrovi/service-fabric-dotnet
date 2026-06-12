@@ -36,10 +36,6 @@ namespace Microsoft.ServiceFabric.Data
         /// Tries to register a custom serializer for all reliable collections and returns <see langword="true"/> if the custom
         /// serializer was added; otherwise, <see langword="false"/>.
         /// </summary>
-        /// <typeparam name="T">Type that will be serialized and deserialized.</typeparam>
-        /// <param name="stateSerializer">
-        /// The state serializer to be added.
-        /// </param>
         /// <remarks>
         /// <para>
         /// When a reliable collection needs to serialize an object, it asks the state manager for a serializer for the given type.
