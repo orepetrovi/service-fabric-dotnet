@@ -98,7 +98,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
+        /// For example, the transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
@@ -119,7 +119,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
+        /// For example, the transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
@@ -176,7 +176,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
+        /// For example, the transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
@@ -198,7 +198,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
+        /// For example, the transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
@@ -253,7 +253,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
+        /// For example, the transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
@@ -270,7 +270,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
+        /// For example, the transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
@@ -318,7 +318,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
+        /// For example, the transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
@@ -336,7 +336,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
-        /// Example, transaction used is already terminated: committed or aborted by the user.
+        /// For example, the transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
