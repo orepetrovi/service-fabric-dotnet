@@ -14,10 +14,21 @@ using GeneratedComInterfaceAttribute = System.Runtime.InteropServices.ComImportA
 namespace Microsoft.ServiceFabric.Diagnostics.Metrics.Implementation;
 
 [GeneratedComInterface]
-[Guid("15AD37D2-F641-4188-824B-0D68CB4F6C17")]
+[Guid("89462876-f11e-41c6-bd99-c933b46c5e66")]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-partial interface IFabricMeterProvider
+partial interface IFabricMeterProvider2
 {
+    #region IFabricMeterProvider
+
     [return: MarshalUsing(typeof(UniqueComInterfaceMarshaller<IFabricMeter>))]
-    IFabricMeter CreateMeter(IntPtr meterDescription);
+    IFabricMeter CreateMeter(IntPtr metricNamespace, IntPtr name, uint count, IntPtr dimensionNames);
+
+    #endregion
+
+    #region IFabricMeterProvider2
+
+    [return: MarshalUsing(typeof(UniqueComInterfaceMarshaller<IFabricMeter>))]
+    IFabricMeter CreateMeter2(IntPtr meterDescription);
+
+    #endregion
 }
