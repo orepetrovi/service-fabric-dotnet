@@ -370,7 +370,8 @@ namespace Microsoft.ServiceFabric.Data
         Task RemoveAsync(string name);
 
         /// <summary>
-        /// Asynchronously attempts to get an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name.
+        /// Asynchronously attempts to get an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with
+        /// the given name, and returns a value indicating whether it was found and containing the instance if it was.
         /// </summary>
         /// <typeparam name="T">
         /// When specifying the type, you may ask for either a concrete type or an interface type. The retrieved object will
@@ -387,11 +388,11 @@ namespace Microsoft.ServiceFabric.Data
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// For example, when a <see cref="ReplicaRole.Primary"/> or <see cref="ReplicaRole.ActiveSecondary"/> loses <see cref="IStatefulServicePartition.ReadStatus"/>.</exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
-        /// <returns>A value indicating whether the <see cref="IReliableState"/> was found, and containing the instance if it was.</returns>
         Task<ConditionalValue<T>> TryGetAsync<T>(Uri name) where T : IReliableState;
 
         /// <summary>
-        /// Asynchronously attempts to get an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with the given name.
+        /// Asynchronously attempts to get an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with
+        /// the given name, and returns a value indicating whether it was found and containing the instance if it was.
         /// </summary>
         /// <typeparam name="T">
         /// When specifying the type, you may ask for either a concrete type or an interface type. The retrieved object will
@@ -408,7 +409,6 @@ namespace Microsoft.ServiceFabric.Data
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// For example, when a <see cref="ReplicaRole.Primary"/> or <see cref="ReplicaRole.ActiveSecondary"/> loses <see cref="IStatefulServicePartition.ReadStatus"/>.</exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
-        /// <returns>A value indicating whether the <see cref="IReliableState"/> was found, and containing the instance if it was.</returns>
         Task<ConditionalValue<T>> TryGetAsync<T>(string name) where T : IReliableState;
     }
 }
