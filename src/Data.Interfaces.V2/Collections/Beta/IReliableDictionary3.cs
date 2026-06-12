@@ -306,7 +306,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned keys.
+        /// (Beta) Asynchronously returns an enumerable over the versioned keys in the <see cref="IReliableDictionary3{TKey, TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
@@ -439,7 +439,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter, TKey firstKey);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
+        /// (Beta) Asynchronously returns an enumerable over the versioned key/value pairs in the <see cref="IReliableDictionary3{TKey, TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
