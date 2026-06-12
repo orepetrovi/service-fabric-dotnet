@@ -16,14 +16,18 @@ namespace Microsoft.ServiceFabric.Data
     public interface IStateProviderReplica
     {
         /// <summary>
-        /// Function called during suspected data-loss.
+        /// Sets the callback invoked during suspected data loss.
         /// </summary>
         /// <value>
-        /// Function called as part of suspected data loss processing.
-        /// Function takes in CancellationToken and need to return a Task that represents the asynchronous processing of the event.
-        /// Returning true, indicates that the replica's state has been restored.
-        /// False indicates that the replica's state has not been changed.
+        /// A function that takes a <see cref="CancellationToken"/> and returns a <see cref="Task{TResult}"/> representing the
+        /// asynchronous processing of the event. Returning <see langword="true"/> indicates the replica's state has been
+        /// restored; <see langword="false"/> indicates it has not been changed.
         /// </value>
+        /// <remarks>
+        /// This callback is where <see cref="RestoreAsync(string)"/> may be invoked. It runs while the replica does not have
+        /// read or write status, so reads and writes against the state providers are not permitted. Returning
+        /// <see langword="true"/> causes the Primary to rebuild the other replicas in the partition from the restored state.
+        /// </remarks>
         Func<CancellationToken, Task<bool>> OnDataLossAsync { set; }
 
         /// <summary>
