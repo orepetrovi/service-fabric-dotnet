@@ -58,12 +58,11 @@ namespace Microsoft.ServiceFabric.Data
         bool TryAddStateSerializer<T>(IStateSerializer<T> stateSerializer);
 
         /// <summary>
-        /// Create and start a new transaction that can be used to group operations to be performed atomically.
+        /// Returns a new, started <see cref="ITransaction"/> that can be used to group operations to be performed atomically.
         /// </summary>
         /// <remarks>
         /// Operations are added to the transaction by passing the <see cref="ITransaction"/> object in to reliable state methods.
         /// </remarks>
-        /// <returns>A new transaction.</returns>
         ITransaction CreateTransaction();
 
         /// <summary>
