@@ -85,7 +85,7 @@ namespace Microsoft.ServiceFabric.Data
         /// is invalid, this method will throw ArgumentException.
         /// </para>
         /// </typeparam>
-        /// <param name="tx">Transaction to associate this operation with.</param>
+        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
         /// across <see cref="IReliableState"/> types, including unrelated types.
@@ -107,7 +107,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <param name="tx">Transaction to associate this operation with.</param>
+        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
         /// across <see cref="IReliableState"/> types, including unrelated types.
@@ -162,7 +162,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <param name="tx">Transaction to associate this operation with.</param>
+        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
         /// across <see cref="IReliableState"/> types, including unrelated types.
@@ -185,7 +185,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <param name="tx">Transaction to associate this operation with.</param>
+        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
         /// across <see cref="IReliableState"/> types, including unrelated types.
@@ -243,7 +243,7 @@ namespace Microsoft.ServiceFabric.Data
         /// This is an atomic operation. The <see cref="IReliableState"/> will be successfully removed along with all state
         /// or be left intact. If this method throws an exception, the transaction must be aborted.
         /// </remarks>
-        /// <param name="tx">Transaction to associate this operation with.</param>
+        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -261,7 +261,7 @@ namespace Microsoft.ServiceFabric.Data
 
         /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/remarks"/>
-        /// <param name="tx">Transaction to associate this operation with.</param>
+        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist.</exception>
@@ -307,7 +307,7 @@ namespace Microsoft.ServiceFabric.Data
 
         /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/remarks"/>
-        /// <param name="tx">Transaction to associate this operation with.</param>
+        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
@@ -326,7 +326,7 @@ namespace Microsoft.ServiceFabric.Data
 
         /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/remarks"/>
-        /// <param name="tx">Transaction to associate this operation with.</param>
+        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist.</exception>
