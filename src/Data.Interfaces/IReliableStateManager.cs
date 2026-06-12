@@ -20,14 +20,14 @@ namespace Microsoft.ServiceFabric.Data
     {
         /// <summary>
         /// Occurs when a transaction's state changes.
-        /// For example, commit of a transaction.
+        /// For example, when a transaction is committed.
         /// </summary>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         event EventHandler<NotifyTransactionChangedEventArgs> TransactionChanged;
 
         /// <summary>
         /// Occurs when State Manager's state changes.
-        /// For example, creation or delete of reliable state or rebuild of the reliable state manager.
+        /// For example, creation or deletion of reliable state or rebuild of the reliable state manager.
         /// </summary>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         event EventHandler<NotifyStateManagerChangedEventArgs> StateManagerChanged;
