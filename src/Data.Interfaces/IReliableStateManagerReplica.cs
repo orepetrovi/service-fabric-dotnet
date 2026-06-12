@@ -6,7 +6,8 @@
 namespace Microsoft.ServiceFabric.Data
 {
     /// <summary>
-    /// Defines a reliable state manager replica that manages reliable state and participates in the Service Fabric replica lifecycle.
+    /// Defines a reliable state manager replica that manages reliable state and participates in the Service Fabric replica
+    /// lifecycle.
     /// </summary>
     public interface IReliableStateManagerReplica : IStateProviderReplica, IReliableStateManager
     {
