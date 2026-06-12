@@ -33,6 +33,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Creates an async enumerator over the <see cref="IReliableDictionary2{TKey,TValue}"/> to enumerate the keys.
         /// </summary>
         /// <param name="txn">Transaction to associate this operation with.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// Exception indicates that the Reliable Dictionary cannot serve reads at the moment.
         /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
@@ -58,6 +59,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="txn">Transaction to associate this operation with.</param>
         /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// Exception indicates that the Reliable Dictionary cannot serve reads at the moment.
         /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
@@ -85,6 +87,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
         /// <param name="timeout">This parameter is ignored.</param>
         /// <param name="cancellationToken">This parameter is ignored.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// Exception indicates that the Reliable Dictionary cannot serve reads at the moment.
         /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
