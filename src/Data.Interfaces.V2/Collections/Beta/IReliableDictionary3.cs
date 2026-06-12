@@ -443,7 +443,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
-        /// <param name="filter">The predicate that filters the versioned key-value pairs to include in the enumeration based on the key.</param>
+        /// <param name="filter">The predicate that filters the versioned key-value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
@@ -468,7 +468,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
-        /// <param name="filter">The predicate that filters the versioned key-value pairs to include in the enumeration based on the key.</param>
+        /// <param name="filter">The predicate that filters the versioned key-value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> or <paramref name="firstKey"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -494,7 +494,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
-        /// <param name="filter">The predicate that filters the versioned key-value pairs to include in the enumeration based on the key.</param>
+        /// <param name="filter">The predicate that filters the versioned key-value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
         /// <param name="lastKey">The key to stop enumerating at in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/>, <paramref name="firstKey"/>, or <paramref name="lastKey"/> is null.</exception>
