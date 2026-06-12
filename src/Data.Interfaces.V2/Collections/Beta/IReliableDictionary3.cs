@@ -296,10 +296,10 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The Reliable Dictionary cannot serve reads at the moment.
-        /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One example for it being thrown in the <see cref="ReplicaRole.Primary"/> is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One example for it being thrown in the <see cref="ReplicaRole.ActiveSecondary"/> is that Reliable Collection's state is not yet consistent.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
+        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
@@ -308,10 +308,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>
-        /// The enumerable returned from the <see cref="IReliableDictionary3{TKey,TValue}"/> is safe to use concurrently with reads and writes
-        /// to the dictionary. It represents a snapshot consistent view of the dictionary.
-        /// </remarks>
+        /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
+        /// It represents a snapshot consistent view.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned keys.</returns>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn);
 
@@ -322,10 +320,10 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> or <paramref name="firstKey"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The Reliable Dictionary cannot serve reads at the moment.
-        /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One example for it being thrown in the <see cref="ReplicaRole.Primary"/> is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One example for it being thrown in the <see cref="ReplicaRole.ActiveSecondary"/> is that Reliable Collection's state is not yet consistent.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
+        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
@@ -334,10 +332,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>
-        /// The enumerable returned from the <see cref="IReliableDictionary3{TKey,TValue}"/> is safe to use concurrently with reads and writes
-        /// to the dictionary. It represents a snapshot consistent view of the dictionary.
-        /// </remarks>
+        /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
+        /// It represents a snapshot consistent view.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned keys.</returns>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey);
 
@@ -350,10 +346,10 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentNullException"><paramref name="txn"/>, <paramref name="firstKey"/>, or <paramref name="lastKey"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="firstKey"/> is greater than <paramref name="lastKey"/>.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The Reliable Dictionary cannot serve reads at the moment.
-        /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One example for it being thrown in the <see cref="ReplicaRole.Primary"/> is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One example for it being thrown in the <see cref="ReplicaRole.ActiveSecondary"/> is that Reliable Collection's state is not yet consistent.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
+        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
+        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
@@ -362,10 +358,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
-        /// <remarks>
-        /// The enumerable returned from the <see cref="IReliableDictionary3{TKey,TValue}"/> is safe to use concurrently with reads and writes
-        /// to the dictionary. It represents a snapshot consistent view of the dictionary.
-        /// </remarks>
+        /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
+        /// It represents a snapshot consistent view.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned keys.</returns>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
