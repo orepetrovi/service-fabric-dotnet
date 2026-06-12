@@ -66,7 +66,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Asynchronously closes the state provider replica gracefully.
         /// </summary>
         /// <remarks>
-        /// This generally occurs when the replica's code is being upgrade, the replica is being moved
+        /// This generally occurs when the replica's code is being upgraded, the replica is being moved
         /// due to load balancing, or a transient fault is detected.
         /// </remarks>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
