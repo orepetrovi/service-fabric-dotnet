@@ -41,10 +41,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="enumerationMode">An ignored enumeration mode. Results are always returned in ordered mode.</param>
         /// <inheritdoc cref="CreateKeyEnumerableAsync(ITransaction)" path="/exception"/>
-        /// <remarks>
-        /// The enumerable returned from the <see cref="IReliableDictionary2{TKey,TValue}"/> is safe to use concurrently with reads and writes
-        /// to the dictionary. It represents a snapshot consistent view of the dictionary. Keys are always enumerated in ordered mode.
-        /// </remarks>
+        /// <inheritdoc cref="CreateKeyEnumerableAsync(ITransaction)" path="/remarks"/>
         Task<IAsyncEnumerable<TKey>> CreateKeyEnumerableAsync(ITransaction txn, EnumerationMode enumerationMode);
 
         /// <inheritdoc cref="CreateKeyEnumerableAsync(ITransaction)" path="/summary"/>
