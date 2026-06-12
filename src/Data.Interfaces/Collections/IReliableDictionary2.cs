@@ -58,7 +58,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Gets the number of key-value pairs contained in the <see cref="IReliableDictionary2{TKey,TValue}"/>.
+        /// Gets the number of key/value pairs contained in the <see cref="IReliableDictionary2{TKey,TValue}"/>.
         /// </summary>
         /// <exception cref="InvalidOperationException">A property access is invalid for the object's current state.</exception>
         /// <remarks>
