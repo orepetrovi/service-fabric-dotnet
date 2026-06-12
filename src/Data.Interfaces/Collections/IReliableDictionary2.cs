@@ -18,7 +18,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
         /// <summary>
-        /// Asynchronously creates an enumerable over the keys of the <see cref="IReliableDictionary2{TKey,TValue}"/>.
+        /// Asynchronously returns an enumerable over the keys of the <see cref="IReliableDictionary2{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
