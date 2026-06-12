@@ -241,7 +241,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <remarks>
         /// This is an atomic operation. The <see cref="IReliableState"/> will be successfully removed along with all state
-        /// or be left in-tact. If this method throws an exception, the transaction must be aborted.
+        /// or be left intact. If this method throws an exception, the transaction must be aborted.
         /// </remarks>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
@@ -282,7 +282,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <remarks>
         /// This is an atomic operation. The <see cref="IReliableState"/> will be successfully removed along with all state
-        /// or be left in-tact.
+        /// or be left intact.
         /// </remarks>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks.</param>
