@@ -320,7 +320,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="txn"/> or <paramref name="firstKey"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The Reliable Dictionary cannot serve reads at the moment.
         /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
@@ -347,7 +347,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
         /// <param name="lastKey">The key to stop enumerating at in ordered enumeration.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="txn"/>, <paramref name="firstKey"/>, or <paramref name="lastKey"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="firstKey"/> is greater than <paramref name="lastKey"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The Reliable Dictionary cannot serve reads at the moment.
         /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
@@ -397,7 +398,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="txn"/> or <paramref name="firstKey"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
@@ -423,7 +424,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
         /// <param name="lastKey">The key to stop enumerating at in ordered enumeration.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="txn"/>, <paramref name="firstKey"/>, or <paramref name="lastKey"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="firstKey"/> is greater than <paramref name="lastKey"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
@@ -474,7 +476,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key-value pairs to include in the enumeration based on the key.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="txn"/> or <paramref name="firstKey"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
@@ -501,7 +503,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="filter">The predicate that filters the versioned key-value pairs to include in the enumeration based on the key.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
         /// <param name="lastKey">The key to stop enumerating at in ordered enumeration.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="txn"/>, <paramref name="firstKey"/>, or <paramref name="lastKey"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="firstKey"/> is greater than <paramref name="lastKey"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
