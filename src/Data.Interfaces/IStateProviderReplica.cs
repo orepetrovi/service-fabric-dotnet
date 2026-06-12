@@ -90,6 +90,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/> overload.
         /// The Boolean returned by <paramref name="backupCallback"/> indicates whether the service successfully moved the backup folder to an external location.
         /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="backupCallback"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="backupCallback"/> returned <see langword="false"/>; the backup is marked unsuccessful.</exception>
         Task BackupAsync(Func<BackupInfo, CancellationToken, Task<bool>> backupCallback);
 
@@ -103,6 +104,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// The Boolean returned by <paramref name="backupCallback"/> indicates whether the service successfully moved the backup folder to an external location.
         /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="backupCallback"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="backupCallback"/> returned <see langword="false"/>; the backup is marked unsuccessful.</exception>
         Task BackupAsync(
             BackupOption option,
