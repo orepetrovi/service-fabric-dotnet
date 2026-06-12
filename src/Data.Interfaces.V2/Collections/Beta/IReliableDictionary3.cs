@@ -284,8 +284,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
         /// <returns>
-        /// Task that represents the asynchronous remove operation. The task result is a tuple indicating
-        /// whether the key was removed from the Reliable Dictionary and if so, the value.
+        /// <see langword="true"/> if the element with the matching sequence number was removed; otherwise, <see langword="false"/>.
         /// </returns>
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber);
 
@@ -310,8 +309,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
         /// <returns>
-        /// Task that represents the asynchronous remove operation. The task result is a tuple indicating
-        /// whether the key was removed from the Reliable Dictionary and if so, the value.
+        /// <see langword="true"/> if the element with the matching sequence number was removed; otherwise, <see langword="false"/>.
         /// </returns>
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
