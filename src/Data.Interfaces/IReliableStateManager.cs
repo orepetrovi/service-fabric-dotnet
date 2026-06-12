@@ -386,14 +386,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task<ConditionalValue<T>> TryGetAsync<T>(Uri name) where T : IReliableState;
 
-        /// <summary>
-        /// Asynchronously attempts to get an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with
-        /// the given name, and returns a value indicating whether it was found and containing the instance if it was.
-        /// </summary>
-        /// <typeparam name="T">
-        /// When specifying the type, you may ask for either a concrete type or an interface type. The retrieved object will
-        /// be cast to the given type.
-        /// </typeparam>
+        /// <inheritdoc cref="TryGetAsync{T}(Uri)" path="/summary"/>
+        /// <inheritdoc cref="TryGetAsync{T}(Uri)" path="/typeparam[@name='T']"/>
         /// <param name="name">
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
         /// across <see cref="IReliableState"/> types, including unrelated types.
