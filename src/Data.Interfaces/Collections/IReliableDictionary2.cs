@@ -30,7 +30,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
         /// <summary>
-        /// Creates an async enumerator over the <see cref="IReliableDictionary2{TKey,TValue}"/> to enumerate the keys.
+        /// Asynchronously creates an enumerable over the keys of the <see cref="IReliableDictionary2{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">Transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
@@ -55,7 +55,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<IAsyncEnumerable<TKey>> CreateKeyEnumerableAsync(ITransaction txn);
 
         /// <summary>
-        /// Creates an async enumerator over the <see cref="IReliableDictionary2{TKey,TValue}"/> to enumerate the keys.
+        /// Asynchronously creates an enumerable over the keys of the <see cref="IReliableDictionary2{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">Transaction to associate this operation with.</param>
         /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
@@ -81,7 +81,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<IAsyncEnumerable<TKey>> CreateKeyEnumerableAsync(ITransaction txn, EnumerationMode enumerationMode);
 
         /// <summary>
-        /// Creates an async enumerator over the <see cref="IReliableDictionary2{TKey,TValue}"/> to enumerate the keys.
+        /// Asynchronously creates an enumerable over the keys of the <see cref="IReliableDictionary2{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">Transaction to associate this operation with.</param>
         /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
