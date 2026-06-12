@@ -46,7 +46,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its sequence number.</returns>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
@@ -73,7 +73,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its sequence number.</returns>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
@@ -104,7 +104,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its sequence number.</returns>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
@@ -133,7 +133,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its value and sequence number.</returns>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
@@ -160,7 +160,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its value and sequence number.</returns>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
@@ -191,7 +191,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its value and sequence number.</returns>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
@@ -216,7 +216,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber);
 
@@ -240,7 +240,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
@@ -259,7 +259,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>
         /// <see langword="true"/> if the element with the matching sequence number was removed; otherwise, <see langword="false"/>.
         /// </returns>
@@ -284,7 +284,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <returns>
         /// <see langword="true"/> if the element with the matching sequence number was removed; otherwise, <see langword="false"/>.
         /// </returns>
@@ -307,7 +307,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>
         /// The enumerable returned from the <see cref="IReliableDictionary3{TKey,TValue}"/> is safe to use concurrently with reads and writes
         /// to the dictionary. It represents a snapshot consistent view of the dictionary.
@@ -333,7 +333,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>
         /// The enumerable returned from the <see cref="IReliableDictionary3{TKey,TValue}"/> is safe to use concurrently with reads and writes
         /// to the dictionary. It represents a snapshot consistent view of the dictionary.
@@ -360,7 +360,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>
         /// The enumerable returned from the <see cref="IReliableDictionary3{TKey,TValue}"/> is safe to use concurrently with reads and writes
         /// to the dictionary. It represents a snapshot consistent view of the dictionary.
@@ -385,7 +385,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
@@ -410,7 +410,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
@@ -436,7 +436,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
@@ -461,7 +461,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
@@ -487,7 +487,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
@@ -514,7 +514,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>The returned enumerator is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
