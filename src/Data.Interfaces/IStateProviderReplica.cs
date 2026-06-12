@@ -31,7 +31,7 @@ namespace Microsoft.ServiceFabric.Data
         Func<CancellationToken, Task<bool>> OnDataLossAsync { set; }
 
         /// <summary>
-        /// Initialize the state provider replica using the service initialization information.
+        /// Initializes the state provider replica using the service initialization information.
         /// </summary>
         /// <remarks>
         /// No complex processing should be done during Initialize. Expensive or long-running initialization should be done in OpenAsync.
@@ -40,7 +40,7 @@ namespace Microsoft.ServiceFabric.Data
         void Initialize(StatefulServiceInitializationParameters initializationParameters);
 
         /// <summary>
-        /// Open the state provider replica for use.
+        /// Asynchronously opens the state provider replica for use.
         /// </summary>
         /// <remarks>
         /// Extended state provider initialization tasks can be started at this time.
@@ -56,7 +56,7 @@ namespace Microsoft.ServiceFabric.Data
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Notify the state provider replica that its role is changing, for example to Primary or Secondary.
+        /// Asynchronously notifies the state provider replica that its role is changing, for example to Primary or Secondary.
         /// </summary>
         /// <param name="newRole">The new replica role, such as primary or secondary.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
@@ -64,7 +64,7 @@ namespace Microsoft.ServiceFabric.Data
         Task ChangeRoleAsync(ReplicaRole newRole, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Gracefully close the state provider replica.
+        /// Asynchronously closes the state provider replica gracefully.
         /// </summary>
         /// <remarks>
         /// This generally occurs when the replica's code is being upgrade, the replica is being moved
@@ -75,7 +75,7 @@ namespace Microsoft.ServiceFabric.Data
         Task CloseAsync(CancellationToken cancellationToken);
 
         /// <summary>
-        /// Forcefully abort the state provider replica.
+        /// Aborts the state provider replica forcefully.
         /// </summary>
         /// <remarks>
         /// This generally occurs when a permanent fault is detected on the node, or when
@@ -84,7 +84,7 @@ namespace Microsoft.ServiceFabric.Data
         void Abort();
 
         /// <summary>
-        /// Performs a full backup of all reliable state managed by this <see cref="IReliableStateManager"/>.
+        /// Asynchronously performs a full backup of all reliable state managed by this <see cref="IReliableStateManager"/>.
         /// </summary>
         /// <param name="backupCallback">Callback to be called when the backup folder has been created locally and is ready to be moved out of the node.</param>
         /// <returns>Task that represents the asynchronous backup operation.</returns>
@@ -98,7 +98,7 @@ namespace Microsoft.ServiceFabric.Data
         Task BackupAsync(Func<BackupInfo, CancellationToken, Task<bool>> backupCallback);
 
         /// <summary>
-        /// Performs a backup of all reliable state managed by this <see cref="IReliableStateManager"/>.
+        /// Asynchronously performs a backup of all reliable state managed by this <see cref="IReliableStateManager"/>.
         /// </summary>
         /// <param name="option">The type of backup to perform.</param>
         /// <param name="timeout">The timeout for this operation.</param>
@@ -117,7 +117,7 @@ namespace Microsoft.ServiceFabric.Data
             Func<BackupInfo, CancellationToken, Task<bool>> backupCallback);
 
         /// <summary>
-        /// Restore a backup taken by <see cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/> or 
+        /// Asynchronously restores a backup taken by <see cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/> or 
         /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>.
         /// </summary>
         /// <param name="backupFolderPath">
@@ -132,7 +132,7 @@ namespace Microsoft.ServiceFabric.Data
         Task RestoreAsync(string backupFolderPath);
 
         /// <summary>
-        /// Restore a backup taken by <see cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/> or 
+        /// Asynchronously restores a backup taken by <see cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/> or 
         /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>.
         /// </summary>
         /// <param name="restorePolicy">The restore policy.</param>
