@@ -13,16 +13,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <summary>
     /// Represents a reliable collection of key/value pairs that are persisted and replicated.
     /// </summary>
-    /// <remarks>
-    /// <para>Keys or values stored in this dictionary MUST NOT be mutated outside the context of an operation on the 
-    /// dictionary.  It is highly recommended to make both <typeparamref name="TKey"/> and <typeparamref name="TValue"/> 
-    /// immutable in order to avoid accidental data corruption.</para>
-    /// <para>
-    /// The transaction is the unit of concurrency. Users can have multiple transactions in-flight at any given point of time, but for a given transaction each API must be called one at a time.
-    /// When calling any asynchronous Reliable Collection method that takes an <see cref="ITransaction"/>, you must wait for completion of the returned Task before calling
-    /// another method using the same transaction.
-    /// </para>
-    /// </remarks>
+    /// <inheritdoc cref="IReliableDictionary{TKey,TValue}" path="/remarks"/>
     public interface IReliableDictionary2<TKey, TValue> : IReliableDictionary<TKey, TValue>
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
