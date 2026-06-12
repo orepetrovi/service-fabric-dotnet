@@ -281,7 +281,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/remarks"/>
-        /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn);
 
         /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/summary"/>
@@ -302,7 +301,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/remarks"/>
-        /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey);
 
         /// <summary>
@@ -328,7 +326,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned keys.</returns>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
@@ -348,7 +345,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn);
 
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
@@ -369,7 +365,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey);
 
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
@@ -392,7 +387,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
@@ -413,7 +407,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter);
 
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
@@ -435,7 +428,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter, TKey firstKey);
 
         /// <summary>
@@ -463,7 +455,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
-        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter, TKey firstKey, TKey lastKey);
     }
 }
