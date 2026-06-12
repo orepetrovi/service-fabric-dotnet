@@ -152,7 +152,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// A task that represents the asynchronous read operation. The task result is a tuple indicating
         /// whether the key was found in the Reliable Dictionary and if found, the value and sequence number.
         /// </returns>
-        /// <returns></returns>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
             TKey key);
