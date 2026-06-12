@@ -40,8 +40,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <para>
         /// When a reliable collection needs to serialize an object, it asks the state manager for a serializer for the given type.
         /// The state manager will first check if there is a custom serializer registered for the input type. If not, it will check if one of the built-in
-        /// serializers can serialize the type. The state manager has built-in serializers for the following types: guid, bool, byte, sbyte, char, decimal, double,
-        /// float, int, uint, long, ulong, short, ushort and string. If not, it will use <see cref="DataContractSerializer"/>.
+        /// serializers can serialize the type. The state manager has built-in serializers for the following types: <see cref="Guid"/>, <see langword="bool"/>, <see langword="byte"/>, <see langword="sbyte"/>, <see langword="char"/>, <see langword="decimal"/>,
+        /// <see langword="double"/>, <see langword="float"/>, <see langword="int"/>, <see langword="uint"/>, <see langword="long"/>, <see langword="ulong"/>, <see langword="short"/>, <see langword="ushort"/> and <see langword="string"/>. If not, it will use <see cref="DataContractSerializer"/>.
         /// </para>
         /// <para>
         /// Serializers must be infinitely forwards and backwards compatible. For the types that are using built-in serializers, Service Fabric ensures
