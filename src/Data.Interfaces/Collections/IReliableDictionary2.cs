@@ -42,7 +42,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>
         /// The enumerable returned from the reliable dictionary is safe to use concurrently with reads and writes
-        /// to the dictionary. It represents a snapshot consistent view of the dictionary.
+        /// to the dictionary. It represents a snapshot consistent view of the dictionary. Keys are always enumerated in ordered mode.
         /// </remarks>
         Task<IAsyncEnumerable<TKey>> CreateKeyEnumerableAsync(ITransaction txn);
 
