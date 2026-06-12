@@ -34,7 +34,8 @@ namespace Microsoft.ServiceFabric.Data
         /// Initializes the state provider replica using the service initialization information.
         /// </summary>
         /// <remarks>
-        /// No complex processing should be done during Initialize. Expensive or long-running initialization should be done in OpenAsync.
+        /// No complex processing should be done during <see cref="Initialize(StatefulServiceInitializationParameters)"/>. Expensive or
+        /// long-running initialization should be done in <see cref="OpenAsync(ReplicaOpenMode, IStatefulServicePartition, CancellationToken)"/>.
         /// </remarks>
         /// <param name="initializationParameters">Service initialization information such as service name, partition id, replica id, and code package information.</param>
         void Initialize(StatefulServiceInitializationParameters initializationParameters);
