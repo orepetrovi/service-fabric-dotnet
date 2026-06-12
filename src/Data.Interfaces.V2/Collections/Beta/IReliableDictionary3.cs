@@ -31,7 +31,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// (Beta) Asynchronously attempts to get the sequence number associated with the specified key from the Reliable Dictionary.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="key">The key of the element's sequence number to get.</param>
+        /// <param name="key">The key of the element whose sequence number is to be retrieved.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -56,7 +56,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// (Beta) Asynchronously attempts to get the sequence number associated with the specified key from the Reliable Dictionary.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="key">The key of the element's sequence number to get.</param>
+        /// <param name="key">The key of the element whose sequence number is to be retrieved.</param>
         /// <param name="lockMode">The type of locking to use for this read operation.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
@@ -84,7 +84,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// (Beta) Asynchronously attempts to get the sequence number associated with the specified key from the Reliable Dictionary.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="key">The key of the element's sequence number to get.</param>
+        /// <param name="key">The key of the element whose sequence number is to be retrieved.</param>
         /// <param name="lockMode">The type of locking to use for this read operation.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a TimeoutException. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
