@@ -91,10 +91,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// A full backup will be performed with no timeout. To specify a timeout, use the
         /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/> overload.
-        /// Boolean returned by the backupCallback indicate whether the service was able to successfully move the backup folder to an external location.
-        /// If false is returned, BackupAsync throws InvalidOperationException with the relevant message indicating backupCallback returned false.
-        /// Also, backup will be marked as unsuccessful.
+        /// The Boolean returned by <paramref name="backupCallback"/> indicates whether the service successfully moved the backup folder to an external location.
         /// </remarks>
+        /// <exception cref="InvalidOperationException"><paramref name="backupCallback"/> returned <see langword="false"/>; the backup is marked unsuccessful.</exception>
         Task BackupAsync(Func<BackupInfo, CancellationToken, Task<bool>> backupCallback);
 
         /// <summary>
@@ -106,10 +105,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="backupCallback">Callback to be called when the backup folder has been created locally and is ready to be moved out of the node.</param>
         /// <returns>Task that represents the asynchronous backup operation.</returns>
         /// <remarks>
-        /// Boolean returned by the backupCallback indicate whether the service was able to successfully move the backup folder to an external location.
-        /// If false is returned, BackupAsync throws InvalidOperationException with the relevant message indicating backupCallback returned false.
-        /// Also, backup will be marked as unsuccessful.
+        /// The Boolean returned by <paramref name="backupCallback"/> indicates whether the service successfully moved the backup folder to an external location.
         /// </remarks>
+        /// <exception cref="InvalidOperationException"><paramref name="backupCallback"/> returned <see langword="false"/>; the backup is marked unsuccessful.</exception>
         Task BackupAsync(
             BackupOption option,
             TimeSpan timeout,
