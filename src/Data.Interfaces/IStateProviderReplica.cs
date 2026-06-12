@@ -106,6 +106,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="backupCallback"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="backupCallback"/> returned <see langword="false"/>; the backup is marked unsuccessful.</exception>
+        /// <exception cref="TimeoutException">The backup did not complete within <paramref name="timeout"/>.</exception>
         Task BackupAsync(
             BackupOption option,
             TimeSpan timeout,
