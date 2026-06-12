@@ -51,10 +51,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>
-        /// A task that represents the asynchronous read operation. The task result is a tuple indicating
-        /// whether the key was found in the Reliable Dictionary and if found, the sequence number.
-        /// </returns>
+        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its sequence number.</returns>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
             TKey key);
@@ -81,10 +78,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>
-        /// A task that represents the asynchronous read operation. The task result is a tuple indicating
-        /// whether the key was found in the Reliable Dictionary and if found, the sequence number.
-        /// </returns>
+        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its sequence number.</returns>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
             TKey key,
@@ -115,10 +109,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>
-        /// A task that represents the asynchronous read operation. The task result is a tuple indicating
-        /// whether the key was found in the Reliable Dictionary and if found, the sequence number.
-        /// </returns>
+        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its sequence number.</returns>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
             TKey key,
@@ -148,10 +139,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>
-        /// A task that represents the asynchronous read operation. The task result is a tuple indicating
-        /// whether the key was found in the Reliable Dictionary and if found, the value and sequence number.
-        /// </returns>
+        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its value and sequence number.</returns>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
             TKey key);
@@ -178,10 +166,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>
-        /// A task that represents the asynchronous read operation. The task result is a tuple indicating
-        /// whether the key was found in the Reliable Dictionary and if found, the value and sequence number.
-        /// </returns>
+        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its value and sequence number.</returns>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
             TKey key,
@@ -212,10 +197,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>
-        /// A task that represents the asynchronous read operation. The task result is a tuple indicating
-        /// whether the key was found in the Reliable Dictionary and if found, the value and sequence number.
-        /// </returns>
+        /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, its value and sequence number.</returns>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
             TKey key,
@@ -240,7 +222,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>A task that represents the asynchronous update operation. The task result indicates whether the object was updated.</returns>
+        /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber);
 
         /// <summary>
@@ -264,7 +246,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="System.Fabric.FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>A task that represents the asynchronous update operation. The task result indicates whether the object was updated.</returns>
+        /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
@@ -418,9 +400,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// the returned IAsyncEnumerable in order to enumerate. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</para>
         /// </remarks>
-        /// <returns>
-        /// <para>A task that represents the asynchronous create enumerable operation. The task result is an enumerator for the Reliable Dictionary.</para>
-        /// </returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn);
 
         /// <summary>
@@ -450,9 +430,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// the returned IAsyncEnumerable in order to enumerate. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</para>
         /// </remarks>
-        /// <returns>
-        /// <para>A task that represents the asynchronous create enumerable operation. The task result is an enumerator for the Reliable Dictionary.</para>
-        /// </returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey);
 
         /// <summary>
@@ -483,9 +461,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// the returned IAsyncEnumerable in order to enumerate. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</para>
         /// </remarks>
-        /// <returns>
-        /// <para>A task that represents the asynchronous create enumerable operation. The task result is an enumerator for the Reliable Dictionary.</para>
-        /// </returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
         /// <summary>
@@ -515,9 +491,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// the returned IAsyncEnumerable in order to enumerate. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</para>
         /// </remarks>
-        /// <returns>
-        /// <para>A task that represents the asynchronous create enumerable operation. The task result is an enumerator for the Reliable Dictionary.</para>
-        /// </returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter);
 
         /// <summary>
@@ -548,9 +522,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// the returned IAsyncEnumerable in order to enumerate. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</para>
         /// </remarks>
-        /// <returns>
-        /// <para>A task that represents the asynchronous create enumerable operation. The task result is an enumerator for the Reliable Dictionary.</para>
-        /// </returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter, TKey firstKey);
 
         /// <summary>
@@ -582,9 +554,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// the returned IAsyncEnumerable in order to enumerate. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</para>
         /// </remarks>
-        /// <returns>
-        /// <para>A task that represents the asynchronous create enumerable operation. The task result is an enumerator for the Reliable Dictionary.</para>
-        /// </returns>
+        /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey,TValue}"/> versioned key/value pairs.</returns>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter, TKey firstKey, TKey lastKey);
     }
 }
