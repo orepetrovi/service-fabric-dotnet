@@ -35,7 +35,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
@@ -62,7 +62,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
@@ -93,7 +93,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
@@ -122,7 +122,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
@@ -149,7 +149,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
@@ -180,7 +180,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
@@ -209,7 +209,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="checkSequenceNumber">The expected sequence number of the element to be updated.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
@@ -233,7 +233,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
-        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
@@ -252,7 +252,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="checkSequenceNumber">The expected sequence number of the element to be removed.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null or cannot be serialized.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
@@ -277,7 +277,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
-        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
+        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
@@ -369,12 +369,12 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
@@ -393,13 +393,13 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
@@ -418,14 +418,14 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
         /// <param name="lastKey">The key to stop enumerating at in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
@@ -444,13 +444,13 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key-value pairs to include in the enumeration based on the key.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
@@ -469,14 +469,14 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key-value pairs to include in the enumeration based on the key.</param>
         /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
@@ -495,7 +495,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter, TKey firstKey);
 
         /// <summary>
-        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary{TKey,TValue}"/>.
+        /// (Beta) Asynchronously creates an asynchronous enumerator over the <see cref="IReliableDictionary3{TKey,TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key-value pairs to include in the enumeration based on the key.</param>
@@ -503,7 +503,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="lastKey">The key to stop enumerating at in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is null.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// The IReliableDictionary cannot serve reads at the moment.
+        /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that Reliable Collection's state is not yet consistent.
