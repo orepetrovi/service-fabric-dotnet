@@ -70,7 +70,7 @@ public abstract class FabricTransportMessageHandlerBrokerTest
                 .Setup(_ => _.RequestResponseAsync(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()))
                 .Callback<FabricTransportRequestContext, FabricTransportMessage>((c, m) => { actualContext = c; actualMessage = m; })
                 .Returns(new TaskCompletionSource<FabricTransportMessage>().Task);
-            var expectedCallbackClient = new FabricTransportCallbackClient(Mock.Of<NativeFabricTransport.IFabricTransportClientConnection>());
+            FabricTransportCallbackClient expectedCallbackClient = new(Mock.Of<NativeFabricTransport.IFabricTransportClientConnection>());
             _ = nativeConnectionHandler.Setup(_ => _.GetCallBack(clientId)).Returns(expectedCallbackClient);
 
             _ = sut.BeginProcessRequest(nativeClientId, message, timeoutMilliseconds, callback);
@@ -116,11 +116,11 @@ public abstract class FabricTransportMessageHandlerBrokerTest
         [Fact]
         public async Task InvokesCallbackWithReturnedContextWhenTaskCompletes()
         {
-            var tcs = new TaskCompletionSource<FabricTransportMessage>();
+            TaskCompletionSource<FabricTransportMessage> tcs = new();
             _ = service
                 .Setup(_ => _.RequestResponseAsync(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()))
                 .Returns(tcs.Task);
-            var callbackInvoked = new TaskCompletionSource<IFabricAsyncOperationContext>();
+            TaskCompletionSource<IFabricAsyncOperationContext> callbackInvoked = new();
             _ = Mock.Get(callback)
                 .Setup(_ => _.Invoke(It.IsAny<IFabricAsyncOperationContext>()))
                 .Callback<IFabricAsyncOperationContext>(c => callbackInvoked.TrySetResult(c));
@@ -147,6 +147,7 @@ public abstract class FabricTransportMessageHandlerBrokerTest
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class EndProcessRequest: FabricTransportMessageHandlerBrokerTest, IDisposable
     {
+        // BeginProcessRequest parameters
         readonly IntPtr nativeClientId;
         readonly NativeFabricTransport.IFabricTransportMessage message = Mock.Of<NativeFabricTransport.IFabricTransportMessage>();
         readonly uint timeoutMilliseconds = fuzzy.UInt32();
@@ -160,7 +161,7 @@ public abstract class FabricTransportMessageHandlerBrokerTest
         [Fact]
         public void ReturnsNativeMessageWrappingReplyWhenRequestResponseAsyncCompletes()
         {
-            var reply = new FabricTransportMessage(null, null);
+            FabricTransportMessage reply = new(null, null);
             _ = service
                 .Setup(_ => _.RequestResponseAsync(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()))
                 .Returns(Task.FromResult(reply));
@@ -178,10 +179,23 @@ public abstract class FabricTransportMessageHandlerBrokerTest
             }
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. EndProcessRequest does not validate context.
+        public void ThrowsArgumentNullExceptionWhenContextIsNull()
+        {
+            // EndProcessRequest passes context straight to AsyncTaskCallInAdapter.End, which validates its own
+            // parameter and throws ArgumentNullException with ParamName "adapter". The broker should validate its own
+            // context parameter first and throw ArgumentNullException with ParamName "context".
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.EndProcessRequest(null));
+            Assert.Equal(
+                sut.Method<Func<IFabricAsyncOperationContext, NativeFabricTransport.IFabricTransportMessage>>()
+                    .Parameter<IFabricAsyncOperationContext>().Name,
+                exception.ParamName);
+        }
+
         [Fact]
         public void ThrowsExceptionWhenRequestResponseAsyncFaults()
         {
-            var expected = new InvalidOperationException(fuzzy.String());
+            InvalidOperationException expected = new(fuzzy.String());
             _ = service
                 .Setup(_ => _.RequestResponseAsync(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()))
                 .Returns(Task.FromException<FabricTransportMessage>(expected));
@@ -213,7 +227,7 @@ public abstract class FabricTransportMessageHandlerBrokerTest
             _ = service
                 .Setup(_ => _.HandleOneWay(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()))
                 .Callback<FabricTransportRequestContext, FabricTransportMessage>((c, m) => { actualContext = c; actualMessage = m; });
-            var expectedCallbackClient = new FabricTransportCallbackClient(Mock.Of<NativeFabricTransport.IFabricTransportClientConnection>());
+            FabricTransportCallbackClient expectedCallbackClient = new(Mock.Of<NativeFabricTransport.IFabricTransportClientConnection>());
             _ = nativeConnectionHandler.Setup(_ => _.GetCallBack(clientId)).Returns(expectedCallbackClient);
 
             sut.HandleOneWay(nativeClientId, message);
