@@ -547,8 +547,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The <see cref="IReliableState"/> instance is not convertible to type <typeparamref name="T"/>.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Exception indicates that the State Manager cannot retrieve a reliable collection.
-        /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
+        /// The <see cref="IReliableStateManager"/> cannot retrieve the requested <see cref="IReliableState"/>.
+        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// For example, when a <see cref="ReplicaRole.Primary"/> or <see cref="ReplicaRole.ActiveSecondary"/> loses <see cref="IStatefulServicePartition.ReadStatus"/>.</exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
@@ -569,8 +569,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="ArgumentException">The <see cref="IReliableState"/> instance is not convertible to type <typeparamref name="T"/>.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
         /// <exception cref="FabricNotReadableException">
-        /// Exception indicates that the State Manager cannot retrieve a reliable collection.
-        /// <see cref="FabricNotReadableException"/> can be thrown in all <see cref="ReplicaRole"/>s.
+        /// The <see cref="IReliableStateManager"/> cannot retrieve the requested <see cref="IReliableState"/>.
+        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// For example, when a <see cref="ReplicaRole.Primary"/> or <see cref="ReplicaRole.ActiveSecondary"/> loses <see cref="IStatefulServicePartition.ReadStatus"/>.</exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation</exception>
