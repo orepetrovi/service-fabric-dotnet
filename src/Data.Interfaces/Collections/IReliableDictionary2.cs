@@ -45,7 +45,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>
-        /// The enumerarable returned from the reliable dictionary is safe to use concurrently with reads and writes
+        /// The enumerable returned from the reliable dictionary is safe to use concurrently with reads and writes
         /// to the dictionary. It represents a snapshot consistent view of the dictionary.
         /// </remarks>
         Task<IAsyncEnumerable<TKey>> CreateKeyEnumerableAsync(ITransaction txn);
@@ -55,7 +55,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
         /// <inheritdoc cref="CreateKeyEnumerableAsync(ITransaction)" path="/exception"/>
         /// <remarks>
-        /// The enumerarable returned from the <see cref="IReliableDictionary2{TKey,TValue}"/> is safe to use concurrently with reads and writes
+        /// The enumerable returned from the <see cref="IReliableDictionary2{TKey,TValue}"/> is safe to use concurrently with reads and writes
         /// to the dictionary. It represents a snapshot consistent view of the dictionary. Keys are always enumerated in ordered mode.
         /// </remarks>
         Task<IAsyncEnumerable<TKey>> CreateKeyEnumerableAsync(ITransaction txn, EnumerationMode enumerationMode);
