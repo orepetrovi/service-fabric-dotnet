@@ -19,9 +19,9 @@ namespace Microsoft.ServiceFabric.Data
         /// Sets the callback invoked during suspected data loss.
         /// </summary>
         /// <value>
-        /// A function that takes a <see cref="CancellationToken"/> and returns a <see cref="Task{TResult}"/> representing the
-        /// asynchronous processing of the event. Returning <see langword="true"/> indicates the replica's state has been
-        /// restored; <see langword="false"/> indicates it has not been changed.
+        /// The callback that represents the asynchronous processing of the data-loss event. Returning
+        /// <see langword="true"/> indicates the replica's state has been restored; <see langword="false"/> indicates it has
+        /// not been changed.
         /// </value>
         /// <remarks>
         /// This callback is where <see cref="RestoreAsync(string)"/> may be invoked. It runs while the replica does not have
