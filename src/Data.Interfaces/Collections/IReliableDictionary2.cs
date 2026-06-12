@@ -43,7 +43,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>
         /// The enumerarable returned from the reliable dictionary is safe to use concurrently with reads and writes
         /// to the dictionary. It represents a snapshot consistent view of the dictionary.
@@ -68,7 +68,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>
         /// The enumerarable returned from the <see cref="IReliableDictionary2{TKey,TValue}"/> is safe to use concurrently with reads and writes
         /// to the dictionary. It represents a snapshot consistent view of the dictionary. Keys are always enumerated in ordered mode.
@@ -95,7 +95,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="System.Fabric.FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
         /// <remarks>
         /// The enumerarable returned from the <see cref="IReliableDictionary2{TKey,TValue}"/> is safe to use concurrently with reads and writes
         /// to the dictionary. It represents a snapshot consistent view of the dictionary. Keys are always enumerated in ordered mode.
