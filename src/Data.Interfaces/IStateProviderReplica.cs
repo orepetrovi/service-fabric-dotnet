@@ -122,6 +122,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// A safe restore will be performed, meaning the restore will only be completed if the data to restore is ahead of state of the current replica.
         /// </remarks>
+        /// <exception cref="ArgumentException"><paramref name="backupFolderPath"/> is <see langword="null"/>, empty, whitespace, or is not a valid backup folder.</exception>
+        /// <exception cref="InvalidOperationException">The method is invoked outside of <see cref="OnDataLossAsync"/> processing.</exception>
         Task RestoreAsync(string backupFolderPath);
 
         /// <summary>
@@ -135,6 +137,8 @@ namespace Microsoft.ServiceFabric.Data
         /// </param>
         /// <param name="restorePolicy">One of the enumeration values that specifies the policy applied when restoring from backup.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <exception cref="ArgumentException"><paramref name="backupFolderPath"/> is <see langword="null"/>, empty, whitespace, or is not a valid backup folder.</exception>
+        /// <exception cref="InvalidOperationException">The method is invoked outside of <see cref="OnDataLossAsync"/> processing.</exception>
         Task RestoreAsync(
             string backupFolderPath,
             RestorePolicy restorePolicy,
