@@ -128,12 +128,12 @@ namespace Microsoft.ServiceFabric.Data
         /// Asynchronously restores a backup taken by <see cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/> or 
         /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>.
         /// </summary>
-        /// <param name="restorePolicy">One of the enumeration values that specifies the policy applied when restoring from backup.</param>
         /// <param name="backupFolderPath">
         /// The directory where the replica is to be restored from.
         /// This parameter cannot be null, empty or contain just whitespace. 
         /// UNC paths may also be provided.
         /// </param>
+        /// <param name="restorePolicy">One of the enumeration values that specifies the policy applied when restoring from backup.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         Task RestoreAsync(
             string backupFolderPath,
