@@ -44,7 +44,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
             TKey key);
@@ -68,7 +68,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
             TKey key,
@@ -98,7 +98,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         Task<ConditionalValue<long>> TryGetSequenceNumberAsync(
             ITransaction tx,
             TKey key,
@@ -124,7 +124,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
             TKey key);
@@ -148,7 +148,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
             TKey key,
@@ -178,7 +178,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         Task<ConditionalValue<VersionedKeyValuePair<TKey, TValue>>> TryGetVersionedKeyValuePairAsync(
             ITransaction tx,
             TKey key,
@@ -200,7 +200,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber);
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <inheritdoc cref="TryRemoveAsync(ITransaction, TKey, long, TimeSpan, CancellationToken)" path="/summary"/>
@@ -239,7 +239,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber);
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/summary"/>
@@ -279,7 +279,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/remarks"/>
         /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn);
@@ -300,7 +300,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/remarks"/>
         /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey);
@@ -325,7 +325,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view.</remarks>
         /// <returns>An enumerable for the <see cref="IReliableDictionary3{TKey, TValue}"/> versioned keys.</returns>
@@ -346,7 +346,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn);
@@ -367,7 +367,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey);
@@ -390,7 +390,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
@@ -411,7 +411,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter);
@@ -433,7 +433,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
         /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/returns"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter, TKey firstKey);
@@ -459,7 +459,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         /// <remarks>The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.</remarks>
