@@ -46,7 +46,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// Extended state provider initialization tasks can be started at this time.
         /// </remarks>
-        /// <param name="openMode">Indicates whether this is a new or existing replica.</param>
+        /// <param name="openMode">One of the enumeration values that specifies whether this is a new or existing replica.</param>
         /// <param name="partition">The partition this replica belongs to.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>
@@ -58,7 +58,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Asynchronously notifies the state provider replica that its role is changing, for example to Primary or Secondary.
         /// </summary>
-        /// <param name="newRole">The new replica role, such as primary or secondary.</param>
+        /// <param name="newRole">One of the enumeration values that specifies the new replica role, such as primary or secondary.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         Task ChangeRoleAsync(ReplicaRole newRole, CancellationToken cancellationToken);
 
@@ -96,7 +96,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Asynchronously performs a backup of all reliable state managed by this replica.
         /// </summary>
-        /// <param name="option">The type of backup to perform.</param>
+        /// <param name="option">One of the enumeration values that specifies the type of backup to perform.</param>
         /// <param name="timeout">The timeout for this operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <param name="backupCallback">Callback to be called when the backup folder has been created locally and is ready to be moved out of the node.</param>
@@ -128,7 +128,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Asynchronously restores a backup taken by <see cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/> or 
         /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>.
         /// </summary>
-        /// <param name="restorePolicy">The restore policy.</param>
+        /// <param name="restorePolicy">One of the enumeration values that specifies the policy applied when restoring from backup.</param>
         /// <param name="backupFolderPath">
         /// The directory where the replica is to be restored from.
         /// This parameter cannot be null, empty or contain just whitespace. 
