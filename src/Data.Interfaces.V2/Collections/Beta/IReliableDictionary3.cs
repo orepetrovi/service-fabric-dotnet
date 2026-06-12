@@ -317,7 +317,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned keys.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
-        /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
+        /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> or <paramref name="firstKey"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
@@ -341,8 +341,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned keys.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
-        /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
-        /// <param name="lastKey">The key to stop enumerating at in ordered enumeration.</param>
+        /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
+        /// <param name="lastKey">The inclusive key to stop enumerating at in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/>, <paramref name="firstKey"/>, or <paramref name="lastKey"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="firstKey"/> is greater than <paramref name="lastKey"/>.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -391,7 +391,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
-        /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
+        /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> or <paramref name="firstKey"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
@@ -416,8 +416,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// (Beta) Asynchronously creates an enumerable over the <see cref="IReliableDictionary3{TKey, TValue}"/> to enumerate the versioned key/value pairs.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
-        /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
-        /// <param name="lastKey">The key to stop enumerating at in ordered enumeration.</param>
+        /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
+        /// <param name="lastKey">The inclusive key to stop enumerating at in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/>, <paramref name="firstKey"/>, or <paramref name="lastKey"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="firstKey"/> is greater than <paramref name="lastKey"/>.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -469,7 +469,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
-        /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
+        /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> or <paramref name="firstKey"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary3{TKey, TValue}"/> cannot serve reads at the moment.
@@ -495,8 +495,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
-        /// <param name="firstKey">The key to start enumerating from in ordered enumeration.</param>
-        /// <param name="lastKey">The key to stop enumerating at in ordered enumeration.</param>
+        /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
+        /// <param name="lastKey">The inclusive key to stop enumerating at in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/>, <paramref name="firstKey"/>, or <paramref name="lastKey"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="firstKey"/> is greater than <paramref name="lastKey"/>.</exception>
         /// <exception cref="FabricNotReadableException">
