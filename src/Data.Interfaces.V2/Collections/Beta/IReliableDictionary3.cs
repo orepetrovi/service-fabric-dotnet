@@ -53,7 +53,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <inheritdoc cref="TryGetSequenceNumberAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element whose sequence number is to be retrieved.</param>
-        /// <param name="lockMode">The type of locking to use for this read operation.</param>
+        /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
@@ -81,7 +81,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element whose sequence number is to be retrieved.</param>
-        /// <param name="lockMode">The type of locking to use for this read operation.</param>
+        /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
@@ -136,7 +136,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <inheritdoc cref="TryGetVersionedKeyValuePairAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the versioned element to get.</param>
-        /// <param name="lockMode">The type of locking to use for this read operation.</param>
+        /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
         /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
@@ -164,7 +164,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the versioned element to get.</param>
-        /// <param name="lockMode">The type of locking to use for this read operation.</param>
+        /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
