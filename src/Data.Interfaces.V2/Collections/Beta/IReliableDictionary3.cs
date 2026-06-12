@@ -201,7 +201,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// (Beta) Asynchronously attempts to update the value for the specified key given the sequence number is matching.
+        /// (Beta) Asynchronously attempts to update the value for the specified key if its current sequence number matches <paramref name="checkSequenceNumber"/>.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to be updated.</param>
@@ -221,7 +221,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber);
 
         /// <summary>
-        /// (Beta) Asynchronously attempts to update the value for the specified key given the sequence number is matching.
+        /// (Beta) Asynchronously attempts to update the value for the specified key if its current sequence number matches <paramref name="checkSequenceNumber"/>.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to be updated.</param>
@@ -245,7 +245,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
-        /// (Beta) Asynchronously attempts to remove the value with the specified key given the sequence number is matching.
+        /// (Beta) Asynchronously attempts to remove the value with the specified key if its current sequence number matches <paramref name="checkSequenceNumber"/>.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
@@ -266,7 +266,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber);
 
         /// <summary>
-        /// (Beta) Asynchronously attempts to remove the value with the specified key given the sequence number is matching.
+        /// (Beta) Asynchronously attempts to remove the value with the specified key if its current sequence number matches <paramref name="checkSequenceNumber"/>.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
