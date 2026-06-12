@@ -39,7 +39,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
 
         /// <inheritdoc cref="CreateKeyEnumerableAsync(ITransaction)" path="/summary"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
-        /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
+        /// <param name="enumerationMode">An ignored enumeration mode. Results are always returned in ordered mode.</param>
         /// <inheritdoc cref="CreateKeyEnumerableAsync(ITransaction)" path="/exception"/>
         /// <remarks>
         /// The enumerable returned from the <see cref="IReliableDictionary2{TKey,TValue}"/> is safe to use concurrently with reads and writes
@@ -49,9 +49,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
 
         /// <inheritdoc cref="CreateKeyEnumerableAsync(ITransaction)" path="/summary"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
-        /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
-        /// <param name="timeout">This parameter is ignored.</param>
-        /// <param name="cancellationToken">This parameter is ignored.</param>
+        /// <param name="enumerationMode">An ignored enumeration mode. Results are always returned in ordered mode.</param>
+        /// <param name="timeout">An ignored timeout.</param>
+        /// <param name="cancellationToken">An ignored cancellation token.</param>
         /// <inheritdoc cref="CreateKeyEnumerableAsync(ITransaction)" path="/exception"/>
         /// <inheritdoc cref="CreateKeyEnumerableAsync(ITransaction, EnumerationMode)" path="/remarks"/>
         Task<IAsyncEnumerable<TKey>> CreateKeyEnumerableAsync(
