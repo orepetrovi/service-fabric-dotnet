@@ -14,9 +14,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
     /// (Beta) Not for production use - API is subject to change in the future.
     /// Represents a reliable collection of key/value pairs that are persisted and replicated.
     /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the reliable dictionary.</typeparam>
-    /// <typeparam name="TValue">
-    /// The type of the values in the reliable dictionary.</typeparam>
     /// <remarks>Keys or values stored in this dictionary MUST NOT be mutated outside the context of an operation on the
     /// dictionary.  It is highly recommended to make both <typeparamref name="TKey"/> and <typeparamref name="TValue"/>
     /// immutable in order to avoid accidental data corruption.
