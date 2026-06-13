@@ -33,13 +33,13 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the four-second timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary4{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
         /// Example, transaction used is already terminated: committed or aborted by the user.
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
-        /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary4{TKey, TValue}"/> is closed or deleted.</exception>
         public static Task<bool> RemoveAsync<TKey, TValue>(this IReliableDictionary4<TKey, TValue> reliableDictionary4Interface, ITransaction tx, TKey key)
             where TKey : IComparable<TKey>, IEquatable<TKey>
         {
