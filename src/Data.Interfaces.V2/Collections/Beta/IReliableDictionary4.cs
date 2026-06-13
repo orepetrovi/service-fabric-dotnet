@@ -30,7 +30,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
         /// <summary>
-        /// Attempts to remove the value with the specified key without reading data from the disk.
+        /// Asynchronously attempts to remove the value with the specified key without reading data from the disk.
         /// </summary>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
