@@ -74,6 +74,22 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
     public sealed class CreateNativeBodyBytesPtr : NativeFabricTransportMessageTest
     {
         [Fact]
+        public void ReturnsPointerToBufferPerBodyBufferContainingGivenBytes()
+        {
+            IntPtr bufferPtr = sut.CreateNativeBodyBytesPtr();
+
+            int size = Marshal.SizeOf<FABRIC_TRANSPORT_MESSAGE_BUFFER>();
+            for (int i = 0; i < bodyBytes.Count; i++)
+            {
+                var element = Marshal.PtrToStructure<FABRIC_TRANSPORT_MESSAGE_BUFFER>(bufferPtr + i * size);
+                Assert.Equal((uint)bodyBytes[i].Length, element.BufferSize);
+                var copy = new byte[element.BufferSize];
+                Marshal.Copy(element.Buffer, copy, 0, copy.Length);
+                Assert.Equal(bodyBytes[i], copy);
+            }
+        }
+
+        [Fact]
         public void ReturnsPointerToEmptyBufferWhenBodyIsNull()
         {
             var header = new FabricTransportRequestHeader(Slice(headerBytes), headerDispose);
@@ -115,6 +131,17 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
 
     public sealed class CreateNativeHeaderBytes : NativeFabricTransportMessageTest
     {
+        [Fact]
+        public void ReturnsBufferContainingHeaderBytesWhenHeaderIsNotNull()
+        {
+            FABRIC_TRANSPORT_MESSAGE_BUFFER actual = sut.CreateNativeHeaderBytes();
+
+            Assert.Equal((uint)headerBytes.Length, actual.BufferSize);
+            var copy = new byte[actual.BufferSize];
+            Marshal.Copy(actual.Buffer, copy, 0, copy.Length);
+            Assert.Equal(headerBytes, copy);
+        }
+
         [Fact]
         public void ReturnsEmptyBufferWhenHeaderIsNull()
         {
