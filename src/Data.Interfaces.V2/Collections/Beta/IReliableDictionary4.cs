@@ -19,7 +19,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
         /// <summary>
-        /// Asynchronously attempts to remove the value with the specified key without reading data from the disk.
+        /// Asynchronously attempts to remove the value with the specified key without reading data from the disk
+        /// and returns <see langword="true"/> if the key was removed from the Reliable Dictionary; otherwise, <see langword="false"/>.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
@@ -37,9 +38,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary4{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <returns>
-        /// <see langword="true"/> if the key was removed from the Reliable Dictionary; otherwise, <see langword="false"/>.
-        /// </returns>
         Task<bool> RemoveAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
     }
 }
