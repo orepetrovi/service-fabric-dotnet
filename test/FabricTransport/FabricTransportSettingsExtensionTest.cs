@@ -18,21 +18,19 @@ public abstract class FabricTransportSettingsExtensionTest
 
     public sealed class ToNativeV2: FabricTransportSettingsExtensionTest, IDisposable
     {
-        readonly FabricTransportSettings transportSettings;
-        readonly PinCollection pin = [];
+        readonly FabricTransportSettings transportSettings = new()
+        {
+            // Suppress credentials marshalling; tests that exercise it reassign explicitly.
+            SecurityCredentials = null,
+            OperationTimeout = fuzzy.TimeSpan().Seconds(),
+            KeepAliveTimeout = fuzzy.TimeSpan().Seconds(),
+            ConnectTimeout = fuzzy.TimeSpan().Milliseconds(),
+            MaxMessageSize = fuzzy.Int32().Minimum(0),
+            MaxConcurrentCalls = fuzzy.Int32().Minimum(0),
+            MaxQueueSize = fuzzy.Int32().Minimum(0),
+        };
 
-        public ToNativeV2() =>
-            transportSettings = new FabricTransportSettings
-            {
-                // Suppress credentials marshalling; tests that exercise it reassign explicitly.
-                SecurityCredentials = null,
-                OperationTimeout = fuzzy.TimeSpan().Seconds(),
-                KeepAliveTimeout = fuzzy.TimeSpan().Seconds(),
-                ConnectTimeout = fuzzy.TimeSpan().Milliseconds(),
-                MaxMessageSize = fuzzy.Int32().Minimum(0),
-                MaxConcurrentCalls = fuzzy.Int32().Minimum(0),
-                MaxQueueSize = fuzzy.Int32().Minimum(0),
-            };
+        readonly PinCollection pin = [];
 
         void IDisposable.Dispose() => pin.Dispose();
 
