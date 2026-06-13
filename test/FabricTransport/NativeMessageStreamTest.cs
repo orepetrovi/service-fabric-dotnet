@@ -127,6 +127,13 @@ public abstract class NativeMessageStreamTest: IDisposable
             sut.Position = expected;
             Assert.Equal(expected, sut.Position);
         }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Position setter updates the reported position without moving the read cursor.
+        public void MovesReadCursorToGivenValue()
+        {
+            sut.Position = 1;
+            Assert.Equal(expectedBytes[1], sut.ReadByte());
+        }
     }
 
     public sealed class Read: NativeMessageStreamTest
