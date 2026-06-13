@@ -179,7 +179,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     }
 
     /// <summary>
-    /// Provides data for the DictionaryChanged event caused by item addition.
+    /// Provides data for an <see cref="IReliableDictionary{TKey, TValue}.DictionaryChanged"/> notification caused by an add operation.
     /// </summary>
     /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
