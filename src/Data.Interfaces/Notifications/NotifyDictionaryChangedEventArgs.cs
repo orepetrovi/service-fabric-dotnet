@@ -169,9 +169,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Gets the commit sequence number for the operation that committed the clear.
         /// </summary>
-        /// <value>
-        /// Sequence number at which the Clear was committed.
-        /// </value>
         public long CommitSequenceNumber
         {
             get
