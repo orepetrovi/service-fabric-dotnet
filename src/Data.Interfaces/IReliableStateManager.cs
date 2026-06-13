@@ -169,7 +169,7 @@ namespace Microsoft.ServiceFabric.Data
         /// across <see cref="IReliableState"/> types, including unrelated types.
         /// </param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
@@ -192,7 +192,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
         /// across <see cref="IReliableState"/> types, including unrelated types.
         /// </param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
@@ -215,6 +215,7 @@ namespace Microsoft.ServiceFabric.Data
         /// across <see cref="IReliableState"/> types, including unrelated types.
         /// </param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
@@ -231,6 +232,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
         /// across <see cref="IReliableState"/> types, including unrelated types.
         /// </param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
@@ -315,7 +317,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
@@ -333,7 +335,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
@@ -351,6 +353,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/remarks"/>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
@@ -362,6 +365,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/remarks"/>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
@@ -398,6 +402,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
         /// across <see cref="IReliableState"/> types, including unrelated types.
         /// </param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The <see cref="IReliableState"/> instance is not convertible to type <typeparamref name="T"/>.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
         /// <exception cref="FabricNotReadableException">
