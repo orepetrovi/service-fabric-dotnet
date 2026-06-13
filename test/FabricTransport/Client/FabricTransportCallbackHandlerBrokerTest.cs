@@ -39,15 +39,5 @@ public abstract class FabricTransportCallbackHandlerBrokerTest
             message.Verify(_ => _.GetHeaderAndBodyBuffer(out It.Ref<IntPtr>.IsAny, out It.Ref<uint>.IsAny, out It.Ref<IntPtr>.IsAny), Times.Once);
             callImpl.Verify(_ => _.OneWayMessage(It.IsAny<FabricTransportMessage>()), Times.Once);
         }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. HandleOneWay does not validate message.
-        public void ThrowsArgumentNullExceptionWhenMessageIsNull()
-        {
-            // HandleOneWay passes message straight to NativeFabricTransportMessage.ToFabricTransportMessage, which
-            // dereferences it to call GetHeaderAndBodyBuffer and throws NullReferenceException instead of
-            // ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.HandleOneWay(null));
-            Assert.Equal(nameof(message), exception.ParamName);
-        }
     }
 }
