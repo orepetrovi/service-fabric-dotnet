@@ -136,20 +136,20 @@ public abstract class FabricTransportListenerSettingsTest
         public void ThrowsArgumentExceptionWhenSpecifiedConfigPackageCannotBeLoaded()
         {
             // LoadFrom throws ArgumentException reporting the missing config package, but constructs it
-            // without a ParamName, so ex.ParamName is null instead of "configPackageName".
-            var ex = Assert.Throws<ArgumentException>(() =>
+            // without a ParamName, so exception.ParamName is null instead of "configPackageName".
+            var exception = Assert.Throws<ArgumentException>(() =>
                 FabricTransportListenerSettings.LoadFrom(sectionName, configPackageName));
-            Assert.Equal(nameof(configPackageName), ex.ParamName);
+            Assert.Equal(nameof(configPackageName), exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportListenerSettings.LoadFrom throws ArgumentException without a paramName.
         public void ThrowsArgumentExceptionWhenDefaultConfigPackageCannotBeLoaded()
         {
             // LoadFrom throws ArgumentException reporting the missing config package, but constructs it
-            // without a ParamName, so ex.ParamName is null instead of "configPackageName".
-            var ex = Assert.Throws<ArgumentException>(() =>
+            // without a ParamName, so exception.ParamName is null instead of "configPackageName".
+            var exception = Assert.Throws<ArgumentException>(() =>
                 FabricTransportListenerSettings.LoadFrom(sectionName));
-            Assert.Equal(nameof(configPackageName), ex.ParamName);
+            Assert.Equal(nameof(configPackageName), exception.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Requires a Service Fabric host process.
