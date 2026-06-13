@@ -39,7 +39,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
 
         /// <summary>
         /// Specifies that the reliable dictionary was repopulated from copy, restore, or recovery; cast to <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/>.
-        /// Delivered through <see cref="Collections.IReliableDictionary{TKey, TValue}.RebuildNotificationAsyncCallback"/>, not the <see cref="Collections.IReliableDictionary{TKey, TValue}.DictionaryChanged"/> event.
         /// </summary>
         Rebuild = 4
     }
