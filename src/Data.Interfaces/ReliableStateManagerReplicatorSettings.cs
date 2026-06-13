@@ -365,6 +365,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <value>
         /// The default is 0.
         /// </value>
+        /// <remarks>
+        /// The value must not be negative.
+        /// </remarks>
         public int? LogTruncationIntervalSeconds { get; set; }
 
         /// <summary>
