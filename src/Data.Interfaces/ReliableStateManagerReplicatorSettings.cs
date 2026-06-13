@@ -16,7 +16,8 @@ namespace Microsoft.ServiceFabric.Data
     {
         /// <summary>
         /// Gets or sets how long the replicator waits after it transmits a message from the primary to the secondary for
-        /// the secondary to acknowledge that it has received the message.
+        /// the secondary to acknowledge that it has received the message and, if no acknowledgement is received,
+        /// retransmits the message.
         /// </summary>
         /// <value>
         /// The default is 5 seconds.
