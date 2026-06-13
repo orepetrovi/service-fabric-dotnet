@@ -124,7 +124,7 @@ public abstract class FabricTransportClientTest
     public sealed class CloseAsync: FabricTransportClientTest
     {
         // Method parameters
-        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         readonly Mock<IFabricTransportClient2> nativeClient = new();
         readonly uint connectTimeoutMs = fuzzy.UInt32();
@@ -145,7 +145,7 @@ public abstract class FabricTransportClientTest
                 .Callback<uint, IFabricAsyncOperationCallback>((_, cb) => capturedCallback = cb)
                 .Returns(context);
 
-            Task task = sut.CloseAsync(cancellation);
+            Task task = sut.CloseAsync(cancellationToken);
             capturedCallback.Invoke(context);
             await task;
 
@@ -190,7 +190,7 @@ public abstract class FabricTransportClientTest
                 .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
-            _ = await Assert.ThrowsAsync<FabricConnectionDeniedException>(() => sut.CloseAsync(cancellation));
+            _ = await Assert.ThrowsAsync<FabricConnectionDeniedException>(() => sut.CloseAsync(cancellationToken));
         }
 
         [Fact]
@@ -201,7 +201,7 @@ public abstract class FabricTransportClientTest
                 .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
-            _ = await Assert.ThrowsAsync<FabricCannotConnectException>(() => sut.CloseAsync(cancellation));
+            _ = await Assert.ThrowsAsync<FabricCannotConnectException>(() => sut.CloseAsync(cancellationToken));
         }
 
         [Fact]
@@ -212,7 +212,7 @@ public abstract class FabricTransportClientTest
                 .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(expected);
 
-            var actual = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CloseAsync(cancellation));
+            var actual = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CloseAsync(cancellationToken));
             Assert.Same(expected, actual);
         }
 
@@ -261,7 +261,7 @@ public abstract class FabricTransportClientTest
     public sealed class OpenAsync: FabricTransportClientTest
     {
         // Method parameters
-        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         readonly Mock<IFabricTransportClient2> nativeClient = new();
         readonly uint connectTimeoutMs = fuzzy.UInt32();
@@ -282,7 +282,7 @@ public abstract class FabricTransportClientTest
                 .Callback<uint, IFabricAsyncOperationCallback>((_, cb) => capturedCallback = cb)
                 .Returns(context);
 
-            Task task = sut.OpenAsync(cancellation);
+            Task task = sut.OpenAsync(cancellationToken);
             capturedCallback.Invoke(context);
             await task;
 
@@ -316,7 +316,7 @@ public abstract class FabricTransportClientTest
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
-            _ = await Assert.ThrowsAsync<FabricConnectionDeniedException>(() => sut.OpenAsync(cancellation));
+            _ = await Assert.ThrowsAsync<FabricConnectionDeniedException>(() => sut.OpenAsync(cancellationToken));
         }
 
         [Fact]
@@ -327,7 +327,7 @@ public abstract class FabricTransportClientTest
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
-            _ = await Assert.ThrowsAsync<FabricCannotConnectException>(() => sut.OpenAsync(cancellation));
+            _ = await Assert.ThrowsAsync<FabricCannotConnectException>(() => sut.OpenAsync(cancellationToken));
         }
 
         [Fact]
@@ -339,7 +339,7 @@ public abstract class FabricTransportClientTest
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
-            _ = await Assert.ThrowsAsync<FabricCannotConnectException>(() => sut.OpenAsync(cancellation));
+            _ = await Assert.ThrowsAsync<FabricCannotConnectException>(() => sut.OpenAsync(cancellationToken));
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. IsSecurityMismatch dereferences SecurityCredentials without a null check.
@@ -358,7 +358,7 @@ public abstract class FabricTransportClientTest
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(new FabricCannotConnectException(fuzzy.String()));
 
-            _ = await Assert.ThrowsAsync<FabricConnectionDeniedException>(() => sut.OpenAsync(cancellation));
+            _ = await Assert.ThrowsAsync<FabricConnectionDeniedException>(() => sut.OpenAsync(cancellationToken));
         }
 
         [Fact]
@@ -369,7 +369,7 @@ public abstract class FabricTransportClientTest
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(expected);
 
-            var actual = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellation));
+            var actual = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellationToken));
             Assert.Same(expected, actual);
         }
 
