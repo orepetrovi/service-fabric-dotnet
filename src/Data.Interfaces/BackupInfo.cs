@@ -39,7 +39,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="version">The latest epoch and LSN included in the backup.</param>
         /// <param name="startBackupVersion">The epoch and LSN of the first logical log record in the backup.</param>
         /// <param name="backupId">The identifier of this backup.</param>
-        /// <param name="parentBackupId">The identifier of the corresponding full backup when <paramref name="option"/> is <see cref="BackupOption.Incremental"/>; otherwise, <see cref="Guid.Empty"/>.</param>
+        /// <param name="parentBackupId">The identifier of the backup used as the parent of this backup.</param>
         public BackupInfo(string directory, BackupOption option, BackupVersion version, BackupVersion startBackupVersion, Guid backupId, Guid parentBackupId)
         {
             this.Directory = directory;
@@ -80,7 +80,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Gets the identifier of the parent backup.
         /// </summary>
-        /// <value>The identifier of the corresponding full backup, or <see cref="Guid.Empty"/> when the instance was constructed without one.</value>
+        /// <value>The parent backup identifier, or <see cref="Guid.Empty"/> when the instance was constructed without one.</value>
         public Guid ParentBackupId { get; private set; }
 
         /// <summary>
