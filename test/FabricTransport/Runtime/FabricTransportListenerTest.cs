@@ -149,7 +149,7 @@ public abstract class FabricTransportListenerTest
     public sealed class CloseAsync: FabricTransportListenerTest
     {
         // Method parameters
-        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         readonly Mock<NativeFabricTransport.IFabricTransportListener> nativeListener = new();
 
@@ -165,7 +165,7 @@ public abstract class FabricTransportListenerTest
                 .Callback<IFabricAsyncOperationCallback>(cb => capturedCallback = cb)
                 .Returns(context);
 
-            Task task = sut.CloseAsync(cancellation);
+            Task task = sut.CloseAsync(cancellationToken);
             capturedCallback.Invoke(context);
             await task;
 
@@ -210,7 +210,7 @@ public abstract class FabricTransportListenerTest
     public sealed class OpenAsync: FabricTransportListenerTest
     {
         // Method parameters
-        readonly CancellationToken cancellation = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         readonly Mock<NativeFabricTransport.IFabricTransportListener> nativeListener = new();
 
@@ -227,7 +227,7 @@ public abstract class FabricTransportListenerTest
                 .Returns(context);
             _ = nativeListener.Setup(_ => _.EndOpen(context)).Returns(Mock.Of<IFabricStringResult>());
 
-            Task<string> task = sut.OpenAsync(cancellation);
+            Task<string> task = sut.OpenAsync(cancellationToken);
             capturedCallback.Invoke(context);
             _ = await task;
 
@@ -253,7 +253,7 @@ public abstract class FabricTransportListenerTest
                     .Returns(context);
                 _ = nativeListener.Setup(_ => _.EndOpen(context)).Returns(address);
 
-                Task<string> task = sut.OpenAsync(cancellation);
+                Task<string> task = sut.OpenAsync(cancellationToken);
                 capturedCallback.Invoke(context);
                 string actual = await task;
 
