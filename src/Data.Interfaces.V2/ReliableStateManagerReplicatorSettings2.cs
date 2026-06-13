@@ -14,32 +14,32 @@ namespace Microsoft.ServiceFabric.Data
     public class ReliableStateManagerReplicatorSettings2 : ReliableStateManagerReplicatorSettings
     {
         /// <summary>
-        /// Controls the size of copy log message that is used in building a replica. Higher value will copy more log records in each message.
-        /// Default value is 0 which means copy one log record at a time.
+        /// Gets or sets the size, in kilobytes, of the copy log message used to build a replica. A higher value copies more log records in each message.
+        /// The default is 0, which copies one log record at a time.
         /// </summary>
         public long? CopyBatchSizeInKB { get; set; }
 
         /// <summary>
-        /// Flag controls Stable reads feature. Stable reads allows every replica to only return values on read which are quorum acked.
-        /// Default is false
+        /// Gets or sets a value that indicates whether stable reads are enabled. Stable reads allow every replica to return only values that are quorum acknowledged on a read.
+        /// The default is <see langword="false" />.
         /// </summary>
         public bool? EnableStableReads { get; set; }
 
         /// <summary>
-        /// Determines whether build can be canceled if the log is full.
+        /// Gets or sets a value that indicates whether a build can be canceled when the log is full.
         /// The default is <see langword="false" />.
         /// </summary>
         public bool? ShouldAbortCopyForTruncation { get; set; }
         
         /// <summary>
-        /// Size of a ReplicationBatch.
-        /// Default is 1
+        /// Gets or sets the number of operations in a replication batch.
+        /// The default is 1.
         /// </summary>
         public long? ReplicationBatchSize { get; set; }
 
         /// <summary>
-        /// Interval at which we force send Replication Batch even if it hasn't reach ReplicationBatchSize.
-        /// Default value is 0.015 Seconds (15 milliseconds)
+        /// Gets or sets the interval at which a replication batch is force sent even if it hasn't reached <see cref="ReplicationBatchSize" />.
+        /// The default is 0.015 seconds (15 milliseconds).
         /// </summary>
         public TimeSpan? ReplicationBatchSendInterval { get; set; }
 
