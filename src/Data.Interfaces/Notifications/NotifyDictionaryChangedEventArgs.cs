@@ -67,7 +67,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the action that caused the event.
+        /// Gets the <see cref="NotifyDictionaryChangedAction"/> that produced the notification.
         /// </summary>
         public NotifyDictionaryChangedAction Action
         {
