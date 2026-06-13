@@ -22,13 +22,13 @@ namespace Microsoft.ServiceFabric.Data.Beta
     {
         /// <summary>
         /// Returns a new, started <see cref="ITransaction"/> that can be used to group operations to be performed atomically,
-        /// using the specified single-entity read isolation level for reads on the primary.
+        /// using the specified isolation level for single-entity primary reads.
         /// </summary>
         /// <remarks>
         /// Operations are added to the transaction by passing the <see cref="ITransaction"/> object in to reliable state methods.
         /// This does not apply to reads on secondaries
         /// </remarks>
-        /// <param name="singleEntityIsolationLevelForPrimaryReads"> The transaction-wide single item read isolation level </param>
+        /// <param name="singleEntityIsolationLevelForPrimaryReads">The transaction-wide isolation level for single-entity primary reads.</param>
         /// <returns>A new transaction.</returns>
         ITransaction CreateTransaction(IsolationLevel singleEntityIsolationLevelForPrimaryReads);
     }
