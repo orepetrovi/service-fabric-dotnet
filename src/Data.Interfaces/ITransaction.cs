@@ -107,7 +107,7 @@ namespace Microsoft.ServiceFabric.Data
     /// <![CDATA[
     /// using (var tx = this.StateManager.CreateTransaction())
     /// {
-    ///     List<Task<ConditionalValue<T>>> taskList = new List<Task<ConditionalValue<T>>>();
+    ///     List<Task<ConditionalValue<T>>> taskList = new();
     ///     taskList.Add(concurrentQueue.TryDequeueAsync(tx, cancellationToken));
     ///     taskList.Add(concurrentQueue.TryDequeueAsync(tx, cancellationToken));
     ///
