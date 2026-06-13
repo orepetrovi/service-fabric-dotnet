@@ -21,7 +21,8 @@ namespace Microsoft.ServiceFabric.Data.Beta
     public interface IReliableStateManager2 : IReliableStateManagerReplica2
     {
         /// <summary>
-        /// Create and start a new transaction that can be used to group operations to be performed atomically with specified single read isolation level.
+        /// Returns a new, started <see cref="ITransaction"/> that can be used to group operations to be performed atomically,
+        /// using the specified single-entity read isolation level for reads on the primary.
         /// </summary>
         /// <remarks>
         /// Operations are added to the transaction by passing the <see cref="ITransaction"/> object in to reliable state methods.
