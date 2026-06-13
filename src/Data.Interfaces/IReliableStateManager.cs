@@ -387,7 +387,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableStateManager"/> cannot retrieve the requested <see cref="IReliableState"/>.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
-        /// For example, when a <see cref="ReplicaRole.Primary"/> or <see cref="ReplicaRole.ActiveSecondary"/> loses <see cref="IStatefulServicePartition.ReadStatus"/>.</exception>
+        /// For example, a <see cref="ReplicaRole.Primary"/> loses <see cref="IStatefulServicePartition.ReadStatus"/>,
+        /// or an <see cref="ReplicaRole.ActiveSecondary"/>'s local state is not yet readable.</exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task<ConditionalValue<T>> TryGetAsync<T>(Uri name) where T : IReliableState;
 
@@ -402,7 +403,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableStateManager"/> cannot retrieve the requested <see cref="IReliableState"/>.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
-        /// For example, when a <see cref="ReplicaRole.Primary"/> or <see cref="ReplicaRole.ActiveSecondary"/> loses <see cref="IStatefulServicePartition.ReadStatus"/>.</exception>
+        /// For example, a <see cref="ReplicaRole.Primary"/> loses <see cref="IStatefulServicePartition.ReadStatus"/>,
+        /// or an <see cref="ReplicaRole.ActiveSecondary"/>'s local state is not yet readable.</exception>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task<ConditionalValue<T>> TryGetAsync<T>(string name) where T : IReliableState;
     }
