@@ -18,6 +18,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Asynchronously returns the number of elements in the <see cref="IReliableCollection{T}"/>.
         /// </summary>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableCollection{T}"/> cannot serve reads.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
