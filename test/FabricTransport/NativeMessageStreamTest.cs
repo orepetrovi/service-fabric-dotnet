@@ -21,7 +21,7 @@ public abstract class NativeMessageStreamTest: IDisposable
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
     readonly PinCollection pins = [];
     readonly List<byte[]> managedBuffers = fuzzy.List(
-        () => fuzzy.Array(fuzzy.Byte, Fuzzy.Length.Min(1)),
+        static () => fuzzy.Array(fuzzy.Byte, Fuzzy.Length.Min(1)),
         Fuzzy.Count.Min(2));
     readonly byte[] expectedBytes;
 
@@ -44,7 +44,7 @@ public abstract class NativeMessageStreamTest: IDisposable
         [Fact]
         public void InitializesLengthToZeroWhenMessageIsEmpty()
         {
-            using var emptySut = new NativeMessageStream([]);
+            using NativeMessageStream emptySut = new([]);
             Assert.Equal(0, emptySut.Length);
         }
 
@@ -55,7 +55,7 @@ public abstract class NativeMessageStreamTest: IDisposable
         [Fact(Explicit = true)] // TODO: SUT bug. Initialize does not validate bufferList; null surfaces as NullReferenceException from SetLength.
         public void ThrowsArgumentNullExceptionWhenBufferListIsNull()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => new NativeMessageStream(null));
+            var exception = Assert.Throws<ArgumentNullException>(static () => new NativeMessageStream(null));
             Assert.Equal(nameof(bufferList), exception.ParamName);
         }
     }
@@ -225,7 +225,7 @@ public abstract class NativeMessageStreamTest: IDisposable
         [Fact]
         public void ReturnsZeroWhenMessageIsEmpty()
         {
-            using var emptySut = new NativeMessageStream([]);
+            using NativeMessageStream emptySut = new([]);
             Assert.Equal(0, emptySut.Read(buffer, offset, count));
         }
 
