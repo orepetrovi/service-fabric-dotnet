@@ -156,7 +156,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         private readonly long commitSequenceNumber;
 
         /// <summary>
-        /// Initializes a new instance of the <cref name="NotifyDictionaryClearEventArgs"/>
+        /// Initializes a new instance of the <see cref="NotifyDictionaryClearEventArgs{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="commitSequenceNumber">
         /// The commit sequence number of the transaction cleared the <see cref="IReliableDictionary{TKey, TValue}"/>
