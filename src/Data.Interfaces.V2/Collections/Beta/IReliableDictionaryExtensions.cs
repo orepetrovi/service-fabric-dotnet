@@ -16,7 +16,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
     public static class IReliableDictionaryExtensions
     {
         /// <summary>
-        /// Attempts to remove the value with the specified key without reading data from the disk.
+        /// Asynchronously attempts to remove the value with the specified key without reading data from the disk
+        /// and returns <see langword="true"/> if the key was removed from the Reliable Dictionary; otherwise, <see langword="false"/>.
         /// </summary>
         /// <remarks>
         /// This overload removes the key with a fixed four-second timeout and cannot be canceled. Call the
@@ -39,10 +40,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// If this exception is thrown, it is highly likely that there is a bug in the service code of the use of transactions.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
-        /// <returns>
-        /// Task that represents the asynchronous remove operation. The task result is a bool indicating
-        /// whether the key was removed from the Reliable Dictionary.
-        /// </returns>
         public static Task<bool> RemoveAsync<TKey, TValue>(this IReliableDictionary4<TKey, TValue> reliableDictionary4Interface, ITransaction tx, TKey key)
             where TKey : IComparable<TKey>, IEquatable<TKey>
         {
