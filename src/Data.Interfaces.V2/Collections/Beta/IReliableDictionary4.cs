@@ -49,8 +49,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </exception>
         /// <exception cref="FabricObjectClosedException">Indicates that the Reliable Dictionary is closed or deleted.</exception>
         /// <returns>
-        /// Task that represents the asynchronous remove operation. The task result is a bool indicating
-        /// whether the key was removed from the Reliable Dictionary.
+        /// <see langword="true"/> if the key was removed from the Reliable Dictionary; otherwise, <see langword="false"/>.
         /// </returns>
         Task<bool> RemoveAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
     }
