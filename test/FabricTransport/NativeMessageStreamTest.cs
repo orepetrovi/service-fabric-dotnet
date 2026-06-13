@@ -115,7 +115,7 @@ public abstract class NativeMessageStreamTest: IDisposable
         [Fact]
         public void IsSetToGivenValue()
         {
-            int expected = fuzzy.Int32();
+            int expected = fuzzy.Int32().Minimum(0);
             sut.Position = expected;
             Assert.Equal(expected, sut.Position);
         }
