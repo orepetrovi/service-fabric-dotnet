@@ -47,10 +47,11 @@ public abstract class HelperTest
         [Fact]
         public void IgnoresCaseOfEndpointName()
         {
+            string name = endpointResourceName + fuzzy.Char().Between('a', 'z');
             int expected = fuzzy.Int32().Minimum(1);
-            endpoints.Add(CreateEndpoint(endpointResourceName.ToUpperInvariant(), expected));
+            endpoints.Add(CreateEndpoint(name.ToUpperInvariant(), expected));
 
-            int actual = Helper.GetEndpointPort(codePackageActivationContext, endpointResourceName.ToLowerInvariant());
+            int actual = Helper.GetEndpointPort(codePackageActivationContext, name.ToLowerInvariant());
 
             Assert.Equal(expected, actual);
         }
