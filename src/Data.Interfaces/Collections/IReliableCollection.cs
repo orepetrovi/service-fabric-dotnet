@@ -27,11 +27,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
-        /// <exception cref="FabricNotPrimaryException">
-        /// The <see cref="IReliableCollection{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.
-        /// In some instances, read operations, such as this one, can be performed from secondary replicas
-        /// depending on the implementation of the <see cref="IReliableCollection{T}"/> used.
-        /// </exception>
         Task<long> GetCountAsync(ITransaction tx);
 
         /// <summary>
