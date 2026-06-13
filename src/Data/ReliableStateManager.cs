@@ -18,7 +18,7 @@ namespace Microsoft.ServiceFabric.Data
     using Microsoft.ServiceFabric.Data.Notifications;
 
     /// <summary>
-    /// Manages <see cref="IReliableState"/> for a service replica.
+    /// Manages all <see cref="IReliableState"/> for a service replica.
     /// </summary>
     /// <remarks>
     /// Each replica in a service has its own <see cref="ReliableStateManager"/> and thus its own set of <see cref="IReliableState"/>.
