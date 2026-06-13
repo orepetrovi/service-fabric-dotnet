@@ -167,7 +167,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the commit sequence number for the operation that committed the clear.
+        /// Gets the commit sequence number of the transaction that cleared the <see cref="IReliableDictionary{TKey, TValue}"/>.
         /// </summary>
         public long CommitSequenceNumber
         {
