@@ -203,9 +203,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Gets the key.
         /// </summary>
-        /// <value>
-        /// The key.
-        /// </value>
         public TKey Key
         {
             get
@@ -217,9 +214,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Gets the value.
         /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
         public TValue Value
         {
             get
