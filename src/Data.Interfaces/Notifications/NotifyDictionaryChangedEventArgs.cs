@@ -108,7 +108,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     }
 
     /// <summary>
-    /// Provides data for the RebuildNotificationAsyncCallback event caused by a rebuild operation.
+    /// Provides data for a rebuild notification delivered through <see cref="IReliableDictionary{TKey, TValue}.RebuildNotificationAsyncCallback"/>.
     /// Rebuild notification is fired at the end of recovery, copy or restore of reliable state.
     /// </summary>
     /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
