@@ -81,14 +81,14 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// <summary>
     /// Provides data for the DictionaryChanged event caused by a transactional operation.
     /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the <cref name="IReliableDictionary"/>.</typeparam>
-    /// <typeparam name="TValue">The type of the values in the <cref name="IReliableDictionary"/>.</typeparam>
+    /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
+    /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     public abstract class NotifyDictionaryTransactionalEventArgs<TKey, TValue> : NotifyDictionaryChangedEventArgs<TKey, TValue>
     {
         private readonly ITransaction transaction;
 
         /// <summary>
-        /// Initializes a new instance of the <cref name="NotifyDictionaryTransactionalEventArgs"/>
+        /// Initializes a new instance of the <see cref="NotifyDictionaryTransactionalEventArgs{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="transaction">Transaction that the operation is related to.</param>
         /// <param name="action">Type of the change.</param>
@@ -114,8 +114,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// Provides data for the RebuildNotificationAsyncCallback event caused by a rebuild operation.
     /// Rebuild notification is fired at the end of recovery, copy or restore of reliable state.
     /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the <cref name="IReliableDictionary"/>.</typeparam>
-    /// <typeparam name="TValue">The type of the values in the <cref name="IReliableDictionary"/>.</typeparam>
+    /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
+    /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     /// <remarks>
     /// Note that until this operation completes, rebuild of the <cref name="IReliableDictionary"/> will not complete.
     /// This can cause the replica to be blocked waiting for the callback to complete before proceeding. 
@@ -150,8 +150,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// <summary>
     /// Provides data for the DictionaryChanged event caused by a clear operation.
     /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the <cref name="IReliableDictionary"/>.</typeparam>
-    /// <typeparam name="TValue">The type of the values in the <cref name="IReliableDictionary"/>.</typeparam>
+    /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
+    /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     public class NotifyDictionaryClearEventArgs<TKey, TValue> : NotifyDictionaryChangedEventArgs<TKey, TValue>
     {
         private readonly long commitSequenceNumber;
@@ -185,8 +185,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// <summary>
     /// Provides data for the DictionaryChanged event caused by item addition.
     /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the <cref name="IReliableDictionary"/>.</typeparam>
-    /// <typeparam name="TValue">The type of the values in the <cref name="IReliableDictionary"/>.</typeparam>
+    /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
+    /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     public class NotifyDictionaryItemAddedEventArgs<TKey, TValue> : NotifyDictionaryTransactionalEventArgs<TKey, TValue>
     {
         private readonly TKey key;
@@ -236,8 +236,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// <summary>
     /// Provides data for the DictionaryChanged event caused by item update.
     /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the <cref name="IReliableDictionary"/>.</typeparam>
-    /// <typeparam name="TValue">The type of the values in the <cref name="IReliableDictionary"/>.</typeparam>
+    /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
+    /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     public class NotifyDictionaryItemUpdatedEventArgs<TKey, TValue> : NotifyDictionaryTransactionalEventArgs<TKey, TValue>
     {
         private readonly TKey key;
@@ -287,8 +287,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// <summary>
     /// Provides data for the DictionaryChanged event caused by item removal.
     /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the <cref name="IReliableDictionary"/>.</typeparam>
-    /// <typeparam name="TValue">The type of the values in the <cref name="IReliableDictionary"/>.</typeparam>
+    /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
+    /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     public class NotifyDictionaryItemRemovedEventArgs<TKey, TValue> : NotifyDictionaryTransactionalEventArgs<TKey, TValue>
     {
         private readonly TKey key;
