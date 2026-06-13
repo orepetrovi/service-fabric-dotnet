@@ -146,7 +146,6 @@ public abstract class NativeMessageStreamTest: IDisposable
 
     public sealed class Read: NativeMessageStreamTest
     {
-        // Method parameters
         readonly byte[] buffer;
         readonly int offset = 0;
         readonly int count;
@@ -284,7 +283,6 @@ public abstract class NativeMessageStreamTest: IDisposable
 
     public sealed class Seek: NativeMessageStreamTest
     {
-        // Method parameters
         readonly long offset;
         readonly SeekOrigin origin = SeekOrigin.Begin;
 
@@ -348,7 +346,6 @@ public abstract class NativeMessageStreamTest: IDisposable
 
     public sealed class SetLength: NativeMessageStreamTest
     {
-        // Method parameters
         readonly long value = fuzzy.Int64();
 
         [Fact(Explicit = true)] // TODO: SUT bug. SetLength throws NotImplementedException; Stream requires NotSupportedException when not writable.
@@ -358,7 +355,6 @@ public abstract class NativeMessageStreamTest: IDisposable
 
     public sealed class Write: NativeMessageStreamTest
     {
-        // Method parameters
         readonly byte[] buffer = fuzzy.Array(fuzzy.Byte);
         readonly int offset = 0;
         readonly int count;
