@@ -58,14 +58,16 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         public void InvokesConnectAsyncOnHandlerWithCallbackClientAndManagedTimeout()
         {
             FabricTransportCallbackClient actualClient = null;
+            TimeSpan actualTimeout = default;
             _ = serviceConnectionHandler
-                .Setup(_ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), TimeSpan.FromMilliseconds(timeoutMilliseconds)))
-                .Callback<FabricTransportCallbackClient, TimeSpan>((c, _) => actualClient = c)
+                .Setup(_ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), It.IsAny<TimeSpan>()))
+                .Callback<FabricTransportCallbackClient, TimeSpan>((c, t) => { actualClient = c; actualTimeout = t; })
                 .Returns(Task.FromResult<object>(null));
 
             _ = sut.BeginProcessConnect(nativeClientConnection, timeoutMilliseconds, callback);
 
             Assert.Equal(clientId, actualClient.GetClientId());
+            Assert.Equal(TimeSpan.FromMilliseconds(timeoutMilliseconds), actualTimeout);
             serviceConnectionHandler.Verify(
                 _ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), It.IsAny<TimeSpan>()),
                 Times.Once);
