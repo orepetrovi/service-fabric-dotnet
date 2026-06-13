@@ -2,7 +2,6 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 
 using System;
-using Inspector;
 using Moq;
 using Xunit;
 
@@ -30,7 +29,7 @@ public abstract class FabricTransportCallbackHandlerBrokerTest
 
     public sealed class HandleOneWay: FabricTransportCallbackHandlerBrokerTest
     {
-        readonly NativeFabricTransport.IFabricTransportMessage message = Mock.Of<NativeFabricTransport.IFabricTransportMessage>();
+        readonly Mock<NativeFabricTransport.IFabricTransportMessage> message = new();
 
         [Fact]
         public void InvokesOneWayMessageOnCallImplWithConvertedMessage()
@@ -40,9 +39,10 @@ public abstract class FabricTransportCallbackHandlerBrokerTest
                 .Setup(_ => _.OneWayMessage(It.IsAny<FabricTransportMessage>()))
                 .Callback((FabricTransportMessage m) => actual = m);
 
-            sut.HandleOneWay(message);
+            sut.HandleOneWay(message.Object);
 
-            Assert.Same(message, actual.Field<NativeFabricTransport.IFabricTransportMessage>().Value);
+            Assert.NotNull(actual);
+            message.Verify(_ => _.GetHeaderAndBodyBuffer(out It.Ref<IntPtr>.IsAny, out It.Ref<uint>.IsAny, out It.Ref<IntPtr>.IsAny), Times.Once);
             callImpl.Verify(_ => _.OneWayMessage(It.IsAny<FabricTransportMessage>()), Times.Once);
         }
 
