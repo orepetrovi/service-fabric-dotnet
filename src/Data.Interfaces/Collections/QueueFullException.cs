@@ -17,7 +17,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// before retrying the enqueue.
     /// </para>
     /// <para>
-    /// Queue capacity is not currently implemented.
+    /// The default capacity limit is the maximum value of <see langword="int"/> and is not currently configurable.
     /// </para>
     /// </remarks>
     public class QueueFullException : FabricTransientException
