@@ -28,7 +28,7 @@ public abstract class NativeMessageStreamTest: IDisposable
     NativeMessageStreamTest()
     {
         bufferList = [.. managedBuffers.Select(_ => NativeTypes.ToNativeBytes(pins, _))];
-        expectedBytes = [.. managedBuffers.SelectMany(_ => _)];
+        expectedBytes = [.. managedBuffers.SelectMany(static _ => _)];
         sut = new NativeMessageStream(bufferList);
     }
 
@@ -39,7 +39,7 @@ public abstract class NativeMessageStreamTest: IDisposable
     {
         [Fact]
         public void InitializesLengthToSumOfBufferLengths() =>
-            Assert.Equal(managedBuffers.Sum(_ => _.Length), sut.Length);
+            Assert.Equal(managedBuffers.Sum(static _ => _.Length), sut.Length);
 
         [Fact]
         public void InitializesLengthToZeroWhenMessageIsEmpty()
