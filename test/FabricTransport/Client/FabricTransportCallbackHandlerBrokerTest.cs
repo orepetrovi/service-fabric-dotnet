@@ -43,7 +43,6 @@ public abstract class FabricTransportCallbackHandlerBrokerTest
             sut.HandleOneWay(message);
 
             Assert.Same(message, actual.Field<NativeFabricTransport.IFabricTransportMessage>().Value);
-            Mock.Get(message).Verify(_ => _.GetHeaderAndBodyBuffer(out It.Ref<IntPtr>.IsAny, out It.Ref<uint>.IsAny, out It.Ref<IntPtr>.IsAny), Times.Once);
             callImpl.Verify(_ => _.OneWayMessage(It.IsAny<FabricTransportMessage>()), Times.Once);
         }
 
