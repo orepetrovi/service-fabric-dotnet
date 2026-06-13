@@ -154,9 +154,8 @@ public abstract class NativeMessageStreamTest: IDisposable
         [Fact]
         public void AdvancesPositionByCumulativeNumberOfBytesRead()
         {
-            var output = new byte[1];
-            int first = sut.Read(output, 0, 1);
-            int second = sut.Read(output, 0, 1);
+            int first = sut.Read(buffer, 0, 1);
+            int second = sut.Read(buffer, 0, 1);
             Assert.Equal(first + second, sut.Position);
         }
 
