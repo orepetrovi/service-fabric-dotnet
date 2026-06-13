@@ -61,7 +61,8 @@ public abstract class HelperTest
         [Fact]
         public void ReturnsZeroWhenNoEndpointMatches()
         {
-            endpoints.Add(CreateEndpoint(endpointResourceName + fuzzy.String(), fuzzy.Int32()));
+            // Non-zero distinguishes a wrongly-matched port from GetEndpointPort's not-found 0 sentinel.
+            endpoints.Add(CreateEndpoint(endpointResourceName + fuzzy.String(), fuzzy.Int32().Minimum(1)));
 
             int actual = Helper.GetEndpointPort(codePackageActivationContext, endpointResourceName);
 
