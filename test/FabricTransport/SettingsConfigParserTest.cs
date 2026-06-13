@@ -4,6 +4,7 @@
 using System;
 using System.Fabric.Management.ServiceModel;
 using System.IO;
+using Fuzzy;
 using Xunit;
 
 namespace Microsoft.ServiceFabric.FabricTransport;
@@ -13,17 +14,31 @@ public abstract class SettingsConfigParserTest
 {
     readonly IFabricServiceConfigParser sut = new SettingsConfigParser();
 
-    public sealed class Parse : SettingsConfigParserTest
+    static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
+
+    public sealed class Parse : SettingsConfigParserTest, IDisposable
     {
-        readonly string fileName = Path.Combine(AppContext.BaseDirectory, "ServiceCommunicationTestSettings.xml");
+        readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
+
+        void IDisposable.Dispose() => Directory.Delete(dir, recursive: true);
 
         [Fact]
-        public void ReturnsSettingsTypeParsedFromFile()
+        public void ReturnsSettingsTypeParsedFromGivenFile()
         {
+            string section = fuzzy.String().LettersOrDigits();
+            string fileName = Path.Combine(dir, Guid.NewGuid().ToString("N") + ".xml");
+            File.WriteAllText(fileName,
+                $"""
+                <?xml version="1.0" encoding="utf-8"?>
+                <Settings xmlns="http://schemas.microsoft.com/2011/01/fabric">
+                  <Section Name="{section}" />
+                </Settings>
+                """);
+
             SettingsType actual = sut.Parse(fileName);
 
-            SettingsTypeSection section = Assert.Single(actual.Section);
-            Assert.Equal("TestServiceListenerTransportSettings", section.Name);
+            SettingsTypeSection actualSection = Assert.Single(actual.Section);
+            Assert.Equal(section, actualSection.Name);
         }
     }
 }
