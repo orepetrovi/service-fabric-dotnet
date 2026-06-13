@@ -106,7 +106,7 @@ public abstract class FabricTransportListenerSettingsTest
 
         static EndpointResourceDescription CreateEndpoint(string name, int port)
         {
-            var endpoint = new EndpointResourceDescription { Name = name };
+            EndpointResourceDescription endpoint = new() { Name = name };
             endpoint.Property<int>().Set(port);
             return endpoint;
         }
