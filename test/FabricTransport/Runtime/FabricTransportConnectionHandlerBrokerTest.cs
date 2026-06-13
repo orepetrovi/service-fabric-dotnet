@@ -134,15 +134,17 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         [Fact]
         public void InvokesDisconnectAsyncOnHandlerWithManagedClientIdAndTimeout()
         {
+            string actualClientId = null;
+            TimeSpan actualTimeout = default;
             _ = serviceConnectionHandler
-                .Setup(_ => _.DisconnectAsync(clientId, TimeSpan.FromMilliseconds(timeoutMilliseconds)))
+                .Setup(_ => _.DisconnectAsync(It.IsAny<string>(), It.IsAny<TimeSpan>()))
+                .Callback<string, TimeSpan>((id, t) => { actualClientId = id; actualTimeout = t; })
                 .Returns(Task.FromResult<object>(null));
 
             _ = sut.BeginProcessDisconnect(nativeClientId, timeoutMilliseconds, callback);
 
-            serviceConnectionHandler.Verify(
-                _ => _.DisconnectAsync(clientId, TimeSpan.FromMilliseconds(timeoutMilliseconds)),
-                Times.Once);
+            Assert.Equal(clientId, actualClientId);
+            Assert.Equal(TimeSpan.FromMilliseconds(timeoutMilliseconds), actualTimeout);
             serviceConnectionHandler.Verify(
                 _ => _.DisconnectAsync(It.IsAny<string>(), It.IsAny<TimeSpan>()),
                 Times.Once);
