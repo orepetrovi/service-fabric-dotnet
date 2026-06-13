@@ -40,7 +40,7 @@ public abstract class FabricTransportListenerAddressTest
         [Fact]
         public void IsSetToGivenValue()
         {
-            string expected = ipAddressOrFQDN + fuzzy.String();
+            string expected = fuzzy.String();
             sut.IpAddressOrFQDN = expected;
             Assert.Same(expected, sut.IpAddressOrFQDN);
         }
@@ -51,7 +51,7 @@ public abstract class FabricTransportListenerAddressTest
         [Fact]
         public void IsSetToGivenValue()
         {
-            string expected = path + fuzzy.String();
+            string expected = fuzzy.String();
             sut.Path = expected;
             Assert.Same(expected, sut.Path);
         }
@@ -62,7 +62,7 @@ public abstract class FabricTransportListenerAddressTest
         [Fact]
         public void IsSetToGivenValue()
         {
-            int expected = port + fuzzy.SByte().Between(1, 5);
+            int expected = fuzzy.Int32();
             sut.Port = expected;
             Assert.Equal(expected, sut.Port);
         }
