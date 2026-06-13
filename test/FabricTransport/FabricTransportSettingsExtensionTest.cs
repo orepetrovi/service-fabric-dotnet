@@ -155,7 +155,7 @@ public abstract class FabricTransportSettingsExtensionTest
         {
             // Drive from a known integer input so the assertion verifies int -> uint marshalling, not the SUT's cast.
             int maxMessageSize = fuzzy.Int32().Minimum(0);
-            int maxConcurrentCalls = fuzzy.Int32().Minimum(1);
+            int maxConcurrentCalls = fuzzy.Int32().Minimum(0);
             int maxQueueSize = fuzzy.Int32().Minimum(0);
             transportSettings.MaxMessageSize = maxMessageSize;
             transportSettings.MaxConcurrentCalls = maxConcurrentCalls;
