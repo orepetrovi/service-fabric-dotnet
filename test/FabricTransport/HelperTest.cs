@@ -22,7 +22,9 @@ public abstract class HelperTest
     {
         // Method parameters
         readonly ICodePackageActivationContext codePackageActivationContext = Mock.Of<ICodePackageActivationContext>();
-        readonly string endpointResourceName = "e" + fuzzy.String().LettersOrDigits();
+        // LettersOrDigits avoids characters whose case folding is unstable under the
+        // InvariantCultureIgnoreCase comparison exercised by IgnoresCaseOfEndpointName.
+        readonly string endpointResourceName = fuzzy.String().LettersOrDigits();
 
         readonly EndpointResourceDescriptionCollection endpoints = [];
 
