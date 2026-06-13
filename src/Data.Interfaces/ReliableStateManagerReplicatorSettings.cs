@@ -316,6 +316,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </value>
         /// <remarks>
         /// The value must not be negative or <see cref="TimeSpan.MaxValue"/>.
+        /// Set this value to <see cref="TimeSpan.Zero"/> to disable slow API monitoring.
         /// </remarks>
         public TimeSpan? SlowApiMonitoringDuration { get; set; }
 
