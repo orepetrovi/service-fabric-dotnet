@@ -34,6 +34,7 @@ public abstract class HelperTest
         [Fact]
         public void ReturnsPortOfEndpointWithMatchingName()
         {
+            // Non-zero distinguishes a matched port from GetEndpointPort's not-found 0 sentinel.
             int expected = fuzzy.Int32().Minimum(1);
             endpoints.Add(CreateEndpoint(endpointResourceName + fuzzy.String(), fuzzy.Int32()));
             endpoints.Add(CreateEndpoint(endpointResourceName, expected));
@@ -48,6 +49,7 @@ public abstract class HelperTest
         public void IgnoresCaseOfEndpointName()
         {
             string name = endpointResourceName + fuzzy.Char().Between('a', 'z');
+            // Non-zero distinguishes a matched port from GetEndpointPort's not-found 0 sentinel.
             int expected = fuzzy.Int32().Minimum(1);
             endpoints.Add(CreateEndpoint(name.ToUpperInvariant(), expected));
 
