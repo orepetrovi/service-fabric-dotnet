@@ -9,7 +9,7 @@ namespace Microsoft.ServiceFabric.Data
     using System.Text;
 
     /// <summary>
-    /// Configures the replicator used by the <see cref="IReliableStateManager"/>.
+    /// Configures the replicator used by the <see cref="IReliableStateManager"/>, adding copy-batching, stable-read, and replication-batching settings.
     /// </summary>
     public class ReliableStateManagerReplicatorSettings2 : ReliableStateManagerReplicatorSettings
     {
