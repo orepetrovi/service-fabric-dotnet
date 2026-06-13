@@ -60,7 +60,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         private readonly NotifyDictionaryChangedAction action;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NotifyDictionaryChangedEventArgs{TKey, TValue}"/>
+        /// Initializes a new instance of the <see cref="NotifyDictionaryChangedEventArgs{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="action">The type of notification.</param>
         public NotifyDictionaryChangedEventArgs(NotifyDictionaryChangedAction action)
