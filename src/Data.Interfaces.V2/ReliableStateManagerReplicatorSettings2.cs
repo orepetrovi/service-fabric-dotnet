@@ -83,24 +83,13 @@ namespace Microsoft.ServiceFabric.Data
             }
         }
 
-        /// <summary>
-        /// Serves as a hash function for this type.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="int"/> representing the hash code.
-        /// </returns>
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
             return base.GetHashCode();
         }
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-
+        /// <inheritdoc/>
         public override string ToString()
         {
             var builder = new StringBuilder(base.ToString());
