@@ -95,11 +95,11 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         [Fact]
         public async Task InvokesCallbackWithReturnedContextWhenTaskCompletes()
         {
-            var tcs = new TaskCompletionSource<object>();
+            TaskCompletionSource<object> tcs = new();
             _ = serviceConnectionHandler
                 .Setup(_ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), It.IsAny<TimeSpan>()))
                 .Returns(tcs.Task);
-            var callbackInvoked = new TaskCompletionSource<IFabricAsyncOperationContext>();
+            TaskCompletionSource<IFabricAsyncOperationContext> callbackInvoked = new();
             _ = Mock.Get(callback)
                 .Setup(_ => _.Invoke(It.IsAny<IFabricAsyncOperationContext>()))
                 .Callback<IFabricAsyncOperationContext>(c => callbackInvoked.TrySetResult(c));
@@ -172,11 +172,11 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         [Fact]
         public async Task InvokesCallbackWithReturnedContextWhenTaskCompletes()
         {
-            var tcs = new TaskCompletionSource<object>();
+            TaskCompletionSource<object> tcs = new();
             _ = serviceConnectionHandler
                 .Setup(_ => _.DisconnectAsync(It.IsAny<string>(), It.IsAny<TimeSpan>()))
                 .Returns(tcs.Task);
-            var callbackInvoked = new TaskCompletionSource<IFabricAsyncOperationContext>();
+            TaskCompletionSource<IFabricAsyncOperationContext> callbackInvoked = new();
             _ = Mock.Get(callback)
                 .Setup(_ => _.Invoke(It.IsAny<IFabricAsyncOperationContext>()))
                 .Callback<IFabricAsyncOperationContext>(c => callbackInvoked.TrySetResult(c));
@@ -238,7 +238,7 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         [Fact]
         public void ThrowsExceptionFromFaultedWrappedTask()
         {
-            var expected = new InvalidOperationException(fuzzy.String());
+            InvalidOperationException expected = new(fuzzy.String());
             _ = serviceConnectionHandler
                 .Setup(_ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), It.IsAny<TimeSpan>()))
                 .Returns(Task.FromException(expected));
@@ -291,7 +291,7 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         [Fact]
         public void ThrowsExceptionFromFaultedWrappedTask()
         {
-            var expected = new InvalidOperationException(fuzzy.String());
+            InvalidOperationException expected = new(fuzzy.String());
             _ = serviceConnectionHandler
                 .Setup(_ => _.DisconnectAsync(It.IsAny<string>(), It.IsAny<TimeSpan>()))
                 .Returns(Task.FromException(expected));
