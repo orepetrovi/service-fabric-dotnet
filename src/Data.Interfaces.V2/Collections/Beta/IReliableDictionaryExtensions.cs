@@ -18,6 +18,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <summary>
         /// Attempts to remove the value with the specified key without reading data from the disk.
         /// </summary>
+        /// <remarks>
+        /// This overload removes the key with a fixed four-second timeout and cannot be canceled. Call the
+        /// <see cref="IReliableDictionary4{TKey, TValue}"/> overload that accepts a <see cref="TimeSpan"/> and a
+        /// <see cref="CancellationToken"/> to control the timeout or cancel the operation.
+        /// </remarks>
         /// <typeparam name="TKey">The type of the keys in the reliable dictionary.</typeparam>
         /// <typeparam name="TValue">
         /// The type of the values in the reliable dictionary.</typeparam>
@@ -25,7 +30,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the four-second timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableDictionary4{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
