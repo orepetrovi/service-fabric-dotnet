@@ -228,6 +228,20 @@ public abstract class NativeMessageStreamTest: IDisposable
             Assert.Equal(0, emptySut.Read(buffer, offset, count));
         }
 
+        [Fact]
+        public void ReturnsZeroAndDoesNotChangeStateWhenCountIsZero()
+        {
+            byte[] output = fuzzy.Array(fuzzy.Byte, Fuzzy.Length.Exactly(count));
+            byte[] expected = [.. output];
+            long position = sut.Position;
+
+            int bytesRead = sut.Read(output, offset, 0);
+
+            Assert.Equal(0, bytesRead);
+            Assert.Equal(position, sut.Position);
+            Assert.Equal(expected, output);
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug. Read throws ArgumentNullException without ParamName.
         public void ThrowsArgumentNullExceptionWhenBufferIsNull()
         {
