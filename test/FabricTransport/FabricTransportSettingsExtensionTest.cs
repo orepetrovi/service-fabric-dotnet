@@ -57,6 +57,8 @@ public abstract class FabricTransportSettingsExtensionTest
         [Fact]
         public void SetsSecurityCredentialsToZeroWhenNull()
         {
+            transportSettings.SecurityCredentials = null;
+
             IntPtr ptr = transportSettings.ToNativeV2(pin);
 
             FABRIC_TRANSPORT_SETTINGS native = Native(ptr);
