@@ -295,33 +295,28 @@ namespace Microsoft.ServiceFabric.Data.Collections
         ///     var concurrentQueue = await this.StateManager.GetOrAddAsync<IReliableConcurrentQueue<long>>(new Uri("fabric:/concurrentQueue"));
         ///
         ///     // Assumption: values are being enqueued/dequeued in another place (e.g. the communication listener).
-        ///     var observer = Task.Run(
-        ///         async () =>
-        ///             {
-        ///                 while (true)
-        ///                 {
-        ///                     cancellationToken.ThrowIfCancellationRequested();
+        ///     while (true)
+        ///     {
+        ///         cancellationToken.ThrowIfCancellationRequested();
         ///
-        ///                     try
-        ///                     {
-        ///                         Console.WriteLine("Count: " + concurrentQueue.Count);
-        ///                     }
-        ///                     catch (FabricNotReadableException e)
-        ///                     {
-        ///                         // Retry until the queue is readable or a different exception is thrown.
-        ///                         Console.WriteLine("Queue is not readable, retrying the observation: " + e);
-        ///                     }
-        ///                     catch (FabricObjectClosedException e)
-        ///                     {
-        ///                         // Gracefully exit as this is happening due to replica close.
-        ///                         Console.WriteLine("Replica is closing, stopping observer: " + e);
-        ///                         return;
-        ///                     }
-        ///                     
-        ///                     await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
-        ///                 }
-        ///             },
-        ///         cancellationToken);
+        ///         try
+        ///         {
+        ///             Console.WriteLine("Count: " + concurrentQueue.Count);
+        ///         }
+        ///         catch (FabricNotReadableException e)
+        ///         {
+        ///             // Retry until the queue is readable or a different exception is thrown.
+        ///             Console.WriteLine("Queue is not readable, retrying the observation: " + e);
+        ///         }
+        ///         catch (FabricObjectClosedException e)
+        ///         {
+        ///             // Gracefully exit RunAsync as this is happening due to replica close.
+        ///             Console.WriteLine("Replica is closing, exiting RunAsync: " + e);
+        ///             return;
+        ///         }
+        ///
+        ///         await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
+        ///     }
         /// }
         /// ]]>
         /// </code>
