@@ -40,7 +40,6 @@ public abstract class FabricTransportListenerSettingsTest
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class GetDefault : FabricTransportListenerSettingsTest
     {
-        // Method parameters
         readonly string sectionName = fuzzy.String();
 
         public GetDefault() => typeof(FabricServiceConfig).Field<FabricServiceConfig>().Set(null);
@@ -121,7 +120,6 @@ public abstract class FabricTransportListenerSettingsTest
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class LoadFrom : FabricTransportListenerSettingsTest
     {
-        // Method parameters
         readonly string sectionName = fuzzy.String();
         readonly string configPackageName = fuzzy.String();
 
@@ -165,7 +163,6 @@ public abstract class FabricTransportListenerSettingsTest
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class TryLoadFrom : FabricTransportListenerSettingsTest
     {
-        // Method parameters
         readonly string sectionName = fuzzy.String();
         readonly string configPackageName = fuzzy.String();
 
