@@ -19,15 +19,15 @@ namespace Microsoft.ServiceFabric.Data
     public interface IReliableStateManager : IAsyncEnumerable<IReliableState>
     {
         /// <summary>
-        /// Occurs when a transaction's state changes.
+        /// Occurs when an <see cref="ITransaction"/> changes state.
         /// For example, when a transaction is committed.
         /// </summary>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         event EventHandler<NotifyTransactionChangedEventArgs> TransactionChanged;
 
         /// <summary>
-        /// Occurs when State Manager's state changes.
-        /// For example, creation or deletion of reliable state or rebuild of the reliable state manager.
+        /// Occurs when the <see cref="IReliableStateManager"/>'s state changes.
+        /// For example, creation or deletion of an <see cref="IReliableState"/> or rebuild of the reliable state manager.
         /// </summary>
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         event EventHandler<NotifyStateManagerChangedEventArgs> StateManagerChanged;
