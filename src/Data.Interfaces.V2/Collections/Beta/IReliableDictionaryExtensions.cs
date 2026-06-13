@@ -28,7 +28,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <typeparam name="TValue">
         /// The type of the values in the reliable dictionary.</typeparam>
         /// <param name="reliableDictionary4Interface">The reliable dictionary to remove the element from.</param>
-        /// <param name="tx">Transaction to associate this operation with.</param>
+        /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the four-second timeout.</exception>
