@@ -123,7 +123,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         private readonly Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>> enumerableState;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/>
+        /// Initializes a new instance of the <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="enumerableState"><see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}"/> that can be used to iterate the new state of the <see cref="IReliableDictionary{TKey, TValue}"/>.</param>
         public NotifyDictionaryRebuildEventArgs(Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>> enumerableState) : base(NotifyDictionaryChangedAction.Rebuild)
