@@ -16,7 +16,7 @@ public abstract class NativeMessageStreamTest: IDisposable
     readonly Stream sut;
 
     // Constructor parameters
-    readonly List<Tuple<uint, nint>> bufferList;
+    readonly List<Tuple<uint, IntPtr>> bufferList;
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
     readonly PinCollection pins = [];
