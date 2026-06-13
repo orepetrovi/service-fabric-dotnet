@@ -43,26 +43,6 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
 
     public sealed class Constructor : NativeFabricTransportMessageTest
     {
-        [Fact]
-        public void InitializesNativeHeadersAndBodies()
-        {
-            sut.GetHeaderAndBodyBuffer(out IntPtr headerPtr, out uint bufferLength, out IntPtr bufferPtr);
-
-            var header = Marshal.PtrToStructure<FABRIC_TRANSPORT_MESSAGE_BUFFER>(headerPtr);
-            Assert.Equal((uint)headerBytes.Length, header.BufferSize);
-            Assert.Equal(headerBytes, ReadBytes(header.Buffer, header.BufferSize));
-
-            Assert.Equal((uint)bodyBytes.Count, bufferLength);
-
-            int size = Marshal.SizeOf<FABRIC_TRANSPORT_MESSAGE_BUFFER>();
-            for (int i = 0; i < bodyBytes.Count; i++)
-            {
-                var element = Marshal.PtrToStructure<FABRIC_TRANSPORT_MESSAGE_BUFFER>(bufferPtr + i * size);
-                Assert.Equal((uint)bodyBytes[i].Length, element.BufferSize);
-                Assert.Equal(bodyBytes[i], ReadBytes(element.Buffer, element.BufferSize));
-            }
-        }
-
         [Fact(Explicit = true)] // TODO: SUT bug. Constructor throws NullReferenceException instead of ArgumentNullException.
         public void ThrowsArgumentNullExceptionWhenMessageIsNull()
         {
@@ -70,13 +50,6 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
             // and CreateNativeBodyBytesPtr, which call message.GetHeader() / message.GetBody().
             var actual = Assert.Throws<ArgumentNullException>(() => new NativeFabricTransportMessage(null));
             Assert.Equal(nameof(message), actual.ParamName);
-        }
-
-        static byte[] ReadBytes(IntPtr ptr, uint size)
-        {
-            var buffer = new byte[size];
-            Marshal.Copy(ptr, buffer, 0, buffer.Length);
-            return buffer;
         }
     }
 
@@ -233,6 +206,36 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
             // ArgumentException.
             var actual = Assert.Throws<ArgumentException>(() => NativeFabricTransportMessage.GetBytesFromNative(IntPtr.Zero));
             Assert.Equal(nameof(ptr), actual.ParamName);
+        }
+    }
+
+    public sealed class GetHeaderAndBodyBuffer : NativeFabricTransportMessageTest
+    {
+        [Fact]
+        public void ReturnsNativeHeaderAndBodyBuffers()
+        {
+            sut.GetHeaderAndBodyBuffer(out IntPtr headerPtr, out uint bufferLength, out IntPtr bufferPtr);
+
+            var header = Marshal.PtrToStructure<FABRIC_TRANSPORT_MESSAGE_BUFFER>(headerPtr);
+            Assert.Equal((uint)headerBytes.Length, header.BufferSize);
+            Assert.Equal(headerBytes, ReadBytes(header.Buffer, header.BufferSize));
+
+            Assert.Equal((uint)bodyBytes.Count, bufferLength);
+
+            int size = Marshal.SizeOf<FABRIC_TRANSPORT_MESSAGE_BUFFER>();
+            for (int i = 0; i < bodyBytes.Count; i++)
+            {
+                var element = Marshal.PtrToStructure<FABRIC_TRANSPORT_MESSAGE_BUFFER>(bufferPtr + i * size);
+                Assert.Equal((uint)bodyBytes[i].Length, element.BufferSize);
+                Assert.Equal(bodyBytes[i], ReadBytes(element.Buffer, element.BufferSize));
+            }
+        }
+
+        static byte[] ReadBytes(IntPtr ptr, uint size)
+        {
+            var buffer = new byte[size];
+            Marshal.Copy(ptr, buffer, 0, buffer.Length);
+            return buffer;
         }
     }
 
