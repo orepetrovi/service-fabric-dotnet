@@ -11,6 +11,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
     using System.Threading.Tasks;
 
     /// <summary>
+    /// (Beta) Not for production use - API is subject to change in the future.
     /// Represents a reliable collection of key/value pairs that are persisted and replicated.
     /// </summary>
     /// <inheritdoc cref="IReliableDictionary3{TKey, TValue}" path="/remarks"/>
