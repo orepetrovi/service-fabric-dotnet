@@ -41,13 +41,9 @@ public abstract class FabricTransportSettingsExtensionTest
         {
             // Drive each scalar from a known integer input so the assertion describes the intended int -> uint
             // marshalling instead of re-applying the SUT's own cast.
-            int operationSeconds = fuzzy.Int32().Minimum(0);
-            int keepAliveSeconds = fuzzy.Int32().Minimum(0);
             int maxMessageSize = fuzzy.Int32().Minimum(0);
             int maxConcurrentCalls = fuzzy.Int32().Minimum(1);
             int maxQueueSize = fuzzy.Int32().Minimum(0);
-            transportSettings.OperationTimeout = TimeSpan.FromSeconds(operationSeconds);
-            transportSettings.KeepAliveTimeout = TimeSpan.FromSeconds(keepAliveSeconds);
             transportSettings.MaxMessageSize = maxMessageSize;
             transportSettings.MaxConcurrentCalls = maxConcurrentCalls;
             transportSettings.MaxQueueSize = maxQueueSize;
@@ -55,8 +51,6 @@ public abstract class FabricTransportSettingsExtensionTest
             IntPtr ptr = transportSettings.ToNativeV2(pin);
 
             FABRIC_TRANSPORT_SETTINGS native = Native(ptr);
-            Assert.Equal(Convert.ToUInt32(operationSeconds), native.OperationTimeoutInSeconds);
-            Assert.Equal(Convert.ToUInt32(keepAliveSeconds), native.KeepAliveTimeoutInSeconds);
             Assert.Equal(Convert.ToUInt32(maxMessageSize), native.MaxMessageSize);
             Assert.Equal(Convert.ToUInt32(maxConcurrentCalls), native.MaxConcurrentCalls);
             Assert.Equal(Convert.ToUInt32(maxQueueSize), native.MaxQueueSize);
@@ -105,6 +99,20 @@ public abstract class FabricTransportSettingsExtensionTest
         }
 
         [Fact]
+        public void MarshalsOperationTimeoutToNativeStruct()
+        {
+            // Drive OperationTimeout from a known integer input so the assertion describes the intended int -> uint
+            // marshalling instead of re-applying the SUT's own cast.
+            int operationSeconds = fuzzy.Int32().Minimum(0);
+            transportSettings.OperationTimeout = TimeSpan.FromSeconds(operationSeconds);
+
+            IntPtr ptr = transportSettings.ToNativeV2(pin);
+
+            FABRIC_TRANSPORT_SETTINGS native = Native(ptr);
+            Assert.Equal(Convert.ToUInt32(operationSeconds), native.OperationTimeoutInSeconds);
+        }
+
+        [Fact]
         public void ClampsOperationTimeoutToZeroWhenNegative()
         {
             transportSettings.OperationTimeout = -fuzzy.TimeSpan().Seconds();
@@ -125,6 +133,20 @@ public abstract class FabricTransportSettingsExtensionTest
 
             var ex = Assert.Throws<ArgumentOutOfRangeException>(() => transportSettings.ToNativeV2(pin));
             Assert.Equal(nameof(FabricTransportSettings.OperationTimeout), ex.ParamName);
+        }
+
+        [Fact]
+        public void MarshalsKeepAliveTimeoutToNativeStruct()
+        {
+            // Drive KeepAliveTimeout from a known integer input so the assertion describes the intended int -> uint
+            // marshalling instead of re-applying the SUT's own cast.
+            int keepAliveSeconds = fuzzy.Int32().Minimum(0);
+            transportSettings.KeepAliveTimeout = TimeSpan.FromSeconds(keepAliveSeconds);
+
+            IntPtr ptr = transportSettings.ToNativeV2(pin);
+
+            FABRIC_TRANSPORT_SETTINGS native = Native(ptr);
+            Assert.Equal(Convert.ToUInt32(keepAliveSeconds), native.KeepAliveTimeoutInSeconds);
         }
 
         [Fact]
