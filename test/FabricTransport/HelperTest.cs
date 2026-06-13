@@ -109,7 +109,7 @@ public abstract class HelperTest
         void IDisposable.Dispose() => pins.Dispose();
 
         [Fact]
-        public void ReturnsCopyOfNativeMessageBuffer()
+        public void ReturnsBytesOfNativeMessageBuffer()
         {
             byte[] actual = Helper.Get_Byte(message);
             Assert.Equal(bytes, actual);
