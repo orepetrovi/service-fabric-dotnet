@@ -3,6 +3,8 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
+using Microsoft.ServiceFabric.Data.Collections;
+
 namespace Microsoft.ServiceFabric.Data.Notifications
 {
     using System;
@@ -12,8 +14,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// Identifies the operation that produced a <see cref="NotifyDictionaryChangedEventArgs{TKey, TValue}"/> notification.
     /// </summary>
     /// <remarks>
-    /// <see cref="Rebuild"/> is delivered through <see cref="Collections.IReliableDictionary{TKey, TValue}.RebuildNotificationAsyncCallback"/>.
-    /// All other values are delivered through <see cref="Collections.IReliableDictionary{TKey, TValue}.DictionaryChanged"/>.
+    /// <see cref="Rebuild"/> is delivered through <see cref="IReliableDictionary{TKey, TValue}.RebuildNotificationAsyncCallback"/>.
+    /// All other values are delivered through <see cref="IReliableDictionary{TKey, TValue}.DictionaryChanged"/>.
     /// </remarks>
     public enum NotifyDictionaryChangedAction : int
     {
