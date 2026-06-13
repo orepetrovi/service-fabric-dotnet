@@ -179,6 +179,15 @@ public abstract class FabricTransportSettingsExtensionTest
         }
 
         [Fact]
+        public void ThrowsArgumentOutOfRangeExceptionWhenMaxMessageSizeExceedsInt32MaxValue()
+        {
+            transportSettings.MaxMessageSize = fuzzy.Int64().Minimum((long)int.MaxValue + 1);
+
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => transportSettings.ToNativeV2(pin));
+            Assert.Equal(nameof(FabricTransportSettings.MaxMessageSize), ex.ParamName);
+        }
+
+        [Fact]
         public void ThrowsArgumentOutOfRangeExceptionWhenMaxConcurrentCallsIsNegative()
         {
             transportSettings.MaxConcurrentCalls = fuzzy.Int64().Maximum(-1);
@@ -188,9 +197,27 @@ public abstract class FabricTransportSettingsExtensionTest
         }
 
         [Fact]
+        public void ThrowsArgumentOutOfRangeExceptionWhenMaxConcurrentCallsExceedsInt32MaxValue()
+        {
+            transportSettings.MaxConcurrentCalls = fuzzy.Int64().Minimum((long)int.MaxValue + 1);
+
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => transportSettings.ToNativeV2(pin));
+            Assert.Equal(nameof(FabricTransportSettings.MaxConcurrentCalls), ex.ParamName);
+        }
+
+        [Fact]
         public void ThrowsArgumentOutOfRangeExceptionWhenMaxQueueSizeIsNegative()
         {
             transportSettings.MaxQueueSize = fuzzy.Int64().Maximum(-1);
+
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => transportSettings.ToNativeV2(pin));
+            Assert.Equal(nameof(FabricTransportSettings.MaxQueueSize), ex.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentOutOfRangeExceptionWhenMaxQueueSizeExceedsInt32MaxValue()
+        {
+            transportSettings.MaxQueueSize = fuzzy.Int64().Minimum((long)int.MaxValue + 1);
 
             var ex = Assert.Throws<ArgumentOutOfRangeException>(() => transportSettings.ToNativeV2(pin));
             Assert.Equal(nameof(FabricTransportSettings.MaxQueueSize), ex.ParamName);
