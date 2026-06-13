@@ -45,6 +45,7 @@ namespace Microsoft.ServiceFabric.Data
     /// Disposing a transaction that has not been committed implicitly aborts it, rolling back its uncommitted operations and releasing the locks it holds. Disposal is idempotent, and any failure during the implicit abort is ignored.
     /// </para>
     /// </remarks>
+    /// <seealso cref="IReliableStateManager.CreateTransaction"/>
     /// <example>
     /// The following is an example of correct usage.
     /// <code language="csharp">
