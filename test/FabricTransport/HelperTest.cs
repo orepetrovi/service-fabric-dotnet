@@ -68,6 +68,8 @@ public abstract class HelperTest
         [Fact(Explicit = true)] // TODO: SUT bug. Helper.GetEndpointPort does not validate that codePackageActivationContext is not null.
         public void ThrowsArgumentNullExceptionWhenCodePackageActivationContextIsNull()
         {
+            // GetEndpointPort calls GetEndpoints() on the null argument, surfacing the low-level
+            // NullReferenceException instead of the expected ArgumentNullException.
             var exception = Assert.Throws<ArgumentNullException>(() => Helper.GetEndpointPort(null, endpointResourceName));
             Assert.Equal(nameof(codePackageActivationContext), exception.ParamName);
         }
