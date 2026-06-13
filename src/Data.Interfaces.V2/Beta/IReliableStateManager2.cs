@@ -28,7 +28,6 @@ namespace Microsoft.ServiceFabric.Data.Beta
         /// Operations are added to the transaction by passing the <see cref="ITransaction"/> object in to reliable state methods.
         /// This does not apply to reads on secondaries
         /// </remarks>
-        /// <returns>A new transaction.</returns>
         ITransaction CreateTransaction(IsolationLevel singleEntityIsolationLevelForPrimaryReads);
     }
 }
