@@ -38,7 +38,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <remarks>
         /// <para>
-        /// When a reliable collection needs to serialize an object, it asks the state manager for a serializer for the given type.
+        /// When a reliable collection needs to serialize an object, it asks the <see cref="IReliableStateManager"/> for a serializer for the given type.
         /// The state manager will first check if there is a custom serializer registered for the input type. If not, it will check if one of the built-in
         /// serializers can serialize the type. The state manager has built-in serializers for the following types: <see cref="Guid"/>, <see langword="bool"/>, <see langword="byte"/>, <see langword="sbyte"/>, <see langword="char"/>, <see langword="decimal"/>,
         /// <see langword="double"/>, <see langword="float"/>, <see langword="int"/>, <see langword="uint"/>, <see langword="long"/>, <see langword="ulong"/>, <see langword="short"/>, <see langword="ushort"/> and <see langword="string"/>. If not, it will use <see cref="DataContractSerializer"/>.
