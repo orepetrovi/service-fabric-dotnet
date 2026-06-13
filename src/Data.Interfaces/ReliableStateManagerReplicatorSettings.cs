@@ -202,7 +202,9 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets the maximum stream size.
         /// </summary>
         /// <value>
-        /// The default is 1024.
+        /// The default is 1024, which applies only when <see cref="OptimizeLogForLowerDiskUsage"/> is explicitly set to
+        /// <see langword="false"/>. While <see cref="OptimizeLogForLowerDiskUsage"/> stays at its default of
+        /// <see langword="true"/>, the replicator uses a sparse log and the effective maximum stream size is 204800 (200 GB).
         /// </value>
         /// <remarks>
         /// This property is deprecated.
@@ -313,10 +315,11 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets the minimum log size.
         /// </summary>
         /// <value>
-        /// The default is 0.
+        /// The default is 0, which directs the replicator to derive the minimum log size from
+        /// <see cref="CheckpointThresholdInMB"/>, using half of it but no less than 1.
         /// </value>
         /// <remarks>
-        /// A truncation is not initiated if it would reduce the size of the log below this value.
+        /// A truncation is not initiated if it would reduce the size of the log below the resulting value.
         /// </remarks>
         public int? MinLogSizeInMB { get; set; }
 
