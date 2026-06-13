@@ -26,7 +26,6 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <param name="key">The key of the element to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is null, or <paramref name="key"/> is null.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled.</exception>
         /// <exception cref="FabricNotPrimaryException">The exception that is thrown when the <see cref="IReliableDictionary4{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction</exception>
         /// <exception cref="InvalidOperationException">
