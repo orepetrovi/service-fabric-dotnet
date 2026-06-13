@@ -7,11 +7,10 @@ using System.Fabric;
 using System.Fabric.Description;
 using Fuzzy;
 using Inspector;
-using Microsoft.ServiceFabric.FabricTransport.Runtime;
 using Moq;
 using Xunit;
 
-namespace Microsoft.ServiceFabric.FabricTransport;
+namespace Microsoft.ServiceFabric.FabricTransport.Runtime;
 
 [Collection(nameof(FabricServiceConfigSingleton))]
 public abstract class FabricTransportListenerSettingsTest
