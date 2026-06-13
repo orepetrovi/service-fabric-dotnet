@@ -128,6 +128,14 @@ public abstract class NativeMessageStreamTest: IDisposable
             Assert.Equal(expected, sut.Position);
         }
 
+        [Fact(Explicit = true)] // TODO: SUT bug. Position setter does not validate that value is non-negative.
+        public void ThrowsArgumentOutOfRangeExceptionWhenValueIsNegative()
+        {
+            long value = fuzzy.Int64().Maximum(-1);
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut.Position = value);
+            Assert.Equal(nameof(value), exception.ParamName);
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug. Position setter updates the reported position without moving the read cursor.
         public void MovesReadCursorToGivenValue()
         {
