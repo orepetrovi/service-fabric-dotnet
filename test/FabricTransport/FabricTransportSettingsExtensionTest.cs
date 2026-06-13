@@ -36,25 +36,6 @@ public abstract class FabricTransportSettingsExtensionTest
 
         void IDisposable.Dispose() => pin.Dispose();
 
-        [Fact]
-        public void MarshalsScalarSettingsToNativeStruct()
-        {
-            // Drive from a known integer input so the assertion verifies int -> uint marshalling, not the SUT's cast.
-            int maxMessageSize = fuzzy.Int32().Minimum(0);
-            int maxConcurrentCalls = fuzzy.Int32().Minimum(1);
-            int maxQueueSize = fuzzy.Int32().Minimum(0);
-            transportSettings.MaxMessageSize = maxMessageSize;
-            transportSettings.MaxConcurrentCalls = maxConcurrentCalls;
-            transportSettings.MaxQueueSize = maxQueueSize;
-
-            IntPtr ptr = transportSettings.ToNativeV2(pin);
-
-            FABRIC_TRANSPORT_SETTINGS native = Native(ptr);
-            Assert.Equal(Convert.ToUInt32(maxMessageSize), native.MaxMessageSize);
-            Assert.Equal(Convert.ToUInt32(maxConcurrentCalls), native.MaxConcurrentCalls);
-            Assert.Equal(Convert.ToUInt32(maxQueueSize), native.MaxQueueSize);
-        }
-
         [Fact(Explicit = true)] // TODO: SUT bug. Missing argument validation for transportSettings.
         public void ThrowsArgumentNullExceptionWhenTransportSettingsIsNull()
         {
@@ -167,6 +148,25 @@ public abstract class FabricTransportSettingsExtensionTest
 
             var ex = Assert.Throws<ArgumentOutOfRangeException>(() => transportSettings.ToNativeV2(pin));
             Assert.Equal(nameof(FabricTransportSettings.KeepAliveTimeout), ex.ParamName);
+        }
+
+        [Fact]
+        public void MarshalsScalarSettingsToNativeStruct()
+        {
+            // Drive from a known integer input so the assertion verifies int -> uint marshalling, not the SUT's cast.
+            int maxMessageSize = fuzzy.Int32().Minimum(0);
+            int maxConcurrentCalls = fuzzy.Int32().Minimum(1);
+            int maxQueueSize = fuzzy.Int32().Minimum(0);
+            transportSettings.MaxMessageSize = maxMessageSize;
+            transportSettings.MaxConcurrentCalls = maxConcurrentCalls;
+            transportSettings.MaxQueueSize = maxQueueSize;
+
+            IntPtr ptr = transportSettings.ToNativeV2(pin);
+
+            FABRIC_TRANSPORT_SETTINGS native = Native(ptr);
+            Assert.Equal(Convert.ToUInt32(maxMessageSize), native.MaxMessageSize);
+            Assert.Equal(Convert.ToUInt32(maxConcurrentCalls), native.MaxConcurrentCalls);
+            Assert.Equal(Convert.ToUInt32(maxQueueSize), native.MaxQueueSize);
         }
 
         [Fact]
