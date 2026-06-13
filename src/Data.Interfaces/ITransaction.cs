@@ -133,9 +133,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Asynchronously commits the transaction.
         /// </summary>
-        /// <remarks>
-        /// A committed transaction cannot be aborted, because all modifications have been persisted and replicated.
-        /// </remarks>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">The transaction is not in a valid state for this operation, for example, it has already been committed or aborted, or another operation is in progress on it.</exception>
         /// <exception cref="FabricNotPrimaryException">
