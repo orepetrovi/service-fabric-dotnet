@@ -197,7 +197,7 @@ public abstract class FabricTransportSettingsExtensionTest
         }
 
         [Fact]
-        public void SetsConnectTimeoutFromGivenValue()
+        public void MarshalsConnectTimeoutToNativeStruct()
         {
             // Drive from a known integer input so the assertion verifies int -> uint marshalling, not the SUT's cast.
             int connectMilliseconds = fuzzy.Int32().Minimum(0);
