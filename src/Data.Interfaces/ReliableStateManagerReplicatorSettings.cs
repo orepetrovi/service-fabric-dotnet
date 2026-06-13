@@ -397,8 +397,8 @@ namespace Microsoft.ServiceFabric.Data
 #endif
 
         /// <summary>
-        /// Returns a value that indicates whether the specified object is a <see cref="ReliableStateManagerReplicatorSettings"/>
-        /// of exactly the same type whose V2 settings match the current instance.
+        /// Returns a value that indicates whether the specified object is of exactly the same type and each V2 setting set on
+        /// that object matches the corresponding setting on the current instance.
         /// </summary>
         public override bool Equals(object obj)
         {
