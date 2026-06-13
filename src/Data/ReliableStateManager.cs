@@ -57,7 +57,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="ReliableStateManager"/> class.
         /// </summary>
-        /// <param name="serviceContext">The stateful service context that the replica operates under.</param>
+        /// <param name="serviceContext">The context that the replica operates under.</param>
         /// <param name="configuration">
         /// The configuration used to create the state manager, or <see langword="null"/> to use a default
         /// <see cref="ReliableStateManagerConfiguration"/>.
