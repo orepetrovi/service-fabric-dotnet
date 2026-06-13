@@ -27,7 +27,7 @@ namespace Microsoft.ServiceFabric.Data
 
         /// <summary>
         /// Determines whether build can be canceled if the log is full.
-        /// Default is 0
+        /// The default is <see langword="false" />.
         /// </summary>
         public bool? ShouldAbortCopyForTruncation { get; set; }
         
