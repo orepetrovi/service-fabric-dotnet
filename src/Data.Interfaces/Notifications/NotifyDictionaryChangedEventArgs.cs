@@ -189,7 +189,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         private readonly TValue value;
 
         /// <summary>
-        /// Initializes a new instance of the <cref name="NotifyDictionaryItemAddedEventArgs"/>
+        /// Initializes a new instance of the <see cref="NotifyDictionaryItemAddedEventArgs{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="transaction">Transaction that the operation is related to.</param>
         /// <param name="key">Key that was added.</param>
