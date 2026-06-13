@@ -96,7 +96,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the transaction that the operation belongs to.
+        /// Gets the <see cref="ITransaction"/> that the operation belongs to.
         /// </summary>
         public ITransaction Transaction
         {
