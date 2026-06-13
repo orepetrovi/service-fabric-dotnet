@@ -13,7 +13,7 @@ namespace Microsoft.ServiceFabric.Data.Beta
 {
     /// <summary>
     /// Defines a reliable state manager replica that additionally supports creating transactions with a configurable
-    /// isolation level for single-entity reads on the primary.
+    /// <see cref="IsolationLevel"/> for single-entity reads on the primary.
     /// </summary>
     /// <remarks>
     /// (Beta) Not for production use - API is subject to change in the future.
@@ -22,7 +22,7 @@ namespace Microsoft.ServiceFabric.Data.Beta
     {
         /// <summary>
         /// Returns a new, started <see cref="ITransaction"/> that can be used to group operations to be performed atomically,
-        /// using the specified isolation level for single-entity primary reads.
+        /// using the specified <see cref="IsolationLevel"/> for single-entity primary reads.
         /// </summary>
         /// <remarks>
         /// Operations are added to the transaction by passing the <see cref="ITransaction"/> object in to reliable state methods.
