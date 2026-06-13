@@ -46,12 +46,12 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     }
 
     /// <summary>
-    /// Provides data for the DictionaryChanged event.
+    /// Provides data for an <see cref="IReliableDictionary{TKey, TValue}"/> change notification.
     /// </summary>
     /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     /// <remarks>
-    /// DictionaryChanged notifications are synchronously fired by <see cref="IReliableDictionary{TKey, TValue}"/> as part of applying the operation.
+    /// <see cref="IReliableDictionary{TKey, TValue}.DictionaryChanged"/> notifications are synchronously fired by the <see cref="IReliableDictionary{TKey, TValue}"/> as part of applying the operation.
     /// Holding up the completion of these events can cause the replica to be blocked on the completion of the event.
     /// It is recommended that the events are handled as fast as possible.
     /// </remarks>
