@@ -24,9 +24,7 @@ namespace Microsoft.ServiceFabric.Data.Beta
         /// Returns a new, started <see cref="ITransaction"/> that can be used to group operations to be performed atomically,
         /// using the specified <see cref="IsolationLevel"/> for single-entity primary reads.
         /// </summary>
-        /// <remarks>
-        /// Operations are added to the transaction by passing the <see cref="ITransaction"/> object in to reliable state methods.
-        /// </remarks>
+        /// <inheritdoc cref="IReliableStateManager.CreateTransaction" path="/remarks"/>
         ITransaction CreateTransaction(IsolationLevel singleEntityIsolationLevelForPrimaryReads);
     }
 }
