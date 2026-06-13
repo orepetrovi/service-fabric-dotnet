@@ -219,7 +219,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 4.
         /// </value>
         /// <remarks>
-        /// The value is specified in KB and must be a multiple of 4.
+        /// The value is specified in KB and must be a non-negative multiple of 4.
         /// </remarks>
         public int? MaxMetadataSizeInKB { get; set; }
 
@@ -242,7 +242,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </value>
         /// <remarks>
         /// The value is the maximum amount of data that can be outstanding during core logger updates.
-        /// It may be 0, in which case the core logger computes an appropriate value; otherwise it must be a multiple of
+        /// It may be 0, in which case the core logger computes an appropriate value; otherwise it must be a positive multiple of
         /// 4.
         /// The value is specified in KB.
         /// </remarks>
@@ -254,6 +254,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <value>
         /// The default is 50.
         /// </value>
+        /// <remarks>
+        /// The value is specified in MB and must be at least 1.
+        /// </remarks>
         public int? CheckpointThresholdInMB { get; set; }
 
         /// <summary>
@@ -265,6 +268,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// An incremental backup request fails when the backup logs it generates would cause the total amount of logs accumulated
         /// since the last full backup to exceed this value. In that case, take a full backup.
+        /// The value is specified in MB and must be at least 1.
         /// </remarks>
         public int? MaxAccumulatedBackupLogSizeInMB { get; set; }
 
@@ -310,6 +314,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <value>
         /// The default is 5 minutes.
         /// </value>
+        /// <remarks>
+        /// The value must not be negative or <see cref="TimeSpan.MaxValue"/>.
+        /// </remarks>
         public TimeSpan? SlowApiMonitoringDuration { get; set; }
 
         /// <summary>
@@ -321,6 +328,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </value>
         /// <remarks>
         /// A truncation is not initiated if it would reduce the size of the log below the resulting value.
+        /// Any explicitly specified nonzero value must be at least 1.
         /// </remarks>
         public int? MinLogSizeInMB { get; set; }
 
