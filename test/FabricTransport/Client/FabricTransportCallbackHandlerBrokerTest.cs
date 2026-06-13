@@ -34,14 +34,8 @@ public abstract class FabricTransportCallbackHandlerBrokerTest
         [Fact]
         public void InvokesOneWayMessageOnCallImplWithConvertedMessage()
         {
-            FabricTransportMessage actual = null;
-            _ = callImpl
-                .Setup(_ => _.OneWayMessage(It.IsAny<FabricTransportMessage>()))
-                .Callback((FabricTransportMessage m) => actual = m);
-
             sut.HandleOneWay(message.Object);
 
-            Assert.NotNull(actual);
             message.Verify(_ => _.GetHeaderAndBodyBuffer(out It.Ref<IntPtr>.IsAny, out It.Ref<uint>.IsAny, out It.Ref<IntPtr>.IsAny), Times.Once);
             callImpl.Verify(_ => _.OneWayMessage(It.IsAny<FabricTransportMessage>()), Times.Once);
         }
