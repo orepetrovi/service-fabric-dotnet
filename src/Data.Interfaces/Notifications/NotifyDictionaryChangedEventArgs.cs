@@ -98,7 +98,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Gets the transaction that the operation belongs to.
         /// </summary>
-        /// <value>The transaction object associated with the notification.</value>
         public ITransaction Transaction
         {
             get
