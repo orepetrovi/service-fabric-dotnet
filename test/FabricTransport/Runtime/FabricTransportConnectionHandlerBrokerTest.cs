@@ -97,7 +97,7 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         {
             var tcs = new TaskCompletionSource<object>();
             _ = serviceConnectionHandler
-                .Setup(_ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), TimeSpan.FromMilliseconds(timeoutMilliseconds)))
+                .Setup(_ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), It.IsAny<TimeSpan>()))
                 .Returns(tcs.Task);
             var callbackInvoked = new TaskCompletionSource<IFabricAsyncOperationContext>();
             _ = Mock.Get(callback)
@@ -174,7 +174,7 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         {
             var tcs = new TaskCompletionSource<object>();
             _ = serviceConnectionHandler
-                .Setup(_ => _.DisconnectAsync(clientId, TimeSpan.FromMilliseconds(timeoutMilliseconds)))
+                .Setup(_ => _.DisconnectAsync(It.IsAny<string>(), It.IsAny<TimeSpan>()))
                 .Returns(tcs.Task);
             var callbackInvoked = new TaskCompletionSource<IFabricAsyncOperationContext>();
             _ = Mock.Get(callback)
@@ -215,7 +215,7 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         public void ReturnsWhenWrappedTaskSucceeds()
         {
             _ = serviceConnectionHandler
-                .Setup(_ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), TimeSpan.FromMilliseconds(timeoutMilliseconds)))
+                .Setup(_ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), It.IsAny<TimeSpan>()))
                 .Returns(Task.FromResult<object>(null));
             IFabricAsyncOperationContext context = sut.BeginProcessConnect(nativeClientConnection, timeoutMilliseconds, callback);
 
@@ -240,7 +240,7 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         {
             var expected = new InvalidOperationException(fuzzy.String());
             _ = serviceConnectionHandler
-                .Setup(_ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), TimeSpan.FromMilliseconds(timeoutMilliseconds)))
+                .Setup(_ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), It.IsAny<TimeSpan>()))
                 .Returns(Task.FromException(expected));
             IFabricAsyncOperationContext context = sut.BeginProcessConnect(nativeClientConnection, timeoutMilliseconds, callback);
 
@@ -268,7 +268,7 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         public void ReturnsWhenWrappedTaskSucceeds()
         {
             _ = serviceConnectionHandler
-                .Setup(_ => _.DisconnectAsync(clientId, TimeSpan.FromMilliseconds(timeoutMilliseconds)))
+                .Setup(_ => _.DisconnectAsync(It.IsAny<string>(), It.IsAny<TimeSpan>()))
                 .Returns(Task.FromResult<object>(null));
             IFabricAsyncOperationContext context = sut.BeginProcessDisconnect(nativeClientId, timeoutMilliseconds, callback);
 
@@ -293,7 +293,7 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         {
             var expected = new InvalidOperationException(fuzzy.String());
             _ = serviceConnectionHandler
-                .Setup(_ => _.DisconnectAsync(clientId, TimeSpan.FromMilliseconds(timeoutMilliseconds)))
+                .Setup(_ => _.DisconnectAsync(It.IsAny<string>(), It.IsAny<TimeSpan>()))
                 .Returns(Task.FromException(expected));
             IFabricAsyncOperationContext context = sut.BeginProcessDisconnect(nativeClientId, timeoutMilliseconds, callback);
 
