@@ -21,7 +21,7 @@ namespace Microsoft.ServiceFabric.Data
     /// Manages <see cref="IReliableState"/> for a service replica.
     /// </summary>
     /// <remarks>
-    /// Each replica in a service has its own <see cref="IReliableState"/> and <see cref="ReliableStateManager"/>.
+    /// Each replica in a service has its own <see cref="ReliableStateManager"/> and thus its own set of <see cref="IReliableState"/>.
     /// <see cref="IReliableState"/> can include <see cref="IReliableDictionary{TKey, TValue}"/>,
     /// <see cref="IReliableQueue{T}"/>, or any <see cref="IReliableCollection{T}"/> types.
     /// </remarks>
