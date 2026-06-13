@@ -57,6 +57,11 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="ReliableStateManager"/> class.
         /// </summary>
+        /// <param name="serviceContext">The stateful service context that the replica operates under.</param>
+        /// <param name="configuration">
+        /// The configuration used to create the state manager, or <see langword="null"/> to use a default
+        /// <see cref="ReliableStateManagerConfiguration"/>.
+        /// </param>
         public ReliableStateManager(StatefulServiceContext serviceContext, ReliableStateManagerConfiguration configuration = null)
         {
             configuration = configuration ?? new ReliableStateManagerConfiguration();
@@ -67,10 +72,7 @@ namespace Microsoft.ServiceFabric.Data
             this._impl = (IReliableStateManagerReplica2)createReliableStateManager2.Invoke(null, new object[] { serviceContext, configuration });
         }
 
-        /// <summary>
-        /// Occurs when a transaction changes.
-        /// </summary>
-        /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
+        /// <inheritdoc/>
         public event EventHandler<NotifyTransactionChangedEventArgs> TransactionChanged
         {
             add
@@ -89,10 +91,7 @@ namespace Microsoft.ServiceFabric.Data
             }
         }
 
-        /// <summary>
-        /// Occurs when the state manager changes.
-        /// </summary>
-        /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
+        /// <inheritdoc/>
         public event EventHandler<NotifyStateManagerChangedEventArgs> StateManagerChanged
         {
             add
