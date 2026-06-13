@@ -79,7 +79,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </para>
         /// <para>
         /// If specifying an interface type, the manager will resolve the interface to its default concrete implementation.
-        /// If the given interface type does not have a default implementation, or the type is invalid, this method will throw ArgumentException.
+        /// If the given interface type does not have a default implementation, or the type is invalid, this method will throw <see cref="ArgumentException"/>.
         /// </para>
         /// </typeparam>
         /// <param name="tx">The transaction to associate this operation with.</param>
