@@ -36,7 +36,7 @@ public abstract class FabricServiceConfigTest
                 """<Settings xmlns="http://schemas.microsoft.com/2011/01/fabric"/>""");
             try
             {
-                var expected = new SettingsType();
+                SettingsType expected = new();
                 IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>(_ => _.Parse(settingsFile) == expected);
                 _ = FabricServiceConfig.Initialize(settingsFile, configParser);
                 var initial = FabricServiceConfig.GetConfig();
@@ -107,7 +107,7 @@ public abstract class FabricServiceConfigTest
         [Fact]
         public void ReturnsTrueAndStoresParsedSettingsWhenFileExistsAndConfigParserIsProvided()
         {
-            var expected = new SettingsType();
+            SettingsType expected = new();
             _ = configParser.Setup(_ => _.Parse(fullFilePath)).Returns(expected);
 
             bool result = FabricServiceConfig.Initialize(fullFilePath, configParser.Object);
@@ -142,7 +142,7 @@ public abstract class FabricServiceConfigTest
         [Fact]
         public void ReturnsFalseAndLeavesInstanceUnchangedWhenFileDoesNotExist()
         {
-            var expected = new SettingsType();
+            SettingsType expected = new();
             _ = configParser.Setup(_ => _.Parse(fullFilePath)).Returns(expected);
             Assert.True(FabricServiceConfig.Initialize(fullFilePath, configParser.Object));
             var initial = FabricServiceConfig.GetConfig();
@@ -159,8 +159,8 @@ public abstract class FabricServiceConfigTest
         [Fact]
         public void ReplacesPriorInstanceOnSubsequentSuccessfulInitialize()
         {
-            var first = new SettingsType();
-            var second = new SettingsType();
+            SettingsType first = new();
+            SettingsType second = new();
             _ = configParser.SetupSequence(_ => _.Parse(fullFilePath)).Returns(first).Returns(second);
             _ = FabricServiceConfig.Initialize(fullFilePath, configParser.Object);
             var initial = FabricServiceConfig.GetConfig();
@@ -188,7 +188,7 @@ public abstract class FabricServiceConfigTest
         [Fact]
         public void ReturnsFalseAndLeavesInstanceUnchangedWhenActivationContextIsUnavailable()
         {
-            var expected = new SettingsType();
+            SettingsType expected = new();
             IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>(_ => _.Parse(settingsFile) == expected);
             Assert.True(FabricServiceConfig.Initialize(settingsFile, configParser));
             var initial = FabricServiceConfig.GetConfig();
