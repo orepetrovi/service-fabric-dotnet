@@ -137,7 +137,7 @@ namespace Microsoft.ServiceFabric.Data
         /// A committed transaction cannot be aborted, because all modifications have been persisted and replicated.
         /// </remarks>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
+        /// <exception cref="InvalidOperationException">The transaction is not in a valid state for this operation, for example, it has already been committed or aborted, or another operation is in progress on it.</exception>
         /// <exception cref="FabricNotPrimaryException">
         /// The transaction includes updates to <see cref="IReliableState"/> and the replica is not in the <see cref="ReplicaRole.Primary"/> role.
         /// Only <see cref="ReplicaRole.Primary"/> replicas are given write status.
@@ -148,7 +148,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Aborts the transaction, rolling back any uncommitted operations.
         /// </summary>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
+        /// <exception cref="InvalidOperationException">The transaction is not in a valid state for this operation, for example, it has already been committed or aborted, or another operation is in progress on it.</exception>
         void Abort();
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The first call establishes the snapshot the transaction reads from, ensuring its reads observe a consistent point in time even as concurrent transactions commit. Use the returned value to correlate this transaction's snapshot reads with other versioned operations.
         /// </remarks>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
+        /// <exception cref="InvalidOperationException">The transaction is not in a valid state for this operation, for example, it has already been committed or aborted, or another operation is in progress on it.</exception>
         Task<long> GetVisibilitySequenceNumberAsync();
     }
 }
