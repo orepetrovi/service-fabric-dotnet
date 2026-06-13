@@ -33,8 +33,8 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
     {
         headerBytes = fuzzy.Array(fuzzy.Byte);
         bodyBytes = fuzzy.List(() => fuzzy.Array(fuzzy.Byte));
-        var header = new FabricTransportRequestHeader(Slice(headerBytes), headerDispose);
-        var body = new FabricTransportRequestBody([.. bodyBytes.Select(Slice)], bodyDispose);
+        FabricTransportRequestHeader header = new(Slice(headerBytes), headerDispose);
+        FabricTransportRequestBody body = new([.. bodyBytes.Select(Slice)], bodyDispose);
         message = new FabricTransportMessage(header, body);
         sut = new NativeFabricTransportMessage(message);
     }
@@ -92,8 +92,8 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
         [Fact]
         public void ReturnsPointerToEmptyBufferWhenBodyIsNull()
         {
-            var header = new FabricTransportRequestHeader(Slice(headerBytes), headerDispose);
-            var sut = new NativeFabricTransportMessage(new FabricTransportMessage(header, null));
+            FabricTransportRequestHeader header = new(Slice(headerBytes), headerDispose);
+            NativeFabricTransportMessage sut = new(new FabricTransportMessage(header, null));
             try
             {
                 IntPtr bufferPtr = sut.CreateNativeBodyBytesPtr();
@@ -111,9 +111,9 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
         [Fact]
         public void ReturnsPointerToEmptyBufferWhenBodyBuffersAreEmpty()
         {
-            var header = new FabricTransportRequestHeader(Slice(headerBytes), headerDispose);
-            var body = new FabricTransportRequestBody([], bodyDispose);
-            var sut = new NativeFabricTransportMessage(new FabricTransportMessage(header, body));
+            FabricTransportRequestHeader header = new(Slice(headerBytes), headerDispose);
+            FabricTransportRequestBody body = new([], bodyDispose);
+            NativeFabricTransportMessage sut = new(new FabricTransportMessage(header, body));
             try
             {
                 IntPtr bufferPtr = sut.CreateNativeBodyBytesPtr();
@@ -145,8 +145,8 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
         [Fact]
         public void ReturnsEmptyBufferWhenHeaderIsNull()
         {
-            var body = new FabricTransportRequestBody([.. bodyBytes.Select(Slice)], bodyDispose);
-            var sut = new NativeFabricTransportMessage(new FabricTransportMessage(null, body));
+            FabricTransportRequestBody body = new([.. bodyBytes.Select(Slice)], bodyDispose);
+            NativeFabricTransportMessage sut = new(new FabricTransportMessage(null, body));
             try
             {
                 FABRIC_TRANSPORT_MESSAGE_BUFFER actual = sut.CreateNativeHeaderBytes();
@@ -222,7 +222,7 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
 
         public GetBytesFromNative()
         {
-            var buffer = new FABRIC_TRANSPORT_MESSAGE_BUFFER
+            FABRIC_TRANSPORT_MESSAGE_BUFFER buffer = new()
             {
                 BufferSize = (uint)bytes.Length,
                 Buffer = pins.AddBlittable(bytes),
@@ -350,7 +350,7 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
             // CreateNativeHeaderBytes.ReturnsEmptyBufferWhenHeaderIsNull). ToFabricTransportMessage
             // only checks headerBuffer != IntPtr.Zero, so feeding the outbound representation back in yields
             // a non-null FabricTransportRequestHeader wrapping a zero-sized stream instead of null.
-            var emptyHeaderBuffer = new FABRIC_TRANSPORT_MESSAGE_BUFFER { BufferSize = 0u, Buffer = IntPtr.Zero };
+            FABRIC_TRANSPORT_MESSAGE_BUFFER emptyHeaderBuffer = new() { BufferSize = 0u, Buffer = IntPtr.Zero };
             IntPtr emptyHeaderPtr = pins.AddBlittable(emptyHeaderBuffer);
             SetupGetHeaderAndBodyBuffer(emptyHeaderPtr, (uint)bodyBytes.Count, bodyPtr);
 
@@ -391,7 +391,7 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
 
         IntPtr PinHeader(byte[] bytes)
         {
-            var buffer = new FABRIC_TRANSPORT_MESSAGE_BUFFER
+            FABRIC_TRANSPORT_MESSAGE_BUFFER buffer = new()
             {
                 BufferSize = (uint)bytes.Length,
                 Buffer = pins.AddBlittable(bytes),
@@ -412,7 +412,7 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
 
         static byte[] ReadAllBytes(Stream stream)
         {
-            using var memory = new MemoryStream();
+            using MemoryStream memory = new();
             stream.CopyTo(memory);
             return memory.ToArray();
         }
