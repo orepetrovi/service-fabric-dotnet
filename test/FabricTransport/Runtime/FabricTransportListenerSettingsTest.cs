@@ -76,6 +76,7 @@ public abstract class FabricTransportListenerSettingsTest
         [Fact]
         public void ReturnsListenerAddressWithPortOfEndpointMatchingEndpointResourceName()
         {
+            // Non-zero distinguishes a matched port from GetEndpointPort's not-found 0 sentinel.
             int expectedPort = fuzzy.Int32().Minimum(1);
             endpoints.Add(CreateEndpoint(sut.EndpointResourceName, expectedPort));
 
