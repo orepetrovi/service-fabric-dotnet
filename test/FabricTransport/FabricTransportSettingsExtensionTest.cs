@@ -248,7 +248,7 @@ public abstract class FabricTransportSettingsExtensionTest
 
             FABRIC_TRANSPORT_SETTINGS native = Native(ptr);
             FABRIC_TRANSPORT_SETTINGS_EX1 ex1 = Ex1(native);
-            Assert.Equal(5000u, ex1.ConnectTimeoutInMilliseconds);
+            Assert.Equal(Convert.ToUInt32(FabricTransportSettings.DefaultConnectTimeout.TotalMilliseconds), ex1.ConnectTimeoutInMilliseconds);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportSettingsExtension.ToNativeV2 does not validate ConnectTimeout upper bound.
