@@ -53,6 +53,24 @@ public abstract class NativeFabricTransportMessageTest : IDisposable
         }
     }
 
+    public sealed class CreateNativeBodyBytes : NativeFabricTransportMessageTest
+    {
+        [Fact]
+        public void ReturnsBufferPerBodyBufferContainingGivenBytes()
+        {
+            FABRIC_TRANSPORT_MESSAGE_BUFFER[] actual = sut.CreateNativeBodyBytes();
+
+            Assert.Equal(bodyBytes.Count, actual.Length);
+            for (int i = 0; i < bodyBytes.Count; i++)
+            {
+                Assert.Equal((uint)bodyBytes[i].Length, actual[i].BufferSize);
+                var copy = new byte[actual[i].BufferSize];
+                Marshal.Copy(actual[i].Buffer, copy, 0, copy.Length);
+                Assert.Equal(bodyBytes[i], copy);
+            }
+        }
+    }
+
     public sealed class CreateNativeBodyBytesPtr : NativeFabricTransportMessageTest
     {
         [Fact]
