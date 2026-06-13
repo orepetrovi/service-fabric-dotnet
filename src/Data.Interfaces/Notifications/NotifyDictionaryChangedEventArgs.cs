@@ -133,7 +133,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Gets an asynchronous enumerable that contains all items in the <see cref="IReliableDictionary{TKey, TValue}"/>.
         /// </summary>
-        /// <value>Asynchronous enumerable that contains the new state.</value>
         /// <remarks>
         /// The enumerable is valid only while <see cref="IReliableDictionary{TKey, TValue}.RebuildNotificationAsyncCallback"/> is executing
         /// and becomes invalid once the callback completes.
