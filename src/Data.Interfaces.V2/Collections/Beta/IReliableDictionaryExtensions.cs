@@ -27,7 +27,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <typeparam name="TKey">The type of the keys in the reliable dictionary.</typeparam>
         /// <typeparam name="TValue">
         /// The type of the values in the reliable dictionary.</typeparam>
-        /// <param name="reliableDictionary4Interface">The instance of the generic class of IReliableDictionary4.</param>
+        /// <param name="reliableDictionary4Interface">The reliable dictionary to remove the element from.</param>
         /// <param name="tx">Transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
