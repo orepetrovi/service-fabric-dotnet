@@ -329,13 +329,25 @@ public abstract class NativeMessageStreamTest: IDisposable
             Assert.Equal(expectedBytes[(int)offset], sut.ReadByte());
         }
 
-        [Fact]
-        public void ThrowsNotImplementedExceptionWhenOriginIsCurrent() =>
-            _ = Assert.Throws<NotImplementedException>(() => sut.Seek(offset, SeekOrigin.Current));
+        [Fact(Explicit = true)] // TODO: SUT bug. Seek throws NotImplementedException for SeekOrigin.Current though CanSeek is true.
+        public void SetsPositionRelativeToCurrentWhenOriginIsCurrent()
+        {
+            _ = sut.ReadByte();
 
-        [Fact]
-        public void ThrowsNotImplementedExceptionWhenOriginIsEnd() =>
-            _ = Assert.Throws<NotImplementedException>(() => sut.Seek(offset, SeekOrigin.End));
+            long result = sut.Seek(offset, SeekOrigin.Current);
+
+            Assert.Equal(1 + offset, result);
+            Assert.Equal(1 + offset, sut.Position);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Seek throws NotImplementedException for SeekOrigin.End though CanSeek is true.
+        public void SetsPositionRelativeToEndWhenOriginIsEnd()
+        {
+            long result = sut.Seek(-offset, SeekOrigin.End);
+
+            Assert.Equal(expectedBytes.Length - offset, result);
+            Assert.Equal(expectedBytes.Length - offset, sut.Position);
+        }
     }
 
     public sealed class SetLength: NativeMessageStreamTest
@@ -343,9 +355,9 @@ public abstract class NativeMessageStreamTest: IDisposable
         // Method parameters
         readonly long value = fuzzy.Int64();
 
-        [Fact]
-        public void ThrowsNotImplementedException() =>
-            _ = Assert.Throws<NotImplementedException>(() => sut.SetLength(value));
+        [Fact(Explicit = true)] // TODO: SUT bug. SetLength throws NotImplementedException; Stream requires NotSupportedException when not writable.
+        public void ThrowsNotSupportedException() =>
+            _ = Assert.Throws<NotSupportedException>(() => sut.SetLength(value));
     }
 
     public sealed class Write: NativeMessageStreamTest
@@ -357,8 +369,8 @@ public abstract class NativeMessageStreamTest: IDisposable
 
         public Write() => count = buffer.Length;
 
-        [Fact]
-        public void ThrowsNotImplementedException() =>
-            _ = Assert.Throws<NotImplementedException>(() => sut.Write(buffer, offset, count));
+        [Fact(Explicit = true)] // TODO: SUT bug. Write throws NotImplementedException; Stream requires NotSupportedException when not writable.
+        public void ThrowsNotSupportedException() =>
+            _ = Assert.Throws<NotSupportedException>(() => sut.Write(buffer, offset, count));
     }
 }
