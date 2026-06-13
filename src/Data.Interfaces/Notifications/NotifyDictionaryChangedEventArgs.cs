@@ -114,7 +114,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     /// <remarks>
-    /// Note that until this operation completes, rebuild of the <cref name="IReliableDictionary"/> will not complete.
+    /// Note that until this operation completes, rebuild of the <see cref="IReliableDictionary{TKey, TValue}"/> will not complete.
     /// This can cause the replica to be blocked waiting for the callback to complete before proceeding. 
     /// Asynchronous iteration over the state may require IO.
     /// </remarks>
@@ -123,16 +123,16 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         private readonly Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>> enumerableState;
 
         /// <summary>
-        /// Initializes a new instance of the <cref name="NotifyDictionaryRebuildEventArgs"/>
+        /// Initializes a new instance of the <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/>
         /// </summary>
-        /// <param name="enumerableState"><cref name="Microsoft.ServiceFabric.Data.IAsyncEnumerable"/> that can be used to iterate the new state of the <cref name="IReliableDictionary"/>.</param>
+        /// <param name="enumerableState"><see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}"/> that can be used to iterate the new state of the <see cref="IReliableDictionary{TKey, TValue}"/>.</param>
         public NotifyDictionaryRebuildEventArgs(Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>> enumerableState) : base(NotifyDictionaryChangedAction.Rebuild)
         {
             this.enumerableState = enumerableState;
         }
 
         /// <summary>
-        /// Gets an asynchronous enumerable that contains all items in the <cref name="IReliableDictionary"/>.
+        /// Gets an asynchronous enumerable that contains all items in the <see cref="IReliableDictionary{TKey, TValue}"/>.
         /// </summary>
         /// <value>Asynchronous enumerable that contains the new state.</value>
         public Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>> State
@@ -157,7 +157,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// Initializes a new instance of the <cref name="NotifyDictionaryClearEventArgs"/>
         /// </summary>
         /// <param name="commitSequenceNumber">
-        /// The commit sequence number of the transaction cleared the <cref name="IReliableDictionary"/>
+        /// The commit sequence number of the transaction cleared the <see cref="IReliableDictionary{TKey, TValue}"/>
         /// </param>
         public NotifyDictionaryClearEventArgs(long commitSequenceNumber) : base(NotifyDictionaryChangedAction.Clear)
         {
