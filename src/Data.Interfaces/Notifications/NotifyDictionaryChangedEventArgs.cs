@@ -191,9 +191,9 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyDictionaryItemAddedEventArgs{TKey, TValue}"/> class.
         /// </summary>
-        /// <param name="transaction">Transaction that the operation is related to.</param>
-        /// <param name="key">Key that was added.</param>
-        /// <param name="value">Value that was added.</param>
+        /// <param name="transaction">The transaction the operation is part of.</param>
+        /// <param name="key">The key that was added.</param>
+        /// <param name="value">The value that was added.</param>
         public NotifyDictionaryItemAddedEventArgs(ITransaction transaction, TKey key, TValue value) : base(transaction, NotifyDictionaryChangedAction.Add)
         {
             this.key = key;
