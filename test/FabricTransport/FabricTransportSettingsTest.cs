@@ -375,7 +375,7 @@ public abstract class FabricTransportSettingsTest
         [Fact]
         public void IsSetToGivenValue()
         {
-            var expected = new WindowsCredentials();
+            WindowsCredentials expected = new();
             sut.SecurityCredentials = expected;
             Assert.Same(expected, sut.SecurityCredentials);
         }
