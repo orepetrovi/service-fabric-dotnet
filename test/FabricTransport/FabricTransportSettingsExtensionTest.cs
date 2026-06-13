@@ -30,7 +30,7 @@ public abstract class FabricTransportSettingsExtensionTest
                 KeepAliveTimeout = fuzzy.TimeSpan().Seconds(),
                 ConnectTimeout = fuzzy.TimeSpan().Milliseconds(),
                 MaxMessageSize = fuzzy.Int32().Minimum(0),
-                MaxConcurrentCalls = fuzzy.Int32().Minimum(1),
+                MaxConcurrentCalls = fuzzy.Int32().Minimum(0),
                 MaxQueueSize = fuzzy.Int32().Minimum(0),
             };
 
