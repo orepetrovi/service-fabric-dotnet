@@ -249,7 +249,7 @@ public abstract class NativeMessageStreamTest: IDisposable
         public void ReturnsBytesSequentiallyAcrossNativeBuffers()
         {
             for (int i = 0; i < expectedBytes.Length; i++)
-                Assert.Equal((int)expectedBytes[i], sut.ReadByte());
+                Assert.Equal(expectedBytes[i], sut.ReadByte());
         }
 
         [Fact]
