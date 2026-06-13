@@ -207,6 +207,17 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
 
         void IDisposable.Dispose() => Marshal.FreeHGlobal(nativeClientId);
 
+        [Fact]
+        public void ReturnsWhenWrappedTaskSucceeds()
+        {
+            _ = serviceConnectionHandler
+                .Setup(_ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), TimeSpan.FromMilliseconds(timeoutMilliseconds)))
+                .Returns(Task.FromResult<object>(null));
+            IFabricAsyncOperationContext context = sut.BeginProcessConnect(nativeClientConnection, timeoutMilliseconds, callback);
+
+            sut.EndProcessConnect(context);
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug. EndProcessConnect does not validate context.
         public void ThrowsArgumentNullExceptionWhenContextIsNull()
         {
@@ -248,6 +259,17 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
             nativeClientId = Marshal.StringToHGlobalUni(clientId);
 
         void IDisposable.Dispose() => Marshal.FreeHGlobal(nativeClientId);
+
+        [Fact]
+        public void ReturnsWhenWrappedTaskSucceeds()
+        {
+            _ = serviceConnectionHandler
+                .Setup(_ => _.DisconnectAsync(clientId, TimeSpan.FromMilliseconds(timeoutMilliseconds)))
+                .Returns(Task.FromResult<object>(null));
+            IFabricAsyncOperationContext context = sut.BeginProcessDisconnect(nativeClientId, timeoutMilliseconds, callback);
+
+            sut.EndProcessDisconnect(context);
+        }
 
         [Fact(Explicit = true)] // TODO: SUT bug. EndProcessDisconnect does not validate context.
         public void ThrowsArgumentNullExceptionWhenContextIsNull()
