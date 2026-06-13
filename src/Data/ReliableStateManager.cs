@@ -62,6 +62,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The configuration used to create the state manager, or <see langword="null"/> to use a default
         /// <see cref="ReliableStateManagerConfiguration"/>.
         /// </param>
+        /// <exception cref="FileNotFoundException">The <c>Microsoft.ServiceFabric.Data.Impl</c> assembly could not be loaded.</exception>
         public ReliableStateManager(StatefulServiceContext serviceContext, ReliableStateManagerConfiguration configuration = null)
         {
             configuration = configuration ?? new ReliableStateManagerConfiguration();
