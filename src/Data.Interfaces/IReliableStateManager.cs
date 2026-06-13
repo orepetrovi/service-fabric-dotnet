@@ -49,7 +49,7 @@ namespace Microsoft.ServiceFabric.Data
         /// must be compatible with the built-in serialization format for that type.
         /// </para>
         /// <para>
-        /// This method should be called from the constructor of the Stateful Service. 
+        /// This method should be called from the constructor of the Stateful Service.
         /// This ensures that the Reliable Collections have the necessary serializers before recovery of the persisted state begins.
         /// </para>
         /// </remarks>
@@ -74,7 +74,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <typeparam name="T">
         /// When specifying the <see cref="IReliableState"/> type, you may ask for either a class type or an interface type.
         /// <para>
-        /// If specifying a class type, the system will attempt to return an instance of that type. 
+        /// If specifying a class type, the system will attempt to return an instance of that type.
         /// If an instance of that type cannot be instantiated (e.g., abstract class, no suitable constructor), an <see cref="ArgumentException"/> is thrown.
         /// </para>
         /// <para>
