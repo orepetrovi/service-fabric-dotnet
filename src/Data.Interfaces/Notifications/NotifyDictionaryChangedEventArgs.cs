@@ -114,7 +114,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     /// <remarks>
-    /// Note that until this operation completes, rebuild of the <see cref="IReliableDictionary{TKey, TValue}"/> will not complete.
+    /// Until this operation completes, rebuild of the <see cref="IReliableDictionary{TKey, TValue}"/> will not complete.
     /// This can cause the replica to be blocked waiting for the callback to complete before proceeding. 
     /// Asynchronous iteration over the state may require IO.
     /// </remarks>
