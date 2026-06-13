@@ -12,10 +12,12 @@ using System.Threading.Tasks;
 namespace Microsoft.ServiceFabric.Data.Beta
 {
     /// <summary>
-    /// (Beta) Not for production use - API is subject to change in the future.
     /// Manages all <see cref="IReliableState"/> for a service replica.
-    /// Each replica in a service has its own state manager and thus its own set of <see cref="IReliableState"/>.
     /// </summary>
+    /// <remarks>
+    /// (Beta) Not for production use - API is subject to change in the future.
+    /// Each replica in a service has its own state manager and thus its own set of <see cref="IReliableState"/>.
+    /// </remarks>
     public interface IReliableStateManager2 : IReliableStateManagerReplica2
     {
         /// <summary>
