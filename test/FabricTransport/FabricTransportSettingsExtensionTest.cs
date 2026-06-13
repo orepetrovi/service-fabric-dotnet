@@ -237,6 +237,8 @@ public abstract class FabricTransportSettingsExtensionTest
         [Fact]
         public void EnablesMaxConcurrentCallsWhenGreaterThanZero()
         {
+            transportSettings.MaxConcurrentCalls = fuzzy.Int32().Minimum(1);
+
             IntPtr ptr = transportSettings.ToNativeV2(pin);
 
             FABRIC_TRANSPORT_SETTINGS native = Native(ptr);
