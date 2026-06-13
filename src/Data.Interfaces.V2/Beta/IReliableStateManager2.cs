@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 namespace Microsoft.ServiceFabric.Data.Beta
 {
     /// <summary>
-    /// Manages all <see cref="IReliableState"/> for a service replica.
+    /// Defines a reliable state manager replica that additionally supports creating transactions with a configurable
+    /// isolation level for single-entity reads on the primary.
     /// </summary>
     /// <remarks>
     /// (Beta) Not for production use - API is subject to change in the future.
-    /// Each replica in a service has its own state manager and thus its own set of <see cref="IReliableState"/>.
     /// </remarks>
     public interface IReliableStateManager2 : IReliableStateManagerReplica2
     {
