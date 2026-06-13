@@ -39,8 +39,7 @@ public abstract class FabricTransportSettingsExtensionTest
         [Fact]
         public void MarshalsScalarSettingsToNativeStruct()
         {
-            // Drive each scalar from a known integer input so the assertion describes the intended int -> uint
-            // marshalling instead of re-applying the SUT's own cast.
+            // Drive from a known integer input so the assertion verifies int -> uint marshalling, not the SUT's cast.
             int maxMessageSize = fuzzy.Int32().Minimum(0);
             int maxConcurrentCalls = fuzzy.Int32().Minimum(1);
             int maxQueueSize = fuzzy.Int32().Minimum(0);
@@ -101,8 +100,7 @@ public abstract class FabricTransportSettingsExtensionTest
         [Fact]
         public void MarshalsOperationTimeoutToNativeStruct()
         {
-            // Drive OperationTimeout from a known integer input so the assertion describes the intended int -> uint
-            // marshalling instead of re-applying the SUT's own cast.
+            // Drive from a known integer input so the assertion verifies int -> uint marshalling, not the SUT's cast.
             int operationSeconds = fuzzy.Int32().Minimum(0);
             transportSettings.OperationTimeout = TimeSpan.FromSeconds(operationSeconds);
 
@@ -138,8 +136,7 @@ public abstract class FabricTransportSettingsExtensionTest
         [Fact]
         public void MarshalsKeepAliveTimeoutToNativeStruct()
         {
-            // Drive KeepAliveTimeout from a known integer input so the assertion describes the intended int -> uint
-            // marshalling instead of re-applying the SUT's own cast.
+            // Drive from a known integer input so the assertion verifies int -> uint marshalling, not the SUT's cast.
             int keepAliveSeconds = fuzzy.Int32().Minimum(0);
             transportSettings.KeepAliveTimeout = TimeSpan.FromSeconds(keepAliveSeconds);
 
@@ -202,8 +199,7 @@ public abstract class FabricTransportSettingsExtensionTest
         [Fact]
         public void SetsConnectTimeoutFromGivenValue()
         {
-            // Drive ConnectTimeout from a known integer input so the assertion describes the intended int -> uint
-            // marshalling instead of re-applying the SUT's own cast.
+            // Drive from a known integer input so the assertion verifies int -> uint marshalling, not the SUT's cast.
             int connectMilliseconds = fuzzy.Int32().Minimum(0);
             transportSettings.ConnectTimeout = TimeSpan.FromMilliseconds(connectMilliseconds);
 
