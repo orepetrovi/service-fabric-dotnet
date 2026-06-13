@@ -297,7 +297,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(ITransaction txn, EnumerationMode enumerationMode);
 
         /// <summary>
-        /// Asynchronously returns an <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}"/> over the <see cref="IReliableDictionary{TKey, TValue}"/>.
+        /// Asynchronously returns an <see cref="Data.IAsyncEnumerable{T}"/> over the <see cref="IReliableDictionary{TKey, TValue}"/>.
         /// </summary>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">A predicate that filters the key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all key/value pairs.</param>
@@ -314,7 +314,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <remarks>
         /// The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
-        /// It represents a snapshot consistent view. <see cref="Microsoft.ServiceFabric.Data.IAsyncEnumerable{T}.GetAsyncEnumerator"/> must be called on
+        /// It represents a snapshot consistent view. <see cref="Data.IAsyncEnumerable{T}.GetAsyncEnumerator"/> must be called on
         /// the returned instance to enumerate. Example usage can be
         /// seen <see href="https://github.com/Azure-Samples/service-fabric-dotnet-web-reference-app/blob/master/ReferenceApp/Inventory.Service/InventoryService.cs">here</see>.
         /// </remarks>
