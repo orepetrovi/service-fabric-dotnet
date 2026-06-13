@@ -73,25 +73,6 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
                 Times.Once);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. BeginProcessConnect does not validate nativeClientConnection.
-        public void ThrowsArgumentNullExceptionWhenNativeClientConnectionIsNull()
-        {
-            // BeginProcessConnect passes nativeClientConnection to the FabricTransportCallbackClient constructor, which
-            // stores it and later dereferences it via get_ClientId(), throwing NullReferenceException instead of
-            // ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.BeginProcessConnect(null, timeoutMilliseconds, callback));
-            Assert.Equal(nameof(nativeClientConnection), exception.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. BeginProcessConnect does not validate callback.
-        public void ThrowsArgumentNullExceptionWhenCallbackIsNull()
-        {
-            // BeginProcessConnect passes callback to Utility.WrapNativeAsyncMethodImplementation without validating it,
-            // so no ArgumentNullException is thrown.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.BeginProcessConnect(nativeClientConnection, timeoutMilliseconds, null));
-            Assert.Equal(nameof(callback), exception.ParamName);
-        }
-
         [Fact]
         public async Task InvokesCallbackWithReturnedContextWhenTaskCompletes()
         {
@@ -113,6 +94,25 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
             Assert.Same(callbackInvoked.Task, completed);
             Assert.Same(returnedContext, await callbackInvoked.Task);
             Mock.Get(callback).Verify(_ => _.Invoke(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. BeginProcessConnect does not validate nativeClientConnection.
+        public void ThrowsArgumentNullExceptionWhenNativeClientConnectionIsNull()
+        {
+            // BeginProcessConnect passes nativeClientConnection to the FabricTransportCallbackClient constructor, which
+            // stores it and later dereferences it via get_ClientId(), throwing NullReferenceException instead of
+            // ArgumentNullException.
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.BeginProcessConnect(null, timeoutMilliseconds, callback));
+            Assert.Equal(nameof(nativeClientConnection), exception.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. BeginProcessConnect does not validate callback.
+        public void ThrowsArgumentNullExceptionWhenCallbackIsNull()
+        {
+            // BeginProcessConnect passes callback to Utility.WrapNativeAsyncMethodImplementation without validating it,
+            // so no ArgumentNullException is thrown.
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.BeginProcessConnect(nativeClientConnection, timeoutMilliseconds, null));
+            Assert.Equal(nameof(callback), exception.ParamName);
         }
     }
 
@@ -150,25 +150,6 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
                 Times.Once);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. BeginProcessDisconnect does not validate nativeClientId.
-        public void ThrowsArgumentNullExceptionWhenNativeClientIdIsZero()
-        {
-            // BeginProcessDisconnect passes nativeClientId to NativeTypes.FromNativeString, which returns null for
-            // IntPtr.Zero, so a null clientId is silently forwarded to DisconnectAsync instead of throwing
-            // ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.BeginProcessDisconnect(IntPtr.Zero, timeoutMilliseconds, callback));
-            Assert.Equal(nameof(nativeClientId), exception.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. BeginProcessDisconnect does not validate callback.
-        public void ThrowsArgumentNullExceptionWhenCallbackIsNull()
-        {
-            // BeginProcessDisconnect passes callback to Utility.WrapNativeAsyncMethodImplementation without validating
-            // it, so no ArgumentNullException is thrown.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.BeginProcessDisconnect(nativeClientId, timeoutMilliseconds, null));
-            Assert.Equal(nameof(callback), exception.ParamName);
-        }
-
         [Fact]
         public async Task InvokesCallbackWithReturnedContextWhenTaskCompletes()
         {
@@ -190,6 +171,25 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
             Assert.Same(callbackInvoked.Task, completed);
             Assert.Same(returnedContext, await callbackInvoked.Task);
             Mock.Get(callback).Verify(_ => _.Invoke(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. BeginProcessDisconnect does not validate nativeClientId.
+        public void ThrowsArgumentNullExceptionWhenNativeClientIdIsZero()
+        {
+            // BeginProcessDisconnect passes nativeClientId to NativeTypes.FromNativeString, which returns null for
+            // IntPtr.Zero, so a null clientId is silently forwarded to DisconnectAsync instead of throwing
+            // ArgumentNullException.
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.BeginProcessDisconnect(IntPtr.Zero, timeoutMilliseconds, callback));
+            Assert.Equal(nameof(nativeClientId), exception.ParamName);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. BeginProcessDisconnect does not validate callback.
+        public void ThrowsArgumentNullExceptionWhenCallbackIsNull()
+        {
+            // BeginProcessDisconnect passes callback to Utility.WrapNativeAsyncMethodImplementation without validating
+            // it, so no ArgumentNullException is thrown.
+            var exception = Assert.Throws<ArgumentNullException>(() => sut.BeginProcessDisconnect(nativeClientId, timeoutMilliseconds, null));
+            Assert.Equal(nameof(callback), exception.ParamName);
         }
     }
 
