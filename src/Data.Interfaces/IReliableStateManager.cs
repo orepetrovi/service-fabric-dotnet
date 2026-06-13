@@ -78,11 +78,8 @@ namespace Microsoft.ServiceFabric.Data
         /// If an instance of that type cannot be instantiated (e.g., abstract class, no parameterless constructor), a <see cref="MissingMethodException"/> is thrown.
         /// </para>
         /// <para>
-        /// If specifying an interface type, the manager will attempt to resolve the interface to a concrete type.
-        /// If type mapping is specified by the user, this method will use the user-specified mapping to resolve the type (not yet supported).
-        /// If type mapping is not specified by the user this method will select the default implementation for the interface given.
-        /// If the given interface type does not have a default implementation, or a user-specified mapping for the type is not provided or the type
-        /// is invalid, this method will throw ArgumentException.
+        /// If specifying an interface type, the manager will resolve the interface to its default concrete implementation.
+        /// If the given interface type does not have a default implementation, or the type is invalid, this method will throw ArgumentException.
         /// </para>
         /// </typeparam>
         /// <param name="tx">The transaction to associate this operation with.</param>
