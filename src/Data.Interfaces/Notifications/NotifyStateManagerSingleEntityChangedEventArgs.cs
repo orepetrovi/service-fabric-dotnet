@@ -19,7 +19,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// Initializes a new instance of the <see cref="NotifyStateManagerSingleEntityChangedEventArgs"/> class.
         /// </summary>
         /// <param name="transaction">The transaction that the change is related to.</param>
-        /// <param name="reliableState"><see cref="IReliableState"/> that was changed.</param>
+        /// <param name="reliableState">The reliable state that was changed.</param>
         /// <param name="action">One of the enumeration values that specifies the action that caused the event.</param>
         public NotifyStateManagerSingleEntityChangedEventArgs(
             ITransaction transaction,
