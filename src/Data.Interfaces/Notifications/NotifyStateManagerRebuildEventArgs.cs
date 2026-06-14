@@ -19,7 +19,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         private readonly IAsyncEnumerable<IReliableState> reliableStates;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NotifyStateManagerChangedEventArgs"/>
+        /// Initializes a new instance of the <see cref="NotifyStateManagerRebuildEventArgs"/> class.
         /// </summary>
         /// <param name="reliableStates">
         /// <see cref="IAsyncEnumerable{IReliableState}"/> of all the ReliableState after the rebuild.
