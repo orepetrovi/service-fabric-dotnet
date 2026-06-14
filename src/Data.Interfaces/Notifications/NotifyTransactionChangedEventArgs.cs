@@ -29,11 +29,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Type of action for which the event was created.
+        /// Gets the action that caused the event.
         /// </summary>
-        /// <value>
-        /// The type of notification.
-        /// </value>
         public NotifyTransactionChangedAction Action
         {
             get
