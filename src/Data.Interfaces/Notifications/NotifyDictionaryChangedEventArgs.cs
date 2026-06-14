@@ -224,7 +224,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     }
 
     /// <summary>
-    /// Provides data for the DictionaryChanged event caused by item update.
+    /// Provides data for an <see cref="IReliableDictionary{TKey, TValue}.DictionaryChanged"/> notification indicating that a key's value was updated.
     /// </summary>
     /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
@@ -234,10 +234,10 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         private readonly TValue value;
 
         /// <summary>
-        /// Initializes a new instance of the <cref name="NotifyDictionaryItemUpdatedEventArgs"/>
+        /// Initializes a new instance of the <see cref="NotifyDictionaryItemUpdatedEventArgs{TKey, TValue}"/> class.
         /// </summary>
-        /// <param name="transaction">Transaction that the operation is related to.</param>
-        /// <param name="key">Key that was updated.</param>
+        /// <param name="transaction">The transaction the operation is part of.</param>
+        /// <param name="key">The key whose value was updated.</param>
         /// <param name="value">The new value.</param>
         public NotifyDictionaryItemUpdatedEventArgs(ITransaction transaction, TKey key, TValue value) : base(transaction, NotifyDictionaryChangedAction.Update)
         {
@@ -246,11 +246,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the key.
+        /// Gets the key whose value was updated.
         /// </summary>
-        /// <value>
-        /// The key.
-        /// </value>
         public TKey Key
         {
             get
@@ -260,11 +257,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the value.
+        /// Gets the new value.
         /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
         public TValue Value
         {
             get
