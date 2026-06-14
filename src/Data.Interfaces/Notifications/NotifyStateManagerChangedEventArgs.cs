@@ -29,9 +29,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Gets the action that caused the event.
         /// </summary>
-        /// <value>
-        /// The type of notification.
-        /// </value>
         public NotifyStateManagerChangedAction Action
         {
             get
