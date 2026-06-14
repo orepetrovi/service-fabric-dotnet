@@ -10,7 +10,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     using Microsoft.ServiceFabric.Data;
 
     /// <summary>
-    /// Event arguments for transactions.
+    /// Provides data for the <see cref="IReliableStateManager.TransactionChanged"/> event.
     /// </summary>
     public class NotifyTransactionChangedEventArgs : EventArgs
     {
