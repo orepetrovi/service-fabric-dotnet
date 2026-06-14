@@ -42,7 +42,7 @@ public abstract class FabricTransportListenerSettingsTest
     {
         readonly string sectionName = fuzzy.String();
 
-        public GetDefault() => typeof(FabricServiceConfig).Field<FabricServiceConfig>().Set(null);
+        public GetDefault() => ResetFabricServiceConfig();
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Requires a Service Fabric host process.
         public void ReturnsListenerSettingsLoadedFromConfigWhenSectionIsPresent() =>
@@ -124,7 +124,7 @@ public abstract class FabricTransportListenerSettingsTest
         readonly string sectionName = fuzzy.String();
         readonly string configPackageName = fuzzy.String();
 
-        public LoadFrom() => typeof(FabricServiceConfig).Field<FabricServiceConfig>().Set(null);
+        public LoadFrom() => ResetFabricServiceConfig();
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Requires a Service Fabric host process.
         public void LoadsListenerSettingsFromConfigPackageWhenConfigPackageNameIsSpecified() =>
@@ -173,7 +173,7 @@ public abstract class FabricTransportListenerSettingsTest
         readonly string sectionName = fuzzy.String();
         readonly string configPackageName = fuzzy.String();
 
-        public TryLoadFrom() => typeof(FabricServiceConfig).Field<FabricServiceConfig>().Set(null);
+        public TryLoadFrom() => ResetFabricServiceConfig();
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Requires a Service Fabric host process.
         public void ReturnsTrueAndListenerSettingsWhenConfigPackageNameIsSpecified() =>
@@ -216,4 +216,9 @@ public abstract class FabricTransportListenerSettingsTest
             // route through FabricServiceConfig / FabricRuntime.GetActivationContext() with no mockable seam.
             throw new NotImplementedException();
     }
+
+    // Reset the process-wide FabricServiceConfig singleton so each test loads configuration from scratch.
+    // Tests in this collection share the singleton; a previous test's instance would otherwise leak state
+    // across tests and make outcomes depend on execution order.
+    static void ResetFabricServiceConfig() => typeof(FabricServiceConfig).Field<FabricServiceConfig>().Set(null);
 }
