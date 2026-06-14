@@ -10,6 +10,9 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// <summary>
     /// Provides data for the <see cref="IReliableStateManager.StateManagerChanged"/> event caused by a transactional single entity operation.
     /// </summary>
+    /// <remarks>
+    /// Raised when a single <see cref="IReliableState"/> provider is added to or removed from the State Manager within a transaction.
+    /// </remarks>
     public class NotifyStateManagerSingleEntityChangedEventArgs : NotifyStateManagerChangedEventArgs
     {
         private readonly ITransaction transaction;
