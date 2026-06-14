@@ -133,21 +133,27 @@ public abstract class FabricTransportListenerSettingsTest
             // GetActivationContext succeeds only inside a Service Fabric host process.
             throw new NotImplementedException();
 
-        [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportListenerSettings.LoadFrom throws ArgumentException without a paramName.
-        public void ThrowsArgumentExceptionWhenSpecifiedConfigPackageCannotBeLoaded()
+        [Fact]
+        public void ThrowsArgumentExceptionWhenSpecifiedConfigPackageCannotBeLoaded() =>
+            Assert.Throws<ArgumentException>(() =>
+                FabricTransportListenerSettings.LoadFrom(sectionName, configPackageName));
+
+        [Fact(Explicit = true)] // TODO: SUT bug. LoadFrom builds the ArgumentException without a paramName, so ParamName is null instead of "configPackageName".
+        public void ReportsConfigPackageNameAsParamNameWhenSpecifiedConfigPackageCannotBeLoaded()
         {
-            // LoadFrom throws ArgumentException reporting the missing config package, but constructs it
-            // without a ParamName, so exception.ParamName is null instead of "configPackageName".
             var exception = Assert.Throws<ArgumentException>(() =>
                 FabricTransportListenerSettings.LoadFrom(sectionName, configPackageName));
             Assert.Equal(nameof(configPackageName), exception.ParamName);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportListenerSettings.LoadFrom throws ArgumentException without a paramName.
-        public void ThrowsArgumentExceptionWhenDefaultConfigPackageCannotBeLoaded()
+        [Fact]
+        public void ThrowsArgumentExceptionWhenDefaultConfigPackageCannotBeLoaded() =>
+            Assert.Throws<ArgumentException>(() =>
+                FabricTransportListenerSettings.LoadFrom(sectionName));
+
+        [Fact(Explicit = true)] // TODO: SUT bug. LoadFrom builds the ArgumentException without a paramName, so ParamName is null instead of "configPackageName".
+        public void ReportsConfigPackageNameAsParamNameWhenDefaultConfigPackageCannotBeLoaded()
         {
-            // LoadFrom throws ArgumentException reporting the missing config package, but constructs it
-            // without a ParamName, so exception.ParamName is null instead of "configPackageName".
             var exception = Assert.Throws<ArgumentException>(() =>
                 FabricTransportListenerSettings.LoadFrom(sectionName));
             Assert.Equal(nameof(configPackageName), exception.ParamName);
