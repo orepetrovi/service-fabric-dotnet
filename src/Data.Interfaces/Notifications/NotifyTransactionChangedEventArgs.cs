@@ -40,11 +40,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the transaction.
+        /// Gets the <see cref="ITransaction"/> whose state change raised the event.
         /// </summary>
-        /// <value>
-        /// The transaction associated with the operation.
-        /// </value>
         public ITransaction Transaction
         {
             get
