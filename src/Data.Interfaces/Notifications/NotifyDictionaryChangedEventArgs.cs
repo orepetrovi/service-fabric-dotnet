@@ -201,7 +201,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the key.
+        /// Gets the key that was added.
         /// </summary>
         public TKey Key
         {
@@ -212,7 +212,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the value.
+        /// Gets the value that was added.
         /// </summary>
         public TValue Value
         {
