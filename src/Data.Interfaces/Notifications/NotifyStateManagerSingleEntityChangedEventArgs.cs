@@ -42,7 +42,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the reliable state
+        /// Gets the reliable state.
         /// </summary>
         public IReliableState ReliableState
         {
