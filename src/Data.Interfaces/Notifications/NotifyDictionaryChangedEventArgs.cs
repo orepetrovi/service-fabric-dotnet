@@ -278,7 +278,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         private readonly TKey key;
 
         /// <summary>
-        /// Initializes a new instance of the <cref name="NotifyDictionaryItemRemovedEventArgs"/>
+        /// Initializes a new instance of the <see cref="NotifyDictionaryItemRemovedEventArgs{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="transaction">Transaction that the operation is related to.</param>
         /// <param name="key">Key that was removed.</param>
