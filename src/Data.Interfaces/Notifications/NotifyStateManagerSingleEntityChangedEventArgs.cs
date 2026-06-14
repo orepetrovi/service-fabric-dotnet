@@ -8,7 +8,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     using Microsoft.ServiceFabric.Data;
 
     /// <summary>
-    /// Provides data for the DictionaryChanged event caused by a transactional single entity operation.
+    /// Provides data for the <see cref="IReliableStateManager.StateManagerChanged"/> event caused by a transactional single entity operation.
     /// </summary>
     public class NotifyStateManagerSingleEntityChangedEventArgs : NotifyStateManagerChangedEventArgs
     {
