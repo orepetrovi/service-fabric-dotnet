@@ -288,7 +288,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the key.
+        /// Gets the key that was removed.
         /// </summary>
         public TKey Key
         {
