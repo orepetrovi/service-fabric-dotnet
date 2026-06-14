@@ -9,8 +9,10 @@ namespace Microsoft.ServiceFabric.Data.Notifications
 
     /// <summary>
     /// Provides data for the <see cref="IReliableStateManager.StateManagerChanged"/> event caused by a rebuild.
-    /// Rebuild notifications are raised during recovery, restore, and at the end of copy.
     /// </summary>
+    /// <remarks>
+    /// Rebuild notifications are raised during recovery, restore, and at the end of copy.
+    /// </remarks>
     public class NotifyStateManagerRebuildEventArgs : NotifyStateManagerChangedEventArgs
     {
         /// <summary>
