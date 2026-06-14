@@ -15,9 +15,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// </remarks>
     public class NotifyStateManagerRebuildEventArgs : NotifyStateManagerChangedEventArgs
     {
-        /// <summary>
-        /// The state providers.
-        /// </summary>
         private readonly IAsyncEnumerable<IReliableState> reliableStates;
 
         /// <summary>
