@@ -22,7 +22,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// Initializes a new instance of the <see cref="NotifyStateManagerRebuildEventArgs"/> class.
         /// </summary>
         /// <param name="reliableStates">
-        /// <see cref="IAsyncEnumerable{IReliableState}"/> of all the ReliableState after the rebuild.
+        /// An asynchronous sequence of <see cref="IReliableState"/> providers after the rebuild.
         /// </param>
         public NotifyStateManagerRebuildEventArgs(IAsyncEnumerable<IReliableState> reliableStates) : base(NotifyStateManagerChangedAction.Rebuild)
         {
