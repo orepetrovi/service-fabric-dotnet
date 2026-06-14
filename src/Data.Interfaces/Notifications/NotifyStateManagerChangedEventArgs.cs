@@ -8,7 +8,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     using System;
 
     /// <summary>
-    /// Provides data for the StateManagerChanged event.
+    /// Provides data for the <see cref="IReliableStateManager.StateManagerChanged"/> event.
     /// </summary>
     public abstract class NotifyStateManagerChangedEventArgs : EventArgs
     {
