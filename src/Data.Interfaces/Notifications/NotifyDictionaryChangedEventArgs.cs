@@ -280,8 +280,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyDictionaryItemRemovedEventArgs{TKey, TValue}"/> class.
         /// </summary>
-        /// <param name="transaction">Transaction that the operation is related to.</param>
-        /// <param name="key">Key that was removed.</param>
+        /// <param name="transaction">The transaction the operation is part of.</param>
+        /// <param name="key">The key that was removed.</param>
         public NotifyDictionaryItemRemovedEventArgs(ITransaction transaction, TKey key) : base(transaction, NotifyDictionaryChangedAction.Remove)
         {
             this.key = key;
