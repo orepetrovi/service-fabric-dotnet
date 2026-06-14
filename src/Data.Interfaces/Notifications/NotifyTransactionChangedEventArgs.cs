@@ -21,7 +21,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// Initializes a new instance of the <see cref="NotifyTransactionChangedEventArgs"/> class.
         /// </summary>
         /// <param name="transaction">The transaction that the change is related to.</param>
-        /// <param name="action">The type of notification.</param>
+        /// <param name="action">One of the enumeration values that specifies the action that caused the event.</param>
         public NotifyTransactionChangedEventArgs(ITransaction transaction, NotifyTransactionChangedAction action)
         {
             this.action = action;
