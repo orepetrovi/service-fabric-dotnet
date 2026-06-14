@@ -33,9 +33,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Gets the transaction.
         /// </summary>
-        /// <value>
-        /// The transaction associated with the operation.
-        /// </value>
         public ITransaction Transaction
         {
             get
@@ -47,9 +44,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Gets the reliable state
         /// </summary>
-        /// <value>
-        /// The <see cref="IReliableState"/> associated with the notification.
-        /// </value>
         public IReliableState ReliableState
         {
             get
