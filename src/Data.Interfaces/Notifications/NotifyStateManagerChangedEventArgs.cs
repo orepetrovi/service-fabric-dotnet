@@ -12,9 +12,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// </summary>
     public abstract class NotifyStateManagerChangedEventArgs : EventArgs
     {
-        /// <summary>
-        /// The action.
-        /// </summary>
         private readonly NotifyStateManagerChangedAction action;
 
         /// <summary>
