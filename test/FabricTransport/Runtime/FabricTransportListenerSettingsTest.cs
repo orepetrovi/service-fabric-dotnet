@@ -138,24 +138,16 @@ public abstract class FabricTransportListenerSettingsTest
             Assert.Throws<ArgumentException>(() =>
                 FabricTransportListenerSettings.LoadFrom(sectionName, configPackageName));
 
-        [Fact(Explicit = true)] // TODO: SUT bug. LoadFrom builds the ArgumentException without a paramName, so ParamName is null instead of "configPackageName".
-        public void ReportsConfigPackageNameAsParamNameWhenSpecifiedConfigPackageCannotBeLoaded()
-        {
-            var exception = Assert.Throws<ArgumentException>(() =>
-                FabricTransportListenerSettings.LoadFrom(sectionName, configPackageName));
-            Assert.Equal(nameof(configPackageName), exception.ParamName);
-        }
-
         [Fact]
         public void ThrowsArgumentExceptionWhenDefaultConfigPackageCannotBeLoaded() =>
             Assert.Throws<ArgumentException>(() =>
                 FabricTransportListenerSettings.LoadFrom(sectionName));
 
         [Fact(Explicit = true)] // TODO: SUT bug. LoadFrom builds the ArgumentException without a paramName, so ParamName is null instead of "configPackageName".
-        public void ReportsConfigPackageNameAsParamNameWhenDefaultConfigPackageCannotBeLoaded()
+        public void ReportsConfigPackageNameAsParamNameWhenConfigPackageCannotBeLoaded()
         {
             var exception = Assert.Throws<ArgumentException>(() =>
-                FabricTransportListenerSettings.LoadFrom(sectionName));
+                FabricTransportListenerSettings.LoadFrom(sectionName, configPackageName));
             Assert.Equal(nameof(configPackageName), exception.ParamName);
         }
 
