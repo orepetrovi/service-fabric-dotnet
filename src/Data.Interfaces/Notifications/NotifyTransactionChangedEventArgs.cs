@@ -18,7 +18,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         private readonly ITransaction transaction;
 
         /// <summary>
-        /// Initializes a new instance of the <cref name="NotifyStateManagerSingleEntityChangedEventArgs"/>
+        /// Initializes a new instance of the <see cref="NotifyTransactionChangedEventArgs"/> class.
         /// </summary>
         /// <param name="transaction">Transaction that the change is related to.</param>
         /// <param name="action">The type of notification.</param>
