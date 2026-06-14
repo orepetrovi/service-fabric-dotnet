@@ -18,7 +18,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         private readonly NotifyStateManagerChangedAction action;
 
         /// <summary>
-        /// Initializes a new instance of the <cref name="NotifyStateManagerChangedEventArgs"/>
+        /// Initializes a new instance of the <see cref="NotifyStateManagerChangedEventArgs"/> class.
         /// </summary>
         /// <param name="action">Type of the event.</param>
         public NotifyStateManagerChangedEventArgs(NotifyStateManagerChangedAction action)
