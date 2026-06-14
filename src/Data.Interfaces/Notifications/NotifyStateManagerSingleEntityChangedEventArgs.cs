@@ -31,7 +31,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the transaction.
+        /// Gets the <see cref="ITransaction"/> within which the change occurred.
         /// </summary>
         public ITransaction Transaction
         {
@@ -42,7 +42,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the reliable state.
+        /// Gets the <see cref="IReliableState"/> that was added or removed.
         /// </summary>
         public IReliableState ReliableState
         {
