@@ -16,7 +16,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         private readonly IReliableState reliableState;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NotifyStateManagerSingleEntityChangedEventArgs"/>
+        /// Initializes a new instance of the <see cref="NotifyStateManagerSingleEntityChangedEventArgs"/> class.
         /// </summary>
         /// <param name="transaction">Transaction that the change is related to.</param>
         /// <param name="reliableState"><see cref="IReliableState"/> that was changed.</param>
