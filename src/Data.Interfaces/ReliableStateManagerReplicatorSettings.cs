@@ -341,7 +341,10 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 2.
         /// </value>
         /// <remarks>
-        /// Must be greater than 1.
+        /// Must be greater than 1. In addition, the product of <see cref="MinLogSizeInMB"/> and this factor must be
+        /// smaller than the effective maximum stream size: the value of <see cref="MaxStreamSizeInMB"/> when
+        /// <see cref="OptimizeLogForLowerDiskUsage"/> is explicitly <see langword="false"/>; otherwise 204800 (200 GB),
+        /// the sparse-log value.
         /// </remarks>
         public int? TruncationThresholdFactor { get; set; }
 
