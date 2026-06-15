@@ -11,12 +11,12 @@ namespace Microsoft.ServiceFabric.Data
     public enum RestorePolicy : int
     {
         /// <summary>
-        /// Verifies that the backup being restored is not older than the current state and fails the restore if it is.
+        /// Verifies that the backup being restored is ahead of the current state and fails the restore otherwise.
         /// </summary>
         Safe = 0,
 
         /// <summary>
-        /// Restores the backup without checking whether it is older than the current state.
+        /// Restores the backup without verifying that it is ahead of the current state.
         /// </summary>
         Force = 1,
     }
