@@ -231,6 +231,9 @@ namespace Microsoft.ServiceFabric.Data
         /// </value>
         /// <remarks>
         /// The value is specified in KB and must be a multiple of 4 and at least 128.
+        /// When <see cref="OptimizeLogForLowerDiskUsage"/> is explicitly <see langword="false"/> and
+        /// <see cref="MaxStreamSizeInMB"/> is set, the maximum stream size must be at least 16 times this value
+        /// (<c>MaxStreamSizeInMB * 1024 &gt;= 16 * MaxRecordSizeInKB</c>).
         /// </remarks>
         public int? MaxRecordSizeInKB { get; set; }
 
@@ -256,6 +259,8 @@ namespace Microsoft.ServiceFabric.Data
         /// </value>
         /// <remarks>
         /// The value is specified in MB and must be at least 1.
+        /// When <see cref="OptimizeLogForLowerDiskUsage"/> is explicitly <see langword="false"/> and
+        /// <see cref="MaxStreamSizeInMB"/> is set, this value must not exceed it.
         /// </remarks>
         public int? CheckpointThresholdInMB { get; set; }
 
@@ -269,6 +274,7 @@ namespace Microsoft.ServiceFabric.Data
         /// An incremental backup request fails when the backup logs it generates would cause the total amount of logs accumulated
         /// since the last full backup to exceed this value. In that case, take a full backup.
         /// The value is specified in MB and must be at least 1.
+        /// When <see cref="MaxStreamSizeInMB"/> is set, this value must also be smaller than it.
         /// </remarks>
         public int? MaxAccumulatedBackupLogSizeInMB { get; set; }
 
@@ -329,7 +335,9 @@ namespace Microsoft.ServiceFabric.Data
         /// </value>
         /// <remarks>
         /// A truncation is not initiated if it would reduce the size of the log below the resulting value.
-        /// Any explicitly specified nonzero value must be at least 1.
+        /// Any explicitly specified nonzero value must be at least 1. It must also be smaller than the effective maximum
+        /// stream size: the value of <see cref="MaxStreamSizeInMB"/> when <see cref="OptimizeLogForLowerDiskUsage"/> is
+        /// explicitly <see langword="false"/>; otherwise 204800 (200 GB), the sparse-log value.
         /// </remarks>
         public int? MinLogSizeInMB { get; set; }
 
@@ -357,7 +365,11 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 4.
         /// </value>
         /// <remarks>
-        /// The throttling threshold must be greater than the truncation threshold.
+        /// The throttling threshold must be greater than the truncation threshold. In addition, the throttling threshold,
+        /// which is the larger of <see cref="MinLogSizeInMB"/> and <see cref="CheckpointThresholdInMB"/> multiplied by this
+        /// factor, must be smaller than the effective maximum stream size: the value of <see cref="MaxStreamSizeInMB"/> when
+        /// <see cref="OptimizeLogForLowerDiskUsage"/> is explicitly <see langword="false"/>; otherwise 204800 (200 GB),
+        /// the sparse-log value.
         /// </remarks>
         public int? ThrottlingThresholdFactor { get; set; }
 
