@@ -202,6 +202,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </value>
         /// <remarks>
         /// <see cref="SharedLogPath"/> and <see cref="SharedLogId"/> must either both be specified or both be omitted.
+        /// When specified, the value must be an absolute path.
         /// </remarks>
         public string SharedLogPath { get; set; }
 
