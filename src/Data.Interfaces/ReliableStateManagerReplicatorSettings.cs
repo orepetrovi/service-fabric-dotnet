@@ -188,6 +188,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <value>
         /// The default is an empty string, which causes the replicator to use the global shared log for the node.
         /// </value>
+        /// <remarks>
+        /// <see cref="SharedLogId"/> and <see cref="SharedLogPath"/> must either both be specified or both be omitted.
+        /// </remarks>
         public string SharedLogId { get; set; }
 
         /// <summary>
@@ -197,6 +200,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <value>
         /// The default is an empty string, which causes the replicator to use the global shared log for the node.
         /// </value>
+        /// <remarks>
+        /// <see cref="SharedLogPath"/> and <see cref="SharedLogId"/> must either both be specified or both be omitted.
+        /// </remarks>
         public string SharedLogPath { get; set; }
 
         /// <summary>
