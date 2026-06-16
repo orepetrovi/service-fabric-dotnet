@@ -12,7 +12,6 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.FabricTransport;
 
-[Collection(nameof(FabricServiceConfigSingleton))]
 [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
 public abstract class FabricServiceConfigTest
 {

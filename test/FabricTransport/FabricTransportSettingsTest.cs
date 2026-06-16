@@ -15,7 +15,6 @@ using static Microsoft.ServiceFabric.FabricTransport.NativeFabricTransport;
 
 namespace Microsoft.ServiceFabric.FabricTransport;
 
-[Collection(nameof(FabricServiceConfigSingleton))]
 public abstract class FabricTransportSettingsTest
 {
     readonly FabricTransportSettings sut = new();

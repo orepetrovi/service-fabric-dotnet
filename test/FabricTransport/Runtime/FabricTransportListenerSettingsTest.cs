@@ -12,7 +12,6 @@ using Xunit;
 
 namespace Microsoft.ServiceFabric.FabricTransport.Runtime;
 
-[Collection(nameof(FabricServiceConfigSingleton))]
 public abstract class FabricTransportListenerSettingsTest
 {
     readonly FabricTransportListenerSettings sut = new();
