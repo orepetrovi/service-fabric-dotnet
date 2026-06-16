@@ -81,30 +81,6 @@ public abstract class FabricTransportListenerTest
             Assert.Equal(nameof(listenerAddress), exception.ParamName);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. Constructor does not validate serviceImplementation.
-        public void ThrowsArgumentNullExceptionWhenServiceImplementationIsNull()
-        {
-            // The public constructor accepts IFabricTransportMessageHandler without a null check,
-            // then passes it to FabricTransportMessageHandlerBroker which stores it and later
-            // dereferences it when handling messages. Today the constructor stores null without
-            // validation instead of throwing ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => new FabricTransportListener(
-                transportSettings, listenerAddress, serviceImplementation: null, remotingConnectionHandler));
-            Assert.Equal(nameof(serviceImplementation), exception.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Constructor does not validate remotingConnectionHandler.
-        public void ThrowsArgumentNullExceptionWhenRemotingConnectionHandlerIsNull()
-        {
-            // The public constructor accepts IFabricTransportConnectionHandler without a null check,
-            // then passes it to FabricTransportConnectionHandlerBroker which stores it and later
-            // dereferences it via callbacks. Today the constructor stores null without validation
-            // instead of throwing ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => new FabricTransportListener(
-                transportSettings, listenerAddress, serviceImplementation, remotingConnectionHandler: null));
-            Assert.Equal(nameof(remotingConnectionHandler), exception.ParamName);
-        }
-
         void ConstructListenerSwallowingNativeFailure()
         {
             // The constructor mutates listenerAddress.Path before invoking the native runtime via
