@@ -144,8 +144,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// <summary>
     /// Provides data for an <see cref="IReliableDictionary{TKey, TValue}.DictionaryChanged"/> notification caused by a clear operation.
     /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
-    /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     public class NotifyDictionaryClearEventArgs<TKey, TValue> : NotifyDictionaryChangedEventArgs<TKey, TValue>
     {
         private readonly long commitSequenceNumber;
@@ -176,8 +174,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// <summary>
     /// Provides data for an <see cref="IReliableDictionary{TKey, TValue}.DictionaryChanged"/> notification indicating that a key/value pair was added.
     /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
-    /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     public class NotifyDictionaryItemAddedEventArgs<TKey, TValue> : NotifyDictionaryTransactionalEventArgs<TKey, TValue>
     {
         private readonly TKey key;
@@ -218,8 +214,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// <summary>
     /// Provides data for an <see cref="IReliableDictionary{TKey, TValue}.DictionaryChanged"/> notification indicating that a key's value was updated.
     /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
-    /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     public class NotifyDictionaryItemUpdatedEventArgs<TKey, TValue> : NotifyDictionaryTransactionalEventArgs<TKey, TValue>
     {
         private readonly TKey key;
@@ -260,8 +254,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// <summary>
     /// Provides data for an <see cref="IReliableDictionary{TKey, TValue}.DictionaryChanged"/> notification indicating that a key was removed.
     /// </summary>
-    /// <typeparam name="TKey">The type of the keys in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
-    /// <typeparam name="TValue">The type of the values in the <see cref="IReliableDictionary{TKey, TValue}"/>.</typeparam>
     public class NotifyDictionaryItemRemovedEventArgs<TKey, TValue> : NotifyDictionaryTransactionalEventArgs<TKey, TValue>
     {
         private readonly TKey key;
