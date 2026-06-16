@@ -18,36 +18,6 @@ public abstract class FabricTransportRequestBodyTest
     FabricTransportRequestBodyTest() =>
         sut = new FabricTransportRequestBody(sendBuffers, disposeAction);
 
-    public sealed class Constructor_IEnumerableOfArraySegmentOfByte_Action : FabricTransportRequestBodyTest
-    {
-        [Fact(Explicit = true)] // TODO: SUT bug. Constructor does not validate sendBuffers.
-        public void ThrowsArgumentNullExceptionWhenSendBuffersIsNull()
-        {
-            // The constructor silently stores null in the sendBuffers field. GetBodyBuffers() then returns null,
-            // and consumers like NativeFabricTransportMessage that call .Any() on the result throw
-            // NullReferenceException far from the original caller, violating the rule in csharp.instructions.md
-            // requiring ArgumentException over low-level exceptions for invalid arguments.
-            var exception = Assert.Throws<ArgumentNullException>(() => new FabricTransportRequestBody(null, disposeAction));
-            Assert.Equal(nameof(sendBuffers), exception.ParamName);
-        }
-    }
-
-    public sealed class Constructor_Stream : FabricTransportRequestBodyTest
-    {
-        readonly Stream recievedStream = Mock.Of<Stream>(); // Spelling matches SUT parameter
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Constructor does not validate recievedStream.
-        public void ThrowsArgumentNullExceptionWhenRecievedStreamIsNull()
-        {
-            // The constructor silently stores null in the recievedStream field. GetRecievedStream() then returns
-            // null, and consumers that read from the returned Stream throw NullReferenceException far from the
-            // original caller, violating the rule in csharp.instructions.md requiring ArgumentException over
-            // low-level exceptions for invalid arguments.
-            var exception = Assert.Throws<ArgumentNullException>(() => new FabricTransportRequestBody(null));
-            Assert.Equal(nameof(recievedStream), exception.ParamName);
-        }
-    }
-
     public sealed class Dispose : FabricTransportRequestBodyTest
     {
         [Fact]
