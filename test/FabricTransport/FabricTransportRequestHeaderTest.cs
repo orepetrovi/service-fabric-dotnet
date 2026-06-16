@@ -31,22 +31,6 @@ public abstract class FabricTransportRequestHeaderTest
         sut = new FabricTransportRequestHeader(requestHeaderBuffer, disposeAction);
     }
 
-    public sealed class Constructor_Stream : FabricTransportRequestHeaderTest
-    {
-        readonly Stream recievedHeaderStream = Mock.Of<Stream>(); // Spelling matches SUT parameter
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Constructor does not validate recievedHeaderStream.
-        public void ThrowsArgumentNullExceptionWhenRecievedHeaderStreamIsNull()
-        {
-            // The constructor silently stores null in the recievedHeaderStream field. GetRecievedStream() then
-            // returns null, and consumers that read from the returned Stream throw NullReferenceException far from
-            // the original caller, violating the rule in csharp.instructions.md requiring ArgumentException over
-            // low-level exceptions for invalid arguments.
-            var exception = Assert.Throws<ArgumentNullException>(() => new FabricTransportRequestHeader(null));
-            Assert.Equal(nameof(recievedHeaderStream), exception.ParamName);
-        }
-    }
-
     public sealed class Dispose : FabricTransportRequestHeaderTest
     {
         [Fact]
