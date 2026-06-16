@@ -87,8 +87,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyDictionaryTransactionalEventArgs{TKey, TValue}"/> class.
         /// </summary>
-        /// <param name="transaction">The transaction the operation is part of.</param>
-        /// <param name="action">Type of the change.</param>
         public NotifyDictionaryTransactionalEventArgs(ITransaction transaction, NotifyDictionaryChangedAction action) : base(action)
         {
             this.transaction = transaction;
@@ -230,9 +228,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyDictionaryItemUpdatedEventArgs{TKey, TValue}"/> class.
         /// </summary>
-        /// <param name="transaction">The transaction the operation is part of.</param>
-        /// <param name="key">The key whose value was updated.</param>
-        /// <param name="value">The new value.</param>
         public NotifyDictionaryItemUpdatedEventArgs(ITransaction transaction, TKey key, TValue value) : base(transaction, NotifyDictionaryChangedAction.Update)
         {
             this.key = key;
@@ -274,8 +269,6 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyDictionaryItemRemovedEventArgs{TKey, TValue}"/> class.
         /// </summary>
-        /// <param name="transaction">The transaction the operation is part of.</param>
-        /// <param name="key">The key that was removed.</param>
         public NotifyDictionaryItemRemovedEventArgs(ITransaction transaction, TKey key) : base(transaction, NotifyDictionaryChangedAction.Remove)
         {
             this.key = key;
