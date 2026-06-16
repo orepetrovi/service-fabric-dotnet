@@ -175,6 +175,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state.</exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         Task ClearAsync(TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
