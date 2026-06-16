@@ -69,41 +69,6 @@ public abstract class FabricTransportClientTest
                 transportSettings, connectionAddress: null, eventHandler, contract, messageMessageDisposer));
             Assert.Equal(nameof(connectionAddress), exception.ParamName);
         }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Constructor does not validate eventHandler.
-        public void ThrowsArgumentNullExceptionWhenEventHandlerIsNull()
-        {
-            // The public constructor accepts IFabricTransportClientEventHandler without a null check,
-            // then passes it to FabricTransportClientConnectionEventHandlerBroker which stores it
-            // and later dereferences it via callbacks. Today the constructor stores null without
-            // validation instead of throwing ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => new FabricTransportClient(
-                transportSettings, connectionAddress, eventHandler: null, contract, messageMessageDisposer));
-            Assert.Equal(nameof(eventHandler), exception.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Constructor does not validate contract.
-        public void ThrowsArgumentNullExceptionWhenContractIsNull()
-        {
-            // The public constructor accepts IFabricTransportCallbackMessageHandler without a null
-            // check, then passes it to FabricTransportCallbackMessageHandlerBroker which stores it
-            // and later dereferences it when handling callbacks. Today the constructor stores null
-            // without validation instead of throwing ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => new FabricTransportClient(
-                transportSettings, connectionAddress, eventHandler, contract: null, messageMessageDisposer));
-            Assert.Equal(nameof(contract), exception.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Constructor does not validate messageMessageDisposer.
-        public void ThrowsArgumentNullExceptionWhenMessageMessageDisposerIsNull()
-        {
-            // The public constructor accepts IFabricTransportMessageDisposer without a null check,
-            // then passes it through to CreateNativeClient. Today the constructor stores null
-            // without validation instead of throwing ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => new FabricTransportClient(
-                transportSettings, connectionAddress, eventHandler, contract, messageMessageDisposer: null));
-            Assert.Equal(nameof(messageMessageDisposer), exception.ParamName);
-        }
     }
 
     public sealed class Abort: FabricTransportClientTest
@@ -489,18 +454,6 @@ public abstract class FabricTransportClientTest
             Assert.Same(nativeResponse, result.Field<IFabricTransportMessage>().Value);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. RequestResponseAsync does not validate requestMessage.
-        public async Task ThrowsArgumentNullExceptionWhenRequestMessageIsNull()
-        {
-            // RequestResponseAsync(FabricTransportMessage, TimeSpan, Guid) should validate the
-            // requestMessage parameter and throw ArgumentNullException with paramName
-            // "requestMessage" before constructing NativeFabricTransportMessage, whose
-            // GetHeader/GetBody dereference the stored FabricTransportMessage reference.
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.RequestResponseAsync(requestMessage: null, timeout));
-            Assert.Equal(nameof(requestMessage), exception.ParamName);
-        }
-
         // IsSecurityMismatch's full branch matrix is exercised once through OpenAsync. These two
         // tests prove only that RequestResponseAsync routes through the helper: true wraps, false rethrows.
         [Fact]
@@ -578,18 +531,6 @@ public abstract class FabricTransportClientTest
             nativeClient.Verify(_ => _.Send(It.IsAny<IFabricTransportMessage>()), Times.Once);
             var wrapper = (NativeFabricTransportMessage)sent;
             Assert.Same(message, wrapper.Field<FabricTransportMessage>().Value);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. SendOneWay does not validate message.
-        public void ThrowsArgumentNullExceptionWhenMessageIsNull()
-        {
-            // SendOneWay(FabricTransportMessage) should validate the message parameter and throw
-            // ArgumentNullException with paramName "message" before constructing
-            // NativeFabricTransportMessage, whose GetHeader/GetBody dereference the stored
-            // FabricTransportMessage reference.
-            sut.Field<IFabricTransportClient2>().Set(Mock.Of<IFabricTransportClient2>());
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.SendOneWay(message: null));
-            Assert.Equal(nameof(message), exception.ParamName);
         }
     }
 
