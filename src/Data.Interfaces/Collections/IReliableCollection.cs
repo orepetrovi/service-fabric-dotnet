@@ -38,6 +38,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricNotPrimaryException">
         /// The <see cref="IReliableCollection{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.
         /// </exception>
+        /// <exception cref="InvalidOperationException">The <see cref="IReliableCollection{T}"/> has not been registered.</exception>
         /// <exception cref="TimeoutException">
         /// The operation failed to complete within the default timeout.
         /// </exception>
