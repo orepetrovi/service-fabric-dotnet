@@ -36,7 +36,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <param name="directory">The folder path that contains the backup.</param>
         /// <param name="option">One of the enumeration values that specifies the kind of backup that was taken.</param>
-        /// <param name="version">The latest epoch and LSN included in the backup.</param>
+        /// <param name="version">The latest <see cref="System.Fabric.Epoch"/> and LSN included in the backup.</param>
         /// <param name="startBackupVersion">The epoch and LSN of the first logical log record in the backup.</param>
         /// <param name="backupId">The identifier of this backup.</param>
         /// <param name="parentBackupId">The identifier of the backup used as the parent of this backup.</param>
@@ -61,7 +61,7 @@ namespace Microsoft.ServiceFabric.Data
         public BackupOption Option { get; private set; }
 
         /// <summary>
-        /// Gets the latest epoch and LSN included in the backup.
+        /// Gets the latest <see cref="System.Fabric.Epoch"/> and LSN included in the backup.
         /// </summary>
         public BackupVersion Version { get; private set; }
 
@@ -72,7 +72,7 @@ namespace Microsoft.ServiceFabric.Data
         public Guid BackupId { get; private set; }
 
         /// <summary>
-        /// Gets the epoch and LSN of the first logical log record included in this backup.
+        /// Gets the <see cref="System.Fabric.Epoch"/> and LSN of the first logical log record included in this backup.
         /// </summary>
         /// <value>The starting version, or <see cref="BackupVersion.InvalidBackupVersion"/> when the instance was constructed without one.</value>
         public BackupVersion StartBackupVersion { get; private set; }
