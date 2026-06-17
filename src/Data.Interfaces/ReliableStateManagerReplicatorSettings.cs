@@ -188,6 +188,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </value>
         /// <remarks>
         /// <see cref="SharedLogId"/> and <see cref="SharedLogPath"/> must either both be specified or both be omitted.
+        /// When specified, the value must be a valid GUID.
         /// </remarks>
         public string SharedLogId { get; set; }
 
