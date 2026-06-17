@@ -398,40 +398,57 @@ namespace Microsoft.ServiceFabric.Data
         public int? LogTruncationIntervalSeconds { get; set; }
 
         /// <summary>
-        /// Configuration that enables incremental backups to be chained across primary replicas.
-        /// When this flag is turned off, a primary replica can only take an incremental backup if it took the last backup at the same epoch.
-        /// When this flag is turned on, a primary replica can take an incremental backup whether or not it was the replica that took the last backup with the same dataloss number.
+        /// Gets or sets a value that indicates whether incremental backups can be chained across primary replicas.
         /// </summary>
+        /// <value>
+        /// <see langword="true"/> if a primary replica can take an incremental backup whether or not it took the last backup
+        /// with the same data-loss number; otherwise, <see langword="false"/>.
+        /// </value>
+        /// <remarks>
+        /// When <see langword="false"/>, a primary replica can take an incremental backup only if it took the last backup at
+        /// the same epoch.
+        /// </remarks>
         internal bool? EnableIncrementalBackupsAcrossReplicas { get; set; }
 
         /// <summary>
-        /// Controls if send window size for primary queues should be in bytes of number of messages
-        /// The default is false
+        /// Gets or sets a value that indicates whether the send window size for primary queues is measured in bytes rather
+        /// than number of messages.
         /// </summary>
+        /// <value>
+        /// <see langword="true"/> if the send window size is measured in bytes; otherwise, <see langword="false"/>.
+        /// The default is <see langword="false"/>.
+        /// </value>
         internal bool? EnableSendWindowSizeInBytes { get; set; }
 
         /// <summary>
-        /// If enableSendWindowSizeInBytes is set then specifies the amount of bytes from replication queue
-        /// that can be put on wire
+        /// Gets or sets the number of bytes from the replication queue that can be put on the wire when
+        /// <see cref="EnableSendWindowSizeInBytes"/> is set.
         /// </summary>
         internal uint? MaxReplicationQueueSendWindowSizeInBytes { get; set; }
 
         /// <summary>
-        /// If enableSendWindowSizeInBytes is set then specifies the amount of bytes from copy queue
-        /// that can be put on wire
+        /// Gets or sets the number of bytes from the copy queue that can be put on the wire when
+        /// <see cref="EnableSendWindowSizeInBytes"/> is set.
         /// </summary>
         internal uint? MaxCopyQueueSendWindowSizeInBytes { get; set; }
 
         /// <summary>
-        /// Controls if multiple replicas within process should use their own individual heaps or shared heap.
-        /// The default is true
+        /// Gets or sets a value that indicates whether multiple replicas within a process use their own individual heaps
+        /// rather than a shared heap.
         /// </summary>
+        /// <value>
+        /// <see langword="true"/> if each replica uses its own individual heap; otherwise, <see langword="false"/>.
+        /// The default is <see langword="true"/>.
+        /// </value>
         internal bool? UseIndividualHeapPerReplica { get; set; }
 
         /// <summary>
-        /// Controls the initial size of the heap owned by a replicas in a process, when UseIndividualHeapPerReplica is enabled.
-        /// The default is 0
+        /// Gets or sets the initial size, in kilobytes, of the heap owned by a replica in a process when
+        /// <see cref="UseIndividualHeapPerReplica"/> is enabled.
         /// </summary>
+        /// <value>
+        /// The default is 0.
+        /// </value>
         internal uint? InitialReplicaHeapSizeInKB { get; set; }
 #endif
 
