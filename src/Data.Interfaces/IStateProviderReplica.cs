@@ -106,7 +106,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The Boolean returned by <paramref name="backupCallback"/> indicates whether the service successfully moved the backup folder to an external location.
         /// </remarks>
         /// <inheritdoc cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})" path="/exception[@cref='T:System.ArgumentNullException']"/>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is negative (other than <see cref="Timeout.InfiniteTimeSpan"/>) or greater than <see cref="Int32.MaxValue"/> milliseconds.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is negative (other than <see cref="Timeout.InfiniteTimeSpan"/>) or greater than <see cref="int.MaxValue"/> milliseconds.</exception>
         /// <inheritdoc cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})" path="/exception[@cref='T:System.InvalidOperationException']"/>
         /// <exception cref="TimeoutException">The backup did not complete within <paramref name="timeout"/>.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
