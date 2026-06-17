@@ -63,7 +63,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <exception cref="InvalidOperationException">The <see cref="IReliableDictionary2{TKey,TValue}"/> has not been registered.</exception>
         /// <remarks>
-        /// This property does not have transactional semantics. It represents the best effort number of items 
+        /// This property does not have transactional semantics. It represents the best-effort number of items 
         /// in the dictionary at the moment when the property was accessed.
         /// </remarks>
         long Count { get; }
