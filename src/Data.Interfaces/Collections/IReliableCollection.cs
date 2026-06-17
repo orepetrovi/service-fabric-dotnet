@@ -35,6 +35,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <remarks>
         /// Not every <see cref="IReliableCollection{T}"/> implementation supports clearing.
         /// </remarks>
+        /// <exception cref="NotImplementedException">
+        /// The <see cref="IReliableCollection{T}"/> implementation does not implement clearing.
+        /// </exception>
         /// <exception cref="FabricNotPrimaryException">
         /// The <see cref="IReliableCollection{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.
         /// </exception>
