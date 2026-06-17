@@ -15,11 +15,11 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
     /// Represents a Reliable Collection of key/value pairs that are persisted and replicated, adding sequence-number reads,
     /// versioned key/value reads, sequence-number-checked updates and removals, and versioned key/value enumeration.
     /// </summary>
-    /// <inheritdoc cref="IReliableDictionary2{TKey, TValue}" path="/remarks"/>
+    /// <inheritdoc path="/remarks" cref="IReliableDictionary2{TKey, TValue}"/>
     public interface IReliableDictionary3<TKey, TValue> : IReliableDictionary2<TKey, TValue>
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
-        /// <inheritdoc cref="TryGetSequenceNumberAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="TryGetSequenceNumberAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element whose sequence number is to be retrieved.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
@@ -37,7 +37,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             ITransaction tx,
             TKey key);
 
-        /// <inheritdoc cref="TryGetSequenceNumberAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="TryGetSequenceNumberAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element whose sequence number is to be retrieved.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
@@ -87,7 +87,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             CancellationToken cancellationToken);
 
 
-        /// <inheritdoc cref="TryGetVersionedKeyValuePairAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="TryGetVersionedKeyValuePairAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the versioned element to get.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/> or cannot be serialized.</exception>
@@ -105,7 +105,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             ITransaction tx,
             TKey key);
 
-        /// <inheritdoc cref="TryGetVersionedKeyValuePairAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="TryGetVersionedKeyValuePairAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the versioned element to get.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
@@ -154,7 +154,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             TimeSpan timeout,
             CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="TryUpdateAsync(ITransaction, TKey, TValue, long, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="TryUpdateAsync(ITransaction, TKey, TValue, long, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to be updated.</param>
         /// <param name="newValue">The value to be updated to if the specified <paramref name="key"/> has the expected <paramref name="checkSequenceNumber"/>. The value can be <see langword="null"/> for reference types.</param>
@@ -186,7 +186,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="TryRemoveAsync(ITransaction, TKey, long, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="TryRemoveAsync(ITransaction, TKey, long, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
         /// <param name="checkSequenceNumber">The expected sequence number of the element to be removed.</param>
@@ -216,7 +216,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
         Task<bool> TryRemoveAsync(ITransaction tx, TKey key, long checkSequenceNumber, TimeSpan timeout, CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -228,10 +228,10 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc path="/remarks" cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)"/>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn);
 
-        /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> or <paramref name="firstKey"/> is <see langword="null"/>.</exception>
@@ -244,7 +244,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <inheritdoc cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc path="/remarks" cref="CreateVersionedKeyEnumerableAsync(ITransaction, TKey, TKey)"/>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey);
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// It represents a snapshot consistent view.</remarks>
         Task<IAsyncEnumerable<VersionedKey<TKey>>> CreateVersionedKeyEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -280,10 +280,10 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc path="/remarks" cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn);
 
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> or <paramref name="firstKey"/> is <see langword="null"/>.</exception>
@@ -296,10 +296,10 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc path="/remarks" cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey);
 
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
         /// <param name="lastKey">The inclusive key to stop enumerating at in ordered enumeration.</param>
@@ -314,10 +314,10 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc path="/remarks" cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, TKey firstKey, TKey lastKey);
 
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
@@ -330,10 +330,10 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc path="/remarks" cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter);
 
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)"/>
         /// <param name="txn">The transaction to associate this operation with.</param>
         /// <param name="filter">The predicate that filters the versioned key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all versioned key/value pairs.</param>
         /// <param name="firstKey">The inclusive key to start enumerating from in ordered enumeration.</param>
@@ -347,7 +347,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary3{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <inheritdoc cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)" path="/remarks"/>
+        /// <inheritdoc path="/remarks" cref="CreateVersionedEnumerableAsync(ITransaction, Func{TKey, bool}, TKey, TKey)"/>
         Task<IAsyncEnumerable<VersionedKeyValuePair<TKey, TValue>>> CreateVersionedEnumerableAsync(ITransaction txn, Func<TKey, bool> filter, TKey firstKey);
 
         /// <summary>
