@@ -12,7 +12,8 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
 
     /// <summary>
     /// (Beta) Not for production use - API is subject to change in the future.
-    /// Represents a reliable collection of key/value pairs that are persisted and replicated.
+    /// Represents a Reliable Collection of key/value pairs that are persisted and replicated, adding sequence-number reads,
+    /// versioned key/value reads, sequence-number-checked updates and removals, and versioned key/value enumeration.
     /// </summary>
     /// <inheritdoc cref="IReliableDictionary2{TKey, TValue}" path="/remarks"/>
     public interface IReliableDictionary3<TKey, TValue> : IReliableDictionary2<TKey, TValue>
