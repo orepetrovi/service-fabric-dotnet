@@ -16,7 +16,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="RestoreDescription"/> struct.
         /// </summary>
-        /// <inheritdoc cref="RestoreDescription(string, RestorePolicy)" path="/param[@name='backupFolderPath']"/>
+        /// <inheritdoc path="/param[@name='backupFolderPath']" cref="RestoreDescription(string, RestorePolicy)"/>
         public RestoreDescription(string backupFolderPath)
         {
             this.backupFolderPath = backupFolderPath;
