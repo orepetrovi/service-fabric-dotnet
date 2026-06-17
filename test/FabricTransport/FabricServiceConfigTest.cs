@@ -13,15 +13,13 @@ using Xunit;
 namespace Microsoft.ServiceFabric.FabricTransport;
 
 [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
-public abstract class FabricServiceConfigTest
+public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
 {
     static readonly string settingsFile = Path.Combine(
         Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
         "ServiceCommunicationTestSettings.xml");
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
-
-    FabricServiceConfigTest() => typeof(FabricServiceConfig).Field<FabricServiceConfig>().Set(null);
 
     public sealed class GetConfig: FabricServiceConfigTest
     {
