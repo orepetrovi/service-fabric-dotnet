@@ -372,11 +372,11 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 4.
         /// </value>
         /// <remarks>
-        /// The throttling threshold must be greater than the truncation threshold. In addition, the throttling threshold,
-        /// which is the larger of <see cref="MinLogSizeInMB"/> and <see cref="CheckpointThresholdInMB"/> multiplied by this
-        /// factor, must be smaller than the effective maximum stream size: the value of <see cref="MaxStreamSizeInMB"/> when
-        /// <see cref="OptimizeLogForLowerDiskUsage"/> is explicitly <see langword="false"/>; otherwise 204800 (200 GB),
-        /// the sparse-log value.
+        /// Must be greater than <see cref="TruncationThresholdFactor"/> and at least 3.
+        /// In addition, the throttling threshold, which is the larger of <see cref="MinLogSizeInMB"/> and
+        /// <see cref="CheckpointThresholdInMB"/> multiplied by this factor, must be smaller than the effective maximum stream size:
+        /// the value of <see cref="MaxStreamSizeInMB"/> when <see cref="OptimizeLogForLowerDiskUsage"/> is explicitly
+        /// <see langword="false"/>; otherwise 204800 (200 GB), the sparse-log value.
         /// </remarks>
         public int? ThrottlingThresholdFactor { get; set; }
 
