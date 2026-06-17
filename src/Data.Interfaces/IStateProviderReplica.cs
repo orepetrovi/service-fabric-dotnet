@@ -106,13 +106,13 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// The Boolean returned by <paramref name="backupCallback"/> indicates whether the service successfully moved the backup folder to an external location.
         /// </remarks>
-        /// <exception cref="ArgumentNullException"><paramref name="backupCallback"/> is <see langword="null"/>.</exception>
+        /// <inheritdoc cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})" path="/exception[@cref='T:System.ArgumentNullException']"/>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is negative (other than <see cref="Timeout.InfiniteTimeSpan"/>) or greater than <see cref="Int32.MaxValue"/> milliseconds.</exception>
-        /// <exception cref="InvalidOperationException"><paramref name="backupCallback"/> returned <see langword="false"/>; the backup is marked unsuccessful.</exception>
+        /// <inheritdoc cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})" path="/exception[@cref='T:System.InvalidOperationException']"/>
         /// <exception cref="TimeoutException">The backup did not complete within <paramref name="timeout"/>.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
-        /// <exception cref="FabricNotPrimaryException">The replica is not a Primary, or is no longer the Primary.</exception>
-        /// <exception cref="FabricBackupInProgressException">Another backup is already in progress.</exception>
+        /// <inheritdoc cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})" path="/exception[@cref='T:System.Fabric.FabricNotPrimaryException']"/>
+        /// <inheritdoc cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})" path="/exception[@cref='T:System.Fabric.FabricBackupInProgressException']"/>
         /// <exception cref="FabricMissingFullBackupException"><paramref name="option"/> is <see cref="BackupOption.Incremental"/> but no valid full backup exists to build upon.</exception>
         Task BackupAsync(
             BackupOption option,
