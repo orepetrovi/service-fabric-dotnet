@@ -153,16 +153,11 @@ namespace Microsoft.ServiceFabric.Data
             return isEqual && BaseInternalEquals(updated as ReliableStateManagerReplicatorSettings);
         }
 
-        /// <summary>
-        /// Copied from ReliableStateManagerReplicatorSettings's InternalEquals.
-        /// We can use base.InternalEquals but
-        /// * base.InternalEquals is private in ReliableStateManagerReplicatorSettings
-        /// * Since base.InternalEquals is private, we will have to use reflection to call in dotnet core (for production coreclr apps), which looks ugly.
-        /// * ReliableStateManagerReplicatorSettings will never change as Data.Interfaces is frozen now. So, this code will not go out of sync.
-        /// * We can't use base.Equals as that checks GetType() runtime checks which fails if we pass ReliableStateManagerReplicatorSettings2 object as argument.
-        /// </summary>
-        /// <param name="updated"></param>
-        /// <returns></returns>
+        // Copied from ReliableStateManagerReplicatorSettings.InternalEquals because:
+        // * InternalEquals is private, so it can't be called directly.
+        // * Calling it via reflection on .NET Core (production coreclr apps) would be ugly.
+        // * ReliableStateManagerReplicatorSettings is frozen, so this copy won't go out of sync.
+        // * base.Equals can't be used either: its GetType() runtime check fails when a ReliableStateManagerReplicatorSettings2 is passed.
         private bool BaseInternalEquals(ReliableStateManagerReplicatorSettings updated)
         {
             bool areEqual = true;
