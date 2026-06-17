@@ -1,4 +1,4 @@
-// ------------------------------------------------------------
+﻿// ------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
@@ -67,7 +67,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             LockMode lockMode);
 
         /// <summary>
-        /// (Beta) Asynchronously attempts to get the sequence number associated with the specified key from the Reliable Dictionary and returns a result indicating whether the key was found and, if so, its sequence number.
+        /// (Beta) Asynchronously attempts to get the sequence number associated with the specified key from the <see cref="IReliableDictionary3{TKey, TValue}"/> and returns a result indicating whether the key was found and, if so, its sequence number.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element whose sequence number is to be retrieved.</param>
@@ -147,7 +147,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
             LockMode lockMode);
 
         /// <summary>
-        /// (Beta) Asynchronously attempts to get the versioned element associated with the specified key from the Reliable Dictionary and returns a result indicating whether the key was found and, if so, its value and sequence number.
+        /// (Beta) Asynchronously attempts to get the versioned element associated with the specified key from the <see cref="IReliableDictionary3{TKey, TValue}"/> and returns a result indicating whether the key was found and, if so, its value and sequence number.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the versioned element to get.</param>
