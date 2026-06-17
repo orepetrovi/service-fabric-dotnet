@@ -17,7 +17,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets the size, in kilobytes, of the copy log message used to build a replica. A higher value copies more log records in each message.
         /// </summary>
         /// <value>
-        /// The default is 0, which copies one log record at a time.
+        /// The default is 0, which copies one log record at a time. The value must be greater than or equal to 0.
         /// </value>
         public long? CopyBatchSizeInKB { get; set; }
 
