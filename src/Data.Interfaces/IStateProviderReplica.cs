@@ -69,7 +69,6 @@ namespace Microsoft.ServiceFabric.Data
         /// This generally occurs when the replica's code is being upgraded, the replica is being moved
         /// due to load balancing, or a transient fault is detected.
         /// </remarks>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         Task CloseAsync(CancellationToken cancellationToken);
 
         /// <summary>
