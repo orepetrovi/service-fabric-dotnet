@@ -87,7 +87,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 64.
         /// </value>
         /// <remarks>
-        /// The value is the number of operations in the copy operation queue and must be a power of 2.
+        /// The value is the number of operations and must be a power of 2.
         /// </remarks>
         public long? InitialCopyQueueSize { get; set; }
 
@@ -98,7 +98,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 16384.
         /// </value>
         /// <remarks>
-        /// The value is the maximum number of operations in the copy operation queue and must be a power of 2.
+        /// The value is the maximum number of operations and must be a power of 2.
         /// </remarks>
         public long? MaxCopyQueueSize { get; set; }
 
@@ -120,7 +120,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 64.
         /// </value>
         /// <remarks>
-        /// The value is the number of operations in the primary replication queue and must be a power of 2.
+        /// The value is the number of operations and must be a power of 2.
         /// </remarks>
         public long? InitialPrimaryReplicationQueueSize { get; set; }
 
@@ -131,8 +131,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 8192.
         /// </value>
         /// <remarks>
-        /// The value is the maximum number of operations in the primary replication queue and must be a power of 2 and greater
-        /// than 64.
+        /// The value is the maximum number of operations and must be a power of 2 and greater than 64.
         /// </remarks>
         public long? MaxPrimaryReplicationQueueSize { get; set; }
 
@@ -154,7 +153,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 64.
         /// </value>
         /// <remarks>
-        /// The value is the number of operations in the secondary replication queue and must be a power of 2.
+        /// The value is the number of operations and must be a power of 2.
         /// </remarks>
         public long? InitialSecondaryReplicationQueueSize { get; set; }
 
@@ -165,8 +164,7 @@ namespace Microsoft.ServiceFabric.Data
         /// The default is 16384.
         /// </value>
         /// <remarks>
-        /// The value is the maximum number of operations in the secondary replication queue and must be a power of 2 and
-        /// greater than 64.
+        /// The value is the maximum number of operations and must be a power of 2 and greater than 64.
         /// </remarks>
         public long? MaxSecondaryReplicationQueueSize { get; set; }
 
