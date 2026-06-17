@@ -25,7 +25,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets a value that indicates whether stable reads are enabled. Stable reads allow every replica to return only values that are quorum acknowledged on a read.
         /// </summary>
         /// <value>
-        /// The default is <see langword="false" />.
+        /// <see langword="true" /> if stable reads are enabled; otherwise, <see langword="false" />. The default is <see langword="false" />.
         /// </value>
         public bool? EnableStableReads { get; set; }
 
@@ -33,7 +33,7 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets a value that indicates whether a build can be canceled when the log is full.
         /// </summary>
         /// <value>
-        /// The default is <see langword="false" />.
+        /// <see langword="true" /> if a build can be canceled when the log is full; otherwise, <see langword="false" />. The default is <see langword="false" />.
         /// </value>
         public bool? ShouldAbortCopyForTruncation { get; set; }
         
