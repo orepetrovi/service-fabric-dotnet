@@ -26,7 +26,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableCollection{T}"/> is not yet consistent.
         /// </exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted.</exception>
+        /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted, or the <see cref="IReliableCollection{T}"/> has not been registered.</exception>
         Task<long> GetCountAsync(ITransaction tx);
 
         /// <summary>
