@@ -13,7 +13,7 @@ using Xunit;
 namespace Microsoft.ServiceFabric.FabricTransport;
 
 [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
-public abstract class FabricServiceConfigSectionTest
+public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccessor
 {
     readonly FabricServiceConfigSection sut;
 
@@ -23,11 +23,7 @@ public abstract class FabricServiceConfigSectionTest
 
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
-    FabricServiceConfigSectionTest()
-    {
-        SetSingleton(null);
-        sut = new FabricServiceConfigSection(sectionName, onInitialize.Object);
-    }
+    FabricServiceConfigSectionTest() => sut = new FabricServiceConfigSection(sectionName, onInitialize.Object);
 
     public sealed class Constructor : FabricServiceConfigSectionTest
     {
@@ -627,7 +623,7 @@ public abstract class FabricServiceConfigSectionTest
         Assert.True(sut.Initialize());
     }
 
-    static void SetSingletonWithConfigurationSettings(ConfigurationSection section)
+    void SetSingletonWithConfigurationSettings(ConfigurationSection section)
     {
         var settings = Type<ConfigurationSettings>.New();
         settings.Sections.Add(section);
@@ -636,15 +632,12 @@ public abstract class FabricServiceConfigSectionTest
         SetSingleton(config);
     }
 
-    static void SetSingletonWithExeSettings(params SettingsTypeSection[] sections)
+    void SetSingletonWithExeSettings(params SettingsTypeSection[] sections)
     {
         var config = Type<FabricServiceConfig>.New();
         config.Settings = new SettingsType { Section = sections };
         SetSingleton(config);
     }
-
-    static void SetSingleton(FabricServiceConfig config) =>
-        typeof(FabricServiceConfig).Field<FabricServiceConfig>().Set(config);
 
     static ConfigurationSection MakeConfigSection(string name, params ConfigurationProperty[] parameters)
     {
