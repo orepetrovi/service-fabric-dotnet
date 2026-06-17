@@ -61,7 +61,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Gets the number of key/value pairs contained in the <see cref="IReliableDictionary2{TKey,TValue}"/>.
         /// </summary>
-        /// <exception cref="InvalidOperationException">A property access is invalid for the object's current state.</exception>
+        /// <exception cref="InvalidOperationException">The <see cref="IReliableDictionary2{TKey,TValue}"/> has not been registered.</exception>
         /// <remarks>
         /// This property does not have transactional semantics. It represents the best effort number of items 
         /// in the dictionary at the moment when the property was accessed.
