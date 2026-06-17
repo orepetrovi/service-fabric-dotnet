@@ -355,7 +355,7 @@ public abstract class FabricTransportClientTest
     public sealed class RequestResponseAsync: FabricTransportClientTest
     {
         // Method parameters
-        readonly FabricTransportMessage requestMessage = CreateMessage();
+        readonly FabricTransportMessage requestMessage = fuzzy.FabricTransportMessage();
         readonly TimeSpan timeout = fuzzy.TimeSpan().Milliseconds();
         readonly Guid requestId = Guid.NewGuid();
 
@@ -514,7 +514,7 @@ public abstract class FabricTransportClientTest
 
     public sealed class SendOneWay: FabricTransportClientTest
     {
-        readonly FabricTransportMessage message = CreateMessage();
+        readonly FabricTransportMessage message = fuzzy.FabricTransportMessage();
 
         [Fact]
         public void InvokesSendOnNativeClient()
@@ -544,8 +544,4 @@ public abstract class FabricTransportClientTest
             Assert.Same(expected, sut.Settings);
         }
     }
-
-    static FabricTransportMessage CreateMessage() => new(
-        new FabricTransportRequestHeader(new ArraySegment<byte>(fuzzy.Array(fuzzy.Byte)), () => { }),
-        new FabricTransportRequestBody([new ArraySegment<byte>(fuzzy.Array(fuzzy.Byte))], () => { }));
 }
