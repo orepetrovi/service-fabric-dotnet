@@ -457,7 +457,7 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Returns a multi-line listing of the property values that have been set on this instance.
+        /// Returns a multi-line listing of the V2 settings, and .NET Framework-only settings when applicable, that have been set on this instance.
         /// </summary>
         public override string ToString()
         {
