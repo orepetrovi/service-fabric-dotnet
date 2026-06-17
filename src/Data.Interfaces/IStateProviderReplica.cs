@@ -125,7 +125,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </summary>
         /// <param name="backupFolderPath">The directory to restore the replica from. UNC paths are supported.</param>
         /// <remarks>
-        /// A safe restore will be performed, meaning the restore will only be completed if the data to restore is ahead of state of the current replica.
+        /// A safe restore will be performed, meaning the restore will only be completed if the data to restore is ahead of the current replica's state.
         /// </remarks>
         /// <exception cref="ArgumentException"><paramref name="backupFolderPath"/> is <see langword="null"/>, empty, whitespace, or is not a valid backup folder.</exception>
         /// <exception cref="InvalidOperationException">The method is invoked outside of <see cref="OnDataLossAsync"/> processing.</exception>
