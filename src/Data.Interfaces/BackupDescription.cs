@@ -20,7 +20,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="BackupDescription"/> struct.
         /// </summary>
-        /// <inheritdoc cref="BackupDescription(BackupOption, Func{BackupInfo, CancellationToken, Task{bool}})" path="/param[@name='backupCallback']"/>
+        /// <inheritdoc path="/param[@name='backupCallback']" cref="BackupDescription(BackupOption, Func{BackupInfo, CancellationToken, Task{bool}})"/>
         /// <remarks>
         /// Uses <see cref="BackupOption.Full"/> for the backup option.
         /// </remarks>
