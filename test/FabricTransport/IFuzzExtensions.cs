@@ -8,8 +8,7 @@ namespace Microsoft.ServiceFabric.FabricTransport;
 
 static class IFuzzExtensions
 {
-    internal static FabricTransportMessage FabricTransportMessage(this IFuzz fuzzy) =>
-        new(
-            new FabricTransportRequestHeader(new ArraySegment<byte>(fuzzy.Array(fuzzy.Byte)), static () => { }),
-            new FabricTransportRequestBody([new ArraySegment<byte>(fuzzy.Array(fuzzy.Byte))], static () => { }));
+    internal static FabricTransportMessage FabricTransportMessage(this IFuzz fuzzy) => new(
+        new FabricTransportRequestHeader(new ArraySegment<byte>(fuzzy.Array(fuzzy.Byte)), static () => { }),
+        new FabricTransportRequestBody([new ArraySegment<byte>(fuzzy.Array(fuzzy.Byte))], static () => { }));
 }
