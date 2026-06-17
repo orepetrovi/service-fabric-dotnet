@@ -15,7 +15,7 @@ using static Microsoft.ServiceFabric.FabricTransport.NativeFabricTransport;
 
 namespace Microsoft.ServiceFabric.FabricTransport;
 
-public abstract class FabricTransportSettingsTest
+public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
 {
     readonly FabricTransportSettings sut = new();
 
@@ -48,15 +48,15 @@ public abstract class FabricTransportSettingsTest
     }
 
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
-    public sealed class GetDefault: FabricTransportSettingsTest, IDisposable
+    public sealed class GetDefault: FabricTransportSettingsTest
     {
-        public GetDefault()
-        {
-            typeof(FabricServiceConfig).Field<FabricServiceConfig>().Set(null);
-            File.Delete(EntrySettingsFile.Path);
-        }
+        public GetDefault() => File.Delete(EntrySettingsFile.Path);
 
-        void IDisposable.Dispose() => File.Delete(EntrySettingsFile.Path);
+        public override void Dispose()
+        {
+            File.Delete(EntrySettingsFile.Path);
+            base.Dispose();
+        }
 
         [Fact]
         public void ReturnsSettingsWithDefaultValuesWhenSectionDoesNotExist()
