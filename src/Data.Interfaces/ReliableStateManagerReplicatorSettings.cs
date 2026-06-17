@@ -402,6 +402,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <value>
         /// <see langword="true"/> if a primary replica can take an incremental backup whether or not it took the last backup
         /// with the same data-loss number; otherwise, <see langword="false"/>.
+        /// The default is <see langword="false"/>.
         /// </value>
         /// <remarks>
         /// When <see langword="false"/>, a primary replica can take an incremental backup only if it took the last backup at
@@ -423,12 +424,18 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets or sets the number of bytes from the replication queue that can be put on the wire when
         /// <see cref="EnableSendWindowSizeInBytes"/> is set.
         /// </summary>
+        /// <value>
+        /// The default is 0.
+        /// </value>
         internal uint? MaxReplicationQueueSendWindowSizeInBytes { get; set; }
 
         /// <summary>
         /// Gets or sets the number of bytes from the copy queue that can be put on the wire when
         /// <see cref="EnableSendWindowSizeInBytes"/> is set.
         /// </summary>
+        /// <value>
+        /// The default is 0.
+        /// </value>
         internal uint? MaxCopyQueueSendWindowSizeInBytes { get; set; }
 
         /// <summary>
