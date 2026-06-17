@@ -141,6 +141,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentException"><paramref name="backupFolderPath"/> is <see langword="null"/>, empty, whitespace, or is not a valid backup folder.</exception>
         /// <exception cref="InvalidOperationException">The method is invoked outside of <see cref="OnDataLossAsync"/> processing.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         Task RestoreAsync(
             string backupFolderPath,
             RestorePolicy restorePolicy,
