@@ -132,15 +132,12 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="InvalidOperationException">The method is invoked outside of <see cref="OnDataLossAsync"/> processing.</exception>
         Task RestoreAsync(string backupFolderPath);
 
-        /// <summary>
-        /// Asynchronously restores a backup taken by <see cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/> or 
-        /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>.
-        /// </summary>
+        /// <inheritdoc cref="RestoreAsync(string)" path="/summary"/>
         /// <param name="backupFolderPath">The directory to restore the replica from. UNC paths are supported.</param>
         /// <param name="restorePolicy">One of the enumeration values that specifies the policy applied when restoring from backup.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentException"><paramref name="backupFolderPath"/> is <see langword="null"/>, empty, whitespace, or is not a valid backup folder.</exception>
-        /// <exception cref="InvalidOperationException">The method is invoked outside of <see cref="OnDataLossAsync"/> processing.</exception>
+        /// <inheritdoc cref="RestoreAsync(string)" path="/exception[@cref='T:System.ArgumentException']"/>
+        /// <inheritdoc cref="RestoreAsync(string)" path="/exception[@cref='T:System.InvalidOperationException']"/>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         Task RestoreAsync(
             string backupFolderPath,
