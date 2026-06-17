@@ -423,7 +423,7 @@ namespace Microsoft.ServiceFabric.Data
 
         /// <summary>
         /// Controls if multiple replicas within process should use their own individual heaps or shared heap.
-        /// The default is false
+        /// The default is true
         /// </summary>
         internal bool? UseIndividualHeapPerReplica { get; set; }
 
