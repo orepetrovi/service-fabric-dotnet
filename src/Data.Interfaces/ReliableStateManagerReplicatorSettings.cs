@@ -301,9 +301,12 @@ namespace Microsoft.ServiceFabric.Data
         /// IO performance.
         /// </summary>
         /// <value>
-        /// <see langword="true"/> if the log uses less disk space at the cost of IO performance; otherwise, <see langword="false"/>,
-        /// in which case the log uses more disk space but has better IO performance. The default is <see langword="true"/>.
+        /// <see langword="true"/> if the log uses less disk space at the cost of IO performance; otherwise, <see langword="false"/>.
+        /// The default is <see langword="true"/>.
         /// </value>
+        /// <remarks>
+        /// When set to <see langword="false"/>, the log uses more disk space but has better IO performance.
+        /// </remarks>
         public bool? OptimizeLogForLowerDiskUsage { get; set; }
 
         /// <summary>
