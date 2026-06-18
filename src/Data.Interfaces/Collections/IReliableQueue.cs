@@ -19,7 +19,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// highly recommended to make <typeparamref name="T"/> immutable to avoid accidental data corruption.
     /// </para>
     /// <para>
-    /// A transaction is the unit of concurrency. Multiple transactions can be in-flight at any time, but operations within
+    /// A <see cref="ITransaction"/> is the unit of concurrency. Multiple transactions can be in-flight at any time, but operations within
     /// a given transaction must be called sequentially.
     /// <see cref="IReliableCollection{T}"/> APIs that take a transaction and return a <see cref="Task"/> must be awaited
     /// one at a time.
@@ -46,7 +46,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Asynchronously adds a value to the end of the queue.
         /// </summary>
-        /// <param name="tx">The transaction to associate this operation with.</param>
+        /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="item">The value to add. Can be <see langword="null"/> for reference types.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
@@ -78,7 +78,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Asynchronously returns the value removed from the beginning of the queue, or an empty result if the queue is empty.
         /// </summary>
-        /// <param name="tx">The transaction to associate this operation with.</param>
+        /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
@@ -136,7 +136,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Asynchronously returns the value at the beginning of the queue without removing it, or an empty result if the queue is empty.
         /// </summary>
-        /// <param name="tx">The transaction to associate this operation with.</param>
+        /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
@@ -168,7 +168,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Asynchronously returns an <see cref="IAsyncEnumerable{T}"/> over the <see cref="IReliableQueue{T}"/>.
         /// </summary>
-        /// <param name="tx">The transaction to associate this operation with.</param>
+        /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
