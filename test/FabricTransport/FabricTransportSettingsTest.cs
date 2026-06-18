@@ -337,7 +337,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         [Fact]
         public void LoadsDefaultOperationTimeoutWhenOperationTimeoutIsOmitted()
         {
-            FabricTransportSettings settings = LoadWithoutTimeouts();
+            FabricTransportSettings settings = LoadOmittingTestedSettings();
             settings.OperationTimeout = FabricTransportSettings.DefaultOperationTimeout + fuzzy.TimeSpan().Seconds().Minimum(TimeSpan.FromSeconds(1));
 
             settings.OnInitialize();
@@ -352,7 +352,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         [Fact]
         public void LoadsDefaultConnectTimeoutWhenConnectTimeoutIsOmitted()
         {
-            FabricTransportSettings settings = LoadWithoutTimeouts();
+            FabricTransportSettings settings = LoadOmittingTestedSettings();
             settings.ConnectTimeout = FabricTransportSettings.DefaultConnectTimeout + fuzzy.TimeSpan().Milliseconds().Minimum(TimeSpan.FromMilliseconds(1));
 
             settings.OnInitialize();
@@ -360,21 +360,58 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             Assert.Equal(FabricTransportSettings.DefaultConnectTimeout, settings.ConnectTimeout);
         }
 
-        FabricTransportSettings LoadWithoutTimeouts()
+        [Fact]
+        public void LoadsDefaultMaxMessageSizeWhenMaxMessageSizeIsOmitted()
+        {
+            FabricTransportSettings settings = LoadOmittingTestedSettings();
+            settings.MaxMessageSize = FabricTransportSettings.DefaultMaxReceivedMessageSize + fuzzy.Int32().Minimum(1);
+
+            settings.OnInitialize();
+
+            Assert.Equal(FabricTransportSettings.DefaultMaxReceivedMessageSize, settings.MaxMessageSize);
+        }
+
+        // DefaultQueueSize (10000) and DefaultConcurrentCalls (0) are private, so these two tests assert the literal
+        // defaults, matching Constructor.InitializesDefaults.
+
+        [Fact]
+        public void LoadsDefaultMaxQueueSizeWhenMaxQueueSizeIsOmitted()
+        {
+            FabricTransportSettings settings = LoadOmittingTestedSettings();
+            settings.MaxQueueSize = 10000L + fuzzy.Int32().Minimum(1);
+
+            settings.OnInitialize();
+
+            Assert.Equal(10000, settings.MaxQueueSize);
+        }
+
+        [Fact]
+        public void LoadsDefaultMaxConcurrentCallsWhenMaxConcurrentCallsIsOmitted()
+        {
+            FabricTransportSettings settings = LoadOmittingTestedSettings();
+            settings.MaxConcurrentCalls = fuzzy.Int64().Minimum(1);
+
+            settings.OnInitialize();
+
+            Assert.Equal(0, settings.MaxConcurrentCalls);
+        }
+
+        FabricTransportSettings LoadOmittingTestedSettings()
         {
             // OnInitialize is internal virtual and is invoked by InitializeSettingsFromConfig, which is reached
-            // through LoadFrom. The generated section omits all three timeout parameters, so the loaded ConfigSection
-            // exercises the fallback branches that substitute the Default*Timeout constants when the corresponding
-            // parameter is absent (parsed as 0). Each test pre-sets the timeout to a value derived from (and thus
-            // guaranteed distinct from) the asserted default, then re-invokes OnInitialize directly, so observing the
-            // default afterwards proves it was actually written rather than surviving untouched.
+            // through LoadFrom. The generated section omits every setting these tests assert on, so the loaded
+            // ConfigSection exercises the fallback branches that substitute the Default* constants when the
+            // corresponding parameter is absent. Each test pre-sets its setting to a value distinct from the asserted
+            // default, then re-invokes OnInitialize directly, so observing the default afterwards proves it was
+            // actually written rather than surviving untouched. KeepAliveTimeoutInSeconds is the lone, non-asserted
+            // filler that keeps the section non-empty without supplying any tested setting.
 
             // LoadFrom stays in the test body, not a constructor, because it would throw TypeInitializationException on
             // Linux before the WindowsOnlyAttribute can skip the test.
 
             string section = fuzzy.String().LettersOrDigits();
             string file = CreateSettingsFile(dir, section,
-                """<Parameter Name="MaxConcurrentCalls" Value="16" />""");
+                """<Parameter Name="KeepAliveTimeoutInSeconds" Value="1" />""");
             return FabricTransportSettings.LoadFrom(section, file);
         }
     }
