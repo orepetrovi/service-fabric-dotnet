@@ -50,6 +50,8 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class GetDefault: FabricTransportSettingsTest
     {
+        string sectionName;
+
         public GetDefault() => File.Delete(EntrySettingsFile.Path);
 
         public override void Dispose()
@@ -61,7 +63,9 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         [Fact]
         public void ReturnsSettingsWithDefaultValuesWhenSectionDoesNotExist()
         {
-            var settings = FabricTransportSettings.GetDefault(fuzzy.String().LettersOrDigits());
+            sectionName = fuzzy.String().LettersOrDigits();
+
+            var settings = FabricTransportSettings.GetDefault(sectionName);
 
             Assert.Equal(TimeSpan.FromMinutes(5), settings.OperationTimeout);
         }
@@ -73,7 +77,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             // which the test runner is, so staging that file routes GetDefault through the success branch of
             // TryLoadFrom. A timeout value of 0 is the sentinel for "use the default", so the timeout is
             // generated > 0 to differ from the constructor default, proving GetDefault returned the loaded settings.
-            string sectionName = fuzzy.String().LettersOrDigits();
+            sectionName = fuzzy.String().LettersOrDigits();
             int operationTimeoutInSeconds = fuzzy.Int32().Minimum(1);
             File.WriteAllText(EntrySettingsFile.Path,
                 $"""
@@ -105,6 +109,11 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class LoadFrom: FabricTransportSettingsTest
     {
+        // Method parameters
+        string sectionName;
+        string filepath;
+        string configPackageName;
+
         readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
 
         public override void Dispose()
@@ -116,14 +125,14 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         [Fact]
         public void LoadsSettingsFromGivenSection()
         {
-            string section = fuzzy.String().LettersOrDigits();
+            sectionName = fuzzy.String().LettersOrDigits();
             int operationSeconds = fuzzy.Int32().Minimum(1);
             int keepAliveSeconds = fuzzy.Int32().Minimum(1);
             int connectMs = fuzzy.Int32().Minimum(1);
             long maxMessageSize = fuzzy.Int32().Minimum(1);
             long maxQueueSize = fuzzy.Int32().Minimum(1);
             long maxConcurrentCalls = fuzzy.Int32().Minimum(1);
-            string file = CreateSettingsFile(dir, section,
+            filepath = CreateSettingsFile(dir, sectionName,
                 $"""
                 <Parameter Name="MaxMessageSize" Value="{maxMessageSize}" />
                 <Parameter Name="MaxConcurrentCalls" Value="{maxConcurrentCalls}" />
@@ -134,7 +143,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
                 <Parameter Name="SecurityCredentialsType" Value="X509" />
                 """);
 
-            var settings = FabricTransportSettings.LoadFrom(section, file);
+            var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
 
             Assert.Equal(TimeSpan.FromSeconds(operationSeconds), settings.OperationTimeout);
             Assert.Equal(TimeSpan.FromSeconds(keepAliveSeconds), settings.KeepAliveTimeout);
@@ -148,15 +157,15 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         [Fact]
         public void LoadsWindowsCredentialsWithRemoteSpn()
         {
-            string section = fuzzy.String().LettersOrDigits();
+            sectionName = fuzzy.String().LettersOrDigits();
             string spn = "host/" + fuzzy.String().LettersOrDigits() + ".server.servicefabric.azure.test";
-            string file = CreateSettingsFile(dir, section,
+            filepath = CreateSettingsFile(dir, sectionName,
                 $"""
                 <Parameter Name="SecurityCredentialsType" Value="Windows" />
                 <Parameter Name="RemoteSecurityPrincipalName" Value="{spn}" />
                 """);
 
-            var settings = FabricTransportSettings.LoadFrom(section, file);
+            var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
 
             Assert.Equal(CredentialType.Windows, settings.SecurityCredentials.CredentialType);
             var credentials = (WindowsCredentials)settings.SecurityCredentials;
@@ -167,11 +176,11 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         public void LoadsNoneCredentialsWhenSecurityCredentialsTypeIsOmitted()
         {
             // The section is non-empty but omits SecurityCredentialsType to exercise the None fallback.
-            string section = fuzzy.String().LettersOrDigits();
-            string file = CreateSettingsFile(dir, section,
+            sectionName = fuzzy.String().LettersOrDigits();
+            filepath = CreateSettingsFile(dir, sectionName,
                 """<Parameter Name="MaxConcurrentCalls" Value="16" />""");
 
-            var settings = FabricTransportSettings.LoadFrom(section, file);
+            var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
 
             Assert.Equal(CredentialType.None, settings.SecurityCredentials.CredentialType);
         }
@@ -179,8 +188,8 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         [Fact]
         public void LoadsRichX509Credentials()
         {
-            string section = fuzzy.String().LettersOrDigits();
-            string file = CreateSettingsFile(dir, section,
+            sectionName = fuzzy.String().LettersOrDigits();
+            filepath = CreateSettingsFile(dir, sectionName,
                 """
                 <Parameter Name="SecurityCredentialsType" Value="X509" />
                 <Parameter Name="CertificateFindType" Value="FindByThumbprint" />
@@ -196,7 +205,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
                 <Parameter Name="CertificateApplicationIssuerStore/CN=SecondIssuer" Value="My" />
                 """);
 
-            var settings = FabricTransportSettings.LoadFrom(section, file);
+            var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
 
             Assert.Equal(CredentialType.X509, settings.SecurityCredentials.CredentialType);
             var credentials = (X509Credentials)settings.SecurityCredentials;
@@ -233,8 +242,9 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         {
             // LoadFrom throws ArgumentException reporting the missing section, but constructs it without
             // a ParamName, so ex.ParamName is null instead of "sectionName".
-            string file = CreateSettingsFile(dir, "PresentSection", "");
-            var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom("AbsentSection", file));
+            sectionName = "AbsentSection";
+            filepath = CreateSettingsFile(dir, "PresentSection", "");
+            var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName, filepath));
             Assert.Equal("sectionName", ex.ParamName);
         }
 
@@ -243,7 +253,8 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         {
             // LoadFrom throws ArgumentException reporting the missing section, but constructs it without
             // a ParamName, so ex.ParamName is null instead of "sectionName".
-            var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(fuzzy.String().LettersOrDigits()));
+            sectionName = fuzzy.String().LettersOrDigits();
+            var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName));
             Assert.Equal("sectionName", ex.ParamName);
         }
 
@@ -252,10 +263,11 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         {
             // LoadFrom throws ArgumentException reporting the missing file, but constructs it without
             // a ParamName, so ex.ParamName is null instead of "filepath".
-            string missing = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits(),
+            sectionName = fuzzy.String().LettersOrDigits();
+            filepath = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits(),
                 fuzzy.String().LettersOrDigits() + ".xml");
-            Assert.False(File.Exists(missing), $"Pre-existing {missing} would invalidate this test.");
-            var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(fuzzy.String().LettersOrDigits(), missing));
+            Assert.False(File.Exists(filepath), $"Pre-existing {filepath} would invalidate this test.");
+            var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName, filepath));
             Assert.Equal("filepath", ex.ParamName);
         }
 
@@ -264,7 +276,9 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         {
             // LoadFrom throws ArgumentException reporting the missing config package, but constructs it
             // without a ParamName, so ex.ParamName is null instead of "configPackageName".
-            var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(fuzzy.String().LettersOrDigits(), configPackageName: fuzzy.String().LettersOrDigits()));
+            sectionName = fuzzy.String().LettersOrDigits();
+            configPackageName = fuzzy.String().LettersOrDigits();
+            var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName, configPackageName: configPackageName));
             Assert.Equal("configPackageName", ex.ParamName);
         }
 
@@ -616,6 +630,11 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class TryLoadFrom: FabricTransportSettingsTest
     {
+        // Method parameters
+        string sectionName;
+        string filepath;
+        string configPackageName;
+
         readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
 
         public override void Dispose()
@@ -627,12 +646,12 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         [Fact]
         public void ReturnsTrueAndLoadsSettingsWhenSectionExists()
         {
-            string section = fuzzy.String().LettersOrDigits();
+            sectionName = fuzzy.String().LettersOrDigits();
             int operationSeconds = fuzzy.Int32().Minimum(1);
-            string file = CreateSettingsFile(dir, section,
+            filepath = CreateSettingsFile(dir, sectionName,
                 $"""<Parameter Name="OperationTimeoutInSeconds" Value="{operationSeconds}" />""");
 
-            bool succeeded = FabricTransportSettings.TryLoadFrom(section, out var settings, file);
+            bool succeeded = FabricTransportSettings.TryLoadFrom(sectionName, out var settings, filepath);
 
             Assert.True(succeeded);
             Assert.Equal(TimeSpan.FromSeconds(operationSeconds), settings.OperationTimeout);
@@ -641,8 +660,9 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         [Fact]
         public void ReturnsFalseAndNullSettingsWhenSectionDoesNotExistInGivenFile()
         {
-            string file = CreateSettingsFile(dir, "PresentSection", "");
-            Assert.False(FabricTransportSettings.TryLoadFrom("AbsentSection", out var settings, file));
+            sectionName = "AbsentSection";
+            filepath = CreateSettingsFile(dir, "PresentSection", "");
+            Assert.False(FabricTransportSettings.TryLoadFrom(sectionName, out var settings, filepath));
             Assert.Null(settings);
         }
 
@@ -652,25 +672,29 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             // With both filepath and configPackageName omitted, TryLoadFrom skips both init branches and
             // falls straight into InitializeSettingsFromConfig(sectionName), which returns false because the
             // randomly generated section name cannot exist in whatever FabricServiceConfig.GetConfig resolves to.
-            Assert.False(FabricTransportSettings.TryLoadFrom(fuzzy.String().LettersOrDigits(), out var settings));
+            sectionName = fuzzy.String().LettersOrDigits();
+            Assert.False(FabricTransportSettings.TryLoadFrom(sectionName, out var settings));
             Assert.Null(settings);
         }
 
         [Fact]
         public void ReturnsFalseAndNullSettingsWhenFileDoesNotExist()
         {
-            string missing = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits(),
+            sectionName = fuzzy.String().LettersOrDigits();
+            filepath = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits(),
                 fuzzy.String().LettersOrDigits() + ".xml");
-            Assert.False(File.Exists(missing), $"Pre-existing {missing} would invalidate this test.");
+            Assert.False(File.Exists(filepath), $"Pre-existing {filepath} would invalidate this test.");
 
-            Assert.False(FabricTransportSettings.TryLoadFrom(fuzzy.String().LettersOrDigits(), out var settings, missing));
+            Assert.False(FabricTransportSettings.TryLoadFrom(sectionName, out var settings, filepath));
             Assert.Null(settings);
         }
 
         [Fact]
         public void ReturnsFalseAndNullSettingsWhenConfigPackageDoesNotExist()
         {
-            Assert.False(FabricTransportSettings.TryLoadFrom(fuzzy.String().LettersOrDigits(), out var settings, configPackageName: fuzzy.String().LettersOrDigits()));
+            sectionName = fuzzy.String().LettersOrDigits();
+            configPackageName = fuzzy.String().LettersOrDigits();
+            Assert.False(FabricTransportSettings.TryLoadFrom(sectionName, out var settings, configPackageName: configPackageName));
             Assert.Null(settings);
         }
 
@@ -687,9 +711,9 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         {
             // MaxMessageSize is parsed as long; a non-numeric value makes InitializeSettingsFromConfig throw,
             // exercising the catch-all branch of TryLoadFrom that swallows the exception and returns false.
-            string section = fuzzy.String().LettersOrDigits();
-            string file = CreateSettingsFile(dir, section, """<Parameter Name="MaxMessageSize" Value="not-a-long" />""");
-            Assert.False(FabricTransportSettings.TryLoadFrom(section, out var settings, file));
+            sectionName = fuzzy.String().LettersOrDigits();
+            filepath = CreateSettingsFile(dir, sectionName, """<Parameter Name="MaxMessageSize" Value="not-a-long" />""");
+            Assert.False(FabricTransportSettings.TryLoadFrom(sectionName, out var settings, filepath));
             Assert.Null(settings);
         }
     }
