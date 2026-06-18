@@ -66,11 +66,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </remarks>
         /// 
         /// <exception cref="FabricNotPrimaryException">The replica is no longer in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="FabricNotReadableException">The replica is currently not readable.</exception>
         /// <exception cref="FabricObjectClosedException">The queue was closed by the runtime.</exception>
         /// <exception cref="FabricTransientException">The replica saw a transient failure. Retry the operation on a new transaction.</exception>
         /// <exception cref="QueueFullException">The queue has reached its capacity. Retry the operation after dequeue operations free up space.</exception>
-        /// <exception cref="FabricException">The replica saw a non-retriable failure other than <see cref="FabricNotPrimaryException"/>, <see cref="FabricNotReadableException"/>, <see cref="FabricObjectClosedException"/>, or <see cref="FabricTransientException"/>.</exception>
+        /// <exception cref="FabricException">The replica saw a non-retriable failure other than <see cref="FabricNotPrimaryException"/>, <see cref="FabricObjectClosedException"/>, or <see cref="FabricTransientException"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="tx"/> is not a valid transaction, or <paramref name="timeout"/> is negative.</exception>
@@ -118,11 +117,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         ///             // If instead enqueue was being executed as part of a client request, the client would be signaled to re-resolve.
         ///             Console.WriteLine("Replica is not primary, exiting RunAsync: " + e);
         ///             return;
-        ///         }
-        ///         catch (FabricNotReadableException e)
-        ///         {
-        ///             // Retry until the queue is readable or a different exception is thrown.
-        ///             Console.WriteLine("Queue is not readable, retrying the transaction: " + e);
         ///         }
         ///         catch (FabricObjectClosedException e)
         ///         {
