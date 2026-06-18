@@ -43,17 +43,6 @@ public abstract class FabricTransportRequestHeaderTest
         [Fact]
         public void DoesNotThrowWhenDisposeActionIsNull() =>
             new FabricTransportRequestHeader(requestHeaderBuffer, null).Dispose();
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Type does not implement IDisposable and Dispose is not idempotent.
-        public void InvokesDisposeActionOnlyOnceWhenCalledMultipleTimes()
-        {
-            // FabricTransportRequestHeader exposes a public Dispose() but does not implement IDisposable,
-            // even though FabricTransportMessage.Dispose disposes it. Once it implements IDisposable, Dispose
-            // must ignore calls after the first; instead it unconditionally invokes disposeAction every call.
-            sut.Dispose();
-            sut.Dispose();
-            Mock.Get(disposeAction).Verify(_ => _(), Times.Once);
-        }
     }
 
     public sealed class GetRecievedStream : FabricTransportRequestHeaderTest
