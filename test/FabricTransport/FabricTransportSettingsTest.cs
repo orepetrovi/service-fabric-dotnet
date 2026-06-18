@@ -94,6 +94,57 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         }
     }
 
+    [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
+    public sealed class InitializeSettingsFromConfig: FabricTransportSettingsTest
+    {
+        // Method parameters
+        string sectionName;
+
+        readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
+
+        public override void Dispose()
+        {
+            Directory.Delete(dir, recursive: true);
+            base.Dispose();
+        }
+
+        [Fact]
+        public void ReturnsTrueAndLoadsSettingsWhenSectionExists()
+        {
+            sectionName = fuzzy.String().LettersOrDigits();
+            int operationSeconds = fuzzy.Int32().Minimum(1);
+            _ = FabricServiceConfig.Initialize(CreateSettingsFile(dir, sectionName,
+                $"""<Parameter Name="OperationTimeoutInSeconds" Value="{operationSeconds}" />"""));
+
+            bool initialized = sut.InitializeSettingsFromConfig(sectionName);
+
+            Assert.True(initialized);
+            Assert.Equal(TimeSpan.FromSeconds(operationSeconds), sut.OperationTimeout);
+        }
+
+        [Fact]
+        public void ReturnsFalseWhenSectionDoesNotExist()
+        {
+            sectionName = "AbsentSection";
+            _ = FabricServiceConfig.Initialize(CreateSettingsFile(dir, "PresentSection", ""));
+            Assert.False(sut.InitializeSettingsFromConfig(sectionName));
+        }
+
+        [Fact]
+        public void UsesDefaultSectionNameWhenSectionNameIsNull()
+        {
+            // sectionName ?? DefaultSectionName routes a null sectionName to the DefaultSectionName section.
+            int operationSeconds = fuzzy.Int32().Minimum(1);
+            _ = FabricServiceConfig.Initialize(CreateSettingsFile(dir, FabricTransportSettings.DefaultSectionName,
+                $"""<Parameter Name="OperationTimeoutInSeconds" Value="{operationSeconds}" />"""));
+
+            bool initialized = sut.InitializeSettingsFromConfig(sectionName);
+
+            Assert.True(initialized);
+            Assert.Equal(TimeSpan.FromSeconds(operationSeconds), sut.OperationTimeout);
+        }
+    }
+
     public sealed class KeepAliveTimeout: FabricTransportSettingsTest
     {
         [Fact]
