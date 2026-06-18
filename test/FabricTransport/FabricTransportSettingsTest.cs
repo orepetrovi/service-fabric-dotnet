@@ -244,7 +244,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             sectionName = "AbsentSection";
             filepath = CreateSettingsFile(dir, "PresentSection", "");
             var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName, filepath));
-            Assert.Equal("sectionName", ex.ParamName);
+            Assert.Equal(nameof(sectionName), ex.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportSettings.LoadFrom throws ArgumentException without a paramName.
@@ -254,7 +254,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             // a ParamName, so ex.ParamName is null instead of "sectionName".
             sectionName = fuzzy.String().LettersOrDigits();
             var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName));
-            Assert.Equal("sectionName", ex.ParamName);
+            Assert.Equal(nameof(sectionName), ex.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportSettings.LoadFrom throws ArgumentException without a paramName.
@@ -267,7 +267,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
                 fuzzy.String().LettersOrDigits() + ".xml");
             Assert.False(File.Exists(filepath), $"Pre-existing {filepath} would invalidate this test.");
             var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName, filepath));
-            Assert.Equal("filepath", ex.ParamName);
+            Assert.Equal(nameof(filepath), ex.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportSettings.LoadFrom throws ArgumentException without a paramName.
@@ -278,7 +278,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             sectionName = fuzzy.String().LettersOrDigits();
             configPackageName = fuzzy.String().LettersOrDigits();
             var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName, configPackageName: configPackageName));
-            Assert.Equal("configPackageName", ex.ParamName);
+            Assert.Equal(nameof(configPackageName), ex.ParamName);
         }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Requires a Service Fabric host process.
@@ -659,7 +659,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             // ToNative dereferences pin without validating it, producing NullReferenceException
             // instead of ArgumentNullException with ParamName "pin".
             var ex = Assert.Throws<ArgumentNullException>(() => sut.ToNative(null));
-            Assert.Equal("pin", ex.ParamName);
+            Assert.Equal(nameof(pin), ex.ParamName);
         }
     }
 
