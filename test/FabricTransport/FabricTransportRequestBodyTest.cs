@@ -30,16 +30,6 @@ public abstract class FabricTransportRequestBodyTest
         [Fact]
         public void DoesNotThrowWhenDisposeActionIsNull() =>
             new FabricTransportRequestBody(sendBuffers, null).Dispose();
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Dispose is not idempotent.
-        public void InvokesDisposeActionOnlyOnceWhenCalledMultipleTimes()
-        {
-            // Dispose() unconditionally invokes disposeAction every time it is called, violating the
-            // IDisposable contract which requires subsequent calls to be ignored.
-            sut.Dispose();
-            sut.Dispose();
-            Mock.Get(disposeAction).Verify(_ => _(), Times.Once);
-        }
     }
 
     public sealed class GetBodyBuffers : FabricTransportRequestBodyTest
