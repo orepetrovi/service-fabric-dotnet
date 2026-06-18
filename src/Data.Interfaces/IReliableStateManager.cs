@@ -33,8 +33,8 @@ namespace Microsoft.ServiceFabric.Data
         event EventHandler<NotifyStateManagerChangedEventArgs> StateManagerChanged;
 
         /// <summary>
-        /// Tries to register a custom serializer for all reliable collections and returns <see langword="true"/> if the custom
-        /// serializer was added; otherwise, <see langword="false"/>.
+        /// Tries to register a custom <paramref name="stateSerializer"/> for all reliable collections and returns <see langword="true"/>
+        /// if it was successfully registered; otherwise returns <see langword="false"/>.
         /// </summary>
         /// <remarks>
         /// <para>
