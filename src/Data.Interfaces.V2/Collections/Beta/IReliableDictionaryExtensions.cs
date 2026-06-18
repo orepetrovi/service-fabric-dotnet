@@ -15,27 +15,22 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
     /// </summary>
     public static class IReliableDictionaryExtensions
     {
-        /// <summary>
-        /// Asynchronously attempts to remove the value with the specified key without reading data from the disk
-        /// and returns <see langword="true"/> if the key was removed from the Reliable Dictionary; otherwise, <see langword="false"/>.
-        /// </summary>
+        /// <inheritdoc path="/summary" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         /// <remarks>
         /// This overload removes the key with a fixed four-second timeout and cannot be canceled. Call the
         /// <see cref="IReliableDictionary4{TKey, TValue}"/> overload that accepts a <see cref="TimeSpan"/> and a
         /// <see cref="CancellationToken"/> to control the timeout or cancel the operation.
         /// </remarks>
         /// <typeparam name="TKey">The type of the keys in the reliable dictionary.</typeparam>
-        /// <typeparam name="TValue">
-        /// The type of the values in the reliable dictionary.</typeparam>
-        /// <param name="reliableDictionary4Interface">The reliable dictionary to remove the element from.</param>
-        /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="key">The key of the element to remove.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
+        /// <typeparam name="TValue">The type of the values in the reliable dictionary.</typeparam>
+        /// <inheritdoc path="/param[@name='tx']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='key']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.ArgumentNullException']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         /// <exception cref="TimeoutException">The operation failed to complete within the four-second timeout.</exception>
-        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary4{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
-        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary4{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricNotPrimaryException']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.TransactionFaultedException']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricObjectClosedException']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         public static Task<bool> RemoveAsync<TKey, TValue>(this IReliableDictionary4<TKey, TValue> reliableDictionary4Interface, ITransaction tx, TKey key)
             where TKey : IComparable<TKey>, IEquatable<TKey>
         {
