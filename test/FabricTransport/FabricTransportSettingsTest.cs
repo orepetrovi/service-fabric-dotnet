@@ -352,9 +352,16 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             Assert.Equal(FabricTransportSettings.DefaultOperationTimeout, settings.OperationTimeout);
         }
 
-        // No test for the "KeepAliveTimeoutInSeconds omitted" branch: DefaultKeepAliveTimeout is TimeSpan.Zero, so the
-        // fallback assignment and TimeSpan.FromSeconds(0) are observationally equivalent and the branch is unreachable
-        // from observable behavior.
+        [Fact]
+        public void LoadsDefaultKeepAliveTimeoutWhenKeepAliveTimeoutIsOmitted()
+        {
+            FabricTransportSettings settings = LoadOmittingTestedSettings();
+            settings.KeepAliveTimeout = FabricTransportSettings.DefaultKeepAliveTimeout + fuzzy.TimeSpan().Seconds().Minimum(TimeSpan.FromSeconds(1));
+
+            settings.OnInitialize();
+
+            Assert.Equal(FabricTransportSettings.DefaultKeepAliveTimeout, settings.KeepAliveTimeout);
+        }
 
         [Fact]
         public void LoadsDefaultConnectTimeoutWhenConnectTimeoutIsOmitted()
@@ -410,7 +417,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             // ConfigSection exercises the fallback branches that substitute the Default* constants when the
             // corresponding parameter is absent. Each test pre-sets its setting to a value distinct from the asserted
             // default, then re-invokes OnInitialize directly, so observing the default afterwards proves it was
-            // actually written rather than surviving untouched. KeepAliveTimeoutInSeconds is the lone, non-asserted
+            // actually written rather than surviving untouched. RemoteSecurityPrincipalName is the non-asserted
             // filler that keeps the section non-empty without supplying any tested setting.
 
             // LoadFrom stays in the test body, not a constructor, because it would throw TypeInitializationException on
@@ -418,7 +425,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
 
             string section = fuzzy.String().LettersOrDigits();
             string file = CreateSettingsFile(dir, section,
-                """<Parameter Name="KeepAliveTimeoutInSeconds" Value="1" />""");
+                """<Parameter Name="RemoteSecurityPrincipalName" Value="filler" />""");
             return FabricTransportSettings.LoadFrom(section, file);
         }
     }
