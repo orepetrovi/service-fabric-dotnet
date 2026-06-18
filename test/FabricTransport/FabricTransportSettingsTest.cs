@@ -9,7 +9,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using Fuzzy;
-using Inspector;
 using Xunit;
 using static Microsoft.ServiceFabric.FabricTransport.NativeFabricTransport;
 
