@@ -102,11 +102,11 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task<T> GetOrAddAsync<T>(ITransaction tx, Uri name, TimeSpan timeout) where T : IReliableState;
 
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='tx']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
+        /// <inheritdoc path="/summary" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/remarks" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/typeparam[@name='T']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='tx']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='name']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -121,14 +121,14 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task<T> GetOrAddAsync<T>(ITransaction tx, Uri name) where T : IReliableState;
 
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
         /// <remarks>
         /// This is an atomic operation. When an <see cref="IReliableState"/> needs to be created, it will either complete and return successfully
         /// or it will not be created.
         /// </remarks>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='timeout']"/>
+        /// <inheritdoc path="/typeparam[@name='T']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='name']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='timeout']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -138,10 +138,10 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation.</exception>
         Task<T> GetOrAddAsync<T>(Uri name, TimeSpan timeout) where T : IReliableState;
 
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(Uri, TimeSpan)" path="/remarks"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
+        /// <inheritdoc path="/summary" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/remarks" cref="GetOrAddAsync{T}(Uri, TimeSpan)"/>
+        /// <inheritdoc path="/typeparam[@name='T']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='name']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -151,12 +151,12 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation.</exception>
         Task<T> GetOrAddAsync<T>(Uri name) where T : IReliableState;
 
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='tx']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='timeout']"/>
+        /// <inheritdoc path="/summary" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/remarks" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/typeparam[@name='T']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='tx']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='name']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='timeout']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -172,11 +172,11 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task<T> GetOrAddAsync<T>(ITransaction tx, string name, TimeSpan timeout) where T : IReliableState;
 
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='tx']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
+        /// <inheritdoc path="/summary" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/remarks" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/typeparam[@name='T']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='tx']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='name']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -192,11 +192,11 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task<T> GetOrAddAsync<T>(ITransaction tx, string name) where T : IReliableState;
 
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(Uri, TimeSpan)" path="/remarks"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='timeout']"/>
+        /// <inheritdoc path="/summary" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/remarks" cref="GetOrAddAsync{T}(Uri, TimeSpan)"/>
+        /// <inheritdoc path="/typeparam[@name='T']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='name']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='timeout']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -207,10 +207,10 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation.</exception>
         Task<T> GetOrAddAsync<T>(string name, TimeSpan timeout) where T : IReliableState;
 
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(Uri, TimeSpan)" path="/remarks"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
+        /// <inheritdoc path="/summary" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/remarks" cref="GetOrAddAsync{T}(Uri, TimeSpan)"/>
+        /// <inheritdoc path="/typeparam[@name='T']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/param[@name='name']" cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)"/>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -245,8 +245,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task RemoveAsync(ITransaction tx, Uri name, TimeSpan timeout);
 
-        /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/summary"/>
-        /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/remarks"/>
+        /// <inheritdoc path="/summary" cref="RemoveAsync(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/remarks" cref="RemoveAsync(ITransaction, Uri, TimeSpan)"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -280,8 +280,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation.</exception>
         Task RemoveAsync(Uri name, TimeSpan timeout);
 
-        /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/summary"/>
-        /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/remarks"/>
+        /// <inheritdoc path="/summary" cref="RemoveAsync(Uri, TimeSpan)"/>
+        /// <inheritdoc path="/remarks" cref="RemoveAsync(Uri, TimeSpan)"/>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist.</exception>
@@ -291,8 +291,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation.</exception>
         Task RemoveAsync(Uri name);
 
-        /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/summary"/>
-        /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/remarks"/>
+        /// <inheritdoc path="/summary" cref="RemoveAsync(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/remarks" cref="RemoveAsync(ITransaction, Uri, TimeSpan)"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
@@ -310,8 +310,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task RemoveAsync(ITransaction tx, string name, TimeSpan timeout);
 
-        /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/summary"/>
-        /// <inheritdoc cref="RemoveAsync(ITransaction, Uri, TimeSpan)" path="/remarks"/>
+        /// <inheritdoc path="/summary" cref="RemoveAsync(ITransaction, Uri, TimeSpan)"/>
+        /// <inheritdoc path="/remarks" cref="RemoveAsync(ITransaction, Uri, TimeSpan)"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -328,8 +328,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task RemoveAsync(ITransaction tx, string name);
 
-        /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/summary"/>
-        /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/remarks"/>
+        /// <inheritdoc path="/summary" cref="RemoveAsync(Uri, TimeSpan)"/>
+        /// <inheritdoc path="/remarks" cref="RemoveAsync(Uri, TimeSpan)"/>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
@@ -341,8 +341,8 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="TransactionFaultedException">The operation has been internally faulted by the system. Retry the operation.</exception>
         Task RemoveAsync(string name, TimeSpan timeout);
 
-        /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/summary"/>
-        /// <inheritdoc cref="RemoveAsync(Uri, TimeSpan)" path="/remarks"/>
+        /// <inheritdoc path="/summary" cref="RemoveAsync(Uri, TimeSpan)"/>
+        /// <inheritdoc path="/remarks" cref="RemoveAsync(Uri, TimeSpan)"/>
         /// <param name="name">The name of the <see cref="IReliableState"/> to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">An <see cref="IReliableState"/> with the given name does not exist.</exception>
@@ -375,9 +375,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
         Task<ConditionalValue<T>> TryGetAsync<T>(Uri name) where T : IReliableState;
 
-        /// <inheritdoc cref="TryGetAsync{T}(Uri)" path="/summary"/>
-        /// <inheritdoc cref="TryGetAsync{T}(Uri)" path="/typeparam[@name='T']"/>
-        /// <inheritdoc cref="TryGetAsync{T}(Uri)" path="/param[@name='name']"/>
+        /// <inheritdoc path="/summary" cref="TryGetAsync{T}(Uri)"/>
+        /// <inheritdoc path="/typeparam[@name='T']" cref="TryGetAsync{T}(Uri)"/>
+        /// <inheritdoc path="/param[@name='name']" cref="TryGetAsync{T}(Uri)"/>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The <see cref="IReliableState"/> instance is not convertible to type <typeparamref name="T"/>.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
