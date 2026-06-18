@@ -109,8 +109,8 @@ namespace Microsoft.ServiceFabric.Data.Notifications
     /// </summary>
     /// <remarks>
     /// A rebuild notification is fired at the end of recovery, copy, or restore of reliable state.
-    /// Until this operation completes, rebuild of the <see cref="IReliableDictionary{TKey, TValue}"/> will not complete.
-    /// This can cause the replica to be blocked waiting for the callback to complete before proceeding. 
+    /// Until the callback completes, rebuild of the <see cref="IReliableDictionary{TKey, TValue}"/> will not complete.
+    /// This can block the replica from proceeding until the rebuild finishes.
     /// Asynchronous iteration over the state may require IO.
     /// </remarks>
     public class NotifyDictionaryRebuildEventArgs<TKey, TValue> : NotifyDictionaryChangedEventArgs<TKey, TValue>
