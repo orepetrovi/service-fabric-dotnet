@@ -120,6 +120,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/> class.
         /// </summary>
+        // TODO: <exception cref="ArgumentNullException"><paramref name="enumerableState"/> is <see langword="null"/>.</exception>
         public NotifyDictionaryRebuildEventArgs(Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>> enumerableState) : base(NotifyDictionaryChangedAction.Rebuild)
         {
             this.enumerableState = enumerableState;
