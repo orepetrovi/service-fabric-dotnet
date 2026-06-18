@@ -161,11 +161,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// If the queue is empty, the dequeue operation returns an empty result immediately rather than waiting for a value to become available.
         /// </para>
         /// <para>
-        /// While <see cref="TryDequeueAsync"/> can only return values for which the corresponding <see cref="EnqueueAsync"/> was committed, <see cref="TryDequeueAsync"/> operations are not isolated
+        /// While a dequeue can only return values for which the corresponding <see cref="EnqueueAsync"/> was committed, dequeue operations are not isolated
         /// from one another.  Once a transaction has dequeued a value, other transactions cannot dequeue it, but are not blocked from dequeuing other values.
         /// </para>
         /// <para>
-        /// When a transaction or transactions including one or more <see cref="TryDequeueAsync"/> operations abort, the dequeued values will be added back at
+        /// When a transaction or transactions including one or more dequeue operations abort, the dequeued values will be added back at
         /// the head of the queue in an arbitrary order.  This will ensure that these values will be dequeued again soon, improving the fairness of the
         /// data structure, but without enforcing strict ordering (which would require reducing the allowed concurrency, as in <see cref="IReliableQueue{T}"/>).
         /// </para>
