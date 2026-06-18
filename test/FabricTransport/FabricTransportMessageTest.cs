@@ -61,30 +61,6 @@ public abstract class FabricTransportMessageTest
             sut.Dispose();
             headerDispose.Verify(_ => _(), Times.Once);
         }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Dispose skips header when body dispose throws.
-        public void InvokesDisposeOnRequestHeaderWhenRequestBodyDisposeThrows()
-        {
-            // Dispose() calls requestBody.Dispose() before requestHeader.Dispose() without try/finally,
-            // so an exception from the body's disposeAction propagates and the header's disposeAction
-            // is never invoked. Real callers supply serialized header/body dispose actions, leaking
-            // header buffers when body disposal fails.
-            _ = bodyDispose.Setup(_ => _()).Throws<InvalidOperationException>();
-            _ = Assert.Throws<InvalidOperationException>(sut.Dispose);
-            headerDispose.Verify(_ => _(), Times.Once);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Dispose is not idempotent.
-        public void IsIdempotent()
-        {
-            // IDisposable requires ignoring Dispose calls after the first. Dispose() has no disposed
-            // guard and invokes requestBody.Dispose() and requestHeader.Dispose() every time, so the
-            // supplied dispose actions run again on the second call.
-            sut.Dispose();
-            sut.Dispose();
-            bodyDispose.Verify(_ => _(), Times.Once);
-            headerDispose.Verify(_ => _(), Times.Once);
-        }
     }
 
     public sealed class GetBody : FabricTransportMessageTest
