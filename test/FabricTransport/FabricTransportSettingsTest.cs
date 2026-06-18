@@ -103,11 +103,15 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     }
 
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
-    public sealed class LoadFrom: FabricTransportSettingsTest, IDisposable
+    public sealed class LoadFrom: FabricTransportSettingsTest
     {
         readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
 
-        void IDisposable.Dispose() => Directory.Delete(dir, recursive: true);
+        public override void Dispose()
+        {
+            Directory.Delete(dir, recursive: true);
+            base.Dispose();
+        }
 
         [Fact]
         public void LoadsSettingsFromGivenSection()
@@ -307,11 +311,15 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     }
 
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
-    public sealed class OnInitialize: FabricTransportSettingsTest, IDisposable
+    public sealed class OnInitialize: FabricTransportSettingsTest
     {
         readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
 
-        void IDisposable.Dispose() => Directory.Delete(dir, recursive: true);
+        public override void Dispose()
+        {
+            Directory.Delete(dir, recursive: true);
+            base.Dispose();
+        }
 
         [Fact]
         public void LoadsDefaultOperationTimeoutWhenOperationTimeoutIsOmitted()
@@ -381,7 +389,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     }
 
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
-    public sealed class ToNative: FabricTransportSettingsTest, IDisposable
+    public sealed class ToNative: FabricTransportSettingsTest
     {
         readonly PinCollection pin = [];
 
@@ -397,7 +405,11 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             sut.MaxQueueSize = fuzzy.Int32().Minimum(0);
         }
 
-        void IDisposable.Dispose() => pin.Dispose();
+        public override void Dispose()
+        {
+            pin.Dispose();
+            base.Dispose();
+        }
 
         // FabricTransportSettings.ToNative marshals into NativeTypes.FABRIC_SERVICE_TRANSPORT_SETTINGS, which is
         // internal to System.Fabric. The byte layout matches FABRIC_TRANSPORT_SETTINGS (declared in this assembly),
@@ -602,11 +614,15 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     }
 
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
-    public sealed class TryLoadFrom: FabricTransportSettingsTest, IDisposable
+    public sealed class TryLoadFrom: FabricTransportSettingsTest
     {
         readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
 
-        void IDisposable.Dispose() => Directory.Delete(dir, recursive: true);
+        public override void Dispose()
+        {
+            Directory.Delete(dir, recursive: true);
+            base.Dispose();
+        }
 
         [Fact]
         public void ReturnsTrueAndLoadsSettingsWhenSectionExists()
