@@ -331,7 +331,8 @@ namespace Microsoft.ServiceFabric.Data
 
         /// <summary>
         /// Asynchronously attempts to get an <see cref="IReliableState"/> of the given type <typeparamref name="T"/> and with
-        /// the given name, and returns a value indicating whether it was found and containing the instance if it was.
+        /// the given name, and returns a <see cref="ConditionalValue{T}"/> indicating whether it was found and containing
+        /// the instance if it was.
         /// </summary>
         /// <typeparam name="T">
         /// When specifying the type, you may ask for either a concrete type or an interface type. The retrieved object will
