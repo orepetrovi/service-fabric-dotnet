@@ -33,25 +33,25 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes the state provider replica using the service initialization information.
         /// </summary>
+        /// <param name="initializationParameters">The service initialization information such as service name, partition id, replica id, and code package information.</param>
         /// <remarks>
         /// No complex processing should be done during <see cref="Initialize(StatefulServiceInitializationParameters)"/>. Expensive or
         /// long-running initialization should be done in <see cref="OpenAsync(ReplicaOpenMode, IStatefulServicePartition, CancellationToken)"/>.
         /// </remarks>
-        /// <param name="initializationParameters">The service initialization information such as service name, partition id, replica id, and code package information.</param>
         void Initialize(StatefulServiceInitializationParameters initializationParameters);
 
         /// <summary>
         /// Asynchronously opens the state provider replica for use.
         /// </summary>
-        /// <remarks>
-        /// Extended state provider initialization tasks can be started at this time.
-        /// </remarks>
         /// <param name="openMode">One of the enumeration values that specifies whether this is a new or existing replica.</param>
         /// <param name="partition">The partition this replica belongs to.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>
         /// The replicator responsible for replicating state between other state provider replicas in the partition.
         /// </returns>
+        /// <remarks>
+        /// Extended state provider initialization tasks can be started at this time.
+        /// </remarks>
         Task<IReplicator> OpenAsync(ReplicaOpenMode openMode, IStatefulServicePartition partition,
             CancellationToken cancellationToken);
 
