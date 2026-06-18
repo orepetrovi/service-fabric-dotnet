@@ -571,7 +571,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         }
 
         [Fact]
-        public void ThrowsArgumentOutOfRangeExceptionWhenMaxMessageSizeOutOfBounds()
+        public void ThrowsArgumentOutOfRangeExceptionWhenMaxMessageSizeIsNegative()
         {
             sut.MaxMessageSize = fuzzy.Int64().Maximum(-1);
 
@@ -580,7 +580,16 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         }
 
         [Fact]
-        public void ThrowsArgumentOutOfRangeExceptionWhenMaxConcurrentCallsOutOfBounds()
+        public void ThrowsArgumentOutOfRangeExceptionWhenMaxMessageSizeExceedsInt32MaxValue()
+        {
+            sut.MaxMessageSize = fuzzy.Int64().Minimum((long)int.MaxValue + 1);
+
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => sut.ToNative(pin));
+            Assert.Equal(nameof(FabricTransportSettings.MaxMessageSize), ex.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentOutOfRangeExceptionWhenMaxConcurrentCallsIsNegative()
         {
             sut.MaxConcurrentCalls = fuzzy.Int64().Maximum(-1);
 
@@ -589,9 +598,27 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         }
 
         [Fact]
-        public void ThrowsArgumentOutOfRangeExceptionWhenMaxQueueSizeOutOfBounds()
+        public void ThrowsArgumentOutOfRangeExceptionWhenMaxConcurrentCallsExceedsInt32MaxValue()
+        {
+            sut.MaxConcurrentCalls = fuzzy.Int64().Minimum((long)int.MaxValue + 1);
+
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => sut.ToNative(pin));
+            Assert.Equal(nameof(FabricTransportSettings.MaxConcurrentCalls), ex.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentOutOfRangeExceptionWhenMaxQueueSizeIsNegative()
         {
             sut.MaxQueueSize = fuzzy.Int64().Maximum(-1);
+
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => sut.ToNative(pin));
+            Assert.Equal(nameof(FabricTransportSettings.MaxQueueSize), ex.ParamName);
+        }
+
+        [Fact]
+        public void ThrowsArgumentOutOfRangeExceptionWhenMaxQueueSizeExceedsInt32MaxValue()
+        {
+            sut.MaxQueueSize = fuzzy.Int64().Minimum((long)int.MaxValue + 1);
 
             var ex = Assert.Throws<ArgumentOutOfRangeException>(() => sut.ToNative(pin));
             Assert.Equal(nameof(FabricTransportSettings.MaxQueueSize), ex.ParamName);
