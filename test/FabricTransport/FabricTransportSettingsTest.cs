@@ -576,7 +576,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
 
             var native = Marshal.PtrToStructure<FABRIC_TRANSPORT_SETTINGS>(ptr);
             var ex1 = Marshal.PtrToStructure<FABRIC_TRANSPORT_SETTINGS_EX1>(native.Reserved);
-            Assert.Equal(5000u, ex1.ConnectTimeoutInMilliseconds);
+            Assert.Equal(Convert.ToUInt32(FabricTransportSettings.DefaultConnectTimeout.TotalMilliseconds), ex1.ConnectTimeoutInMilliseconds);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportSettings.ToNative does not validate ConnectTimeout upper bound.
