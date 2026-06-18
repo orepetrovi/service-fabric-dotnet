@@ -152,10 +152,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="cancellationToken">A token to monitor for cancellation requests. Defaults to <see cref="CancellationToken.None"/>.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. The default is <see langword="null"/>. If <see langword="null"/> is passed, a default timeout will be used.</param>
         /// 
-        /// <returns>
-        /// A result containing the dequeued value if the queue was not empty; otherwise, an empty result.
-        /// </returns>
-        /// 
         /// <remarks>
         /// <para>
         /// If the queue is empty, the dequeue operation returns an empty result immediately rather than waiting for a value to become available.
