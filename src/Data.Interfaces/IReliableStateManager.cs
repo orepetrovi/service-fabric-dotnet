@@ -355,15 +355,11 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc path="/summary" cref="TryGetAsync{T}(Uri)"/>
         /// <inheritdoc path="/typeparam[@name='T']" cref="TryGetAsync{T}(Uri)"/>
         /// <inheritdoc path="/param[@name='name']" cref="TryGetAsync{T}(Uri)"/>
-        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException">The <see cref="IReliableState"/> instance is not convertible to type <typeparamref name="T"/>.</exception>
+        /// <inheritdoc path="/exception[@cref='T:System.ArgumentNullException']" cref="TryGetAsync{T}(Uri)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.ArgumentException']" cref="TryGetAsync{T}(Uri)"/>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
-        /// <exception cref="FabricNotReadableException">
-        /// The <see cref="IReliableStateManager"/> cannot retrieve the requested <see cref="IReliableState"/>.
-        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
-        /// For example, a <see cref="ReplicaRole.Primary"/> loses <see cref="IStatefulServicePartition.ReadStatus"/>,
-        /// or an <see cref="ReplicaRole.ActiveSecondary"/>'s local state is not yet readable.</exception>
-        /// <exception cref="FabricObjectClosedException">The Reliable State Manager is closed.</exception>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricNotReadableException']" cref="TryGetAsync{T}(Uri)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricObjectClosedException']" cref="TryGetAsync{T}(Uri)"/>
         Task<ConditionalValue<T>> TryGetAsync<T>(string name) where T : IReliableState;
     }
 }
