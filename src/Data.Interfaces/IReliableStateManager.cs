@@ -105,7 +105,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <param name="tx">The transaction to associate this operation with.</param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='tx']"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
@@ -128,7 +128,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </remarks>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='timeout']"/>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -154,9 +154,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <param name="tx">The transaction to associate this operation with.</param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='tx']"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='timeout']"/>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -175,7 +175,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <param name="tx">The transaction to associate this operation with.</param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='tx']"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
@@ -196,7 +196,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='timeout']"/>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
