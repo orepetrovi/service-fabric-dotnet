@@ -44,6 +44,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
         Task EnqueueAsync(ITransaction tx, T item);
 
         /// <summary>
@@ -64,6 +65,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
         Task EnqueueAsync(ITransaction tx, T item, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <inheritdoc cref="TryDequeueAsync(ITransaction, TimeSpan, CancellationToken)" path="/summary"/>
@@ -76,6 +78,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="TryDequeueAsync(ITransaction, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx);
 
@@ -96,6 +99,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
         /// <returns>
         /// The value removed from the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with
         /// <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty;
@@ -119,6 +123,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx);
 
@@ -142,6 +147,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, TimeSpan timeout,
             CancellationToken cancellationToken);
@@ -163,6 +169,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
         /// <inheritdoc cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, LockMode lockMode);
 
@@ -189,6 +196,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
         /// <returns>
         /// The value at the beginning of the queue via <see cref="ConditionalValue{T}.Value"/> with
         /// <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty;
@@ -214,6 +222,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
+        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
         /// <remarks>
         /// The returned enumerable provides a snapshot-consistent view of the <see cref="IReliableQueue{T}"/>, traversing
         /// its values in first-in, first-out order. <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> must be called on
