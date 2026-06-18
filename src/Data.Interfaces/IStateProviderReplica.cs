@@ -129,6 +129,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </remarks>
         /// <exception cref="ArgumentException"><paramref name="backupFolderPath"/> is <see langword="null"/>, empty, whitespace, or is not a valid backup folder.</exception>
         /// <exception cref="InvalidOperationException">The method is invoked outside of <see cref="OnDataLossAsync"/> processing.</exception>
+        /// <exception cref="FabricMissingFullBackupException"><paramref name="backupFolderPath"/> does not contain a valid full backup to use as the head of the backup chain.</exception>
         Task RestoreAsync(string backupFolderPath);
 
         /// <inheritdoc cref="RestoreAsync(string)" path="/summary"/>
@@ -137,6 +138,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <inheritdoc cref="RestoreAsync(string)" path="/exception[@cref='T:System.ArgumentException']"/>
         /// <inheritdoc cref="RestoreAsync(string)" path="/exception[@cref='T:System.InvalidOperationException']"/>
+        /// <inheritdoc cref="RestoreAsync(string)" path="/exception[@cref='T:System.Fabric.FabricMissingFullBackupException']"/>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         Task RestoreAsync(
             string backupFolderPath,
