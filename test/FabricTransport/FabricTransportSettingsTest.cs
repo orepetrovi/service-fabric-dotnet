@@ -188,20 +188,31 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         public void LoadsRichX509Credentials()
         {
             sectionName = fuzzy.String().LettersOrDigits();
+            string findValue = fuzzy.String().LettersOrDigits();
+            string findValueSecondary = fuzzy.String().LettersOrDigits();
+            string storeName = fuzzy.String().LettersOrDigits();
+            string remoteCommonName1 = fuzzy.String().LettersOrDigits();
+            string remoteCommonName2 = fuzzy.String().LettersOrDigits();
+            string remoteThumbprint1 = fuzzy.String().LettersOrDigits();
+            string remoteThumbprint2 = fuzzy.String().LettersOrDigits();
+            string issuerThumbprint = fuzzy.String().LettersOrDigits();
+            string firstIssuerStore1 = fuzzy.String().LettersOrDigits();
+            string firstIssuerStore2 = fuzzy.String().LettersOrDigits();
+            string secondIssuerStore = fuzzy.String().LettersOrDigits();
             filepath = CreateSettingsFile(dir, sectionName,
-                """
+                $"""
                 <Parameter Name="SecurityCredentialsType" Value="X509" />
                 <Parameter Name="CertificateFindType" Value="FindByThumbprint" />
-                <Parameter Name="CertificateFindValue" Value="1111111111111111111111111111111111111111" />
-                <Parameter Name="CertificateFindValuebySecondary" Value="2222222222222222222222222222222222222222" />
+                <Parameter Name="CertificateFindValue" Value="{findValue}" />
+                <Parameter Name="CertificateFindValuebySecondary" Value="{findValueSecondary}" />
                 <Parameter Name="CertificateProtectionLevel" Value="Sign" />
                 <Parameter Name="CertificateStoreLocation" Value="LocalMachine" />
-                <Parameter Name="CertificateStoreName" Value="Root" />
-                <Parameter Name="CertificateRemoteCommonNames" Value="alice.server.servicefabric.azure.test,bob.server.servicefabric.azure.test" />
-                <Parameter Name="CertificateRemoteThumbprints" Value="3333333333333333333333333333333333333333,4444444444444444444444444444444444444444" />
-                <Parameter Name="CertificateIssuerThumbprints" Value="5555555555555555555555555555555555555555" />
-                <Parameter Name="CertificateApplicationIssuerStore/CN=FirstIssuer" Value="My,Root" />
-                <Parameter Name="CertificateApplicationIssuerStore/CN=SecondIssuer" Value="My" />
+                <Parameter Name="CertificateStoreName" Value="{storeName}" />
+                <Parameter Name="CertificateRemoteCommonNames" Value="{remoteCommonName1},{remoteCommonName2}" />
+                <Parameter Name="CertificateRemoteThumbprints" Value="{remoteThumbprint1},{remoteThumbprint2}" />
+                <Parameter Name="CertificateIssuerThumbprints" Value="{issuerThumbprint}" />
+                <Parameter Name="CertificateApplicationIssuerStore/CN=FirstIssuer" Value="{firstIssuerStore1},{firstIssuerStore2}" />
+                <Parameter Name="CertificateApplicationIssuerStore/CN=SecondIssuer" Value="{secondIssuerStore}" />
                 """);
 
             var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
@@ -209,30 +220,26 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             Assert.Equal(CredentialType.X509, settings.SecurityCredentials.CredentialType);
             var credentials = (X509Credentials)settings.SecurityCredentials;
             Assert.Equal(X509FindType.FindByThumbprint, credentials.FindType);
-            Assert.Equal("1111111111111111111111111111111111111111", credentials.FindValue);
-            Assert.Equal("2222222222222222222222222222222222222222", credentials.FindValueSecondary);
+            Assert.Equal(findValue, credentials.FindValue);
+            Assert.Equal(findValueSecondary, credentials.FindValueSecondary);
             Assert.Equal(ProtectionLevel.Sign, credentials.ProtectionLevel);
             Assert.Equal(StoreLocation.LocalMachine, credentials.StoreLocation);
-            Assert.Equal("Root", credentials.StoreName);
-            Assert.Equal(
-                ["alice.server.servicefabric.azure.test", "bob.server.servicefabric.azure.test"],
-                credentials.RemoteCommonNames);
-            Assert.Equal(
-                ["3333333333333333333333333333333333333333", "4444444444444444444444444444444444444444"],
-                credentials.RemoteCertThumbprints);
-            Assert.Equal(["5555555555555555555555555555555555555555"], credentials.IssuerThumbprints);
+            Assert.Equal(storeName, credentials.StoreName);
+            Assert.Equal([remoteCommonName1, remoteCommonName2], credentials.RemoteCommonNames);
+            Assert.Equal([remoteThumbprint1, remoteThumbprint2], credentials.RemoteCertThumbprints);
+            Assert.Equal([issuerThumbprint], credentials.IssuerThumbprints);
             // Order is not part of the contract: RemoteCertIssuers is populated from a Dictionary<string,string>
             // whose enumeration order is unspecified. Sort by Name to make the assertion deterministic.
             Assert.Collection(credentials.RemoteCertIssuers.OrderBy(i => i.Name, StringComparer.Ordinal),
                 issuer =>
                 {
                     Assert.Equal("CN=FirstIssuer", issuer.Name);
-                    Assert.Equal(["My", "Root"], issuer.IssuerStores);
+                    Assert.Equal([firstIssuerStore1, firstIssuerStore2], issuer.IssuerStores);
                 },
                 issuer =>
                 {
                     Assert.Equal("CN=SecondIssuer", issuer.Name);
-                    Assert.Equal(["My"], issuer.IssuerStores);
+                    Assert.Equal([secondIssuerStore], issuer.IssuerStores);
                 });
         }
 
