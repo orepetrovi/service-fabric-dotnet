@@ -129,9 +129,9 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             int operationSeconds = fuzzy.Int32().Minimum(1);
             int keepAliveSeconds = fuzzy.Int32().Minimum(1);
             int connectMs = fuzzy.Int32().Minimum(1);
-            long maxMessageSize = fuzzy.Int32().Minimum(1);
-            long maxQueueSize = fuzzy.Int32().Minimum(1);
-            long maxConcurrentCalls = fuzzy.Int32().Minimum(1);
+            long maxMessageSize = fuzzy.Int64();
+            long maxQueueSize = fuzzy.Int64();
+            long maxConcurrentCalls = fuzzy.Int64();
             filepath = CreateSettingsFile(dir, sectionName,
                 $"""
                 <Parameter Name="MaxMessageSize" Value="{maxMessageSize}" />
