@@ -11,6 +11,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
     using System.Threading.Tasks;
 
     /// <summary>
+    /// (Beta) Not for production use - API is subject to change in the future.
     /// Provides extension methods for <see cref="IReliableDictionary4{TKey, TValue}"/>.
     /// </summary>
     public static class IReliableDictionaryExtensions
