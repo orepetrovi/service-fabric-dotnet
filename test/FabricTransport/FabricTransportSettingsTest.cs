@@ -338,11 +338,11 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         public void LoadsDefaultOperationTimeoutWhenOperationTimeoutIsOmitted()
         {
             FabricTransportSettings settings = LoadWithoutTimeouts();
-            settings.OperationTimeout = TimeSpan.FromMinutes(5) + fuzzy.TimeSpan().Seconds().Minimum(TimeSpan.FromSeconds(1));
+            settings.OperationTimeout = FabricTransportSettings.DefaultOperationTimeout + fuzzy.TimeSpan().Seconds().Minimum(TimeSpan.FromSeconds(1));
 
             settings.OnInitialize();
 
-            Assert.Equal(TimeSpan.FromMinutes(5), settings.OperationTimeout);
+            Assert.Equal(FabricTransportSettings.DefaultOperationTimeout, settings.OperationTimeout);
         }
 
         // No test for the "KeepAliveTimeoutInSeconds omitted" branch: DefaultKeepAliveTimeout is TimeSpan.Zero, so the
@@ -353,11 +353,11 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         public void LoadsDefaultConnectTimeoutWhenConnectTimeoutIsOmitted()
         {
             FabricTransportSettings settings = LoadWithoutTimeouts();
-            settings.ConnectTimeout = TimeSpan.FromSeconds(5) + fuzzy.TimeSpan().Milliseconds().Minimum(TimeSpan.FromMilliseconds(1));
+            settings.ConnectTimeout = FabricTransportSettings.DefaultConnectTimeout + fuzzy.TimeSpan().Milliseconds().Minimum(TimeSpan.FromMilliseconds(1));
 
             settings.OnInitialize();
 
-            Assert.Equal(TimeSpan.FromSeconds(5), settings.ConnectTimeout);
+            Assert.Equal(FabricTransportSettings.DefaultConnectTimeout, settings.ConnectTimeout);
         }
 
         FabricTransportSettings LoadWithoutTimeouts()
