@@ -32,19 +32,15 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <seealso cref="ITransaction"/>
     public interface IReliableQueue<T> : IReliableCollection<T>
     {
-        /// <inheritdoc cref="EnqueueAsync(ITransaction, T, TimeSpan, CancellationToken)" path="/summary"/>
-        /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="item">The value to add. Can be <see langword="null"/> for reference types.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
+        /// <inheritdoc path="/summary" cref="EnqueueAsync(ITransaction, T, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='tx']" cref="EnqueueAsync(ITransaction, T, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='item']" cref="EnqueueAsync(ITransaction, T, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.ArgumentNullException']" cref="EnqueueAsync(ITransaction, T, TimeSpan, CancellationToken)"/>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableQueue{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">
-        /// A method call is invalid for the object's current state.
-        /// For example, the transaction used was already terminated: committed or aborted by the user.
-        /// This exception typically indicates a bug in the service's use of transactions.
-        /// </exception>
-        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricNotPrimaryException']" cref="EnqueueAsync(ITransaction, T, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.TransactionFaultedException']" cref="EnqueueAsync(ITransaction, T, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="EnqueueAsync(ITransaction, T, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricObjectClosedException']" cref="EnqueueAsync(ITransaction, T, TimeSpan, CancellationToken)"/>
         Task EnqueueAsync(ITransaction tx, T item);
 
         /// <summary>
@@ -68,18 +64,15 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
         Task EnqueueAsync(ITransaction tx, T item, TimeSpan timeout, CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="TryDequeueAsync(ITransaction, TimeSpan, CancellationToken)" path="/summary"/>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
+        /// <inheritdoc path="/summary" cref="TryDequeueAsync(ITransaction, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='tx']" cref="TryDequeueAsync(ITransaction, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.ArgumentNullException']" cref="TryDequeueAsync(ITransaction, TimeSpan, CancellationToken)"/>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableQueue{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">
-        /// A method call is invalid for the object's current state.
-        /// For example, the transaction used was already terminated: committed or aborted by the user.
-        /// This exception typically indicates a bug in the service's use of transactions.
-        /// </exception>
-        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
-        /// <inheritdoc cref="TryDequeueAsync(ITransaction, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricNotPrimaryException']" cref="TryDequeueAsync(ITransaction, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.TransactionFaultedException']" cref="TryDequeueAsync(ITransaction, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="TryDequeueAsync(ITransaction, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricObjectClosedException']" cref="TryDequeueAsync(ITransaction, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/returns" cref="TryDequeueAsync(ITransaction, TimeSpan, CancellationToken)"/>
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx);
 
         /// <summary>
@@ -108,69 +101,36 @@ namespace Microsoft.ServiceFabric.Data.Collections
         Task<ConditionalValue<T>> TryDequeueAsync(ITransaction tx, TimeSpan timeout,
             CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
+        /// <inheritdoc path="/summary" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='tx']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.ArgumentNullException']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="FabricNotReadableException">
-        /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
-        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableQueue{T}"/> is not yet consistent.
-        /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">
-        /// A method call is invalid for the object's current state.
-        /// For example, the transaction used was already terminated: committed or aborted by the user.
-        /// This exception typically indicates a bug in the service's use of transactions.
-        /// </exception>
-        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
-        /// <inheritdoc cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricNotReadableException']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.TransactionFaultedException']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricObjectClosedException']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/returns" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx);
 
-        /// <inheritdoc cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
-        /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
-        /// <exception cref="FabricNotReadableException">
-        /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
-        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableQueue{T}"/> is not yet consistent.
-        /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">
-        /// A method call is invalid for the object's current state.
-        /// For example, the transaction used was already terminated: committed or aborted by the user.
-        /// This exception typically indicates a bug in the service's use of transactions.
-        /// </exception>
-        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
-        /// <inheritdoc cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/summary" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='tx']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='timeout']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='cancellationToken']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/returns" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, TimeSpan timeout,
             CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
-        /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
+        /// <inheritdoc path="/summary" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='tx']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='lockMode']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.ArgumentNullException']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="FabricNotReadableException">
-        /// The <see cref="IReliableQueue{T}"/> cannot serve reads.
-        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableQueue{T}"/> is not yet consistent.
-        /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">
-        /// A method call is invalid for the object's current state.
-        /// For example, the transaction used was already terminated: committed or aborted by the user.
-        /// This exception typically indicates a bug in the service's use of transactions.
-        /// </exception>
-        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableQueue{T}"/> is closed or deleted.</exception>
-        /// <inheritdoc cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricNotReadableException']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.TransactionFaultedException']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricObjectClosedException']" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/returns" cref="TryPeekAsync(ITransaction, LockMode, TimeSpan, CancellationToken)"/>
         Task<ConditionalValue<T>> TryPeekAsync(ITransaction tx, LockMode lockMode);
 
         /// <summary>
