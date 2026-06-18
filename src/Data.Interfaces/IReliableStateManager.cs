@@ -106,10 +106,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="name">
-        /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
-        /// across <see cref="IReliableState"/> types, including unrelated types.
-        /// </param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -130,10 +127,7 @@ namespace Microsoft.ServiceFabric.Data
         /// or it will not be created.
         /// </remarks>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <param name="name">
-        /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
-        /// across <see cref="IReliableState"/> types, including unrelated types.
-        /// </param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
@@ -147,10 +141,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <param name="name">
-        /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
-        /// across <see cref="IReliableState"/> types, including unrelated types.
-        /// </param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -164,10 +155,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="name">
-        /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
-        /// across <see cref="IReliableState"/> types, including unrelated types.
-        /// </param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
@@ -188,10 +176,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
-        /// <param name="name">
-        /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
-        /// across <see cref="IReliableState"/> types, including unrelated types.
-        /// </param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -210,10 +195,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <param name="name">
-        /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
-        /// across <see cref="IReliableState"/> types, including unrelated types.
-        /// </param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>, or <paramref name="timeout"/> is negative.</exception>
@@ -228,10 +210,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/summary"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(Uri, TimeSpan)" path="/remarks"/>
         /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/typeparam[@name='T']"/>
-        /// <param name="name">
-        /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
-        /// across <see cref="IReliableState"/> types, including unrelated types.
-        /// </param>
+        /// <inheritdoc cref="GetOrAddAsync{T}(ITransaction, Uri, TimeSpan)" path="/param[@name='name']"/>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The interface type <typeparamref name="T"/> cannot be resolved to a concrete type, or the existing <see cref="IReliableState"/> instance is not of type <typeparamref name="T"/>.</exception>
         /// <exception cref="MissingMethodException">The class type <typeparamref name="T"/> cannot be instantiated; for example, it is abstract or has no parameterless constructor.</exception>
@@ -398,10 +377,7 @@ namespace Microsoft.ServiceFabric.Data
 
         /// <inheritdoc cref="TryGetAsync{T}(Uri)" path="/summary"/>
         /// <inheritdoc cref="TryGetAsync{T}(Uri)" path="/typeparam[@name='T']"/>
-        /// <param name="name">
-        /// The name of the <see cref="IReliableState"/>. This name must be unique in this <see cref="IReliableStateManager"/>
-        /// across <see cref="IReliableState"/> types, including unrelated types.
-        /// </param>
+        /// <inheritdoc cref="TryGetAsync{T}(Uri)" path="/param[@name='name']"/>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The <see cref="IReliableState"/> instance is not convertible to type <typeparamref name="T"/>.</exception>
         /// <exception cref="FormatException"><paramref name="name"/> begins with the reserved <c>urn:</c> prefix.</exception>
