@@ -52,7 +52,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     {
         string sectionName;
 
-        public GetDefault() => File.Delete(EntrySettingsFile.Path);
+        public GetDefault() => EntrySettingsFile.AssertAbsent();
 
         public override void Dispose()
         {
