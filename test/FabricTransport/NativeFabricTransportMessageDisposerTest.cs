@@ -5,9 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-#if NET
 using System.Runtime.InteropServices.Marshalling;
-#endif
 using Fuzzy;
 using Xunit;
 using static Microsoft.ServiceFabric.FabricTransport.NativeFabricTransport;
@@ -76,15 +74,9 @@ public abstract partial class NativeFabricTransportMessageDisposerTest
             Assert.Equal(nameof(messages), actual.ParamName);
         }
 
-#if NET
-        static readonly StrategyBasedComWrappers wrappers = new();
 
         [GeneratedComClass]
         sealed partial class FakeMessage : IFabricTransportMessage
-#else
-        [ComVisible(true), ClassInterface(ClassInterfaceType.None)]
-        sealed class FakeMessage : IFabricTransportMessage
-#endif
         {
             internal int Id;
             internal int DisposeCallCount;
@@ -102,6 +94,9 @@ public abstract partial class NativeFabricTransportMessageDisposerTest
 
         sealed class NativeMessageArray : IDisposable
         {
+#if NET
+            static readonly StrategyBasedComWrappers wrappers = new();
+#endif
             readonly IntPtr[] iunknowns;
             internal readonly IntPtr Ptr;
             internal readonly uint Count;
@@ -113,11 +108,7 @@ public abstract partial class NativeFabricTransportMessageDisposerTest
                 Ptr = Marshal.AllocHGlobal(IntPtr.Size * messages.Length);
                 for (int i = 0; i < messages.Length; i++)
                 {
-#if NET
-                    iunknowns[i] = wrappers.GetOrCreateComInterfaceForObject(messages[i], CreateComInterfaceFlags.None);
-#else
-                    iunknowns[i] = Marshal.GetIUnknownForObject(messages[i]);
-#endif
+                    iunknowns[i] = GetIUnknownForObject(messages[i]);
                     Marshal.WriteIntPtr(Ptr, i * IntPtr.Size, iunknowns[i]);
                 }
             }
@@ -128,6 +119,14 @@ public abstract partial class NativeFabricTransportMessageDisposerTest
                     if (ptr != IntPtr.Zero) _ = Marshal.Release(ptr);
                 Marshal.FreeHGlobal(Ptr);
             }
+
+            IntPtr GetIUnknownForObject(object managed) =>
+#if NET
+                wrappers.GetOrCreateComInterfaceForObject(managed, CreateComInterfaceFlags.None);
+#else
+                Marshal.GetIUnknownForObject(managed);
+#endif
+
         }
     }
 }
