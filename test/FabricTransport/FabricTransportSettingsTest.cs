@@ -66,7 +66,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
 
             var settings = FabricTransportSettings.GetDefault(sectionName);
 
-            Assert.Equal(TimeSpan.FromMinutes(5), settings.OperationTimeout);
+            Assert.Equal(FabricTransportSettings.DefaultOperationTimeout, settings.OperationTimeout);
         }
 
         [Fact]
