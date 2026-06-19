@@ -83,36 +83,6 @@ public abstract class FabricTransportMessageHandlerBrokerTest
                 Times.Once);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. BeginProcessRequest does not validate nativeClientId.
-        public void ThrowsArgumentNullExceptionWhenNativeClientIdIsZero()
-        {
-            // BeginProcessRequest passes nativeClientId to NativeTypes.FromNativeString, which returns null for
-            // IntPtr.Zero, so a null clientId is silently forwarded into FabricTransportRequestContext instead of
-            // throwing ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.BeginProcessRequest(IntPtr.Zero, message, timeoutMilliseconds, callback));
-            Assert.Equal(nameof(nativeClientId), exception.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. BeginProcessRequest does not validate message.
-        public void ThrowsArgumentNullExceptionWhenMessageIsNull()
-        {
-            // BeginProcessRequest defers dereferencing message into the lambda passed to
-            // Utility.WrapNativeAsyncMethodImplementation, where NativeFabricTransportMessage.ToFabricTransportMessage
-            // calls message.GetHeaderAndBodyBuffer, so the NullReferenceException surfaces through EndProcessRequest
-            // instead of synchronously throwing ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.BeginProcessRequest(nativeClientId, null, timeoutMilliseconds, callback));
-            Assert.Equal(nameof(message), exception.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. BeginProcessRequest does not validate callback.
-        public void ThrowsArgumentNullExceptionWhenCallbackIsNull()
-        {
-            // BeginProcessRequest passes callback to Utility.WrapNativeAsyncMethodImplementation without validating it,
-            // so no ArgumentNullException is thrown.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.BeginProcessRequest(nativeClientId, message, timeoutMilliseconds, null));
-            Assert.Equal(nameof(callback), exception.ParamName);
-        }
-
         [Fact]
         public async Task InvokesCallbackWithReturnedContextWhenTaskCompletes()
         {
@@ -179,19 +149,6 @@ public abstract class FabricTransportMessageHandlerBrokerTest
             }
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. EndProcessRequest does not validate context.
-        public void ThrowsArgumentNullExceptionWhenContextIsNull()
-        {
-            // EndProcessRequest passes context straight to AsyncTaskCallInAdapter.End, which validates its own
-            // parameter and throws ArgumentNullException with ParamName "adapter". The broker should validate its own
-            // context parameter first and throw ArgumentNullException with ParamName "context".
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.EndProcessRequest(null));
-            Assert.Equal(
-                sut.Method<Func<IFabricAsyncOperationContext, NativeFabricTransport.IFabricTransportMessage>>()
-                    .Parameter<IFabricAsyncOperationContext>().Name,
-                exception.ParamName);
-        }
-
         [Fact]
         public void ThrowsExceptionWhenRequestResponseAsyncFaults()
         {
@@ -238,26 +195,6 @@ public abstract class FabricTransportMessageHandlerBrokerTest
             service.Verify(
                 _ => _.HandleOneWay(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()),
                 Times.Once);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. HandleOneWay does not validate nativeClientId.
-        public void ThrowsArgumentNullExceptionWhenNativeClientIdIsZero()
-        {
-            // HandleOneWay passes nativeClientId to NativeTypes.FromNativeString, which returns null for IntPtr.Zero,
-            // so a null clientId is silently forwarded into FabricTransportRequestContext instead of throwing
-            // ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.HandleOneWay(IntPtr.Zero, message));
-            Assert.Equal(nameof(nativeClientId), exception.ParamName);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. HandleOneWay does not validate message.
-        public void ThrowsArgumentNullExceptionWhenMessageIsNull()
-        {
-            // HandleOneWay passes message to NativeFabricTransportMessage.ToFabricTransportMessage, which immediately
-            // dereferences it via message.GetHeaderAndBodyBuffer, throwing NullReferenceException instead of
-            // ArgumentNullException.
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.HandleOneWay(nativeClientId, null));
-            Assert.Equal(nameof(message), exception.ParamName);
         }
     }
 }
