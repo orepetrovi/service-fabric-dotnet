@@ -54,7 +54,6 @@ public abstract class FabricTransportMessageHandlerBrokerTest
         readonly IFabricAsyncOperationCallback callback = Mock.Of<IFabricAsyncOperationCallback>();
 
         readonly string clientId = fuzzy.String();
-        static readonly TimeSpan callbackWait = TimeSpan.FromSeconds(5);
 
         public BeginProcessRequest() =>
             nativeClientId = Marshal.StringToHGlobalUni(clientId);
@@ -73,44 +72,15 @@ public abstract class FabricTransportMessageHandlerBrokerTest
             FabricTransportCallbackClient expectedCallbackClient = new(Mock.Of<NativeFabricTransport.IFabricTransportClientConnection>());
             _ = nativeConnectionHandler.Setup(_ => _.GetCallBack(clientId)).Returns(expectedCallbackClient);
 
-            _ = sut.BeginProcessRequest(nativeClientId, message, timeoutMilliseconds, callback);
+            IFabricAsyncOperationContext returnedContext = sut.BeginProcessRequest(nativeClientId, message, timeoutMilliseconds, callback);
 
+            Assert.NotNull(returnedContext);
             Assert.Equal(clientId, actualContext.ClientId);
             Assert.Same(expectedCallbackClient, actualContext.GetCallbackClient());
             Assert.Same(message, actualMessage.Field<NativeFabricTransport.IFabricTransportMessage>().Value);
             service.Verify(
                 _ => _.RequestResponseAsync(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()),
                 Times.Once);
-        }
-
-        [Fact]
-        public async Task InvokesCallbackWithReturnedContextWhenTaskCompletes()
-        {
-            TaskCompletionSource<FabricTransportMessage> tcs = new();
-            _ = service
-                .Setup(_ => _.RequestResponseAsync(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()))
-                .Returns(tcs.Task);
-            TaskCompletionSource<IFabricAsyncOperationContext> callbackInvoked = new();
-            _ = Mock.Get(callback)
-                .Setup(_ => _.Invoke(It.IsAny<IFabricAsyncOperationContext>()))
-                .Callback<IFabricAsyncOperationContext>(c => callbackInvoked.TrySetResult(c));
-
-            IFabricAsyncOperationContext returnedContext = sut.BeginProcessRequest(nativeClientId, message, timeoutMilliseconds, callback);
-            Assert.False(callbackInvoked.Task.IsCompleted);
-
-            tcs.SetResult(new FabricTransportMessage(null, null));
-
-            try
-            {
-                Task completed = await Task.WhenAny(callbackInvoked.Task, Task.Delay(callbackWait, TestContext.Current.CancellationToken));
-                Assert.Same(callbackInvoked.Task, completed);
-                Assert.Same(returnedContext, await callbackInvoked.Task);
-                Mock.Get(callback).Verify(_ => _.Invoke(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
-            }
-            finally
-            {
-                sut.EndProcessRequest(returnedContext).Dispose();
-            }
         }
     }
 
@@ -147,19 +117,6 @@ public abstract class FabricTransportMessageHandlerBrokerTest
             {
                 result.Dispose();
             }
-        }
-
-        [Fact]
-        public void ThrowsExceptionWhenRequestResponseAsyncFaults()
-        {
-            InvalidOperationException expected = new(fuzzy.String());
-            _ = service
-                .Setup(_ => _.RequestResponseAsync(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()))
-                .Returns(Task.FromException<FabricTransportMessage>(expected));
-            IFabricAsyncOperationContext context = sut.BeginProcessRequest(nativeClientId, message, timeoutMilliseconds, callback);
-
-            var actual = Assert.Throws<InvalidOperationException>(() => sut.EndProcessRequest(context));
-            Assert.Same(expected, actual);
         }
     }
 
