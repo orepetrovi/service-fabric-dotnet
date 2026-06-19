@@ -49,7 +49,7 @@ public abstract class FabricTransportMessageHandlerBrokerTest
     {
         // Method parameters
         readonly IntPtr nativeClientId;
-        readonly NativeFabricTransport.IFabricTransportMessage message = Mock.Of<NativeFabricTransport.IFabricTransportMessage>();
+        readonly Mock<NativeFabricTransport.IFabricTransportMessage> message = new();
         readonly uint timeoutMilliseconds = fuzzy.UInt32();
         readonly IFabricAsyncOperationCallback callback = Mock.Of<IFabricAsyncOperationCallback>();
 
@@ -72,12 +72,15 @@ public abstract class FabricTransportMessageHandlerBrokerTest
             FabricTransportCallbackClient expectedCallbackClient = new(Mock.Of<NativeFabricTransport.IFabricTransportClientConnection>());
             _ = nativeConnectionHandler.Setup(_ => _.GetCallBack(clientId)).Returns(expectedCallbackClient);
 
-            IFabricAsyncOperationContext returnedContext = sut.BeginProcessRequest(nativeClientId, message, timeoutMilliseconds, callback);
+            IFabricAsyncOperationContext returnedContext = sut.BeginProcessRequest(nativeClientId, message.Object, timeoutMilliseconds, callback);
 
             Assert.NotNull(returnedContext);
             Assert.Equal(clientId, actualContext.ClientId);
             Assert.Same(expectedCallbackClient, actualContext.GetCallbackClient());
-            Assert.Same(message, actualMessage.Field<NativeFabricTransport.IFabricTransportMessage>().Value);
+            Assert.Same(message.Object, actualMessage.Field<NativeFabricTransport.IFabricTransportMessage>().Value);
+            message.Verify(
+                _ => _.GetHeaderAndBodyBuffer(out It.Ref<IntPtr>.IsAny, out It.Ref<uint>.IsAny, out It.Ref<IntPtr>.IsAny),
+                Times.Once);
             service.Verify(
                 _ => _.RequestResponseAsync(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()),
                 Times.Once);
@@ -124,7 +127,7 @@ public abstract class FabricTransportMessageHandlerBrokerTest
     {
         // Method parameters
         readonly IntPtr nativeClientId;
-        readonly NativeFabricTransport.IFabricTransportMessage message = Mock.Of<NativeFabricTransport.IFabricTransportMessage>();
+        readonly Mock<NativeFabricTransport.IFabricTransportMessage> message = new();
 
         readonly string clientId = fuzzy.String();
 
@@ -144,11 +147,14 @@ public abstract class FabricTransportMessageHandlerBrokerTest
             FabricTransportCallbackClient expectedCallbackClient = new(Mock.Of<NativeFabricTransport.IFabricTransportClientConnection>());
             _ = nativeConnectionHandler.Setup(_ => _.GetCallBack(clientId)).Returns(expectedCallbackClient);
 
-            sut.HandleOneWay(nativeClientId, message);
+            sut.HandleOneWay(nativeClientId, message.Object);
 
             Assert.Equal(clientId, actualContext.ClientId);
             Assert.Same(expectedCallbackClient, actualContext.GetCallbackClient());
-            Assert.Same(message, actualMessage.Field<NativeFabricTransport.IFabricTransportMessage>().Value);
+            Assert.Same(message.Object, actualMessage.Field<NativeFabricTransport.IFabricTransportMessage>().Value);
+            message.Verify(
+                _ => _.GetHeaderAndBodyBuffer(out It.Ref<IntPtr>.IsAny, out It.Ref<uint>.IsAny, out It.Ref<IntPtr>.IsAny),
+                Times.Once);
             service.Verify(
                 _ => _.HandleOneWay(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()),
                 Times.Once);
