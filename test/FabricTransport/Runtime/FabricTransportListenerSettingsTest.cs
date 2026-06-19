@@ -95,11 +95,7 @@ public abstract class FabricTransportListenerSettingsTest: FabricServiceConfigAc
         {
             string expectedPrefix = FormattableString.Invariant($"{serviceContext.PartitionId}-{serviceContext.ReplicaOrInstanceId}-");
             Assert.StartsWith(expectedPrefix, path);
-#if NET
             _ = Guid.Parse(path[expectedPrefix.Length..]);
-#else
-            _ = Guid.Parse(path.Substring(expectedPrefix.Length));
-#endif
         }
 
         static EndpointResourceDescription CreateEndpoint(string name, int port)
