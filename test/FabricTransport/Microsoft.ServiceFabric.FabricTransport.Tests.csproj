@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Fuzzy" />
     <PackageReference Include="Inspector" />
+    <PackageReference Include="Microsoft.Bcl.Memory" Condition="$(TargetFramework.StartsWith('net4'))" />
     <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
     <PackageReference Include="Moq" />
     <PackageReference Include="xunit.v3" />
