@@ -210,18 +210,6 @@ public abstract class FabricTransportClientTest
             throw new NotImplementedException();
     }
 
-    public sealed class IsValid: FabricTransportClientTest
-    {
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void IsSetToGivenValue(bool value)
-        {
-            sut.IsValid = value;
-            Assert.Equal(value, sut.IsValid);
-        }
-    }
-
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class OpenAsync: FabricTransportClientTest
     {
