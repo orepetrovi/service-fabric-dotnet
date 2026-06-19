@@ -202,23 +202,21 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsCommaSeparatedInt32ValuesFromConfigurationSection()
         {
-            int first = fuzzy.Int32();
-            int second = first + fuzzy.SByte().Between(1, 5);
-            InitializeWithConfigSection(MakeConfigParameter(settingName, $"{first},{second}"));
+            int[] expected = fuzzy.Array(fuzzy.Int32);
+            InitializeWithConfigSection(MakeConfigParameter(settingName, string.Join(",", expected)));
 
             IList<int> actual = sut.GetSettingsList<int>(settingName);
-            Assert.Equal([first, second], actual);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void ReturnsCommaSeparatedInt32ValuesFromExeSection()
         {
-            int first = fuzzy.Int32();
-            int second = first + fuzzy.SByte().Between(1, 5);
-            InitializeWithExeSection(MakeExeParameter(settingName, $"{first},{second}"));
+            int[] expected = fuzzy.Array(fuzzy.Int32);
+            InitializeWithExeSection(MakeExeParameter(settingName, string.Join(",", expected)));
 
             IList<int> actual = sut.GetSettingsList<int>(settingName);
-            Assert.Equal([first, second], actual);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -226,14 +224,13 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         {
             // Exercises the loop-continuation branch over exeSection.Parameter: the first parameter does
             // not match and GetSettingsList must keep iterating to find the matching parameter.
-            int first = fuzzy.Int32();
-            int second = first + fuzzy.SByte().Between(1, 5);
+            int[] expected = fuzzy.Array(fuzzy.Int32);
             InitializeWithExeSection(
                 MakeExeParameter(settingName + "_" + fuzzy.String().LettersOrDigits(), fuzzy.String()),
-                MakeExeParameter(settingName, $"{first},{second}"));
+                MakeExeParameter(settingName, string.Join(",", expected)));
 
             IList<int> actual = sut.GetSettingsList<int>(settingName);
-            Assert.Equal([first, second], actual);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -289,12 +286,11 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         {
             // Pins the trim: GetSettingsList calls settingName.Trim() before lookup.
             string core = fuzzy.String().LettersOrDigits();
-            int first = fuzzy.Int32();
-            int second = first + fuzzy.SByte().Between(1, 5);
-            InitializeWithConfigSection(MakeConfigParameter(core, $"{first},{second}"));
+            int[] expected = fuzzy.Array(fuzzy.Int32);
+            InitializeWithConfigSection(MakeConfigParameter(core, string.Join(",", expected)));
 
             IList<int> actual = sut.GetSettingsList<int>($"  {core}  ");
-            Assert.Equal([first, second], actual);
+            Assert.Equal(expected, actual);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. GetSettingsList does not validate settingName in exe-section branch.
@@ -313,12 +309,11 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         {
             // Pins the trim in the exe-section branch: GetSettingsList calls settingName.Trim() before lookup.
             string core = fuzzy.String().LettersOrDigits();
-            int first = fuzzy.Int32();
-            int second = first + fuzzy.SByte().Between(1, 5);
-            InitializeWithExeSection(MakeExeParameter(core, $"{first},{second}"));
+            int[] expected = fuzzy.Array(fuzzy.Int32);
+            InitializeWithExeSection(MakeExeParameter(core, string.Join(",", expected)));
 
             IList<int> actual = sut.GetSettingsList<int>($"  {core}  ");
-            Assert.Equal([first, second], actual);
+            Assert.Equal(expected, actual);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. GetSettingsList does not check whether Initialize succeeded.
