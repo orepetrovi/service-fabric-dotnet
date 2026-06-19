@@ -48,17 +48,17 @@ public abstract class FabricTransportMessageHandlerBrokerTest
     public sealed class BeginProcessRequest: FabricTransportMessageHandlerBrokerTest, IDisposable
     {
         // Method parameters
-        readonly IntPtr nativeClientId;
+        readonly IntPtr clientId;
         readonly Mock<NativeFabricTransport.IFabricTransportMessage> message = new();
         readonly uint timeoutMilliseconds = fuzzy.UInt32();
         readonly IFabricAsyncOperationCallback callback = Mock.Of<IFabricAsyncOperationCallback>();
 
-        readonly string clientId = fuzzy.String();
+        readonly string managedClientId = fuzzy.String();
 
         public BeginProcessRequest() =>
-            nativeClientId = Marshal.StringToHGlobalUni(clientId);
+            clientId = Marshal.StringToHGlobalUni(managedClientId);
 
-        void IDisposable.Dispose() => Marshal.FreeHGlobal(nativeClientId);
+        void IDisposable.Dispose() => Marshal.FreeHGlobal(clientId);
 
         [Fact]
         public void InvokesRequestResponseAsyncOnServiceWithManagedContextAndMessage()
@@ -70,12 +70,12 @@ public abstract class FabricTransportMessageHandlerBrokerTest
                 .Callback<FabricTransportRequestContext, FabricTransportMessage>((c, m) => { actualContext = c; actualMessage = m; })
                 .Returns(new TaskCompletionSource<FabricTransportMessage>().Task);
             FabricTransportCallbackClient expectedCallbackClient = new(Mock.Of<NativeFabricTransport.IFabricTransportClientConnection>());
-            _ = nativeConnectionHandler.Setup(_ => _.GetCallBack(clientId)).Returns(expectedCallbackClient);
+            _ = nativeConnectionHandler.Setup(_ => _.GetCallBack(managedClientId)).Returns(expectedCallbackClient);
 
-            IFabricAsyncOperationContext returnedContext = sut.BeginProcessRequest(nativeClientId, message.Object, timeoutMilliseconds, callback);
+            IFabricAsyncOperationContext returnedContext = sut.BeginProcessRequest(clientId, message.Object, timeoutMilliseconds, callback);
 
             Assert.NotNull(returnedContext);
-            Assert.Equal(clientId, actualContext.ClientId);
+            Assert.Equal(managedClientId, actualContext.ClientId);
             Assert.Same(expectedCallbackClient, actualContext.GetCallbackClient());
             Assert.Same(message.Object, actualMessage.Field<NativeFabricTransport.IFabricTransportMessage>().Value);
             message.Verify(
@@ -91,15 +91,15 @@ public abstract class FabricTransportMessageHandlerBrokerTest
     public sealed class EndProcessRequest: FabricTransportMessageHandlerBrokerTest, IDisposable
     {
         // BeginProcessRequest parameters
-        readonly IntPtr nativeClientId;
+        readonly IntPtr clientId;
         readonly NativeFabricTransport.IFabricTransportMessage message = Mock.Of<NativeFabricTransport.IFabricTransportMessage>();
         readonly uint timeoutMilliseconds = fuzzy.UInt32();
         readonly IFabricAsyncOperationCallback callback = Mock.Of<IFabricAsyncOperationCallback>();
 
         public EndProcessRequest() =>
-            nativeClientId = Marshal.StringToHGlobalUni(fuzzy.String());
+            clientId = Marshal.StringToHGlobalUni(fuzzy.String());
 
-        void IDisposable.Dispose() => Marshal.FreeHGlobal(nativeClientId);
+        void IDisposable.Dispose() => Marshal.FreeHGlobal(clientId);
 
         [Fact]
         public void ReturnsNativeMessageWrappingReplyWhenRequestResponseAsyncCompletes()
@@ -108,7 +108,7 @@ public abstract class FabricTransportMessageHandlerBrokerTest
             _ = service
                 .Setup(_ => _.RequestResponseAsync(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()))
                 .Returns(Task.FromResult(reply));
-            IFabricAsyncOperationContext context = sut.BeginProcessRequest(nativeClientId, message, timeoutMilliseconds, callback);
+            IFabricAsyncOperationContext context = sut.BeginProcessRequest(clientId, message, timeoutMilliseconds, callback);
 
             NativeFabricTransport.IFabricTransportMessage result = sut.EndProcessRequest(context);
 
@@ -126,15 +126,15 @@ public abstract class FabricTransportMessageHandlerBrokerTest
     public sealed class HandleOneWay: FabricTransportMessageHandlerBrokerTest, IDisposable
     {
         // Method parameters
-        readonly IntPtr nativeClientId;
+        readonly IntPtr clientId;
         readonly Mock<NativeFabricTransport.IFabricTransportMessage> message = new();
 
-        readonly string clientId = fuzzy.String();
+        readonly string managedClientId = fuzzy.String();
 
         public HandleOneWay() =>
-            nativeClientId = Marshal.StringToHGlobalUni(clientId);
+            clientId = Marshal.StringToHGlobalUni(managedClientId);
 
-        void IDisposable.Dispose() => Marshal.FreeHGlobal(nativeClientId);
+        void IDisposable.Dispose() => Marshal.FreeHGlobal(clientId);
 
         [Fact]
         public void InvokesHandleOneWayOnServiceWithManagedContextAndMessage()
@@ -145,11 +145,11 @@ public abstract class FabricTransportMessageHandlerBrokerTest
                 .Setup(_ => _.HandleOneWay(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()))
                 .Callback<FabricTransportRequestContext, FabricTransportMessage>((c, m) => { actualContext = c; actualMessage = m; });
             FabricTransportCallbackClient expectedCallbackClient = new(Mock.Of<NativeFabricTransport.IFabricTransportClientConnection>());
-            _ = nativeConnectionHandler.Setup(_ => _.GetCallBack(clientId)).Returns(expectedCallbackClient);
+            _ = nativeConnectionHandler.Setup(_ => _.GetCallBack(managedClientId)).Returns(expectedCallbackClient);
 
-            sut.HandleOneWay(nativeClientId, message.Object);
+            sut.HandleOneWay(clientId, message.Object);
 
-            Assert.Equal(clientId, actualContext.ClientId);
+            Assert.Equal(managedClientId, actualContext.ClientId);
             Assert.Same(expectedCallbackClient, actualContext.GetCallbackClient());
             Assert.Same(message.Object, actualMessage.Field<NativeFabricTransport.IFabricTransportMessage>().Value);
             message.Verify(
