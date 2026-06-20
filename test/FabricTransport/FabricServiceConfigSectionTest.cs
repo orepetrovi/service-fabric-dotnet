@@ -329,7 +329,8 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         public void ReturnsMatchingParametersKeyedBySuffixFromConfigurationSection()
         {
             Dictionary<string, string> expected = fuzzy.Dictionary(() => fuzzy.String().LettersOrDigits(), fuzzy.String);
-            string nonMatchingName = fuzzy.String().LettersOrDigits();
+            // settingPrefix ends with '_' and LettersOrDigits cannot contain '_', so this name cannot start with settingPrefix.
+            string nonMatchingName = settingPrefix.TrimEnd('_') + fuzzy.String().LettersOrDigits();
             InitializeWithConfigSection([
                 MakeConfigParameter(nonMatchingName, fuzzy.String()),
                 .. expected.Select(_ => MakeConfigParameter(settingPrefix + _.Key, _.Value))]);
@@ -343,7 +344,8 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         public void ReturnsMatchingParametersKeyedBySuffixFromExeSection()
         {
             Dictionary<string, string> expected = fuzzy.Dictionary(() => fuzzy.String().LettersOrDigits(), fuzzy.String);
-            string nonMatchingName = fuzzy.String().LettersOrDigits();
+            // settingPrefix ends with '_' and LettersOrDigits cannot contain '_', so this name cannot start with settingPrefix.
+            string nonMatchingName = settingPrefix.TrimEnd('_') + fuzzy.String().LettersOrDigits();
             InitializeWithExeSection([
                 MakeExeParameter(nonMatchingName, fuzzy.String()),
                 .. expected.Select(_ => MakeExeParameter(settingPrefix + _.Key, _.Value))]);
