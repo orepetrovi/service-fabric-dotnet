@@ -90,26 +90,31 @@ public abstract class FabricTransportMessageHandlerBrokerTest
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class EndProcessRequest: FabricTransportMessageHandlerBrokerTest, IDisposable
     {
+        // Method parameters
+        readonly IFabricAsyncOperationContext context;
+
         // BeginProcessRequest parameters
         readonly IntPtr clientId;
         readonly NativeFabricTransport.IFabricTransportMessage message = Mock.Of<NativeFabricTransport.IFabricTransportMessage>();
         readonly uint timeoutMilliseconds = fuzzy.UInt32();
         readonly IFabricAsyncOperationCallback callback = Mock.Of<IFabricAsyncOperationCallback>();
 
-        public EndProcessRequest() =>
+        readonly FabricTransportMessage reply = new(null, null);
+
+        public EndProcessRequest()
+        {
             clientId = Marshal.StringToHGlobalUni(fuzzy.String());
+            _ = service
+                .Setup(_ => _.RequestResponseAsync(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()))
+                .Returns(Task.FromResult(reply));
+            context = sut.BeginProcessRequest(clientId, message, timeoutMilliseconds, callback);
+        }
 
         void IDisposable.Dispose() => Marshal.FreeHGlobal(clientId);
 
         [Fact]
         public void ReturnsNativeMessageWrappingReplyWhenRequestResponseAsyncCompletes()
         {
-            FabricTransportMessage reply = new(null, null);
-            _ = service
-                .Setup(_ => _.RequestResponseAsync(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()))
-                .Returns(Task.FromResult(reply));
-            IFabricAsyncOperationContext context = sut.BeginProcessRequest(clientId, message, timeoutMilliseconds, callback);
-
             NativeFabricTransport.IFabricTransportMessage result = sut.EndProcessRequest(context);
 
             try
