@@ -23,6 +23,12 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
 
     public sealed class GetConfig: FabricServiceConfigTest
     {
+        public override void Dispose()
+        {
+            File.Delete(EntrySettingsFile.Path);
+            base.Dispose();
+        }
+
         [Fact]
         public void ReturnsInstanceCreatedByPriorInitialize()
         {
@@ -31,21 +37,14 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             EntrySettingsFile.AssertAbsent();
             File.WriteAllText(EntrySettingsFile.Path,
                 """<Settings xmlns="http://schemas.microsoft.com/2011/01/fabric"/>""");
-            try
-            {
-                SettingsType expected = new();
-                IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>(_ => _.Parse(settingsFile) == expected);
-                _ = FabricServiceConfig.Initialize(settingsFile, configParser);
-                var initial = FabricServiceConfig.GetConfig();
+            SettingsType expected = new();
+            IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>(_ => _.Parse(settingsFile) == expected);
+            _ = FabricServiceConfig.Initialize(settingsFile, configParser);
+            var initial = FabricServiceConfig.GetConfig();
 
-                var actual = FabricServiceConfig.GetConfig();
+            var actual = FabricServiceConfig.GetConfig();
 
-                Assert.Same(initial, actual);
-            }
-            finally
-            {
-                File.Delete(EntrySettingsFile.Path);
-            }
+            Assert.Same(initial, actual);
         }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Depends on FabricRuntime.GetActivationContext().
@@ -72,17 +71,10 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
                   <Section Name="{sectionName}" />
                 </Settings>
                 """);
-            try
-            {
-                var actual = FabricServiceConfig.GetConfig();
+            var actual = FabricServiceConfig.GetConfig();
 
-                SettingsTypeSection section = Assert.Single(actual.Settings.Section);
-                Assert.Equal(sectionName, section.Name);
-            }
-            finally
-            {
-                File.Delete(EntrySettingsFile.Path);
-            }
+            SettingsTypeSection section = Assert.Single(actual.Settings.Section);
+            Assert.Equal(sectionName, section.Name);
         }
 
         [Fact]
