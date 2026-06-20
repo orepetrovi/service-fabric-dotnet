@@ -72,7 +72,6 @@ public abstract partial class NativeFabricTransportMessageDisposerTest
             Assert.Equal(nameof(messages), actual.ParamName);
         }
 
-
         [GeneratedComClass]
         sealed partial class FakeMessage : IFabricTransportMessage
         {
