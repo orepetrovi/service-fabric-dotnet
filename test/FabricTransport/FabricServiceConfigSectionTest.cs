@@ -332,7 +332,7 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsMatchingParametersKeyedBySuffixFromConfigurationSection()
         {
-            var expected = new Dictionary<string, string>();
+            Dictionary<string, string> expected = new();
             foreach (string value in fuzzy.Array(fuzzy.String))
                 expected[fuzzy.String().LettersOrDigits()] = value;
             string nonMatchingName = fuzzy.String().LettersOrDigits();
@@ -348,7 +348,7 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsMatchingParametersKeyedBySuffixFromExeSection()
         {
-            var expected = new Dictionary<string, string>();
+            Dictionary<string, string> expected = new();
             foreach (string value in fuzzy.Array(fuzzy.String))
                 expected[fuzzy.String().LettersOrDigits()] = value;
             string nonMatchingName = fuzzy.String().LettersOrDigits();
