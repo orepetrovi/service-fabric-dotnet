@@ -40,7 +40,7 @@ public abstract partial class NativeFabricTransportMessageDisposerTest
 
             sut.Dispose(count, messages);
 
-            Assert.Equal(fakes.Select(f => f.Id), order);
+            Assert.Equal(fakes.Select(static f => f.Id), order);
         }
 
         [Fact]
@@ -53,8 +53,8 @@ public abstract partial class NativeFabricTransportMessageDisposerTest
 
             sut.Dispose(count, messages);
 
-            Assert.All(fakes.Take((int)count), f => Assert.Equal(1, f.DisposeCallCount));
-            Assert.All(fakes.Skip((int)count), f => Assert.Equal(0, f.DisposeCallCount));
+            Assert.All(fakes.Take((int)count), static f => Assert.Equal(1, f.DisposeCallCount));
+            Assert.All(fakes.Skip((int)count), static f => Assert.Equal(0, f.DisposeCallCount));
         }
 
         [Fact]
@@ -117,7 +117,7 @@ public abstract partial class NativeFabricTransportMessageDisposerTest
                 Marshal.FreeHGlobal(Ptr);
             }
 
-            IntPtr GetIUnknownForObject(object managed) =>
+            static IntPtr GetIUnknownForObject(object managed) =>
 #if NET
                 wrappers.GetOrCreateComInterfaceForObject(managed, CreateComInterfaceFlags.None);
 #else
