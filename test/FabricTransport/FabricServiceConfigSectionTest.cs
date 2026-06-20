@@ -401,12 +401,11 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         public void ReturnsMatchingParametersWhenSettingPrefixIsPaddedWithWhitespace()
         {
             // Mirrors the trimming behavior of GetSetting, GetSettingsList, and Initialize.
-            string prefix = fuzzy.String().LettersOrDigits() + "_";
             string suffix = fuzzy.String().LettersOrDigits();
             string value = fuzzy.String();
-            InitializeWithConfigSection(MakeConfigParameter(prefix + suffix, value));
+            InitializeWithConfigSection(MakeConfigParameter(settingPrefix + suffix, value));
 
-            Dictionary<string, string> actual = sut.GetSettingsMapFromPrefix($"  {prefix}  ");
+            Dictionary<string, string> actual = sut.GetSettingsMapFromPrefix($"  {settingPrefix}  ");
 
             KeyValuePair<string, string> entry = Assert.Single(actual);
             Assert.Equal(suffix, entry.Key);
@@ -439,12 +438,11 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         public void ReturnsMatchingExeSectionParametersWhenSettingPrefixIsPaddedWithWhitespace()
         {
             // Mirrors the trimming behavior of GetSetting, GetSettingsList, and Initialize.
-            string prefix = fuzzy.String().LettersOrDigits() + "_";
             string suffix = fuzzy.String().LettersOrDigits();
             string value = fuzzy.String();
-            InitializeWithExeSection(MakeExeParameter(prefix + suffix, value));
+            InitializeWithExeSection(MakeExeParameter(settingPrefix + suffix, value));
 
-            Dictionary<string, string> actual = sut.GetSettingsMapFromPrefix($"  {prefix}  ");
+            Dictionary<string, string> actual = sut.GetSettingsMapFromPrefix($"  {settingPrefix}  ");
 
             KeyValuePair<string, string> entry = Assert.Single(actual);
             Assert.Equal(suffix, entry.Key);
