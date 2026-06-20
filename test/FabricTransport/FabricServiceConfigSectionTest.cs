@@ -157,7 +157,6 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsParameterValueWhenSettingNameIsPaddedWithWhitespace()
         {
-            // Pins the trim: GetSetting calls settingName.Trim() before lookup.
             string core = fuzzy.String().LettersOrDigits();
             string value = fuzzy.String();
             InitializeWithConfigSection(MakeConfigParameter(core, value));
@@ -180,7 +179,6 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsExeSectionParameterValueWhenSettingNameIsPaddedWithWhitespace()
         {
-            // Pins the trim in the exe-section branch: GetSetting calls settingName.Trim() before lookup.
             string core = fuzzy.String().LettersOrDigits();
             string value = fuzzy.String();
             InitializeWithExeSection(MakeExeParameter(core, value));
@@ -286,7 +284,6 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsParameterValuesWhenSettingNameIsPaddedWithWhitespace()
         {
-            // Pins the trim: GetSettingsList calls settingName.Trim() before lookup.
             string core = fuzzy.String().LettersOrDigits();
             int[] expected = fuzzy.Array(fuzzy.Int32);
             InitializeWithConfigSection(MakeConfigParameter(core, string.Join(",", expected)));
@@ -309,7 +306,6 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsExeSectionParameterValuesWhenSettingNameIsPaddedWithWhitespace()
         {
-            // Pins the trim in the exe-section branch: GetSettingsList calls settingName.Trim() before lookup.
             string core = fuzzy.String().LettersOrDigits();
             int[] expected = fuzzy.Array(fuzzy.Int32);
             InitializeWithExeSection(MakeExeParameter(core, string.Join(",", expected)));
@@ -571,7 +567,6 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsTrueWhenSectionNameIsPaddedWithWhitespaceAndMatchesExeSettingsSection()
         {
-            // Pins the trim on the exe-settings path: Initialize compares section.Name to this.sectionName.Trim().
             string core = fuzzy.String().LettersOrDigits();
             SetSingletonWithExeSettings(MakeExeSection(core));
             FabricServiceConfigSection paddedSectionNameSut = new($"  {core}  ", onInitialize.Object);
