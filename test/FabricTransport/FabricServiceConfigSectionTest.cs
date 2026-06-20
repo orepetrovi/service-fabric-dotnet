@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Fabric.Description;
 using System.Fabric.Management.ServiceModel;
+using System.Linq;
 using Fuzzy;
 using Inspector;
 using Moq;
@@ -330,41 +331,33 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsMatchingParametersKeyedBySuffixFromConfigurationSection()
         {
-            string suffixA = fuzzy.String().LettersOrDigits();
-            string suffixB = suffixA + fuzzy.String().LettersOrDigits();
-            string valueA = fuzzy.String();
-            string valueB = fuzzy.String();
+            var expected = new Dictionary<string, string>();
+            foreach (string value in fuzzy.Array(fuzzy.String))
+                expected[fuzzy.String().LettersOrDigits()] = value;
             string nonMatchingName = fuzzy.String().LettersOrDigits();
-            InitializeWithConfigSection(
-                MakeConfigParameter(settingPrefix + suffixA, valueA),
-                MakeConfigParameter(settingPrefix + suffixB, valueB),
-                MakeConfigParameter(nonMatchingName, fuzzy.String()));
+            InitializeWithConfigSection([
+                .. expected.Select(_ => MakeConfigParameter(settingPrefix + _.Key, _.Value)),
+                MakeConfigParameter(nonMatchingName, fuzzy.String())]);
 
             Dictionary<string, string> actual = sut.GetSettingsMapFromPrefix(settingPrefix);
 
-            Assert.Equal(2, actual.Count);
-            Assert.Same(valueA, actual[suffixA]);
-            Assert.Same(valueB, actual[suffixB]);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void ReturnsMatchingParametersKeyedBySuffixFromExeSection()
         {
-            string suffixA = fuzzy.String().LettersOrDigits();
-            string suffixB = suffixA + fuzzy.String().LettersOrDigits();
-            string valueA = fuzzy.String();
-            string valueB = fuzzy.String();
+            var expected = new Dictionary<string, string>();
+            foreach (string value in fuzzy.Array(fuzzy.String))
+                expected[fuzzy.String().LettersOrDigits()] = value;
             string nonMatchingName = fuzzy.String().LettersOrDigits();
-            InitializeWithExeSection(
-                MakeExeParameter(settingPrefix + suffixA, valueA),
-                MakeExeParameter(settingPrefix + suffixB, valueB),
-                MakeExeParameter(nonMatchingName, fuzzy.String()));
+            InitializeWithExeSection([
+                .. expected.Select(_ => MakeExeParameter(settingPrefix + _.Key, _.Value)),
+                MakeExeParameter(nonMatchingName, fuzzy.String())]);
 
             Dictionary<string, string> actual = sut.GetSettingsMapFromPrefix(settingPrefix);
 
-            Assert.Equal(2, actual.Count);
-            Assert.Same(valueA, actual[suffixA]);
-            Assert.Same(valueB, actual[suffixB]);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
