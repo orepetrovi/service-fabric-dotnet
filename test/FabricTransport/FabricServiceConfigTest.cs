@@ -92,6 +92,13 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
     {
         readonly string fullFilePath = settingsFile;
         readonly Mock<IFabricServiceConfigParser> configParser = new();
+        readonly string path = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits() + ".xml");
+
+        public override void Dispose()
+        {
+            File.Delete(path);
+            base.Dispose();
+        }
 
         [Fact]
         public void ReturnsTrueAndStoresParsedSettingsWhenFileExistsAndConfigParserIsProvided()
@@ -113,7 +120,6 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             // Integration-style by necessity: the SUT instantiates the default SettingsConfigParser inline
             // when configParser is null, so there is no seam to substitute it. This test generates its own
             // settings file with a fuzzy section name and exercises the real parser against it.
-            string path = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits() + ".xml");
             string sectionName = "Section_" + fuzzy.String().LettersOrDigits();
             File.WriteAllText(path,
                 $"""
@@ -121,19 +127,12 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
                   <Section Name="{sectionName}" />
                 </Settings>
                 """);
-            try
-            {
-                bool result = FabricServiceConfig.Initialize(path, null);
+            bool result = FabricServiceConfig.Initialize(path, null);
 
-                Assert.True(result);
-                SettingsType settings = FabricServiceConfig.GetConfig().Settings;
-                SettingsTypeSection section = Assert.Single(settings.Section);
-                Assert.Equal(sectionName, section.Name);
-            }
-            finally
-            {
-                File.Delete(path);
-            }
+            Assert.True(result);
+            SettingsType settings = FabricServiceConfig.GetConfig().Settings;
+            SettingsTypeSection section = Assert.Single(settings.Section);
+            Assert.Equal(sectionName, section.Name);
         }
 
         [Theory]
