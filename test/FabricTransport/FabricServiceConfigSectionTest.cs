@@ -337,8 +337,8 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
                 expected[fuzzy.String().LettersOrDigits()] = value;
             string nonMatchingName = fuzzy.String().LettersOrDigits();
             InitializeWithConfigSection([
-                .. expected.Select(_ => MakeConfigParameter(settingPrefix + _.Key, _.Value)),
-                MakeConfigParameter(nonMatchingName, fuzzy.String())]);
+                MakeConfigParameter(nonMatchingName, fuzzy.String()),
+                .. expected.Select(_ => MakeConfigParameter(settingPrefix + _.Key, _.Value))]);
 
             Dictionary<string, string> actual = sut.GetSettingsMapFromPrefix(settingPrefix);
 
@@ -353,8 +353,8 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
                 expected[fuzzy.String().LettersOrDigits()] = value;
             string nonMatchingName = fuzzy.String().LettersOrDigits();
             InitializeWithExeSection([
-                .. expected.Select(_ => MakeExeParameter(settingPrefix + _.Key, _.Value)),
-                MakeExeParameter(nonMatchingName, fuzzy.String())]);
+                MakeExeParameter(nonMatchingName, fuzzy.String()),
+                .. expected.Select(_ => MakeExeParameter(settingPrefix + _.Key, _.Value))]);
 
             Dictionary<string, string> actual = sut.GetSettingsMapFromPrefix(settingPrefix);
 
