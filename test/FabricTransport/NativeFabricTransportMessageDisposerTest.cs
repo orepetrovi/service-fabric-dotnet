@@ -123,7 +123,6 @@ public abstract partial class NativeFabricTransportMessageDisposerTest
 #else
                 Marshal.GetIUnknownForObject(managed);
 #endif
-
         }
     }
 }
