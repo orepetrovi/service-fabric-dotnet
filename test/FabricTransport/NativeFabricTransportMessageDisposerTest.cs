@@ -32,17 +32,15 @@ public abstract partial class NativeFabricTransportMessageDisposerTest
         public void InvokesDisposeOnMessagesInPointerArrayOrder()
         {
             List<int> order = [];
-            int firstId = fuzzy.Int32();
-            int secondId = firstId + fuzzy.SByte().Between(1, 5);
-            FakeMessage first = new() { Id = firstId, DisposeOrder = order };
-            FakeMessage second = new() { Id = secondId, DisposeOrder = order };
-            nativeMessages = new NativeMessageArray(first, second);
+            int id = fuzzy.Int32();
+            FakeMessage[] fakes = fuzzy.Array(() => new FakeMessage { Id = id++, DisposeOrder = order }, Length.Min(2));
+            nativeMessages = new NativeMessageArray(fakes);
             count = nativeMessages.Count;
             messages = nativeMessages.Ptr;
 
             sut.Dispose(count, messages);
 
-            Assert.Equal([firstId, secondId], order);
+            Assert.Equal(fakes.Select(f => f.Id), order);
         }
 
         [Fact]
