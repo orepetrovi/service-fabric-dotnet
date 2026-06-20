@@ -266,10 +266,11 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         {
             // CastParameterAsList<T> calls Convert.ChangeType which throws InvalidCastException for enum target
             // types, unlike GetSetting<T>.
-            InitializeWithConfigSection(MakeConfigParameter(settingName, $"{SampleEnum.First},{SampleEnum.Second}"));
+            SampleEnum[] expected = fuzzy.Array(fuzzy.Enum<SampleEnum>);
+            InitializeWithConfigSection(MakeConfigParameter(settingName, string.Join(",", expected)));
 
             IList<SampleEnum> actual = sut.GetSettingsList<SampleEnum>(settingName);
-            Assert.Equal([SampleEnum.First, SampleEnum.Second], actual);
+            Assert.Equal(expected, actual);
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. GetSettingsList does not validate settingName.
