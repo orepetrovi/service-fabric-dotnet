@@ -264,7 +264,8 @@ public abstract class NativeMessageStreamTest: IDisposable
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. Read throws ArgumentOutOfRangeException instead of ArgumentException.
-        public void ThrowsArgumentExceptionWhenOffsetPlusCountExceedsBufferLength() => Assert.Throws<ArgumentException>(() => sut.Read(buffer, 1, count));
+        public void ThrowsArgumentExceptionWhenOffsetPlusCountExceedsBufferLength() =>
+            Assert.Throws<ArgumentException>(() => sut.Read(buffer, 1, count));
     }
 
     public sealed class ReadByte: NativeMessageStreamTest
