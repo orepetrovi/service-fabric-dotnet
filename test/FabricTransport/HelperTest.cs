@@ -98,7 +98,7 @@ public abstract class HelperTest
 
         static EndpointResourceDescription CreateEndpoint(string name, int port)
         {
-            var endpoint = new EndpointResourceDescription { Name = name };
+            EndpointResourceDescription endpoint = new() { Name = name };
             endpoint.Property<int>().Set(port);
             return endpoint;
         }
@@ -119,7 +119,7 @@ public abstract class HelperTest
 
         public Get_Byte()
         {
-            var buffer = new NativeTypes.FABRIC_MESSAGE_BUFFER
+            NativeTypes.FABRIC_MESSAGE_BUFFER buffer = new()
             {
                 BufferSize = (uint)bytes.Length,
                 Buffer = pins.AddBlittable(bytes),
