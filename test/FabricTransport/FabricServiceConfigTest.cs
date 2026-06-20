@@ -90,8 +90,10 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
 
     public sealed class Initialize: FabricServiceConfigTest
     {
+        // Method parameters
         readonly string fullFilePath = settingsFile;
         readonly Mock<IFabricServiceConfigParser> configParser = new();
+
         readonly string path = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits() + ".xml");
 
         public override void Dispose()
