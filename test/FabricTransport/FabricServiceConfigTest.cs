@@ -119,15 +119,29 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
         public void ParsesFileWithDefaultParserWhenConfigParserIsNull()
         {
             // Integration-style by necessity: the SUT instantiates the default SettingsConfigParser inline
-            // when configParser is null, so there is no seam to substitute it. Adding a product-code
-            // testability seam is out of scope, so this test exercises the real parser against the real
-            // ServiceCommunicationTestSettings.xml staged next to the test assembly.
-            bool result = FabricServiceConfig.Initialize(fullFilePath, null);
+            // when configParser is null, so there is no seam to substitute it. This test generates its own
+            // settings file with a fuzzy section name and exercises the real parser against it.
+            string path = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits() + ".xml");
+            string sectionName = "Section_" + fuzzy.String().LettersOrDigits();
+            File.WriteAllText(path,
+                $"""
+                <Settings xmlns="http://schemas.microsoft.com/2011/01/fabric">
+                  <Section Name="{sectionName}" />
+                </Settings>
+                """);
+            try
+            {
+                bool result = FabricServiceConfig.Initialize(path, null);
 
-            Assert.True(result);
-            SettingsType settings = FabricServiceConfig.GetConfig().Settings;
-            SettingsTypeSection section = Assert.Single(settings.Section);
-            Assert.Equal("TestServiceListenerTransportSettings", section.Name);
+                Assert.True(result);
+                SettingsType settings = FabricServiceConfig.GetConfig().Settings;
+                SettingsTypeSection section = Assert.Single(settings.Section);
+                Assert.Equal(sectionName, section.Name);
+            }
+            finally
+            {
+                File.Delete(path);
+            }
         }
 
         [Theory]
