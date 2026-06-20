@@ -98,7 +98,7 @@ public abstract partial class NativeFabricTransportMessageDisposerTest
             internal readonly IntPtr Ptr;
             internal readonly uint Count;
 
-            internal NativeMessageArray(params FakeMessage[] messages)
+            internal NativeMessageArray(FakeMessage[] messages)
             {
                 iunknowns = new IntPtr[messages.Length];
                 Count = (uint)messages.Length;
