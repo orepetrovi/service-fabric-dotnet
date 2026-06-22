@@ -7,6 +7,7 @@ namespace Microsoft.ServiceFabric.Data
 {
     using System;
     using System.Fabric;
+    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -128,8 +129,9 @@ namespace Microsoft.ServiceFabric.Data
         /// A safe restore will be performed, meaning the restore will only be completed if the data to restore is ahead of the current replica's state.
         /// </remarks>
         /// <exception cref="ArgumentException"><paramref name="backupFolderPath"/> is <see langword="null"/>, empty, whitespace, or is not a valid backup folder.</exception>
-        /// <exception cref="InvalidOperationException">The method is invoked outside of <see cref="OnDataLossAsync"/> processing.</exception>
         /// <exception cref="FabricMissingFullBackupException"><paramref name="backupFolderPath"/> does not contain a valid full backup to use as the head of the backup chain.</exception>
+        /// <exception cref="InvalidDataException">The backup data in <paramref name="backupFolderPath"/> is corrupt.</exception>
+        /// <exception cref="InvalidOperationException">The method is invoked outside of <see cref="OnDataLossAsync"/> processing.</exception>
         Task RestoreAsync(string backupFolderPath);
 
         /// <inheritdoc path="/summary" cref="RestoreAsync(string)"/>
@@ -137,8 +139,9 @@ namespace Microsoft.ServiceFabric.Data
         /// <param name="restorePolicy">One of the enumeration values that specifies the policy applied when restoring from backup.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <inheritdoc path="/exception[@cref='T:System.ArgumentException']" cref="RestoreAsync(string)"/>
-        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="RestoreAsync(string)"/>
         /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricMissingFullBackupException']" cref="RestoreAsync(string)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.IO.InvalidDataException']" cref="RestoreAsync(string)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="RestoreAsync(string)"/>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         Task RestoreAsync(
             string backupFolderPath,
