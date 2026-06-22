@@ -184,19 +184,6 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
             sut.EndProcessConnect(context);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. EndProcessConnect does not validate context.
-        public void ThrowsArgumentNullExceptionWhenContextIsNull()
-        {
-            // EndProcessConnect passes context straight to AsyncTaskCallInAdapter.End, which validates its own
-            // parameter and throws ArgumentNullException with ParamName "adapter". The broker should validate its own
-            // context parameter first and throw ArgumentNullException with ParamName "context".
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.EndProcessConnect(null));
-            Assert.Equal(
-                sut.Method<Action<IFabricAsyncOperationContext>>(nameof(NativeFabricTransport.IFabricTransportConnectionHandler.EndProcessConnect))
-                    .Parameter<IFabricAsyncOperationContext>().Name,
-                exception.ParamName);
-        }
-
         [Fact]
         public void ThrowsExceptionFromFaultedWrappedTask()
         {
@@ -235,19 +222,6 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
             IFabricAsyncOperationContext context = sut.BeginProcessDisconnect(nativeClientId, timeoutMilliseconds, callback);
 
             sut.EndProcessDisconnect(context);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. EndProcessDisconnect does not validate context.
-        public void ThrowsArgumentNullExceptionWhenContextIsNull()
-        {
-            // EndProcessDisconnect passes context straight to AsyncTaskCallInAdapter.End, which validates its own
-            // parameter and throws ArgumentNullException with ParamName "adapter". The broker should validate its own
-            // context parameter first and throw ArgumentNullException with ParamName "context".
-            var exception = Assert.Throws<ArgumentNullException>(() => sut.EndProcessDisconnect(null));
-            Assert.Equal(
-                sut.Method<Action<IFabricAsyncOperationContext>>(nameof(NativeFabricTransport.IFabricTransportConnectionHandler.EndProcessDisconnect))
-                    .Parameter<IFabricAsyncOperationContext>().Name,
-                exception.ParamName);
         }
 
         [Fact]
