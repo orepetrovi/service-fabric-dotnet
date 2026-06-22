@@ -4,7 +4,6 @@
 using System;
 using System.Fabric.Management.ServiceModel;
 using System.IO;
-using System.Reflection;
 using Fuzzy;
 using Inspector;
 using Moq;
@@ -15,16 +14,15 @@ namespace Microsoft.ServiceFabric.FabricTransport;
 [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
 public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
 {
-    static readonly string settingsFile = Path.Combine(
-        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-        "ServiceCommunicationTestSettings.xml");
-
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
     public sealed class GetConfig: FabricServiceConfigTest
     {
+        readonly string settingsFile = CreateSettingsFile();
+
         public override void Dispose()
         {
+            File.Delete(settingsFile);
             File.Delete(EntrySettingsFile.Path);
             base.Dispose();
         }
@@ -35,8 +33,7 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             // Stage an entry-assembly settings file so the fallback path in GetConfig would observably
             // overwrite `instance` if the `if (instance == null)` fast-path guard regressed.
             EntrySettingsFile.AssertAbsent();
-            File.WriteAllText(EntrySettingsFile.Path,
-                """<Settings xmlns="http://schemas.microsoft.com/2011/01/fabric"/>""");
+            File.WriteAllText(EntrySettingsFile.Path, EmptySettings);
             SettingsType expected = new();
             IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>(_ => _.Parse(settingsFile) == expected);
             _ = FabricServiceConfig.Initialize(settingsFile, configParser);
@@ -61,8 +58,7 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             // Outside an SF host FabricRuntime.GetActivationContext() throws, so GetConfig falls through to the
             // entry-assembly path: <entry-assembly-dir>/<entry-assembly-name>.Settings.xml. Under this test
             // project the test runner is the entry assembly, so we can stage that file next to it. The staged
-            // file uses a unique section name so the assertion distinguishes it from the always-present
-            // ServiceCommunicationTestSettings.xml that the csproj copies to the output directory.
+            // file uses a unique section name so the assertion verifies GetConfig read this specific file.
             EntrySettingsFile.AssertAbsent();
             string sectionName = "EntrySettings_" + fuzzy.String().LettersOrDigits();
             File.WriteAllText(EntrySettingsFile.Path,
@@ -91,14 +87,12 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
     public sealed class Initialize: FabricServiceConfigTest
     {
         // Method parameters
-        readonly string fullFilePath = settingsFile;
+        readonly string fullFilePath = CreateSettingsFile();
         readonly Mock<IFabricServiceConfigParser> configParser = new();
-
-        readonly string path = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits() + ".xml");
 
         public override void Dispose()
         {
-            File.Delete(path);
+            File.Delete(fullFilePath);
             base.Dispose();
         }
 
@@ -123,13 +117,13 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             // when configParser is null, so there is no seam to substitute it. This test generates its own
             // settings file with a fuzzy section name and exercises the real parser against it.
             string sectionName = "Section_" + fuzzy.String().LettersOrDigits();
-            File.WriteAllText(path,
+            File.WriteAllText(fullFilePath,
                 $"""
                 <Settings xmlns="http://schemas.microsoft.com/2011/01/fabric">
                   <Section Name="{sectionName}" />
                 </Settings>
                 """);
-            bool result = FabricServiceConfig.Initialize(path, null);
+            bool result = FabricServiceConfig.Initialize(fullFilePath, null);
 
             Assert.True(result);
             SettingsType settings = FabricServiceConfig.GetConfig().Settings;
@@ -182,6 +176,13 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
     public sealed class InitializeFromConfigPackage: FabricServiceConfigTest
     {
         readonly string configPackageName = fuzzy.String();
+        readonly string settingsFile = CreateSettingsFile();
+
+        public override void Dispose()
+        {
+            File.Delete(settingsFile);
+            base.Dispose();
+        }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Depends on FabricRuntime.GetActivationContext().
         public void ReturnsTrueAndStoresConfigurationSettingsWhenActivationContextProvidesConfigPackage() =>
@@ -209,5 +210,14 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             // a configuration package with the requested name. Exercising this branch requires substituting
             // FabricRuntime.GetActivationContext(), which is only available inside a Service Fabric host process.
             throw new NotImplementedException();
+    }
+
+    const string EmptySettings = """<Settings xmlns="http://schemas.microsoft.com/2011/01/fabric"/>""";
+
+    static string CreateSettingsFile()
+    {
+        string path = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits() + ".xml");
+        File.WriteAllText(path, EmptySettings);
+        return path;
     }
 }
