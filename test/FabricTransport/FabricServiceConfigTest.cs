@@ -32,7 +32,7 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             // Stage an entry-assembly settings file so the fallback path in GetConfig would observably
             // overwrite `instance` if the `if (instance == null)` fast-path guard regressed.
             EntrySettingsFile.AssertAbsent();
-            File.WriteAllText(EntrySettingsFile.Path, EmptySettings);
+            File.WriteAllText(EntrySettingsFile.Path, emptySettings);
             IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>();
             _ = FabricServiceConfig.Initialize(settingsFile, configParser);
             var initial = FabricServiceConfig.GetConfig();
@@ -212,12 +212,12 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             throw new NotImplementedException();
     }
 
-    const string EmptySettings = """<Settings xmlns="http://schemas.microsoft.com/2011/01/fabric"/>""";
+    const string emptySettings = """<Settings xmlns="http://schemas.microsoft.com/2011/01/fabric"/>""";
 
     static string CreateSettingsFile()
     {
         string path = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits() + ".xml");
-        File.WriteAllText(path, EmptySettings);
+        File.WriteAllText(path, emptySettings);
         return path;
     }
 }
