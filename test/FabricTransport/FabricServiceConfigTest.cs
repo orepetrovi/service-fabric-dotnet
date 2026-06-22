@@ -160,6 +160,7 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             _ = configParser.SetupSequence(_ => _.Parse(fullFilePath)).Returns(first).Returns(second);
             _ = FabricServiceConfig.Initialize(fullFilePath, configParser.Object);
             var initial = FabricServiceConfig.GetConfig();
+            Assert.Same(first, initial.Settings);
 
             bool result = FabricServiceConfig.Initialize(fullFilePath, configParser.Object);
 
