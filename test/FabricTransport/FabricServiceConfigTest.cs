@@ -33,8 +33,7 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             // overwrite `instance` if the `if (instance == null)` fast-path guard regressed.
             EntrySettingsFile.AssertAbsent();
             File.WriteAllText(EntrySettingsFile.Path, EmptySettings);
-            SettingsType expected = new();
-            IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>(_ => _.Parse(settingsFile) == expected);
+            IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>();
             _ = FabricServiceConfig.Initialize(settingsFile, configParser);
             var initial = FabricServiceConfig.GetConfig();
 
@@ -195,8 +194,7 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
         [Fact]
         public void ReturnsFalseAndLeavesInstanceUnchangedWhenActivationContextIsUnavailable()
         {
-            SettingsType expected = new();
-            IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>(_ => _.Parse(settingsFile) == expected);
+            IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>();
             Assert.True(FabricServiceConfig.Initialize(settingsFile, configParser));
             var initial = FabricServiceConfig.GetConfig();
 
