@@ -82,6 +82,14 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             EntrySettingsFile.AssertAbsent();
             Assert.Null(FabricServiceConfig.GetConfig());
         }
+
+        [Fact(Explicit = true)] // TODO: SUT testability limitation. Depends on Assembly.GetEntryAssembly() being null.
+        public void ReturnsNullWhenEntryAssemblyIsNull() =>
+            // When the entry-assembly fallback runs GetExeSettingsFilePath returns an empty path because
+            // Assembly.GetEntryAssembly() is null, so the settings file is never found, instance stays null,
+            // and GetConfig returns null. Under the test host Assembly.GetEntryAssembly() returns the runner
+            // assembly and is never null, with no seam to substitute it in a unit test.
+            throw new NotImplementedException();
     }
 
     public sealed class Initialize: FabricServiceConfigTest
