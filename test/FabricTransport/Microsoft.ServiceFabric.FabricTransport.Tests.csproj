@@ -19,9 +19,6 @@
     <ProjectReference Include="..\TestFramework\Microsoft.ServiceFabric.TestFramework.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ServiceCommunicationTestSettings.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Microsoft.ServiceFabric.FabricTransport.Test.dll.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
