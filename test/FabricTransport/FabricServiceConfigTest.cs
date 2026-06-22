@@ -17,7 +17,7 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
 
     public sealed class GetConfig: FabricServiceConfigTest
     {
-        readonly string settingsFile = CreateSettingsFile();
+        readonly string settingsFile = SettingsFilePath();
 
         public override void Dispose()
         {
@@ -34,6 +34,7 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             EntrySettingsFile.AssertAbsent();
             File.WriteAllText(EntrySettingsFile.Path, emptySettings);
             IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>();
+            File.WriteAllText(settingsFile, emptySettings);
             Assert.True(FabricServiceConfig.Initialize(settingsFile, configParser));
             var initial = FabricServiceConfig.GetConfig();
 
@@ -212,9 +213,12 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
 
     const string emptySettings = """<Settings xmlns="http://schemas.microsoft.com/2011/01/fabric"/>""";
 
+    static string SettingsFilePath() =>
+        Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits() + ".xml");
+
     static string CreateSettingsFile()
     {
-        string path = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits() + ".xml");
+        string path = SettingsFilePath();
         File.WriteAllText(path, emptySettings);
         return path;
     }
