@@ -174,7 +174,9 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
 
     public sealed class InitializeFromConfigPackage: FabricServiceConfigTest
     {
+        // Method parameters
         readonly string configPackageName = fuzzy.String();
+
         readonly string settingsFile = CreateSettingsFile();
 
         public override void Dispose()
