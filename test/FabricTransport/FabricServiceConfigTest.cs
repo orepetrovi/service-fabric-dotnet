@@ -142,7 +142,7 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
         {
             Assert.True(FabricServiceConfig.Initialize(fullFilePath, configParser.Object));
             var initial = FabricServiceConfig.GetConfig();
-            string missing = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits() + ".xml");
+            string missing = SettingsFilePath();
             Assert.False(File.Exists(missing), $"Pre-existing {missing} would invalidate this test.");
 
             bool result = FabricServiceConfig.Initialize(missing, configParser.Object);
