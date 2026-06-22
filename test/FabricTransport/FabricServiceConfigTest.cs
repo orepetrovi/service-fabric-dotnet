@@ -67,6 +67,7 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
                   <Section Name="{sectionName}" />
                 </Settings>
                 """);
+
             var actual = FabricServiceConfig.GetConfig();
 
             SettingsTypeSection section = Assert.Single(actual.Settings.Section);
@@ -122,6 +123,7 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
                   <Section Name="{sectionName}" />
                 </Settings>
                 """);
+
             bool result = FabricServiceConfig.Initialize(fullFilePath, null);
 
             Assert.True(result);
