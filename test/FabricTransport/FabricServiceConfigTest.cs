@@ -5,7 +5,6 @@ using System;
 using System.Fabric.Management.ServiceModel;
 using System.IO;
 using Fuzzy;
-using Inspector;
 using Moq;
 using Xunit;
 
