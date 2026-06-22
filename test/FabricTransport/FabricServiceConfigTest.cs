@@ -34,7 +34,7 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             EntrySettingsFile.AssertAbsent();
             File.WriteAllText(EntrySettingsFile.Path, emptySettings);
             IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>();
-            _ = FabricServiceConfig.Initialize(settingsFile, configParser);
+            Assert.True(FabricServiceConfig.Initialize(settingsFile, configParser));
             var initial = FabricServiceConfig.GetConfig();
 
             var actual = FabricServiceConfig.GetConfig();
