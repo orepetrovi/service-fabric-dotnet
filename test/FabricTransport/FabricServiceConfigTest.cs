@@ -139,8 +139,6 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
         [Fact]
         public void ReturnsFalseAndLeavesInstanceUnchangedWhenFileDoesNotExist()
         {
-            SettingsType expected = new();
-            _ = configParser.Setup(_ => _.Parse(fullFilePath)).Returns(expected);
             Assert.True(FabricServiceConfig.Initialize(fullFilePath, configParser.Object));
             var initial = FabricServiceConfig.GetConfig();
             string missing = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits() + ".xml");
