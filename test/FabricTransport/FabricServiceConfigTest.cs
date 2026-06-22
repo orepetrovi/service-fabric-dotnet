@@ -86,7 +86,6 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
 
     public sealed class Initialize: FabricServiceConfigTest
     {
-        // Method parameters
         readonly string fullFilePath = CreateSettingsFile();
         readonly Mock<IFabricServiceConfigParser> configParser = new();
 
