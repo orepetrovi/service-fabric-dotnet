@@ -90,9 +90,6 @@ public abstract class FabricTransportMessageHandlerBrokerTest
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class EndProcessRequest: FabricTransportMessageHandlerBrokerTest, IDisposable
     {
-        // Method parameters
-        readonly IFabricAsyncOperationContext context;
-
         // BeginProcessRequest parameters
         readonly IntPtr clientId;
         readonly NativeFabricTransport.IFabricTransportMessage message = Mock.Of<NativeFabricTransport.IFabricTransportMessage>();
@@ -107,7 +104,6 @@ public abstract class FabricTransportMessageHandlerBrokerTest
             _ = service
                 .Setup(_ => _.RequestResponseAsync(It.IsAny<FabricTransportRequestContext>(), It.IsAny<FabricTransportMessage>()))
                 .Returns(Task.FromResult(reply));
-            context = sut.BeginProcessRequest(clientId, message, timeoutMilliseconds, callback);
         }
 
         void IDisposable.Dispose() => Marshal.FreeHGlobal(clientId);
@@ -115,6 +111,8 @@ public abstract class FabricTransportMessageHandlerBrokerTest
         [Fact]
         public void ReturnsNativeMessageWrappingReplyWhenRequestResponseAsyncCompletes()
         {
+            IFabricAsyncOperationContext context = sut.BeginProcessRequest(clientId, message, timeoutMilliseconds, callback);
+
             NativeFabricTransport.IFabricTransportMessage result = sut.EndProcessRequest(context);
 
             try
