@@ -12,6 +12,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <summary>
     /// Represents a Reliable Collection of elements of type <typeparamref name="T"/>.
     /// </summary>
+    /// <remarks>
+    /// An <see cref="ITransaction"/> is the unit of concurrency. Multiple transactions can be in-flight at any time, but operations
+    /// within a given transaction must be called sequentially: APIs that take a transaction and return a <see cref="Task"/> must be
+    /// awaited one at a time.
+    /// </remarks>
     /// <seealso href="https://learn.microsoft.com/azure/service-fabric/service-fabric-reliable-services-reliable-collections">Reliable Collections</seealso>
     public interface IReliableCollection<T> : IReliableState
     {
