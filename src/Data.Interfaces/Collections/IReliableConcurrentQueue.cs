@@ -274,7 +274,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </remarks>
         /// <exception cref="FabricNotReadableException">The replica is currently not readable.</exception>
         /// <exception cref="FabricObjectClosedException">The queue was closed by the runtime.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state.</exception>
+        /// <exception cref="InvalidOperationException">The object's current state is invalid for this operation.</exception>
         ///  
         /// <example>
         /// This example shows how to monitor the queue's count continuously, until the cancellation token is canceled.
