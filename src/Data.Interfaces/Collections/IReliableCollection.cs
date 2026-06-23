@@ -30,8 +30,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableCollection{T}"/> is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">The transaction has already been committed or aborted, or the <see cref="IReliableCollection{T}"/> has not been registered.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         Task<long> GetCountAsync(ITransaction tx);
 
         /// <summary>
@@ -40,13 +40,13 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <remarks>
         /// Not every <see cref="IReliableCollection{T}"/> implementation supports clearing.
         /// </remarks>
-        /// <exception cref="NotImplementedException">
-        /// The <see cref="IReliableCollection{T}"/> implementation does not implement clearing.
-        /// </exception>
         /// <exception cref="FabricNotPrimaryException">
         /// The <see cref="IReliableCollection{T}"/> is not in the <see cref="ReplicaRole.Primary"/> role.
         /// </exception>
         /// <exception cref="InvalidOperationException">The <see cref="IReliableCollection{T}"/> has not been registered.</exception>
+        /// <exception cref="NotImplementedException">
+        /// The <see cref="IReliableCollection{T}"/> implementation does not implement clearing.
+        /// </exception>
         /// <exception cref="TimeoutException">
         /// The operation failed to complete within the default timeout.
         /// </exception>
