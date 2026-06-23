@@ -29,6 +29,8 @@ This repository requires unique knowledge you don't possess; you won't know what
     Execute /review skill with argument `{file path}`.
     - _Avoid contradicting findings resolved by prior commits in `git log origin/HEAD..HEAD -- {file path}`_.
       A contradicting finding must be described in detail in a commit messages. A code change alone is not a contradiction.
+    - _Follow newer instructions over older decisions in commit messages_.
+      Instructions are frequently updated to fix at scale the mistakes introduced earlier.
     - _Exclude findings previously reported in `{file path}-needs-human-review.md`, if it exists_.
 
     Note that I'm working on the following request.
