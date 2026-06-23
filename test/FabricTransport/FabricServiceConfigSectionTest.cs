@@ -157,11 +157,10 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsParameterValueWhenSettingNameIsPaddedWithWhitespace()
         {
-            string core = fuzzy.String().LettersOrDigits();
             string value = fuzzy.String();
-            InitializeWithConfigSection(MakeConfigParameter(core, value));
+            InitializeWithConfigSection(MakeConfigParameter(settingName, value));
 
-            string actual = sut.GetSetting<string>($"  {core}  ", defaultValue: null);
+            string actual = sut.GetSetting<string>($"  {settingName}  ", defaultValue: null);
             Assert.Same(value, actual);
         }
 
@@ -179,11 +178,10 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsExeSectionParameterValueWhenSettingNameIsPaddedWithWhitespace()
         {
-            string core = fuzzy.String().LettersOrDigits();
             string value = fuzzy.String();
-            InitializeWithExeSection(MakeExeParameter(core, value));
+            InitializeWithExeSection(MakeExeParameter(settingName, value));
 
-            string actual = sut.GetSetting<string>($"  {core}  ", defaultValue: null);
+            string actual = sut.GetSetting<string>($"  {settingName}  ", defaultValue: null);
             Assert.Same(value, actual);
         }
 
@@ -284,11 +282,10 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsParameterValuesWhenSettingNameIsPaddedWithWhitespace()
         {
-            string core = fuzzy.String().LettersOrDigits();
             int[] expected = fuzzy.Array(fuzzy.Int32);
-            InitializeWithConfigSection(MakeConfigParameter(core, string.Join(",", expected)));
+            InitializeWithConfigSection(MakeConfigParameter(settingName, string.Join(",", expected)));
 
-            IList<int> actual = sut.GetSettingsList<int>($"  {core}  ");
+            IList<int> actual = sut.GetSettingsList<int>($"  {settingName}  ");
             Assert.Equal(expected, actual);
         }
 
@@ -306,11 +303,10 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsExeSectionParameterValuesWhenSettingNameIsPaddedWithWhitespace()
         {
-            string core = fuzzy.String().LettersOrDigits();
             int[] expected = fuzzy.Array(fuzzy.Int32);
-            InitializeWithExeSection(MakeExeParameter(core, string.Join(",", expected)));
+            InitializeWithExeSection(MakeExeParameter(settingName, string.Join(",", expected)));
 
-            IList<int> actual = sut.GetSettingsList<int>($"  {core}  ");
+            IList<int> actual = sut.GetSettingsList<int>($"  {settingName}  ");
             Assert.Equal(expected, actual);
         }
 
@@ -567,9 +563,8 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         [Fact]
         public void ReturnsTrueWhenSectionNameIsPaddedWithWhitespaceAndMatchesExeSettingsSection()
         {
-            string core = fuzzy.String().LettersOrDigits();
-            SetSingletonWithExeSettings(MakeExeSection(core));
-            FabricServiceConfigSection paddedSectionNameSut = new($"  {core}  ", onInitialize.Object);
+            SetSingletonWithExeSettings(MakeExeSection(sectionName));
+            FabricServiceConfigSection paddedSectionNameSut = new($"  {sectionName}  ", onInitialize.Object);
 
             Assert.True(paddedSectionNameSut.Initialize());
             onInitialize.Verify(_ => _(), Times.Once);
@@ -580,9 +575,8 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         {
             // Pins the asymmetry: on the configuration-settings path, Initialize calls Sections.Contains(this.sectionName)
             // without trimming, so a padded sectionName does NOT match an un-padded section.
-            string core = fuzzy.String().LettersOrDigits();
-            SetSingletonWithConfigurationSettings(MakeConfigSection(core));
-            FabricServiceConfigSection paddedSectionNameSut = new($"  {core}  ", onInitialize.Object);
+            SetSingletonWithConfigurationSettings(MakeConfigSection(sectionName));
+            FabricServiceConfigSection paddedSectionNameSut = new($"  {sectionName}  ", onInitialize.Object);
 
             Assert.False(paddedSectionNameSut.Initialize());
             onInitialize.Verify(_ => _(), Times.Never);
