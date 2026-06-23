@@ -27,7 +27,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// This callback is where <see cref="RestoreAsync(string)"/> may be invoked. It runs while the replica does not have
         /// read or write status, so reads and writes against the state providers are not permitted. Returning
-        /// <see langword="true"/> causes the Primary to rebuild the other replicas in the partition from the restored state.
+        /// <see langword="true"/> causes the <see cref="ReplicaRole.Primary"/> to rebuild the other replicas in the partition from the restored state.
         /// </remarks>
         Func<CancellationToken, Task<bool>> OnDataLossAsync { set; }
 
@@ -55,7 +55,7 @@ namespace Microsoft.ServiceFabric.Data
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Asynchronously notifies the state provider replica that its role is changing, for example to Primary or Secondary.
+        /// Asynchronously notifies the state provider replica that its role is changing, for example to <see cref="ReplicaRole.Primary"/> or Secondary.
         /// </summary>
         /// <param name="newRole">One of the enumeration values that specifies the new replica role, such as primary or secondary.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
@@ -90,7 +90,7 @@ namespace Microsoft.ServiceFabric.Data
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="backupCallback"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricBackupInProgressException">Another backup is already in progress.</exception>
-        /// <exception cref="FabricNotPrimaryException">The replica is not a Primary, or is no longer the Primary.</exception>
+        /// <exception cref="FabricNotPrimaryException">The replica is not a <see cref="ReplicaRole.Primary"/>, or is no longer the Primary.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="backupCallback"/> returned <see langword="false"/>; the backup is marked unsuccessful.</exception>
         Task BackupAsync(Func<BackupInfo, CancellationToken, Task<bool>> backupCallback);
 
