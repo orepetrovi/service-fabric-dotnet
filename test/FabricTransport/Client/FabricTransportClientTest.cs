@@ -361,7 +361,7 @@ public abstract class FabricTransportClientTest
             IFabricAsyncOperationCallback capturedCallback = null;
             IFabricTransportMessage capturedNativeMessage = null;
             var context = Mock.Of<IFabricAsyncOperationContext>();
-            var nativeResponse = Mock.Of<IFabricTransportMessage>();
+            var nativeResponse = new Mock<IFabricTransportMessage>();
             _ = nativeClient
                 .Setup(_ => _.BeginRequest(
                     It.IsAny<IFabricTransportMessage>(),
@@ -372,7 +372,7 @@ public abstract class FabricTransportClientTest
                 .Returns(context);
             _ = nativeClient
                 .Setup(_ => _.EndRequest(context))
-                .Returns(nativeResponse);
+                .Returns(nativeResponse.Object);
 
             Task<FabricTransportMessage> task = sut.RequestResponseAsync(requestMessage, timeout);
             capturedCallback.Invoke(context);
@@ -395,7 +395,8 @@ public abstract class FabricTransportClientTest
             nativeClient.Verify(_ => _.EndRequestWithId(It.IsAny<IFabricAsyncOperationContext>()), Times.Never);
             var wrapper = (NativeFabricTransportMessage)capturedNativeMessage;
             Assert.Same(requestMessage, wrapper.Field<FabricTransportMessage>().Value);
-            Assert.Same(nativeResponse, result.Field<IFabricTransportMessage>().Value);
+            nativeResponse.Verify(_ => _.GetHeaderAndBodyBuffer(out It.Ref<IntPtr>.IsAny, out It.Ref<uint>.IsAny, out It.Ref<IntPtr>.IsAny), Times.Once);
+            Assert.Same(nativeResponse.Object, result.Field<IFabricTransportMessage>().Value);
         }
 
         [Fact]
@@ -404,7 +405,7 @@ public abstract class FabricTransportClientTest
             IFabricAsyncOperationCallback capturedCallback = null;
             IFabricTransportMessage capturedNativeMessage = null;
             var context = Mock.Of<IFabricAsyncOperationContext>();
-            var nativeResponse = Mock.Of<IFabricTransportMessage>();
+            var nativeResponse = new Mock<IFabricTransportMessage>();
             _ = nativeClient
                 .Setup(_ => _.BeginRequestWithId(
                     requestId,
@@ -416,7 +417,7 @@ public abstract class FabricTransportClientTest
                 .Returns(context);
             _ = nativeClient
                 .Setup(_ => _.EndRequestWithId(context))
-                .Returns(nativeResponse);
+                .Returns(nativeResponse.Object);
 
             Task<FabricTransportMessage> task = sut.RequestResponseAsync(requestMessage, timeout, requestId);
             capturedCallback.Invoke(context);
@@ -439,7 +440,8 @@ public abstract class FabricTransportClientTest
             nativeClient.Verify(_ => _.EndRequest(It.IsAny<IFabricAsyncOperationContext>()), Times.Never);
             var wrapper = (NativeFabricTransportMessage)capturedNativeMessage;
             Assert.Same(requestMessage, wrapper.Field<FabricTransportMessage>().Value);
-            Assert.Same(nativeResponse, result.Field<IFabricTransportMessage>().Value);
+            nativeResponse.Verify(_ => _.GetHeaderAndBodyBuffer(out It.Ref<IntPtr>.IsAny, out It.Ref<uint>.IsAny, out It.Ref<IntPtr>.IsAny), Times.Once);
+            Assert.Same(nativeResponse.Object, result.Field<IFabricTransportMessage>().Value);
         }
 
         // IsSecurityMismatch's full branch matrix is exercised once through OpenAsync. These two
