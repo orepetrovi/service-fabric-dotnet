@@ -387,7 +387,7 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. GetSettingsMapFromPrefix does not validate settingPrefix.
-        public void ThrowsArgumentNullExceptionWithSettingPrefixParamNameWhenSettingPrefixIsNull()
+        public void ThrowsArgumentNullExceptionWhenSettingPrefixIsNull()
         {
             // GetSettingsMapFromPrefix does not validate settingPrefix and forwards it to
             // param.Name.StartsWith(settingPrefix), which throws ArgumentNullException with ParamName="value".
@@ -424,7 +424,7 @@ public abstract class FabricServiceConfigSectionTest: FabricServiceConfigAccesso
         }
 
         [Fact(Explicit = true)] // TODO: SUT bug. GetSettingsMapFromPrefix does not validate settingPrefix in exe-section branch.
-        public void ThrowsArgumentNullExceptionWithSettingPrefixParamNameWhenSettingPrefixIsNullAndExeSectionIsInitialized()
+        public void ThrowsArgumentNullExceptionWhenSettingPrefixIsNullAndExeSectionIsInitialized()
         {
             // In the exe-section branch, GetSettingsMapFromPrefix does not validate settingPrefix and
             // forwards it to param.Name.StartsWith(settingPrefix), which throws ArgumentNullException with ParamName="value".
