@@ -172,12 +172,12 @@ public abstract class FabricTransportClientTest
         [Fact]
         public async Task RethrowsOtherExceptions()
         {
-            var expected = new InvalidOperationException(fuzzy.String());
+            var expected = new TestException(fuzzy.String());
             _ = nativeClient
                 .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(expected);
 
-            var actual = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CloseAsync(cancellationToken));
+            var actual = await Assert.ThrowsAsync<TestException>(() => sut.CloseAsync(cancellationToken));
             Assert.Same(expected, actual);
         }
 
@@ -317,12 +317,12 @@ public abstract class FabricTransportClientTest
         [Fact]
         public async Task RethrowsOtherExceptions()
         {
-            var expected = new InvalidOperationException(fuzzy.String());
+            var expected = new TestException(fuzzy.String());
             _ = nativeClient
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(expected);
 
-            var actual = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.OpenAsync(cancellationToken));
+            var actual = await Assert.ThrowsAsync<TestException>(() => sut.OpenAsync(cancellationToken));
             Assert.Same(expected, actual);
         }
 
@@ -477,7 +477,7 @@ public abstract class FabricTransportClientTest
         [Fact]
         public async Task RethrowsOtherExceptions()
         {
-            var expected = new InvalidOperationException(fuzzy.String());
+            var expected = new TestException(fuzzy.String());
             _ = nativeClient
                 .Setup(_ => _.BeginRequest(
                     It.IsAny<IFabricTransportMessage>(),
@@ -485,7 +485,7 @@ public abstract class FabricTransportClientTest
                     It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(expected);
 
-            var actual = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.RequestResponseAsync(requestMessage, timeout));
+            var actual = await Assert.ThrowsAsync<TestException>(() => sut.RequestResponseAsync(requestMessage, timeout));
             Assert.Same(expected, actual);
         }
 
@@ -533,5 +533,10 @@ public abstract class FabricTransportClientTest
             sut.Field<FabricTransportSettings>().Set(expected);
             Assert.Same(expected, sut.Settings);
         }
+    }
+
+    class TestException: Exception
+    {
+        internal TestException(string message): base(message) { }
     }
 }
