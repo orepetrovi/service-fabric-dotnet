@@ -194,6 +194,17 @@ public abstract class FabricTransportClientTest
             throw new NotImplementedException();
     }
 
+    public sealed class ConnectionAddress: FabricTransportClientTest
+    {
+        [Fact]
+        public void ReturnsAssignedAddress()
+        {
+            string expected = fuzzy.String();
+            sut.Property<string>().Set(expected);
+            Assert.Same(expected, sut.ConnectionAddress);
+        }
+    }
+
     public sealed class Dispose: FabricTransportClientTest
     {
         [Fact]
