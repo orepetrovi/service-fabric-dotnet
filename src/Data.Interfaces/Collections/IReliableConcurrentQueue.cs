@@ -45,7 +45,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// highly recommended to make <typeparamref name="T"/> immutable in order to avoid accidental data corruption.
     /// </para>
     /// <para>
-    /// A transaction is the unit of concurrency: Users can have multiple transactions in-flight at any time, but for a given transaction each API must be called one at a time.
+    /// An <see cref="ITransaction"/> is the unit of concurrency: Users can have multiple transactions in-flight at any time, but for a given transaction each API must be called one at a time.
     /// APIs on this and other reliable collection types that accept a transaction and return a <see cref="Task"/> must be awaited one at a time.
     /// </para>
     /// </remarks>
