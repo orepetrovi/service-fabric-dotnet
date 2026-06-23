@@ -245,8 +245,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         ///         }
         ///         catch (FabricTransientException e)
         ///         {
-        ///             // Retry until the queue is writable or a different exception is thrown.
-        ///             Console.WriteLine("Queue is currently not writable, retrying the transaction: " + e);
+        ///             // Retry until the transient failure is resolved or a different exception is thrown.
+        ///             Console.WriteLine("Encountered a transient error, retrying the transaction: " + e);
         ///         }
         /// 
         ///         // Delay and retry.
