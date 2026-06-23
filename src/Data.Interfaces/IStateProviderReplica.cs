@@ -42,14 +42,12 @@ namespace Microsoft.ServiceFabric.Data
         void Initialize(StatefulServiceInitializationParameters initializationParameters);
 
         /// <summary>
-        /// Asynchronously opens the state provider replica for use.
+        /// Asynchronously opens the state provider replica for use and returns the replicator responsible for
+        /// replicating state between other state provider replicas in the partition.
         /// </summary>
         /// <param name="openMode">One of the enumeration values that specifies whether this is a new or existing replica.</param>
         /// <param name="partition">The partition this replica belongs to.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>
-        /// The replicator responsible for replicating state between other state provider replicas in the partition.
-        /// </returns>
         /// <remarks>
         /// Extended state provider initialization tasks can be started at this time.
         /// </remarks>
