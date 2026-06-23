@@ -29,14 +29,14 @@ public abstract class FabricTransportCallbackHandlerBrokerTest
 
     public sealed class HandleOneWay: FabricTransportCallbackHandlerBrokerTest
     {
-        readonly Mock<NativeFabricTransport.IFabricTransportMessage> message = new();
+        readonly NativeFabricTransport.IFabricTransportMessage message = Mock.Of<NativeFabricTransport.IFabricTransportMessage>();
 
         [Fact]
         public void InvokesOneWayMessageOnCallImplWithConvertedMessage()
         {
-            sut.HandleOneWay(message.Object);
+            sut.HandleOneWay(message);
 
-            message.Verify(
+            Mock.Get(message).Verify(
                 _ => _.GetHeaderAndBodyBuffer(out It.Ref<IntPtr>.IsAny, out It.Ref<uint>.IsAny, out It.Ref<IntPtr>.IsAny),
                 Times.Once);
             Mock.Get(callImpl).Verify(_ => _.OneWayMessage(It.IsAny<FabricTransportMessage>()), Times.Once);
