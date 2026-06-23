@@ -65,21 +65,21 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// This includes the transaction in which the value was enqueued; as a consequence, the queue does not support Read-Your-Writes.
         /// </remarks>
         /// 
+        /// <exception cref="ArgumentException"><paramref name="tx"/> is not a valid transaction, or <paramref name="timeout"/> is negative.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
+        /// <exception cref="FabricException">The replica saw a non-retriable failure other than <see cref="FabricNotPrimaryException"/>, <see cref="FabricObjectClosedException"/>, or <see cref="FabricTransientException"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The replica is no longer in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="FabricObjectClosedException">The queue was closed by the runtime.</exception>
         /// <exception cref="FabricTransientException">The replica saw a transient failure. Retry the operation on a new transaction.</exception>
-        /// <exception cref="QueueFullException">The queue has reached its capacity. Retry the operation after dequeue operations free up space.</exception>
-        /// <exception cref="FabricException">The replica saw a non-retriable failure other than <see cref="FabricNotPrimaryException"/>, <see cref="FabricObjectClosedException"/>, or <see cref="FabricTransientException"/>.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="tx"/> is not a valid transaction, or <paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="QueueFullException">The queue has reached its capacity. Retry the operation after dequeue operations free up space.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// 
         /// <example>
         /// This example shows how to enqueue a value with retry.
@@ -167,21 +167,21 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </para>
         /// </remarks>
         /// 
+        /// <exception cref="ArgumentException"><paramref name="tx"/> is not a valid transaction, or <paramref name="timeout"/> is negative.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
+        /// <exception cref="FabricException">The replica saw a non-retriable failure other than <see cref="FabricNotPrimaryException"/>, <see cref="FabricNotReadableException"/>, <see cref="FabricObjectClosedException"/>, or <see cref="FabricTransientException"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The replica is no longer in <see cref="ReplicaRole.Primary"/>.</exception>
         /// <exception cref="FabricNotReadableException">The replica is currently not readable.</exception>
         /// <exception cref="FabricObjectClosedException">The queue was closed by the runtime.</exception>
         /// <exception cref="FabricTransientException">The replica saw a transient failure. Retry the operation on a new transaction.</exception>
-        /// <exception cref="FabricException">The replica saw a non-retriable failure other than <see cref="FabricNotPrimaryException"/>, <see cref="FabricNotReadableException"/>, <see cref="FabricObjectClosedException"/>, or <see cref="FabricTransientException"/>.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="tx"/> is not a valid transaction, or <paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <exception cref="InvalidOperationException">
         /// A method call is invalid for the object's current state.
         /// For example, the transaction used was already terminated: committed or aborted by the user.
         /// This exception typically indicates a bug in the service's use of transactions.
         /// </exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <example>
         /// This example shows how to dequeue and log continuously with retry, until the cancellation token is canceled.  
         /// <code language="csharp">
