@@ -32,7 +32,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// may worsen system performance.
     /// </para>
     /// <para>
-    /// As the ordering of elements is not strictly guaranteed, assumptions about the ordering of any two values in the queue MUST NOT
+    /// As the ordering of values is not strictly guaranteed, assumptions about the ordering of any two values in the queue MUST NOT
     /// be made.  The best-effort first-in first-out ordering is provided for fairness; the time that a value spends in the queue should
     /// be related to the failure rate (failures may alter the queue's ordering) and the dequeue rate, but not the enqueue rate.
     /// </para>
