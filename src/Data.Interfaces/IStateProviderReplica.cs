@@ -82,16 +82,16 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Asynchronously performs a full backup of all reliable state managed by this replica.
         /// </summary>
-        /// <param name="backupCallback">The callback invoked when the backup folder has been created locally and is ready to be moved out of the node.</param>
+        /// <inheritdoc path="/param[@name='backupCallback']" cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>
         /// <remarks>
         /// A full backup will be performed with no timeout. To specify a timeout, use the
         /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/> overload.
         /// The Boolean returned by <paramref name="backupCallback"/> indicates whether the service successfully moved the backup folder to an external location.
         /// </remarks>
-        /// <exception cref="ArgumentNullException"><paramref name="backupCallback"/> is <see langword="null"/>.</exception>
-        /// <exception cref="FabricBackupInProgressException">Another backup is already in progress.</exception>
-        /// <exception cref="FabricNotPrimaryException">The replica is not a <see cref="ReplicaRole.Primary"/>, or is no longer the Primary.</exception>
-        /// <exception cref="InvalidOperationException"><paramref name="backupCallback"/> returned <see langword="false"/>; the backup is marked unsuccessful.</exception>
+        /// <inheritdoc path="/exception[@cref='T:System.ArgumentNullException']" cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricBackupInProgressException']" cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricNotPrimaryException']" cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>
+        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>
         Task BackupAsync(Func<BackupInfo, CancellationToken, Task<bool>> backupCallback);
 
         /// <summary>
@@ -104,43 +104,43 @@ namespace Microsoft.ServiceFabric.Data
         /// <remarks>
         /// The Boolean returned by <paramref name="backupCallback"/> indicates whether the service successfully moved the backup folder to an external location.
         /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="backupCallback"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is negative (other than <see cref="Timeout.InfiniteTimeSpan"/>) or greater than <see cref="int.MaxValue"/> milliseconds.</exception>
+        /// <exception cref="FabricBackupInProgressException">Another backup is already in progress.</exception>
         /// <exception cref="FabricMissingFullBackupException"><paramref name="option"/> is <see cref="BackupOption.Incremental"/> but no valid full backup exists to build upon.</exception>
+        /// <exception cref="FabricNotPrimaryException">The replica is not a <see cref="ReplicaRole.Primary"/>, or is no longer the Primary.</exception>
+        /// <exception cref="InvalidOperationException"><paramref name="backupCallback"/> returned <see langword="false"/>; the backup is marked unsuccessful.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="TimeoutException">The backup did not complete within <paramref name="timeout"/>.</exception>
-        /// <inheritdoc path="/exception[@cref='T:System.ArgumentNullException']" cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/>
-        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricBackupInProgressException']" cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/>
-        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricNotPrimaryException']" cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/>
-        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/>
         Task BackupAsync(
             BackupOption option,
             TimeSpan timeout,
             CancellationToken cancellationToken,
             Func<BackupInfo, CancellationToken, Task<bool>> backupCallback);
 
+        /// <inheritdoc path="/summary" cref="RestoreAsync(string, RestorePolicy, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='backupFolderPath']" cref="RestoreAsync(string, RestorePolicy, CancellationToken)"/>
+        /// <remarks>
+        /// A safe restore will be performed, meaning the restore will only be completed if the data to restore is ahead of the current replica's state.
+        /// </remarks>
+        /// <inheritdoc path="/exception[@cref='T:System.ArgumentException']" cref="RestoreAsync(string, RestorePolicy, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricMissingFullBackupException']" cref="RestoreAsync(string, RestorePolicy, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.IO.InvalidDataException']" cref="RestoreAsync(string, RestorePolicy, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="RestoreAsync(string, RestorePolicy, CancellationToken)"/>
+        Task RestoreAsync(string backupFolderPath);
+
         /// <summary>
         /// Asynchronously restores a backup taken by <see cref="BackupAsync(Func{BackupInfo, CancellationToken, Task{bool}})"/> or 
         /// <see cref="BackupAsync(BackupOption, TimeSpan, CancellationToken, Func{BackupInfo, CancellationToken, Task{bool}})"/>.
         /// </summary>
         /// <param name="backupFolderPath">The directory to restore the replica from. UNC paths are supported.</param>
-        /// <remarks>
-        /// A safe restore will be performed, meaning the restore will only be completed if the data to restore is ahead of the current replica's state.
-        /// </remarks>
+        /// <param name="restorePolicy">One of the enumeration values that specifies the policy applied when restoring from backup.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentException"><paramref name="backupFolderPath"/> is <see langword="null"/>, empty, whitespace, or is not a valid backup folder.</exception>
         /// <exception cref="FabricMissingFullBackupException"><paramref name="backupFolderPath"/> does not contain a valid full backup to use as the head of the backup chain.</exception>
         /// <exception cref="InvalidDataException">The backup data in <paramref name="backupFolderPath"/> is corrupt.</exception>
         /// <exception cref="InvalidOperationException">The method is invoked outside of <see cref="OnDataLossAsync"/> processing.</exception>
-        Task RestoreAsync(string backupFolderPath);
-
-        /// <inheritdoc path="/summary" cref="RestoreAsync(string)"/>
-        /// <param name="backupFolderPath">The directory to restore the replica from. UNC paths are supported.</param>
-        /// <param name="restorePolicy">One of the enumeration values that specifies the policy applied when restoring from backup.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
-        /// <inheritdoc path="/exception[@cref='T:System.ArgumentException']" cref="RestoreAsync(string)"/>
-        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricMissingFullBackupException']" cref="RestoreAsync(string)"/>
-        /// <inheritdoc path="/exception[@cref='T:System.IO.InvalidDataException']" cref="RestoreAsync(string)"/>
-        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="RestoreAsync(string)"/>
         Task RestoreAsync(
             string backupFolderPath,
             RestorePolicy restorePolicy,
