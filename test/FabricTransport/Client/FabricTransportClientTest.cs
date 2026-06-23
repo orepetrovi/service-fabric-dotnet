@@ -170,7 +170,7 @@ public abstract class FabricTransportClientTest
         }
 
         [Fact]
-        public async Task RethrowsOtherExceptions()
+        public async Task PropagatesOtherExceptions()
         {
             var expected = new TestException(fuzzy.String());
             _ = nativeClient
@@ -315,7 +315,7 @@ public abstract class FabricTransportClientTest
         }
 
         [Fact]
-        public async Task RethrowsOtherExceptions()
+        public async Task PropagatesOtherExceptions()
         {
             var expected = new TestException(fuzzy.String());
             _ = nativeClient
