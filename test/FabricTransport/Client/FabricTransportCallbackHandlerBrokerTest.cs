@@ -10,10 +10,10 @@ namespace Microsoft.ServiceFabric.FabricTransport.Client;
 public abstract class FabricTransportCallbackHandlerBrokerTest
 {
     readonly NativeFabricTransport.IFabricTransportCallbackMessageHandler sut;
-    readonly Mock<IFabricTransportCallbackMessageHandler> callImpl = new();
+    readonly IFabricTransportCallbackMessageHandler callImpl = Mock.Of<IFabricTransportCallbackMessageHandler>();
 
     FabricTransportCallbackHandlerBrokerTest() =>
-        sut = new FabricTransportCallbackHandlerBroker(callImpl.Object);
+        sut = new FabricTransportCallbackHandlerBroker(callImpl);
 
     public sealed class Constructor: FabricTransportCallbackHandlerBrokerTest
     {
@@ -39,7 +39,7 @@ public abstract class FabricTransportCallbackHandlerBrokerTest
             message.Verify(
                 _ => _.GetHeaderAndBodyBuffer(out It.Ref<IntPtr>.IsAny, out It.Ref<uint>.IsAny, out It.Ref<IntPtr>.IsAny),
                 Times.Once);
-            callImpl.Verify(_ => _.OneWayMessage(It.IsAny<FabricTransportMessage>()), Times.Once);
+            Mock.Get(callImpl).Verify(_ => _.OneWayMessage(It.IsAny<FabricTransportMessage>()), Times.Once);
         }
     }
 }
