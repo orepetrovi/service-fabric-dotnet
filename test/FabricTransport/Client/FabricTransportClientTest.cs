@@ -128,7 +128,7 @@ public abstract class FabricTransportClientTest
             _ = nativeClient
                 .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Returns(context);
-            using var cts = new CancellationTokenSource();
+            using CancellationTokenSource cts = new();
 
             _ = sut.CloseAsync(cts.Token);
             cts.Cancel();
@@ -172,7 +172,7 @@ public abstract class FabricTransportClientTest
         [Fact]
         public async Task PropagatesOtherExceptions()
         {
-            var expected = new TestException(fuzzy.String());
+            TestException expected = new(fuzzy.String());
             _ = nativeClient
                 .Setup(_ => _.BeginClose(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(expected);
@@ -253,7 +253,7 @@ public abstract class FabricTransportClientTest
             _ = nativeClient
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Returns(context);
-            using var cts = new CancellationTokenSource();
+            using CancellationTokenSource cts = new();
 
             _ = sut.OpenAsync(cts.Token);
             cts.Cancel();
@@ -317,7 +317,7 @@ public abstract class FabricTransportClientTest
         [Fact]
         public async Task PropagatesOtherExceptions()
         {
-            var expected = new TestException(fuzzy.String());
+            TestException expected = new(fuzzy.String());
             _ = nativeClient
                 .Setup(_ => _.BeginOpen(connectTimeoutMs, It.IsAny<IFabricAsyncOperationCallback>()))
                 .Throws(expected);
@@ -361,7 +361,7 @@ public abstract class FabricTransportClientTest
             IFabricAsyncOperationCallback capturedCallback = null;
             IFabricTransportMessage capturedNativeMessage = null;
             var context = Mock.Of<IFabricAsyncOperationContext>();
-            var nativeResponse = new Mock<IFabricTransportMessage>();
+            Mock<IFabricTransportMessage> nativeResponse = new();
             _ = nativeClient
                 .Setup(_ => _.BeginRequest(
                     It.IsAny<IFabricTransportMessage>(),
@@ -405,7 +405,7 @@ public abstract class FabricTransportClientTest
             IFabricAsyncOperationCallback capturedCallback = null;
             IFabricTransportMessage capturedNativeMessage = null;
             var context = Mock.Of<IFabricAsyncOperationContext>();
-            var nativeResponse = new Mock<IFabricTransportMessage>();
+            Mock<IFabricTransportMessage> nativeResponse = new();
             _ = nativeClient
                 .Setup(_ => _.BeginRequestWithId(
                     requestId,
@@ -477,7 +477,7 @@ public abstract class FabricTransportClientTest
         [Fact]
         public async Task RethrowsOtherExceptions()
         {
-            var expected = new TestException(fuzzy.String());
+            TestException expected = new(fuzzy.String());
             _ = nativeClient
                 .Setup(_ => _.BeginRequest(
                     It.IsAny<IFabricTransportMessage>(),
