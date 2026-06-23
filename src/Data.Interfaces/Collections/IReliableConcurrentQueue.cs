@@ -182,6 +182,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
+        /// <returns>
+        /// The value dequeued from the head of the queue via <see cref="ConditionalValue{T}.Value"/> with
+        /// <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty;
+        /// otherwise, <see cref="ConditionalValue{T}.HasValue"/> is <see langword="false"/>.
+        /// </returns>
         /// <example>
         /// This example shows how to dequeue and log continuously with retry, until the cancellation token is canceled.  
         /// <code language="csharp">
