@@ -19,6 +19,9 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
     {
         readonly string settingsFile = SettingsFilePath();
 
+        public GetConfig() =>
+            EntrySettingsFile.AssertAbsent();
+
         public override void Dispose()
         {
             File.Delete(settingsFile);
@@ -31,7 +34,6 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
         {
             // Stage an entry-assembly settings file so the fallback path in GetConfig would observably
             // overwrite `instance` if the `if (instance == null)` fast-path guard regressed.
-            EntrySettingsFile.AssertAbsent();
             File.WriteAllText(EntrySettingsFile.Path, emptySettings);
             IFabricServiceConfigParser configParser = Mock.Of<IFabricServiceConfigParser>();
             File.WriteAllText(settingsFile, emptySettings);
@@ -58,7 +60,6 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
             // entry-assembly path: <entry-assembly-dir>/<entry-assembly-name>.Settings.xml. Under this test
             // project the test runner is the entry assembly, so we can stage that file next to it. The staged
             // file uses a unique section name so the assertion verifies GetConfig read this specific file.
-            EntrySettingsFile.AssertAbsent();
             string sectionName = "EntrySettings_" + fuzzy.String().LettersOrDigits();
             File.WriteAllText(EntrySettingsFile.Path,
                 $"""
@@ -74,14 +75,11 @@ public abstract class FabricServiceConfigTest: FabricServiceConfigAccessor
         }
 
         [Fact]
-        public void ReturnsNullWhenNoInitializationPathSucceeds()
-        {
+        public void ReturnsNullWhenNoInitializationPathSucceeds() =>
             // Outside an SF host FabricRuntime.GetActivationContext() throws, and without staging the
             // entry-assembly settings file the exe-settings path also fails. GetConfig then returns the
             // instance left behind by InitializeWithCallerHoldingLock, which is the null reset by the base.
-            EntrySettingsFile.AssertAbsent();
             Assert.Null(FabricServiceConfig.GetConfig());
-        }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Depends on Assembly.GetEntryAssembly() being null.
         public void ReturnsNullWhenEntryAssemblyIsNull() =>
