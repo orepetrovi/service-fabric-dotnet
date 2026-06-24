@@ -185,7 +185,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>
         /// The value dequeued from the head of the queue via <see cref="ConditionalValue{T}.Value"/> with
         /// <see cref="ConditionalValue{T}.HasValue"/> set to <see langword="true"/> when the queue was not empty;
-        /// otherwise, <c>HasValue</c> is <see langword="false"/>.
+        /// otherwise, HasValue is <see langword="false"/>.
         /// </returns>
         /// <example>
         /// This example shows how to dequeue and log continuously with retry, until the cancellation token is canceled.  
