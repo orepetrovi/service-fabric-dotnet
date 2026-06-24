@@ -242,14 +242,11 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             string findValue = fuzzy.String().LettersOrDigits();
             string findValueSecondary = fuzzy.String().LettersOrDigits();
             string storeName = fuzzy.String().LettersOrDigits();
-            string remoteCommonName1 = fuzzy.String().LettersOrDigits();
-            string remoteCommonName2 = fuzzy.String().LettersOrDigits();
-            string remoteThumbprint1 = fuzzy.String().LettersOrDigits();
-            string remoteThumbprint2 = fuzzy.String().LettersOrDigits();
-            string issuerThumbprint = fuzzy.String().LettersOrDigits();
-            string firstIssuerStore1 = fuzzy.String().LettersOrDigits();
-            string firstIssuerStore2 = fuzzy.String().LettersOrDigits();
-            string secondIssuerStore = fuzzy.String().LettersOrDigits();
+            string[] remoteCommonNames = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
+            string[] remoteThumbprints = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
+            string[] issuerThumbprints = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
+            string[] firstIssuerStores = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
+            string[] secondIssuerStores = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
             filepath = CreateSettingsFile(dir, sectionName,
                 $"""
                 <Parameter Name="SecurityCredentialsType" Value="X509" />
@@ -259,11 +256,11 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
                 <Parameter Name="CertificateProtectionLevel" Value="Sign" />
                 <Parameter Name="CertificateStoreLocation" Value="LocalMachine" />
                 <Parameter Name="CertificateStoreName" Value="{storeName}" />
-                <Parameter Name="CertificateRemoteCommonNames" Value="{remoteCommonName1},{remoteCommonName2}" />
-                <Parameter Name="CertificateRemoteThumbprints" Value="{remoteThumbprint1},{remoteThumbprint2}" />
-                <Parameter Name="CertificateIssuerThumbprints" Value="{issuerThumbprint}" />
-                <Parameter Name="CertificateApplicationIssuerStore/CN=FirstIssuer" Value="{firstIssuerStore1},{firstIssuerStore2}" />
-                <Parameter Name="CertificateApplicationIssuerStore/CN=SecondIssuer" Value="{secondIssuerStore}" />
+                <Parameter Name="CertificateRemoteCommonNames" Value="{string.Join(",", remoteCommonNames)}" />
+                <Parameter Name="CertificateRemoteThumbprints" Value="{string.Join(",", remoteThumbprints)}" />
+                <Parameter Name="CertificateIssuerThumbprints" Value="{string.Join(",", issuerThumbprints)}" />
+                <Parameter Name="CertificateApplicationIssuerStore/CN=FirstIssuer" Value="{string.Join(",", firstIssuerStores)}" />
+                <Parameter Name="CertificateApplicationIssuerStore/CN=SecondIssuer" Value="{string.Join(",", secondIssuerStores)}" />
                 """);
 
             var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
@@ -276,21 +273,21 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             Assert.Equal(ProtectionLevel.Sign, credentials.ProtectionLevel);
             Assert.Equal(StoreLocation.LocalMachine, credentials.StoreLocation);
             Assert.Equal(storeName, credentials.StoreName);
-            Assert.Equal([remoteCommonName1, remoteCommonName2], credentials.RemoteCommonNames);
-            Assert.Equal([remoteThumbprint1, remoteThumbprint2], credentials.RemoteCertThumbprints);
-            Assert.Equal([issuerThumbprint], credentials.IssuerThumbprints);
+            Assert.Equal(remoteCommonNames, credentials.RemoteCommonNames);
+            Assert.Equal(remoteThumbprints, credentials.RemoteCertThumbprints);
+            Assert.Equal(issuerThumbprints, credentials.IssuerThumbprints);
             // Order is not part of the contract: RemoteCertIssuers is populated from a Dictionary<string,string>
             // whose enumeration order is unspecified. Sort by Name to make the assertion deterministic.
             Assert.Collection(credentials.RemoteCertIssuers.OrderBy(i => i.Name, StringComparer.Ordinal),
                 issuer =>
                 {
                     Assert.Equal("CN=FirstIssuer", issuer.Name);
-                    Assert.Equal([firstIssuerStore1, firstIssuerStore2], issuer.IssuerStores);
+                    Assert.Equal(firstIssuerStores, issuer.IssuerStores);
                 },
                 issuer =>
                 {
                     Assert.Equal("CN=SecondIssuer", issuer.Name);
-                    Assert.Equal([secondIssuerStore], issuer.IssuerStores);
+                    Assert.Equal(secondIssuerStores, issuer.IssuerStores);
                 });
         }
 
