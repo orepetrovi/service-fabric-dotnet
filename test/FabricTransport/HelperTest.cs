@@ -149,24 +149,31 @@ public abstract class HelperTest
 
     public sealed class ThrowIfValueOutOfBounds : HelperTest
     {
+        long value;
         readonly string argumentName = fuzzy.String();
 
         [Fact]
-        public void DoesNotThrowWhenValueIsWithinBounds() =>
-            Helper.ThrowIfValueOutOfBounds(fuzzy.Int64().Between(0, int.MaxValue), argumentName);
+        public void DoesNotThrowWhenValueIsWithinBounds()
+        {
+            value = fuzzy.Int64().Between(0, int.MaxValue);
+            Helper.ThrowIfValueOutOfBounds(value, argumentName);
+        }
 
         [Fact]
         public void DoesNotThrowWhenValueIsZero() =>
-            Helper.ThrowIfValueOutOfBounds(0, argumentName);
+            Helper.ThrowIfValueOutOfBounds(value, argumentName);
 
         [Fact]
-        public void DoesNotThrowWhenValueIsIntMaxValue() =>
-            Helper.ThrowIfValueOutOfBounds(int.MaxValue, argumentName);
+        public void DoesNotThrowWhenValueIsIntMaxValue()
+        {
+            value = int.MaxValue;
+            Helper.ThrowIfValueOutOfBounds(value, argumentName);
+        }
 
         [Fact]
         public void ThrowsArgumentOutOfRangeExceptionWhenValueIsNegative()
         {
-            long value = fuzzy.Int64().Maximum(-1);
+            value = fuzzy.Int64().Maximum(-1);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() => Helper.ThrowIfValueOutOfBounds(value, argumentName));
             Assert.Equal(argumentName, exception.ParamName);
         }
@@ -174,7 +181,7 @@ public abstract class HelperTest
         [Fact]
         public void ThrowsArgumentOutOfRangeExceptionWhenValueExceedsIntMaxValue()
         {
-            long value = fuzzy.Int64().Minimum((long)int.MaxValue + 1);
+            value = fuzzy.Int64().Minimum((long)int.MaxValue + 1);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() => Helper.ThrowIfValueOutOfBounds(value, argumentName));
             Assert.Equal(argumentName, exception.ParamName);
         }
