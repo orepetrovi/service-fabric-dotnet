@@ -95,18 +95,10 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     }
 
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
-    public sealed class InitializeSettingsFromConfig: FabricTransportSettingsTest
+    public sealed class InitializeSettingsFromConfig: TempDirTest
     {
         // Method parameters
         string sectionName;
-
-        readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
-
-        public override void Dispose()
-        {
-            Directory.Delete(dir, recursive: true);
-            base.Dispose();
-        }
 
         [Fact]
         public void ReturnsTrueAndLoadsSettingsWhenSectionExists()
@@ -157,20 +149,12 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     }
 
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
-    public sealed class LoadFrom: FabricTransportSettingsTest
+    public sealed class LoadFrom: TempDirTest
     {
         // Method parameters
         string sectionName;
         string filepath;
         string configPackageName;
-
-        readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
-
-        public override void Dispose()
-        {
-            Directory.Delete(dir, recursive: true);
-            base.Dispose();
-        }
 
         [Fact]
         public void LoadsSettingsFromGivenSection()
@@ -394,16 +378,8 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     }
 
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
-    public sealed class OnInitialize: FabricTransportSettingsTest
+    public sealed class OnInitialize: TempDirTest
     {
-        readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
-
-        public override void Dispose()
-        {
-            Directory.Delete(dir, recursive: true);
-            base.Dispose();
-        }
-
         [Fact]
         public void LoadsDefaultOperationTimeoutWhenOperationTimeoutIsOmitted()
         {
@@ -768,20 +744,12 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     }
 
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
-    public sealed class TryLoadFrom: FabricTransportSettingsTest
+    public sealed class TryLoadFrom: TempDirTest
     {
         // Method parameters
         string sectionName;
         string filepath;
         string configPackageName;
-
-        readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
-
-        public override void Dispose()
-        {
-            Directory.Delete(dir, recursive: true);
-            base.Dispose();
-        }
 
         [Fact]
         public void ReturnsTrueAndLoadsSettingsWhenSectionExists()
@@ -855,6 +823,17 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             filepath = CreateSettingsFile(dir, sectionName, """<Parameter Name="MaxMessageSize" Value="not-a-long" />""");
             Assert.False(FabricTransportSettings.TryLoadFrom(sectionName, out var settings, filepath));
             Assert.Null(settings);
+        }
+    }
+
+    public abstract class TempDirTest: FabricTransportSettingsTest
+    {
+        protected readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
+
+        public override void Dispose()
+        {
+            Directory.Delete(dir, recursive: true);
+            base.Dispose();
         }
     }
 
