@@ -526,7 +526,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             int operationSeconds = fuzzy.Int32().Minimum(0);
             int keepAliveSeconds = fuzzy.Int32().Minimum(0);
             int maxMessageSize = fuzzy.Int32().Minimum(0);
-            int maxConcurrentCalls = fuzzy.Int32().Minimum(1);
+            int maxConcurrentCalls = fuzzy.Int32().Minimum(0);
             int maxQueueSize = fuzzy.Int32().Minimum(0);
             sut.OperationTimeout = TimeSpan.FromSeconds(operationSeconds);
             sut.KeepAliveTimeout = TimeSpan.FromSeconds(keepAliveSeconds);
