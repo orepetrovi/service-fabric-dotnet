@@ -160,8 +160,11 @@ public abstract class HelperTest
         }
 
         [Fact]
-        public void DoesNotThrowWhenValueIsZero() =>
+        public void DoesNotThrowWhenValueIsZero()
+        {
+            value = 0;
             Helper.ThrowIfValueOutOfBounds(value, argumentName);
+        }
 
         [Fact]
         public void DoesNotThrowWhenValueIsIntMaxValue()
