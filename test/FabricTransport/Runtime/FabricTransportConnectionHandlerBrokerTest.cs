@@ -206,10 +206,8 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         readonly uint timeoutMilliseconds = fuzzy.UInt32();
         readonly IFabricAsyncOperationCallback callback = Mock.Of<IFabricAsyncOperationCallback>();
 
-        readonly string clientId = fuzzy.String();
-
         public EndProcessDisconnect() =>
-            nativeClientId = Marshal.StringToHGlobalUni(clientId);
+            nativeClientId = Marshal.StringToHGlobalUni(fuzzy.String());
 
         void IDisposable.Dispose() => Marshal.FreeHGlobal(nativeClientId);
 
