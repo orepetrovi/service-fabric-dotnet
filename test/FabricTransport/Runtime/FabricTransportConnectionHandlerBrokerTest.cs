@@ -184,7 +184,7 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         }
 
         [Fact]
-        public void ThrowsExceptionFromFaultedWrappedTask()
+        public void PropagatesExceptionFromFaultedWrappedTask()
         {
             TestException expected = new(fuzzy.String());
             _ = serviceConnectionHandler
@@ -222,7 +222,7 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         }
 
         [Fact]
-        public void ThrowsExceptionFromFaultedWrappedTask()
+        public void PropagatesExceptionFromFaultedWrappedTask()
         {
             TestException expected = new(fuzzy.String());
             _ = serviceConnectionHandler
