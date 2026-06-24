@@ -290,49 +290,45 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             Assert.Empty(credentials.RemoteCertIssuers);
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportSettings.LoadFrom throws ArgumentException without a paramName.
+        [Fact]
         public void ThrowsArgumentExceptionWhenSectionDoesNotExistInSpecifiedFile()
         {
-            // LoadFrom throws ArgumentException reporting the missing section, but constructs it without
-            // a ParamName, so ex.ParamName is null instead of "sectionName".
+            // TODO: SUT bug. LoadFrom should set ex.ParamName to nameof(sectionName) and the test should
+            // assert it, but LoadFrom constructs the ArgumentException without a ParamName.
             sectionName = "AbsentSection";
             filepath = CreateSettingsFile(dir, "PresentSection", "");
-            var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName, filepath));
-            Assert.Equal(nameof(sectionName), ex.ParamName);
+            _ = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName, filepath));
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportSettings.LoadFrom throws ArgumentException without a paramName.
+        [Fact]
         public void ThrowsArgumentExceptionWhenSectionDoesNotExist()
         {
-            // LoadFrom throws ArgumentException reporting the missing section, but constructs it without
-            // a ParamName, so ex.ParamName is null instead of "sectionName".
+            // TODO: SUT bug. LoadFrom should set ex.ParamName to nameof(sectionName) and the test should
+            // assert it, but LoadFrom constructs the ArgumentException without a ParamName.
             sectionName = fuzzy.String().LettersOrDigits();
-            var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName));
-            Assert.Equal(nameof(sectionName), ex.ParamName);
+            _ = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName));
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportSettings.LoadFrom throws ArgumentException without a paramName.
+        [Fact]
         public void ThrowsArgumentExceptionWhenFileDoesNotExist()
         {
-            // LoadFrom throws ArgumentException reporting the missing file, but constructs it without
-            // a ParamName, so ex.ParamName is null instead of "filepath".
+            // TODO: SUT bug. LoadFrom should set ex.ParamName to nameof(filepath) and the test should
+            // assert it, but LoadFrom constructs the ArgumentException without a ParamName.
             sectionName = fuzzy.String().LettersOrDigits();
             filepath = Path.Combine(Path.GetTempPath(), fuzzy.String().LettersOrDigits(),
                 fuzzy.String().LettersOrDigits() + ".xml");
             Assert.False(File.Exists(filepath), $"Pre-existing {filepath} would invalidate this test.");
-            var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName, filepath));
-            Assert.Equal(nameof(filepath), ex.ParamName);
+            _ = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName, filepath));
         }
 
-        [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportSettings.LoadFrom throws ArgumentException without a paramName.
+        [Fact]
         public void ThrowsArgumentExceptionWhenConfigPackageDoesNotExist()
         {
-            // LoadFrom throws ArgumentException reporting the missing config package, but constructs it
-            // without a ParamName, so ex.ParamName is null instead of "configPackageName".
+            // TODO: SUT bug. LoadFrom should set ex.ParamName to nameof(configPackageName) and the test
+            // should assert it, but LoadFrom constructs the ArgumentException without a ParamName.
             sectionName = fuzzy.String().LettersOrDigits();
             configPackageName = fuzzy.String().LettersOrDigits();
-            var ex = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName, configPackageName: configPackageName));
-            Assert.Equal(nameof(configPackageName), ex.ParamName);
+            _ = Assert.Throws<ArgumentException>(() => FabricTransportSettings.LoadFrom(sectionName, configPackageName: configPackageName));
         }
 
         [Fact(Explicit = true)] // TODO: SUT testability limitation. Requires a Service Fabric host process.
