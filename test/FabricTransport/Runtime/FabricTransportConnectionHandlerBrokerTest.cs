@@ -5,7 +5,6 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Fuzzy;
-using Inspector;
 using Moq;
 using Xunit;
 using static System.Fabric.Interop.NativeCommon;
