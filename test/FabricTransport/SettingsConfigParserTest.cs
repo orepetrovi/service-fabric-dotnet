@@ -26,7 +26,7 @@ public abstract class SettingsConfigParserTest
         public void ReturnsSettingsTypeParsedFromGivenFile()
         {
             string section = fuzzy.String().LettersOrDigits();
-            string fileName = Path.Combine(dir, Guid.NewGuid().ToString("N") + ".xml");
+            string fileName = Path.Combine(dir, "Settings.xml");
             File.WriteAllText(fileName,
                 $"""
                 <?xml version="1.0" encoding="utf-8"?>
