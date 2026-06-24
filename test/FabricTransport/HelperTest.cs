@@ -87,10 +87,8 @@ public abstract class HelperTest
         public void ReturnsPortOfFirstMatchingEndpoint()
         {
             string name = endpointResourceName + fuzzy.Char().Between('a', 'z');
-            // Disjoint ranges guarantee the two matching endpoints have different ports, so
-            // dropping the break (letting the last match win) would change the result.
-            int expected = fuzzy.Int32().Between(1, int.MaxValue / 2);
-            int other = fuzzy.Int32().Minimum(int.MaxValue / 2 + 1);
+            int expected = fuzzy.Int32().Between(1, int.MaxValue - 5);
+            int other = expected + fuzzy.SByte().Between(1, 5);
             // Upper- and lower-case names are distinct ordinal keys in the collection but both
             // match the case-insensitive lookup; break must return the first one added.
             endpoints.Add(CreateEndpoint(name.ToUpperInvariant(), expected));
