@@ -48,7 +48,7 @@ public abstract class FabricTransportListenerSettingsTest: FabricServiceConfigAc
             throw new NotImplementedException();
 
         [Fact]
-        public void ReturnsListenerSettingsWithDefaultEndpointResourceNameWhenTryLoadFromFails()
+        public void ReturnsListenerSettingsWithDefaultEndpointResourceNameWhenSectionCannotBeLoaded()
         {
             var settings = FabricTransportListenerSettings.GetDefault(sectionName);
 
