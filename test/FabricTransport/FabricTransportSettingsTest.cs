@@ -97,7 +97,6 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class InitializeSettingsFromConfig: TempDirTest
     {
-        // Method parameters
         string sectionName;
 
         [Fact]
@@ -151,7 +150,6 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class LoadFrom: TempDirTest
     {
-        // Method parameters
         string sectionName;
         string filepath;
         string configPackageName;
@@ -742,7 +740,6 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class TryLoadFrom: TempDirTest
     {
-        // Method parameters
         string sectionName;
         string filepath;
         string configPackageName;
