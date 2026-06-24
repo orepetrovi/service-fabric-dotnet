@@ -212,7 +212,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             // The section is non-empty but omits SecurityCredentialsType to exercise the None fallback.
             sectionName = fuzzy.String().LettersOrDigits();
             filepath = CreateSettingsFile(dir, sectionName,
-                """<Parameter Name="MaxConcurrentCalls" Value="16" />""");
+                """<Parameter Name="RemoteSecurityPrincipalName" Value="filler" />""");
 
             var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
 
