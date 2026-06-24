@@ -17,18 +17,18 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// <remarks>
     /// <para>
     /// Intended as an alternative to <see cref="IReliableQueue{T}"/> for workloads where strict ordering is not required, as by relaxing
-    /// the ordering constraint, concurrency can be greatly improved.  <c>IReliableQueue&lt;T&gt;</c> restricts concurrent consumers
+    /// the ordering constraint, concurrency can be greatly improved.  IReliableQueue&lt;T&gt; restricts concurrent consumers
     /// and producers to a maximum of one each, while this queue imposes no such restriction.
     /// </para>
     /// <para>
     /// This queue does not offer the same transaction isolation semantics as
-    /// <see cref="IReliableDictionary{TKey,TValue}"/> and <c>IReliableQueue&lt;T&gt;</c>.
+    /// <see cref="IReliableDictionary{TKey,TValue}"/> and IReliableQueue&lt;T&gt;.
     /// See the individual operations and properties (<see cref="EnqueueAsync"/>, <see cref="TryDequeueAsync"/>
     /// and <see cref="Count"/>) for details on what isolation, if any, they provide.
     /// </para>
     /// <para>
-    /// It is expected that values will be relatively short-lived in the queue; in other words, that the egress (<c>TryDequeueAsync</c>) rate is 
-    /// equal to or greater than the ingress (<c>EnqueueAsync</c>) rate.  Violating this expectation 
+    /// It is expected that values will be relatively short-lived in the queue; in other words, that the egress (TryDequeueAsync) rate is 
+    /// equal to or greater than the ingress (EnqueueAsync) rate.  Violating this expectation 
     /// may worsen system performance.
     /// </para>
     /// <para>
@@ -37,8 +37,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// be related to the failure rate (failures may alter the queue's ordering) and the dequeue rate, but not the enqueue rate.
     /// </para>
     /// <para>
-    /// This queue does not offer a Peek operation; however, by combining <c>TryDequeueAsync</c> and <see cref="ITransaction.Abort"/>
-    /// the same semantics can be achieved.  See <c>TryDequeueAsync</c> for additional details.
+    /// This queue does not offer a Peek operation; however, by combining TryDequeueAsync and <see cref="ITransaction.Abort"/>
+    /// the same semantics can be achieved.  See TryDequeueAsync for additional details.
     /// </para>
     /// <para>
     /// Values stored in this queue MUST NOT be mutated outside the context of an operation on the queue. It is
@@ -273,7 +273,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// increase the count; however, uncommitted dequeues will decrease the count.
         /// </para>
         /// <para>
-        /// Since the effects of <c>TryDequeueAsync</c> are not isolated from other transactions, the count also
+        /// Since the effects of TryDequeueAsync are not isolated from other transactions, the count also
         /// cannot be isolated from other transactions.
         /// </para>
         /// </remarks>
