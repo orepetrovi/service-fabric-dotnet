@@ -85,6 +85,7 @@ public abstract class FabricTransportRequestContextTest
             _ = sut.GetCallbackClient();
 
             getCallBack.Verify(_ => _(clientId), Times.Exactly(2));
+            getCallBack.Verify(_ => _(It.IsAny<string>()), Times.Exactly(2));
         }
     }
 }
