@@ -140,7 +140,9 @@ public abstract class NativeMessageStreamTest: IDisposable
         public void MovesReadCursorToGivenValue()
         {
             sut.Position = 1;
-            Assert.Equal(expectedBytes[1], sut.ReadByte());
+            var actual = new byte[expectedBytes.Length - 1];
+            _ = sut.Read(actual, 0, actual.Length);
+            Assert.Equal(expectedBytes.Skip(1), actual);
         }
     }
 
