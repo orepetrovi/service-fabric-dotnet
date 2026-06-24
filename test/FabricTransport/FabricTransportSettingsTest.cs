@@ -190,7 +190,7 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         public void LoadsWindowsCredentialsWithRemoteSpn()
         {
             sectionName = fuzzy.String().LettersOrDigits();
-            string spn = "host/" + fuzzy.String().LettersOrDigits() + ".server.servicefabric.azure.test";
+            string spn = fuzzy.String().LettersOrDigits();
             filepath = CreateSettingsFile(dir, sectionName,
                 $"""
                 <Parameter Name="SecurityCredentialsType" Value="Windows" />
