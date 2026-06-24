@@ -18,15 +18,16 @@ public abstract class SettingsConfigParserTest
 
     public sealed class Parse : SettingsConfigParserTest, IDisposable
     {
+        // Method parameters
+        readonly string fileName;
+
         readonly string dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).FullName;
+        readonly string section = fuzzy.String().LettersOrDigits();
 
-        void IDisposable.Dispose() => Directory.Delete(dir, recursive: true);
-
-        [Fact]
-        public void ReturnsSettingsTypeParsedFromGivenFile()
+        public Parse()
         {
-            string section = fuzzy.String().LettersOrDigits();
-            string fileName = Path.Combine(dir, "Settings.xml");
+            fileName = Path.Combine(dir, "Settings.xml");
+
             File.WriteAllText(fileName,
                 $"""
                 <?xml version="1.0" encoding="utf-8"?>
@@ -34,7 +35,13 @@ public abstract class SettingsConfigParserTest
                   <Section Name="{section}" />
                 </Settings>
                 """);
+        }
 
+        void IDisposable.Dispose() => Directory.Delete(dir, recursive: true);
+
+        [Fact]
+        public void ReturnsSettingsTypeParsedFromGivenFile()
+        {
             SettingsType actual = sut.Parse(fileName);
 
             SettingsTypeSection actualSection = Assert.Single(actual.Section);
