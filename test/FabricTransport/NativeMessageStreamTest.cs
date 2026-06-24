@@ -52,7 +52,7 @@ public abstract class NativeMessageStreamTest: IDisposable
         public void InitializesPositionToZero() =>
             Assert.Equal(0, sut.Position);
 
-        [Fact(Explicit = true)] // TODO: SUT bug. Initialize does not validate bufferList; null surfaces as NullReferenceException from SetLength.
+        [Fact(Explicit = true)] // TODO: SUT bug. Constructor does not validate bufferList; null surfaces as NullReferenceException from the private SetLength().
         public void ThrowsArgumentNullExceptionWhenBufferListIsNull()
         {
             var exception = Assert.Throws<ArgumentNullException>(static () => new NativeMessageStream(null));
