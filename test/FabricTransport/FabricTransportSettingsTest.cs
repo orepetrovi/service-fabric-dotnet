@@ -291,6 +291,21 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
                 });
         }
 
+        [Fact]
+        public void LoadsX509CredentialsWithoutRemoteCertIssuersWhenIssuerStoresAreOmitted()
+        {
+            // The section selects X509 but omits CertificateApplicationIssuerStore entries to exercise the
+            // branch that leaves RemoteCertIssuers at its default empty collection.
+            sectionName = fuzzy.String().LettersOrDigits();
+            filepath = CreateSettingsFile(dir, sectionName,
+                """<Parameter Name="SecurityCredentialsType" Value="X509" />""");
+
+            var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
+
+            var credentials = (X509Credentials)settings.SecurityCredentials;
+            Assert.Empty(credentials.RemoteCertIssuers);
+        }
+
         [Fact(Explicit = true)] // TODO: SUT bug. FabricTransportSettings.LoadFrom throws ArgumentException without a paramName.
         public void ThrowsArgumentExceptionWhenSectionDoesNotExistInSpecifiedFile()
         {
