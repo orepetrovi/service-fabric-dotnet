@@ -187,13 +187,13 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         [Fact]
         public void ThrowsExceptionFromFaultedWrappedTask()
         {
-            InvalidOperationException expected = new(fuzzy.String());
+            TestException expected = new(fuzzy.String());
             _ = serviceConnectionHandler
                 .Setup(_ => _.ConnectAsync(It.IsAny<FabricTransportCallbackClient>(), It.IsAny<TimeSpan>()))
                 .Returns(Task.FromException(expected));
             IFabricAsyncOperationContext context = sut.BeginProcessConnect(nativeClientConnection, timeoutMilliseconds, callback);
 
-            var actual = Assert.Throws<InvalidOperationException>(() => sut.EndProcessConnect(context));
+            var actual = Assert.Throws<TestException>(() => sut.EndProcessConnect(context));
             Assert.Same(expected, actual);
         }
     }
@@ -227,14 +227,16 @@ public abstract class FabricTransportConnectionHandlerBrokerTest
         [Fact]
         public void ThrowsExceptionFromFaultedWrappedTask()
         {
-            InvalidOperationException expected = new(fuzzy.String());
+            TestException expected = new(fuzzy.String());
             _ = serviceConnectionHandler
                 .Setup(_ => _.DisconnectAsync(It.IsAny<string>(), It.IsAny<TimeSpan>()))
                 .Returns(Task.FromException(expected));
             IFabricAsyncOperationContext context = sut.BeginProcessDisconnect(nativeClientId, timeoutMilliseconds, callback);
 
-            var actual = Assert.Throws<InvalidOperationException>(() => sut.EndProcessDisconnect(context));
+            var actual = Assert.Throws<TestException>(() => sut.EndProcessDisconnect(context));
             Assert.Same(expected, actual);
         }
     }
+
+    sealed class TestException(string message): Exception(message);
 }
