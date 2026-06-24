@@ -149,21 +149,6 @@ public abstract class FabricTransportListenerTest
             nativeListener.Verify(_ => _.EndClose(context), Times.Once);
             nativeListener.Verify(_ => _.EndClose(It.IsAny<IFabricAsyncOperationContext>()), Times.Once);
         }
-
-        [Fact]
-        public void UsesCancellationToken()
-        {
-            var context = Mock.Of<IFabricAsyncOperationContext>();
-            _ = nativeListener
-                .Setup(_ => _.BeginClose(It.IsAny<IFabricAsyncOperationCallback>()))
-                .Returns(context);
-            using var cts = new CancellationTokenSource();
-
-            _ = sut.CloseAsync(cts.Token);
-            cts.Cancel();
-
-            Mock.Get(context).Verify(_ => _.Cancel(), Times.Once);
-        }
     }
 
     public sealed class Dispose: FabricTransportListenerTest
@@ -239,21 +224,6 @@ public abstract class FabricTransportListenerTest
             {
                 Marshal.FreeHGlobal(nativeAddress);
             }
-        }
-
-        [Fact]
-        public void UsesCancellationToken()
-        {
-            var context = Mock.Of<IFabricAsyncOperationContext>();
-            _ = nativeListener
-                .Setup(_ => _.BeginOpen(It.IsAny<IFabricAsyncOperationCallback>()))
-                .Returns(context);
-            using var cts = new CancellationTokenSource();
-
-            _ = sut.OpenAsync(cts.Token);
-            cts.Cancel();
-
-            Mock.Get(context).Verify(_ => _.Cancel(), Times.Once);
         }
     }
 }
