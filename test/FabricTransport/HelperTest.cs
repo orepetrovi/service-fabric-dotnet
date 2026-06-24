@@ -17,6 +17,44 @@ public abstract class HelperTest
 {
     static readonly IFuzz fuzzy = new RandomFuzz(Environment.TickCount);
 
+    public sealed class Get_Byte : HelperTest, IDisposable
+    {
+        // Method parameters
+        readonly IntPtr message;
+
+        readonly PinCollection pins = [];
+        readonly byte[] bytes = fuzzy.Array(fuzzy.Byte);
+
+        public Get_Byte()
+        {
+            NativeTypes.FABRIC_MESSAGE_BUFFER buffer = new()
+            {
+                BufferSize = (uint)bytes.Length,
+                Buffer = pins.AddBlittable(bytes),
+            };
+            message = pins.AddBlittable(buffer);
+        }
+
+        void IDisposable.Dispose() => pins.Dispose();
+
+        [Fact]
+        public void ReturnsBytesOfNativeMessageBuffer()
+        {
+            byte[] actual = Helper.Get_Byte(message);
+            Assert.Equal(bytes, actual);
+        }
+
+        [Fact(Explicit = true)] // TODO: SUT bug. Method throws NullReferenceException instead of ArgumentException.
+        public void ThrowsArgumentExceptionWhenMessageIsZero()
+        {
+            // Get_Byte immediately dereferences the native pointer without a zero-check, so passing
+            // IntPtr.Zero surfaces the low-level NullReferenceException instead of the expected
+            // ArgumentException.
+            var exception = Assert.Throws<ArgumentException>(() => Helper.Get_Byte(IntPtr.Zero));
+            Assert.Equal(nameof(message), exception.ParamName);
+        }
+    }
+
     [WindowsOnly("Can't load libFabricCommon.so on Linux.")]
     public sealed class GetEndpointPort : HelperTest
     {
@@ -106,44 +144,6 @@ public abstract class HelperTest
         sealed class EndpointResourceDescriptionCollection : KeyedCollection<string, EndpointResourceDescription>
         {
             protected override string GetKeyForItem(EndpointResourceDescription item) => item.Name;
-        }
-    }
-
-    public sealed class Get_Byte : HelperTest, IDisposable
-    {
-        // Method parameters
-        readonly IntPtr message;
-
-        readonly PinCollection pins = [];
-        readonly byte[] bytes = fuzzy.Array(fuzzy.Byte);
-
-        public Get_Byte()
-        {
-            NativeTypes.FABRIC_MESSAGE_BUFFER buffer = new()
-            {
-                BufferSize = (uint)bytes.Length,
-                Buffer = pins.AddBlittable(bytes),
-            };
-            message = pins.AddBlittable(buffer);
-        }
-
-        void IDisposable.Dispose() => pins.Dispose();
-
-        [Fact]
-        public void ReturnsBytesOfNativeMessageBuffer()
-        {
-            byte[] actual = Helper.Get_Byte(message);
-            Assert.Equal(bytes, actual);
-        }
-
-        [Fact(Explicit = true)] // TODO: SUT bug. Method throws NullReferenceException instead of ArgumentException.
-        public void ThrowsArgumentExceptionWhenMessageIsZero()
-        {
-            // Get_Byte immediately dereferences the native pointer without a zero-check, so passing
-            // IntPtr.Zero surfaces the low-level NullReferenceException instead of the expected
-            // ArgumentException.
-            var exception = Assert.Throws<ArgumentException>(() => Helper.Get_Byte(IntPtr.Zero));
-            Assert.Equal(nameof(message), exception.ParamName);
         }
     }
 
