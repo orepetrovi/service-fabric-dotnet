@@ -75,5 +75,16 @@ public abstract class FabricTransportRequestContextTest
             getCallBack.Verify(_ => _(clientId), Times.Once);
             getCallBack.Verify(_ => _(It.IsAny<string>()), Times.Once);
         }
+
+        [Fact]
+        public void DoesNotCacheNullResultAndRetriesCallbackOnNextCall()
+        {
+            _ = getCallBack.Setup(_ => _(clientId)).Returns((FabricTransportCallbackClient)null);
+
+            _ = sut.GetCallbackClient();
+            _ = sut.GetCallbackClient();
+
+            getCallBack.Verify(_ => _(clientId), Times.Exactly(2));
+        }
     }
 }
