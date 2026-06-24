@@ -665,9 +665,9 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         }
 
         [Fact]
-        public void SetsConnectTimeoutWhenPositive()
+        public void SetsConnectTimeoutWhenNonNegative()
         {
-            int connectMs = fuzzy.Int32().Minimum(1);
+            int connectMs = fuzzy.Int32().Minimum(0);
             sut.ConnectTimeout = TimeSpan.FromMilliseconds(connectMs);
 
             IntPtr ptr = sut.ToNative(pin);
