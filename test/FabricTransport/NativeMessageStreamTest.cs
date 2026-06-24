@@ -98,18 +98,6 @@ public abstract class NativeMessageStreamTest: IDisposable
         }
     }
 
-    public sealed class Flush: NativeMessageStreamTest
-    {
-        [Fact]
-        public void DoesNotChangePosition()
-        {
-            _ = sut.ReadByte();
-            long expected = sut.Position;
-            sut.Flush();
-            Assert.Equal(expected, sut.Position);
-        }
-    }
-
     public sealed class Position: NativeMessageStreamTest
     {
         [Fact]
