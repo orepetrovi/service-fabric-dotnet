@@ -24,10 +24,6 @@ public abstract class FabricTransportRequestContextTest
 
     public sealed class Constructor : FabricTransportRequestContextTest
     {
-        [Fact]
-        public void InitializesClientId() =>
-            Assert.Same(clientId, sut.ClientId);
-
         [Fact(Explicit = true)] // TODO: SUT bug. Constructor does not validate getCallBack.
         public void ThrowsArgumentNullExceptionWhenGetCallBackIsNull()
         {
@@ -37,6 +33,13 @@ public abstract class FabricTransportRequestContextTest
             var exception = Assert.Throws<ArgumentNullException>(() => new FabricTransportRequestContext(clientId, null));
             Assert.Equal(nameof(getCallBack), exception.ParamName);
         }
+    }
+
+    public sealed class ClientId : FabricTransportRequestContextTest
+    {
+        [Fact]
+        public void ReturnsClientIdProvidedToConstructor() =>
+            Assert.Same(clientId, sut.ClientId);
     }
 
     public sealed class GetCallbackClient : FabricTransportRequestContextTest
