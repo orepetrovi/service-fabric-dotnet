@@ -62,5 +62,12 @@ public abstract class FabricTransportRequestContextTest
             Assert.Same(first, second);
             getCallBack.Verify(_ => _(It.IsAny<string>()), Times.Once);
         }
+
+        [Fact]
+        public void ReturnsNullWhenCallbackReturnsNull()
+        {
+            _ = getCallBack.Setup(_ => _(clientId)).Returns((FabricTransportCallbackClient)null);
+            Assert.Null(sut.GetCallbackClient());
+        }
     }
 }
