@@ -155,137 +155,16 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
         string configPackageName;
 
         [Fact]
-        public void LoadsSettingsFromGivenSection()
+        public void ReturnsSettingsInitializedFromGivenSection()
         {
             sectionName = fuzzy.String().LettersOrDigits();
             int operationSeconds = fuzzy.Int32().Minimum(1);
-            int keepAliveSeconds = fuzzy.Int32().Minimum(1);
-            int connectMs = fuzzy.Int32().Minimum(1);
-            long maxMessageSize = fuzzy.Int64();
-            long maxQueueSize = fuzzy.Int64();
-            long maxConcurrentCalls = fuzzy.Int64();
             filepath = CreateSettingsFile(dir, sectionName,
-                $"""
-                <Parameter Name="MaxMessageSize" Value="{maxMessageSize}" />
-                <Parameter Name="MaxConcurrentCalls" Value="{maxConcurrentCalls}" />
-                <Parameter Name="MaxQueueSize" Value="{maxQueueSize}" />
-                <Parameter Name="OperationTimeoutInSeconds" Value="{operationSeconds}" />
-                <Parameter Name="KeepAliveTimeoutInSeconds" Value="{keepAliveSeconds}" />
-                <Parameter Name="ConnectTimeoutInMilliseconds" Value="{connectMs}" />
-                <Parameter Name="SecurityCredentialsType" Value="X509" />
-                """);
+                $"""<Parameter Name="OperationTimeoutInSeconds" Value="{operationSeconds}" />""");
 
             var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
 
             Assert.Equal(TimeSpan.FromSeconds(operationSeconds), settings.OperationTimeout);
-            Assert.Equal(TimeSpan.FromSeconds(keepAliveSeconds), settings.KeepAliveTimeout);
-            Assert.Equal(TimeSpan.FromMilliseconds(connectMs), settings.ConnectTimeout);
-            Assert.Equal(maxMessageSize, settings.MaxMessageSize);
-            Assert.Equal(maxQueueSize, settings.MaxQueueSize);
-            Assert.Equal(maxConcurrentCalls, settings.MaxConcurrentCalls);
-            Assert.Equal(CredentialType.X509, settings.SecurityCredentials.CredentialType);
-        }
-
-        [Fact]
-        public void LoadsWindowsCredentialsWithRemoteSpn()
-        {
-            sectionName = fuzzy.String().LettersOrDigits();
-            string spn = fuzzy.String().LettersOrDigits();
-            filepath = CreateSettingsFile(dir, sectionName,
-                $"""
-                <Parameter Name="SecurityCredentialsType" Value="Windows" />
-                <Parameter Name="RemoteSecurityPrincipalName" Value="{spn}" />
-                """);
-
-            var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
-
-            Assert.Equal(CredentialType.Windows, settings.SecurityCredentials.CredentialType);
-            var credentials = (WindowsCredentials)settings.SecurityCredentials;
-            Assert.Equal(spn, credentials.RemoteSpn);
-        }
-
-        [Fact]
-        public void LoadsNoneCredentialsWhenSecurityCredentialsTypeIsOmitted()
-        {
-            // The section is non-empty but omits SecurityCredentialsType to exercise the None fallback.
-            sectionName = fuzzy.String().LettersOrDigits();
-            filepath = CreateSettingsFile(dir, sectionName,
-                """<Parameter Name="RemoteSecurityPrincipalName" Value="filler" />""");
-
-            var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
-
-            Assert.Equal(CredentialType.None, settings.SecurityCredentials.CredentialType);
-        }
-
-        [Fact]
-        public void LoadsRichX509Credentials()
-        {
-            sectionName = fuzzy.String().LettersOrDigits();
-            string findValue = fuzzy.String().LettersOrDigits();
-            string findValueSecondary = fuzzy.String().LettersOrDigits();
-            string storeName = fuzzy.String().LettersOrDigits();
-            string[] remoteCommonNames = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
-            string[] remoteThumbprints = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
-            string[] issuerThumbprints = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
-            string[] firstIssuerStores = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
-            string[] secondIssuerStores = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
-            filepath = CreateSettingsFile(dir, sectionName,
-                $"""
-                <Parameter Name="SecurityCredentialsType" Value="X509" />
-                <Parameter Name="CertificateFindType" Value="FindByThumbprint" />
-                <Parameter Name="CertificateFindValue" Value="{findValue}" />
-                <Parameter Name="CertificateFindValuebySecondary" Value="{findValueSecondary}" />
-                <Parameter Name="CertificateProtectionLevel" Value="Sign" />
-                <Parameter Name="CertificateStoreLocation" Value="LocalMachine" />
-                <Parameter Name="CertificateStoreName" Value="{storeName}" />
-                <Parameter Name="CertificateRemoteCommonNames" Value="{string.Join(",", remoteCommonNames)}" />
-                <Parameter Name="CertificateRemoteThumbprints" Value="{string.Join(",", remoteThumbprints)}" />
-                <Parameter Name="CertificateIssuerThumbprints" Value="{string.Join(",", issuerThumbprints)}" />
-                <Parameter Name="CertificateApplicationIssuerStore/CN=FirstIssuer" Value="{string.Join(",", firstIssuerStores)}" />
-                <Parameter Name="CertificateApplicationIssuerStore/CN=SecondIssuer" Value="{string.Join(",", secondIssuerStores)}" />
-                """);
-
-            var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
-
-            Assert.Equal(CredentialType.X509, settings.SecurityCredentials.CredentialType);
-            var credentials = (X509Credentials)settings.SecurityCredentials;
-            Assert.Equal(X509FindType.FindByThumbprint, credentials.FindType);
-            Assert.Equal(findValue, credentials.FindValue);
-            Assert.Equal(findValueSecondary, credentials.FindValueSecondary);
-            Assert.Equal(ProtectionLevel.Sign, credentials.ProtectionLevel);
-            Assert.Equal(StoreLocation.LocalMachine, credentials.StoreLocation);
-            Assert.Equal(storeName, credentials.StoreName);
-            Assert.Equal(remoteCommonNames, credentials.RemoteCommonNames);
-            Assert.Equal(remoteThumbprints, credentials.RemoteCertThumbprints);
-            Assert.Equal(issuerThumbprints, credentials.IssuerThumbprints);
-            // Order is not part of the contract: RemoteCertIssuers is populated from a Dictionary<string,string>
-            // whose enumeration order is unspecified. Sort by Name to make the assertion deterministic.
-            Assert.Collection(credentials.RemoteCertIssuers.OrderBy(i => i.Name, StringComparer.Ordinal),
-                issuer =>
-                {
-                    Assert.Equal("CN=FirstIssuer", issuer.Name);
-                    Assert.Equal(firstIssuerStores, issuer.IssuerStores);
-                },
-                issuer =>
-                {
-                    Assert.Equal("CN=SecondIssuer", issuer.Name);
-                    Assert.Equal(secondIssuerStores, issuer.IssuerStores);
-                });
-        }
-
-        [Fact]
-        public void LoadsX509CredentialsWithoutRemoteCertIssuersWhenIssuerStoresAreOmitted()
-        {
-            // The section selects X509 but omits CertificateApplicationIssuerStore entries to exercise the
-            // branch that leaves RemoteCertIssuers at its default empty collection.
-            sectionName = fuzzy.String().LettersOrDigits();
-            filepath = CreateSettingsFile(dir, sectionName,
-                """<Parameter Name="SecurityCredentialsType" Value="X509" />""");
-
-            var settings = FabricTransportSettings.LoadFrom(sectionName, filepath);
-
-            var credentials = (X509Credentials)settings.SecurityCredentials;
-            Assert.Empty(credentials.RemoteCertIssuers);
         }
 
         [Fact]
@@ -375,6 +254,44 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
     public sealed class OnInitialize: TempDirTest
     {
         [Fact]
+        public void LoadsSettingsFromGivenSection()
+        {
+            int operationSeconds = fuzzy.Int32().Minimum(1);
+            int keepAliveSeconds = fuzzy.Int32().Minimum(1);
+            int connectMs = fuzzy.Int32().Minimum(1);
+            long maxMessageSize = fuzzy.Int64().Minimum(1);
+            long maxQueueSize = fuzzy.Int64().Minimum(1);
+            long maxConcurrentCalls = fuzzy.Int64().Minimum(1);
+            FabricTransportSettings settings = Load(
+                $"""
+                <Parameter Name="MaxMessageSize" Value="{maxMessageSize}" />
+                <Parameter Name="MaxConcurrentCalls" Value="{maxConcurrentCalls}" />
+                <Parameter Name="MaxQueueSize" Value="{maxQueueSize}" />
+                <Parameter Name="OperationTimeoutInSeconds" Value="{operationSeconds}" />
+                <Parameter Name="KeepAliveTimeoutInSeconds" Value="{keepAliveSeconds}" />
+                <Parameter Name="ConnectTimeoutInMilliseconds" Value="{connectMs}" />
+                <Parameter Name="SecurityCredentialsType" Value="X509" />
+                """);
+            settings.OperationTimeout = TimeSpan.Zero;
+            settings.KeepAliveTimeout = TimeSpan.Zero;
+            settings.ConnectTimeout = TimeSpan.Zero;
+            settings.MaxMessageSize = 0;
+            settings.MaxQueueSize = 0;
+            settings.MaxConcurrentCalls = 0;
+            settings.SecurityCredentials = null;
+
+            settings.OnInitialize();
+
+            Assert.Equal(TimeSpan.FromSeconds(operationSeconds), settings.OperationTimeout);
+            Assert.Equal(TimeSpan.FromSeconds(keepAliveSeconds), settings.KeepAliveTimeout);
+            Assert.Equal(TimeSpan.FromMilliseconds(connectMs), settings.ConnectTimeout);
+            Assert.Equal(maxMessageSize, settings.MaxMessageSize);
+            Assert.Equal(maxQueueSize, settings.MaxQueueSize);
+            Assert.Equal(maxConcurrentCalls, settings.MaxConcurrentCalls);
+            Assert.Equal(CredentialType.X509, settings.SecurityCredentials.CredentialType);
+        }
+
+        [Fact]
         public void LoadsDefaultOperationTimeoutWhenOperationTimeoutIsOmitted()
         {
             FabricTransportSettings settings = LoadOmittingTestedSettings();
@@ -443,24 +360,127 @@ public abstract class FabricTransportSettingsTest: FabricServiceConfigAccessor
             Assert.Equal(0, settings.MaxConcurrentCalls);
         }
 
-        FabricTransportSettings LoadOmittingTestedSettings()
+        [Fact]
+        public void LoadsNoneCredentialsWhenSecurityCredentialsTypeIsOmitted()
         {
-            // OnInitialize is internal virtual and is invoked by InitializeSettingsFromConfig, which is reached
-            // through LoadFrom. The generated section omits every setting these tests assert on, so the loaded
-            // ConfigSection exercises the fallback branches that substitute the Default* constants when the
-            // corresponding parameter is absent. Each test pre-sets its setting to a value distinct from the asserted
-            // default, then re-invokes OnInitialize directly, so observing the default afterwards proves it was
-            // actually written rather than surviving untouched. RemoteSecurityPrincipalName is the non-asserted
-            // filler that keeps the section non-empty without supplying any tested setting.
+            // The section is non-empty but omits SecurityCredentialsType to exercise the None fallback.
+            FabricTransportSettings settings = Load("""<Parameter Name="RemoteSecurityPrincipalName" Value="filler" />""");
+            settings.SecurityCredentials = new WindowsCredentials();
 
-            // LoadFrom stays in the test body, not a constructor, because it would throw TypeInitializationException on
-            // Linux before the WindowsOnlyAttribute can skip the test.
+            settings.OnInitialize();
+
+            Assert.Equal(CredentialType.None, settings.SecurityCredentials.CredentialType);
+        }
+
+        [Fact]
+        public void LoadsWindowsCredentialsWithRemoteSpn()
+        {
+            string spn = fuzzy.String().LettersOrDigits();
+            FabricTransportSettings settings = Load(
+                $"""
+                <Parameter Name="SecurityCredentialsType" Value="Windows" />
+                <Parameter Name="RemoteSecurityPrincipalName" Value="{spn}" />
+                """);
+            settings.SecurityCredentials = null;
+
+            settings.OnInitialize();
+
+            Assert.Equal(CredentialType.Windows, settings.SecurityCredentials.CredentialType);
+            var credentials = (WindowsCredentials)settings.SecurityCredentials;
+            Assert.Equal(spn, credentials.RemoteSpn);
+        }
+
+        [Fact]
+        public void LoadsRichX509Credentials()
+        {
+            string findValue = fuzzy.String().LettersOrDigits();
+            string findValueSecondary = fuzzy.String().LettersOrDigits();
+            string storeName = fuzzy.String().LettersOrDigits();
+            string[] remoteCommonNames = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
+            string[] remoteThumbprints = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
+            string[] issuerThumbprints = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
+            string[] firstIssuerStores = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
+            string[] secondIssuerStores = fuzzy.Array(() => fuzzy.String().LettersOrDigits());
+            FabricTransportSettings settings = Load(
+                $"""
+                <Parameter Name="SecurityCredentialsType" Value="X509" />
+                <Parameter Name="CertificateFindType" Value="FindByThumbprint" />
+                <Parameter Name="CertificateFindValue" Value="{findValue}" />
+                <Parameter Name="CertificateFindValuebySecondary" Value="{findValueSecondary}" />
+                <Parameter Name="CertificateProtectionLevel" Value="Sign" />
+                <Parameter Name="CertificateStoreLocation" Value="LocalMachine" />
+                <Parameter Name="CertificateStoreName" Value="{storeName}" />
+                <Parameter Name="CertificateRemoteCommonNames" Value="{string.Join(",", remoteCommonNames)}" />
+                <Parameter Name="CertificateRemoteThumbprints" Value="{string.Join(",", remoteThumbprints)}" />
+                <Parameter Name="CertificateIssuerThumbprints" Value="{string.Join(",", issuerThumbprints)}" />
+                <Parameter Name="CertificateApplicationIssuerStore/CN=FirstIssuer" Value="{string.Join(",", firstIssuerStores)}" />
+                <Parameter Name="CertificateApplicationIssuerStore/CN=SecondIssuer" Value="{string.Join(",", secondIssuerStores)}" />
+                """);
+            settings.SecurityCredentials = null;
+
+            settings.OnInitialize();
+
+            Assert.Equal(CredentialType.X509, settings.SecurityCredentials.CredentialType);
+            var credentials = (X509Credentials)settings.SecurityCredentials;
+            Assert.Equal(X509FindType.FindByThumbprint, credentials.FindType);
+            Assert.Equal(findValue, credentials.FindValue);
+            Assert.Equal(findValueSecondary, credentials.FindValueSecondary);
+            Assert.Equal(ProtectionLevel.Sign, credentials.ProtectionLevel);
+            Assert.Equal(StoreLocation.LocalMachine, credentials.StoreLocation);
+            Assert.Equal(storeName, credentials.StoreName);
+            Assert.Equal(remoteCommonNames, credentials.RemoteCommonNames);
+            Assert.Equal(remoteThumbprints, credentials.RemoteCertThumbprints);
+            Assert.Equal(issuerThumbprints, credentials.IssuerThumbprints);
+            // Order is not part of the contract: RemoteCertIssuers is populated from a Dictionary<string,string>
+            // whose enumeration order is unspecified. Sort by Name to make the assertion deterministic.
+            Assert.Collection(credentials.RemoteCertIssuers.OrderBy(i => i.Name, StringComparer.Ordinal),
+                issuer =>
+                {
+                    Assert.Equal("CN=FirstIssuer", issuer.Name);
+                    Assert.Equal(firstIssuerStores, issuer.IssuerStores);
+                },
+                issuer =>
+                {
+                    Assert.Equal("CN=SecondIssuer", issuer.Name);
+                    Assert.Equal(secondIssuerStores, issuer.IssuerStores);
+                });
+        }
+
+        [Fact]
+        public void LoadsX509CredentialsWithoutRemoteCertIssuersWhenIssuerStoresAreOmitted()
+        {
+            // The section selects X509 but omits CertificateApplicationIssuerStore entries to exercise the
+            // branch that leaves RemoteCertIssuers at its default empty collection.
+            FabricTransportSettings settings = Load("""<Parameter Name="SecurityCredentialsType" Value="X509" />""");
+            settings.SecurityCredentials = null;
+
+            settings.OnInitialize();
+
+            var credentials = (X509Credentials)settings.SecurityCredentials;
+            Assert.Empty(credentials.RemoteCertIssuers);
+        }
+
+        FabricTransportSettings Load(string parameters)
+        {
+            // OnInitialize is internal virtual and runs when InitializeSettingsFromConfig, reached through LoadFrom,
+            // sets up the ConfigSection. Each test loads a section populated with the parameters it asserts on,
+            // pre-sets the corresponding properties to values distinct from the expected results, then re-invokes
+            // OnInitialize directly, so the assertions prove OnInitialize wrote the values rather than them surviving
+            // the load untouched.
+
+            // LoadFrom stays in the test body, not a constructor, because it would throw TypeInitializationException
+            // on Linux before the WindowsOnlyAttribute can skip the test.
 
             string section = fuzzy.String().LettersOrDigits();
-            string file = CreateSettingsFile(dir, section,
-                """<Parameter Name="RemoteSecurityPrincipalName" Value="filler" />""");
+            string file = CreateSettingsFile(dir, section, parameters);
             return FabricTransportSettings.LoadFrom(section, file);
         }
+
+        FabricTransportSettings LoadOmittingTestedSettings() =>
+            // RemoteSecurityPrincipalName is non-asserted filler that keeps the section non-empty without supplying
+            // any tested setting, so the loaded ConfigSection exercises the fallback branches that substitute the
+            // Default* constants when the corresponding parameter is absent.
+            Load("""<Parameter Name="RemoteSecurityPrincipalName" Value="filler" />""");
     }
 
     public sealed class OperationTimeout: FabricTransportSettingsTest
