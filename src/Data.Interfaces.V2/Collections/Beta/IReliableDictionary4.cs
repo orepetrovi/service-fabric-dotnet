@@ -20,7 +20,7 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         where TKey : IComparable<TKey>, IEquatable<TKey>
     {
         /// <summary>
-        /// Asynchronously attempts to remove the value with the specified key without reading data from the disk
+        /// Asynchronously attempts to remove the value with the specified key without reading the value from disk
         /// and returns <see langword="true"/> if the key was removed from the Reliable Dictionary; otherwise, <see langword="false"/>.
         /// </summary>
         /// <param name="tx">The transaction to associate this operation with.</param>
