@@ -24,12 +24,12 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
         /// </remarks>
         /// <inheritdoc path="/param[@name='tx']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         /// <inheritdoc path="/param[@name='key']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
-        /// <inheritdoc path="/exception[@cref='T:System.ArgumentNullException']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         /// <exception cref="TimeoutException">The operation failed to complete within the four-second timeout.</exception>
+        /// <inheritdoc path="/exception[@cref='T:System.ArgumentNullException']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricNotPrimaryException']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricObjectClosedException']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         /// <inheritdoc path="/exception[@cref='T:System.Fabric.TransactionFaultedException']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
-        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricObjectClosedException']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         public static Task<bool> RemoveAsync<TKey, TValue>(this IReliableDictionary4<TKey, TValue> reliableDictionary4Interface, ITransaction tx, TKey key)
             where TKey : IComparable<TKey>, IEquatable<TKey>
         {
