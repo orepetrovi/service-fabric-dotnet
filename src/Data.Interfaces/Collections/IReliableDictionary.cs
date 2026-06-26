@@ -375,15 +375,15 @@ namespace Microsoft.ServiceFabric.Data.Collections
             CancellationToken cancellationToken);
 
         /// <inheritdoc path="/summary" cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
-        /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
-        /// <param name="key">The key of the element to add.</param>
-        /// <param name="value">The value of the element to add. The value can be <see langword="null"/> for reference types.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
-        /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <inheritdoc path="/param[@name='tx']" cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='key']" cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/param[@name='value']" cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
+        /// <inheritdoc path="/exception[@cref='T:System.ArgumentNullException']" cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricNotPrimaryException']" cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricObjectClosedException']" cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.TransactionFaultedException']" cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
         /// <inheritdoc path="/returns" cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
         Task<bool> TryAddAsync(ITransaction tx, TKey key, TValue value);
 
