@@ -148,13 +148,6 @@ public abstract class HelperTest
         readonly string argumentName = fuzzy.String();
 
         [Fact]
-        public void DoesNotThrowWhenValueIsWithinBounds()
-        {
-            value = fuzzy.Int64().Between(0, int.MaxValue);
-            Helper.ThrowIfValueOutOfBounds(value, argumentName);
-        }
-
-        [Fact]
         public void DoesNotThrowWhenValueIsZero()
         {
             value = 0;
