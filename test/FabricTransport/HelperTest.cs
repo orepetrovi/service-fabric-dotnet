@@ -58,7 +58,7 @@ public abstract class HelperTest
         // Method parameters
         readonly ICodePackageActivationContext codePackageActivationContext = Mock.Of<ICodePackageActivationContext>();
         // LettersOrDigits avoids characters whose case folding is unstable under the
-        // InvariantCultureIgnoreCase comparison exercised by IgnoresCaseOfEndpointName.
+        // InvariantCultureIgnoreCase comparison exercised by ReturnsPortOfFirstMatchingEndpoint.
         readonly string endpointResourceName = fuzzy.String().LettersOrDigits();
 
         readonly EndpointResourceDescriptionCollection endpoints = [];
@@ -92,19 +92,6 @@ public abstract class HelperTest
             endpoints.Add(CreateEndpoint(name.ToLowerInvariant(), other));
 
             int actual = Helper.GetEndpointPort(codePackageActivationContext, name);
-
-            Assert.Equal(expected, actual);
-        }
-
-        [Fact]
-        public void IgnoresCaseOfEndpointName()
-        {
-            string name = endpointResourceName + fuzzy.Char().Between('a', 'z');
-            // Non-zero distinguishes a matched port from GetEndpointPort's not-found 0 sentinel.
-            int expected = fuzzy.Int32().Minimum(1);
-            endpoints.Add(CreateEndpoint(name.ToUpperInvariant(), expected));
-
-            int actual = Helper.GetEndpointPort(codePackageActivationContext, name.ToLowerInvariant());
 
             Assert.Equal(expected, actual);
         }
