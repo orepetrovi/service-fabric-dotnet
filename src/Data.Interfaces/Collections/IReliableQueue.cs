@@ -188,7 +188,6 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// its values in first-in, first-out order. <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> must be called on
         /// the returned instance to enumerate.
         /// </remarks>
-        /// <returns>An <see cref="IAsyncEnumerable{T}"/> over the values in the <see cref="IReliableQueue{T}"/>.</returns>
         Task<IAsyncEnumerable<T>> CreateEnumerableAsync(ITransaction tx);
     }
 }
