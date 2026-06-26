@@ -27,7 +27,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <summary>
         /// Asynchronously returns an enumerable over the keys of the <see cref="IReliableDictionary2{TKey,TValue}"/>.
         /// </summary>
-        /// <param name="txn">The transaction to associate this operation with.</param>
+        /// <param name="txn">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="enumerationMode">An ignored enumeration mode. Results are always returned in ordered mode.</param>
         /// <param name="timeout">An ignored timeout.</param>
         /// <param name="cancellationToken">An ignored cancellation token.</param>
