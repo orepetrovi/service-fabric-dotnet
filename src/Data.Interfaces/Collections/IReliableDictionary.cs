@@ -282,7 +282,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
 
         /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/summary"/>
         /// <param name="txn">The <see cref="ITransaction"/> to associate this operation with.</param>
-        /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
+        /// <param name="enumerationMode">One of the enumeration values. This parameter is ignored; results are always returned in ordered mode.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
@@ -302,7 +302,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         /// <param name="txn">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="filter">A predicate that filters the key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all key/value pairs.</param>
-        /// <param name="enumerationMode">This parameter is ignored. Results are always returned in ordered mode.</param>
+        /// <param name="enumerationMode">One of the enumeration values. This parameter is ignored; results are always returned in ordered mode.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
