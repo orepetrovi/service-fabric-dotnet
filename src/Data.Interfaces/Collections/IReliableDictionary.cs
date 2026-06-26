@@ -50,13 +50,13 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to be added.</param>
         /// <param name="value">The value to be added. The value can be <see langword="null"/> for reference types.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">A value with the same key already exists in the Reliable Dictionary.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         Task AddAsync(ITransaction tx, TKey key, TValue value);
 
         /// <summary>
@@ -67,14 +67,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="value">The value to be added. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">A value with the same key already exists in the Reliable Dictionary, or <paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         Task AddAsync(ITransaction tx, TKey key, TValue value, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <inheritdoc cref="AddOrUpdateAsync(ITransaction, TKey, Func{TKey, TValue}, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)" path="/summary"/>
@@ -83,11 +83,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="addValueFactory">The function used to generate a value for an absent key.</param>
         /// <param name="updateValueFactory">The function used to generate a new value for an existing key based on the key's existing value.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>, or <paramref name="addValueFactory"/> is <see langword="null"/>, or <paramref name="updateValueFactory"/> is <see langword="null"/>.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="AddOrUpdateAsync(ITransaction, TKey, Func{TKey, TValue}, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)" path="/returns"/>
         Task<TValue> AddOrUpdateAsync(
             ITransaction tx, 
@@ -101,11 +101,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="addValue">The value to be added for an absent key. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="updateValueFactory">The function used to generate a new value for an existing key based on the key's existing value.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>, or <paramref name="updateValueFactory"/> is <see langword="null"/>.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="AddOrUpdateAsync(ITransaction, TKey, TValue, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)" path="/returns"/>
         Task<TValue> AddOrUpdateAsync(
             ITransaction tx, 
@@ -122,14 +122,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="updateValueFactory">The function used to generate a new value for an existing key based on the key's existing value.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>, or <paramref name="addValueFactory"/> is <see langword="null"/>, or <paramref name="updateValueFactory"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>, or <paramref name="addValueFactory"/> is <see langword="null"/>, or <paramref name="updateValueFactory"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <returns>The new value for the key: the result of <paramref name="addValueFactory"/> if the key was absent, or the result of <paramref name="updateValueFactory"/> if the key was present.</returns>
         Task<TValue> AddOrUpdateAsync(
             ITransaction tx, 
@@ -148,14 +148,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="updateValueFactory">The function used to generate a new value for an existing key based on the key's existing value.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>, or <paramref name="updateValueFactory"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>, or <paramref name="updateValueFactory"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <returns>The new value for the key: <paramref name="addValue"/> if the key was absent, or the result of <paramref name="updateValueFactory"/> if the key was present.</returns>
         Task<TValue> AddOrUpdateAsync(
             ITransaction tx, 
@@ -171,27 +171,27 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         Task ClearAsync(TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key);
 
@@ -199,18 +199,18 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key, LockMode lockMode);
 
@@ -219,19 +219,19 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
 
@@ -243,19 +243,19 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value, or <paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <returns><see langword="true"/> if the Reliable Dictionary contains the key; otherwise, <see langword="false"/>.</returns>
         Task<bool> ContainsKeyAsync(
             ITransaction tx, 
@@ -273,9 +273,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/remarks"/>
         /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/returns"/>
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(ITransaction txn);
@@ -290,9 +290,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/remarks"/>
         /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/returns"/>
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(ITransaction txn, EnumerationMode enumerationMode);
@@ -310,9 +310,9 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <remarks>
         /// The returned enumerable is safe to use concurrently with reads and writes to the Reliable Dictionary.
         /// It represents a snapshot consistent view. <see cref="Data.IAsyncEnumerable{T}.GetAsyncEnumerator"/> must be called on
@@ -330,11 +330,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="key">The key of the element to add.</param>
         /// <param name="valueFactory">The function used to generate a value for the key.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>, or <paramref name="valueFactory"/> is <see langword="null"/>.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="GetOrAddAsync(ITransaction, TKey, Func{TKey, TValue}, TimeSpan, CancellationToken)" path="/returns"/>
         Task<TValue> GetOrAddAsync(ITransaction tx, TKey key, Func<TKey, TValue> valueFactory);
 
@@ -343,11 +343,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="key">The key of the element to add.</param>
         /// <param name="value">The value to be added, if the key does not already exist. The value can be <see langword="null"/> for reference types.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="GetOrAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/returns"/>
         Task<TValue> GetOrAddAsync(ITransaction tx, TKey key, TValue value);
 
@@ -359,14 +359,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="valueFactory">The function used to generate a value for the key.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>, or <paramref name="valueFactory"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>, or <paramref name="valueFactory"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <returns>The value associated with the key: the existing value if the key was already present, or the value returned by <paramref name="valueFactory"/> otherwise.</returns>
         Task<TValue> GetOrAddAsync(
             ITransaction tx, 
@@ -383,14 +383,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="value">The value to be added, if the key does not already exist. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <returns>The value associated with the key: the existing value if the key was already present, or <paramref name="value"/> otherwise.</returns>
         Task<TValue> GetOrAddAsync(
             ITransaction tx, 
@@ -404,11 +404,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="key">The key of the element to add.</param>
         /// <param name="value">The value of the element to add. The value can be <see langword="null"/> for reference types.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> TryAddAsync(ITransaction tx, TKey key, TValue value);
 
@@ -420,14 +420,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="value">The value of the element to add. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <returns><see langword="true"/> if the key/value pair was added; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryAddAsync(
             ITransaction tx, 
@@ -440,16 +440,16 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<TValue>> TryGetValueAsync(ITransaction tx, TKey key);
 
@@ -457,18 +457,18 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<TValue>> TryGetValueAsync(ITransaction tx, TKey key, LockMode lockMode);
 
@@ -477,19 +477,19 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="key">The key of the value to get.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<TValue>> TryGetValueAsync(
             ITransaction tx, 
@@ -505,19 +505,19 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value, or <paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
         /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
         /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
         /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
         /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
         /// </exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <returns>A result indicating whether the key was found in the Reliable Dictionary and, if so, the associated value.</returns>
         Task<ConditionalValue<TValue>> TryGetValueAsync(
             ITransaction tx, 
@@ -530,11 +530,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="tx">The transaction to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="TryRemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)" path="/returns"/>
         Task<ConditionalValue<TValue>> TryRemoveAsync(ITransaction tx, TKey key);
 
@@ -545,14 +545,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="key">The key of the element to remove.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <returns>A result indicating whether the key was removed from the Reliable Dictionary and, if so, the previous value.</returns>
         Task<ConditionalValue<TValue>> TryRemoveAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
 
@@ -562,11 +562,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="newValue">The value that replaces the value of the element that has the specified <paramref name="key"/> if the comparison results in equality. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="comparisonValue">The value that is compared to the value of the element that has the specified <paramref name="key"/>. The value can be <see langword="null"/> for reference types.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <inheritdoc cref="TryUpdateAsync(ITransaction, TKey, TValue, TValue, TimeSpan, CancellationToken)" path="/returns"/>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, TValue comparisonValue);
 
@@ -579,14 +579,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="comparisonValue">The value that is compared to the value of the element that has the specified <paramref name="key"/>. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         /// <returns><see langword="true"/> if the value was updated; otherwise, <see langword="false"/>.</returns>
         Task<bool> TryUpdateAsync(
             ITransaction tx, 
@@ -601,11 +601,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="key">The key to be added or whose value should be updated.</param>
         /// <param name="value">The value to be added for an absent key or that replaces the value of an existing element. The value can be <see langword="null"/> for reference types.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         Task SetAsync(ITransaction tx, TKey key, TValue value);
 
         /// <summary>
@@ -617,14 +617,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="value">The value to be added for an absent key or that replaces the value of an existing element. The value can be <see langword="null"/> for reference types.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="timeout"/> is negative.</exception>
-        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
-        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotPrimaryException">The <see cref="IReliableDictionary{TKey, TValue}"/> is not in <see cref="ReplicaRole.Primary"/>.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
+        /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
+        /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         Task SetAsync(ITransaction tx, TKey key, TValue value, TimeSpan timeout, CancellationToken cancellationToken);
     }
 }
