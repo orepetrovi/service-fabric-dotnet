@@ -230,12 +230,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
-        /// <exception cref="FabricNotReadableException">
-        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
-        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
-        /// </exception>
+        /// <exception cref="FabricNotReadableException">The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment. This exception can be thrown in all <see cref="ReplicaRole"/>s. One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>. One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
@@ -279,12 +274,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="filter">A predicate that filters the key/value pairs to include in the enumeration based on the key, or <see langword="null"/> to include all key/value pairs.</param>
         /// <param name="enumerationMode">One of the enumeration values that specifies whether the results are ordered. This parameter is ignored; results are always returned in ordered mode.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
-        /// <exception cref="FabricNotReadableException">
-        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
-        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
-        /// </exception>
+        /// <exception cref="FabricNotReadableException">The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment. This exception can be thrown in all <see cref="ReplicaRole"/>s. One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>. One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
@@ -467,12 +457,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <exception cref="ArgumentException"><paramref name="lockMode"/> is not a valid <see cref="LockMode"/> value, or <paramref name="timeout"/> is negative.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
-        /// <exception cref="FabricNotReadableException">
-        /// The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment.
-        /// This exception can be thrown in all <see cref="ReplicaRole"/>s.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>.
-        /// One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.
-        /// </exception>
+        /// <exception cref="FabricNotReadableException">The <see cref="IReliableDictionary{TKey, TValue}"/> cannot serve reads at the moment. This exception can be thrown in all <see cref="ReplicaRole"/>s. One reason it may be thrown in the <see cref="ReplicaRole.Primary"/> role is loss of <see cref="IStatefulServicePartition.ReadStatus"/>. One reason it may be thrown in the <see cref="ReplicaRole.ActiveSecondary"/> role is that the state of the <see cref="IReliableDictionary{TKey, TValue}"/> is not yet consistent.</exception>
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
