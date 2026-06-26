@@ -46,7 +46,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// </summary>
         event EventHandler<NotifyDictionaryChangedEventArgs<TKey, TValue>> DictionaryChanged;
 
-        /// <inheritdoc cref="AddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="AddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key to be added.</param>
         /// <param name="value">The value to be added. The value can be <see langword="null"/> for reference types.</param>
@@ -77,7 +77,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
         Task AddAsync(ITransaction tx, TKey key, TValue value, TimeSpan timeout, CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="AddOrUpdateAsync(ITransaction, TKey, Func{TKey, TValue}, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="AddOrUpdateAsync(ITransaction, TKey, Func{TKey, TValue}, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key to be added or whose value should be updated.</param>
         /// <param name="addValueFactory">The function used to generate a value for an absent key.</param>
@@ -88,14 +88,14 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="AddOrUpdateAsync(ITransaction, TKey, Func{TKey, TValue}, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="AddOrUpdateAsync(ITransaction, TKey, Func{TKey, TValue}, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)"/>
         Task<TValue> AddOrUpdateAsync(
             ITransaction tx, 
             TKey key, 
             Func<TKey, TValue> addValueFactory,
             Func<TKey, TValue, TValue> updateValueFactory);
 
-        /// <inheritdoc cref="AddOrUpdateAsync(ITransaction, TKey, TValue, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="AddOrUpdateAsync(ITransaction, TKey, TValue, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key to be added or whose value should be updated.</param>
         /// <param name="addValue">The value to be added for an absent key. The value can be <see langword="null"/> for reference types.</param>
@@ -106,7 +106,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="AddOrUpdateAsync(ITransaction, TKey, TValue, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="AddOrUpdateAsync(ITransaction, TKey, TValue, Func{TKey, TValue, TValue}, TimeSpan, CancellationToken)"/>
         Task<TValue> AddOrUpdateAsync(
             ITransaction tx, 
             TKey key, 
@@ -178,7 +178,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         Task ClearAsync(TimeSpan timeout, CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
@@ -192,10 +192,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key);
 
-        /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
@@ -211,10 +211,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key, LockMode lockMode);
 
-        /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key to locate in the Reliable Dictionary.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
@@ -232,7 +232,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="ContainsKeyAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         Task<bool> ContainsKeyAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             TimeSpan timeout,
             CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)"/>
         /// <param name="txn">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
         /// <exception cref="FabricNotReadableException">
@@ -276,11 +276,11 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/remarks"/>
-        /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/returns"/>
+        /// <inheritdoc path="/remarks" cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)"/>
+        /// <inheritdoc path="/returns" cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)"/>
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(ITransaction txn);
 
-        /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)"/>
         /// <param name="txn">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="enumerationMode">One of the enumeration values. This parameter is ignored; results are always returned in ordered mode.</param>
         /// <exception cref="ArgumentNullException"><paramref name="txn"/> is <see langword="null"/>.</exception>
@@ -293,8 +293,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="FabricObjectClosedException">The <see cref="IReliableDictionary{TKey, TValue}"/> is closed or deleted.</exception>
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/remarks"/>
-        /// <inheritdoc cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)" path="/returns"/>
+        /// <inheritdoc path="/remarks" cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)"/>
+        /// <inheritdoc path="/returns" cref="CreateEnumerableAsync(ITransaction, Func{TKey, bool}, EnumerationMode)"/>
         Task<Microsoft.ServiceFabric.Data.IAsyncEnumerable<KeyValuePair<TKey, TValue>>> CreateEnumerableAsync(ITransaction txn, EnumerationMode enumerationMode);
 
         /// <summary>
@@ -325,7 +325,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             Func<TKey, bool> filter,
             EnumerationMode enumerationMode);
 
-        /// <inheritdoc cref="GetOrAddAsync(ITransaction, TKey, Func{TKey, TValue}, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="GetOrAddAsync(ITransaction, TKey, Func{TKey, TValue}, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
         /// <param name="valueFactory">The function used to generate a value for the key.</param>
@@ -335,10 +335,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="GetOrAddAsync(ITransaction, TKey, Func{TKey, TValue}, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="GetOrAddAsync(ITransaction, TKey, Func{TKey, TValue}, TimeSpan, CancellationToken)"/>
         Task<TValue> GetOrAddAsync(ITransaction tx, TKey key, Func<TKey, TValue> valueFactory);
 
-        /// <inheritdoc cref="GetOrAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="GetOrAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
         /// <param name="value">The value to be added, if the key does not already exist. The value can be <see langword="null"/> for reference types.</param>
@@ -348,7 +348,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="GetOrAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="GetOrAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
         Task<TValue> GetOrAddAsync(ITransaction tx, TKey key, TValue value);
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             TimeSpan timeout,
             CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key of the element to add.</param>
         /// <param name="value">The value of the element to add. The value can be <see langword="null"/> for reference types.</param>
@@ -409,7 +409,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="TryAddAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
         Task<bool> TryAddAsync(ITransaction tx, TKey key, TValue value);
 
         /// <summary>
@@ -436,7 +436,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             TimeSpan timeout,
             CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
@@ -450,10 +450,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         Task<ConditionalValue<TValue>> TryGetValueAsync(ITransaction tx, TKey key);
 
-        /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
         /// <param name="lockMode">One of the enumeration values that specifies the type of locking to use for this read operation.</param>
@@ -469,10 +469,10 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         Task<ConditionalValue<TValue>> TryGetValueAsync(ITransaction tx, TKey key, LockMode lockMode);
 
-        /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key of the value to get.</param>
         /// <param name="timeout">The amount of time to wait for the operation to complete before throwing a <see cref="TimeoutException"/>. Primarily used to prevent deadlocks.</param>
@@ -490,7 +490,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the given timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="TryGetValueAsync(ITransaction, TKey, LockMode, TimeSpan, CancellationToken)"/>
         Task<ConditionalValue<TValue>> TryGetValueAsync(
             ITransaction tx, 
             TKey key, 
@@ -526,7 +526,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             TimeSpan timeout, 
             CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="TryRemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="TryRemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key of the element to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="tx"/> is <see langword="null"/>, or <paramref name="key"/> is <see langword="null"/>.</exception>
@@ -535,7 +535,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="TryRemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="TryRemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         Task<ConditionalValue<TValue>> TryRemoveAsync(ITransaction tx, TKey key);
 
         /// <summary>
@@ -556,7 +556,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <returns>A result indicating whether the key was removed from the Reliable Dictionary and, if so, the previous value.</returns>
         Task<ConditionalValue<TValue>> TryRemoveAsync(ITransaction tx, TKey key, TimeSpan timeout, CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="TryUpdateAsync(ITransaction, TKey, TValue, TValue, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="TryUpdateAsync(ITransaction, TKey, TValue, TValue, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key whose value is compared with <paramref name="comparisonValue"/> and possibly replaced.</param>
         /// <param name="newValue">The value that replaces the value of the element that has the specified <paramref name="key"/> if the comparison results in equality. The value can be <see langword="null"/> for reference types.</param>
@@ -567,7 +567,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
         /// <exception cref="InvalidOperationException">A method call is invalid for the object's current state, for example, the transaction is already committed or aborted.</exception>
         /// <exception cref="TimeoutException">The operation failed to complete within the default timeout.</exception>
         /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
-        /// <inheritdoc cref="TryUpdateAsync(ITransaction, TKey, TValue, TValue, TimeSpan, CancellationToken)" path="/returns"/>
+        /// <inheritdoc path="/returns" cref="TryUpdateAsync(ITransaction, TKey, TValue, TValue, TimeSpan, CancellationToken)"/>
         Task<bool> TryUpdateAsync(ITransaction tx, TKey key, TValue newValue, TValue comparisonValue);
 
         /// <summary>
@@ -596,7 +596,7 @@ namespace Microsoft.ServiceFabric.Data.Collections
             TimeSpan timeout,
             CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="SetAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)" path="/summary"/>
+        /// <inheritdoc path="/summary" cref="SetAsync(ITransaction, TKey, TValue, TimeSpan, CancellationToken)"/>
         /// <param name="tx">The <see cref="ITransaction"/> to associate this operation with.</param>
         /// <param name="key">The key to be added or whose value should be updated.</param>
         /// <param name="value">The value to be added for an absent key or that replaces the value of an existing element. The value can be <see langword="null"/> for reference types.</param>
