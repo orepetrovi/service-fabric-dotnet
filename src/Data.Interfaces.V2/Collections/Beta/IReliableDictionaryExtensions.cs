@@ -18,9 +18,9 @@ namespace Microsoft.ServiceFabric.Data.Collections.Beta
     {
         /// <inheritdoc path="/summary" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         /// <remarks>
-        /// This overload removes the key with a fixed four-second timeout and cannot be canceled. Call the
-        /// <see cref="IReliableDictionary4{TKey, TValue}"/> overload that accepts a <see cref="TimeSpan"/> and a
-        /// <see cref="CancellationToken"/> to control the timeout or cancel the operation.
+        /// This overload removes the key with a fixed four-second timeout and cannot be canceled. Call
+        /// <see cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/> to control
+        /// the timeout or cancel the operation.
         /// </remarks>
         /// <inheritdoc path="/param[@name='tx']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
         /// <inheritdoc path="/param[@name='key']" cref="IReliableDictionary4{TKey, TValue}.RemoveAsync(ITransaction, TKey, TimeSpan, CancellationToken)"/>
