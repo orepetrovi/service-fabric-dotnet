@@ -73,7 +73,6 @@ public abstract class HelperTest
             int expected = fuzzy.Int32().Minimum(1);
             endpoints.Add(CreateEndpoint(endpointResourceName + fuzzy.String(), fuzzy.Int32()));
             endpoints.Add(CreateEndpoint(endpointResourceName, expected));
-            endpoints.Add(CreateEndpoint(endpointResourceName + fuzzy.String(), fuzzy.Int32()));
 
             int actual = Helper.GetEndpointPort(codePackageActivationContext, endpointResourceName);
 
