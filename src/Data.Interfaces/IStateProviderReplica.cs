@@ -109,7 +109,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <exception cref="FabricBackupInProgressException">Another backup is already in progress.</exception>
         /// <exception cref="FabricMissingFullBackupException"><paramref name="option"/> is <see cref="BackupOption.Incremental"/> but no valid full backup exists to build upon.</exception>
         /// <exception cref="FabricNotPrimaryException">The replica is not a <see cref="ReplicaRole.Primary"/>, or is no longer the Primary.</exception>
-        /// <exception cref="InvalidOperationException"><paramref name="backupCallback"/> returned <see langword="false"/>; the backup is marked unsuccessful.</exception>
+        /// <exception cref="InvalidOperationException">The replica does not have persisted state, or <paramref name="backupCallback"/> returned <see langword="false"/> and the backup is marked unsuccessful.</exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <exception cref="TimeoutException">The backup did not complete within <paramref name="timeout"/>.</exception>
         Task BackupAsync(
