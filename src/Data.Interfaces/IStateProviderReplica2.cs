@@ -10,7 +10,7 @@ namespace Microsoft.ServiceFabric.Data
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Defines the additional member a reliable state provider replica must implement for Service Fabric to interact with it.
+    /// Defines the additional member a <see cref="IStateProviderReplica">reliable state provider replica</see> must implement for Service Fabric to interact with it.
     /// </summary>
     public interface IStateProviderReplica2 : IStateProviderReplica
     {
