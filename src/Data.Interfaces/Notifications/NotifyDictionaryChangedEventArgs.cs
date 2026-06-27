@@ -40,7 +40,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         Clear = 3,
 
         /// <summary>
-        /// Specifies that the <see cref="IReliableDictionary{TKey, TValue}"/> was repopulated from copy, restore, or recovery; cast to <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/>.
+        /// Specifies that the <see cref="IReliableDictionary{TKey, TValue}"/> was repopulated from copy, restore, or recovery; delivered as <see cref="NotifyDictionaryRebuildEventArgs{TKey, TValue}"/>.
         /// </summary>
         Rebuild = 4
     }
