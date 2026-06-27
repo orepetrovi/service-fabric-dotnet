@@ -9,7 +9,8 @@ namespace Microsoft.ServiceFabric.Data.Collections
     using System.Fabric;
 
     /// <summary>
-    /// Represents the exception thrown by <see cref="IReliableConcurrentQueue{T}.EnqueueAsync"/> when the queue capacity has been reached.
+    /// Represents the exception thrown by <see cref="IReliableConcurrentQueue{T}.EnqueueAsync"/> when the queue capacity
+    /// has been reached.
     /// </summary>
     /// <remarks>
     /// <para>
