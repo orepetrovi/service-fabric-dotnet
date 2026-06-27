@@ -26,7 +26,17 @@ namespace Microsoft.ServiceFabric.Data
             this.stateProviderReplica = stateProviderReplica;
         }
 
-        /// <inheritdoc cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
+        /// <inheritdoc path="/summary" cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
+        /// <inheritdoc path="/remarks" cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.ArgumentException']" cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricException']" cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricMissingFullBackupException']" cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.Fabric.FabricObjectClosedException']" cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.IO.DirectoryNotFoundException']" cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.IO.FileNotFoundException']" cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.IO.InvalidDataException']" cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.InvalidOperationException']" cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
+        /// <inheritdoc path="/exception[@cref='T:System.NotImplementedException']" cref="RestoreAsync(RestoreDescription, CancellationToken)"/>
         public Task RestoreAsync(RestoreDescription restoreDescription)
         {
             return this.stateProviderReplica.RestoreAsync(
