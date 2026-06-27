@@ -19,30 +19,38 @@ namespace Microsoft.ServiceFabric.Data
     /// <list type="bullet">
     ///     <item>
     ///         <term>Atomicity</term>
-    ///         <description>A transaction must be an atomic unit of work; either all of its data modifications are performed, or none of them is performed.</description>
+    ///         <description>A transaction must be an atomic unit of work; either all of its data modifications are performed,
+    ///         or none of them is performed.</description>
     ///     </item>
     ///     <item>
     ///         <term>Consistency</term>
-    ///         <description>When completed, a transaction must leave all data in a consistent state. All internal data structures must be correct at the end of the transaction.</description>
+    ///         <description>When completed, a transaction must leave all data in a consistent state. All internal data structures
+    ///         must be correct at the end of the transaction.</description>
     ///     </item>
     ///     <item>
     ///         <term>Isolation</term>
-    ///         <description>Modifications made by concurrent transactions must be isolated from the modifications made by any other concurrent transactions. The isolation level used for an operation is determined by the <see cref="IReliableState"/> performing the operation.</description>
+    ///         <description>Modifications made by concurrent transactions must be isolated from the modifications made by
+    ///         any other concurrent transactions. The isolation level used for an operation is determined by the <see cref="IReliableState"/>
+    ///         performing the operation.</description>
     ///     </item>
     ///     <item>
     ///         <term>Durability</term>
-    ///         <description>After a transaction has completed, its effects are permanently in place in the system. The modifications persist even in the event of a system failure.</description>
+    ///         <description>After a transaction has completed, its effects are permanently in place in the system. The modifications
+    ///         persist even in the event of a system failure.</description>
     ///     </item>
     /// </list>
     /// <para>
     /// Instance members of this type are not guaranteed to be thread-safe.
-    /// This makes transactions the unit of concurrency: Users can have multiple transactions in-flight at any time, but for a given transaction each API must be called one at a time.
+    /// This makes transactions the unit of concurrency: Users can have multiple transactions in-flight at any time, but
+    /// for a given transaction each API must be called one at a time.
     /// </para>
     /// <para>
-    /// Every reliable data structure API (on <see cref="IReliableCollection{T}"/>, <see cref="IReliableConcurrentQueue{T}"/>, etc.) that accepts a transaction and returns a <see cref="Task"/> must be awaited one at a time.
+    /// Every reliable data structure API (on <see cref="IReliableCollection{T}"/>, <see cref="IReliableConcurrentQueue{T}"/>,
+    /// etc.) that accepts a transaction and returns a <see cref="Task"/> must be awaited one at a time.
     /// </para>
     /// <para>
-    /// Disposing a transaction that has not been committed implicitly aborts it, rolling back its uncommitted operations and releasing the locks it holds. Disposal is idempotent, and any failure during the implicit abort is ignored.
+    /// Disposing a transaction that has not been committed implicitly aborts it, rolling back its uncommitted operations
+    /// and releasing the locks it holds. Disposal is idempotent, and any failure during the implicit abort is ignored.
     /// </para>
     /// </remarks>
     /// <seealso cref="IReliableStateManager.CreateTransaction"/>
@@ -122,7 +130,8 @@ namespace Microsoft.ServiceFabric.Data
         /// Gets the sequence number assigned to the transaction when it was committed.
         /// </summary>
         /// <remarks>
-        /// The value is <c>-1</c> before <see cref="CommitAsync"/> completes successfully, after <see cref="Abort"/>, or after the transaction is internally faulted.
+        /// The value is <c>-1</c> before <see cref="CommitAsync"/> completes successfully, after <see cref="Abort"/>, or
+        /// after the transaction is internally faulted.
         /// For a successfully committed read-only transaction the value also remains <c>-1</c>.
         /// </remarks>
         long CommitSequenceNumber { get; }
@@ -135,23 +144,29 @@ namespace Microsoft.ServiceFabric.Data
         /// Only <see cref="ReplicaRole.Primary"/> replicas are given write status.
         /// </exception>
         /// <exception cref="FabricObjectClosedException">The replica or a reliable state used by the transaction is closed.</exception>
-        /// <exception cref="InvalidOperationException">The transaction is not in a valid state for this operation, for example, it has already been committed or aborted, or another operation is in progress on it.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
+        /// <exception cref="InvalidOperationException">The transaction is not in a valid state for this operation, for example,
+        /// it has already been committed or aborted, or another operation is in progress on it.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry
+        /// the operation on a new transaction.</exception>
         Task CommitAsync();
 
         /// <summary>
         /// Aborts the transaction, rolling back any uncommitted operations.
         /// </summary>
-        /// <exception cref="InvalidOperationException">The transaction is not in a valid state for this operation, for example, it has already been committed or aborted, or another operation is in progress on it.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
+        /// <exception cref="InvalidOperationException">The transaction is not in a valid state for this operation, for example,
+        /// it has already been committed or aborted, or another operation is in progress on it.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry
+        /// the operation on a new transaction.</exception>
         void Abort();
 
         /// <summary>
         /// Gets the identifier assigned to the transaction when it was created.
         /// </summary>
         /// <remarks>
-        /// The identifier remains stable for the lifetime of the transaction, which makes it useful for correlating the transaction across its operations and diagnostic traces.
-        /// Identifiers are unique and monotonically increasing within the process that created the transaction, but can recur across replicas, partitions, and services.
+        /// The identifier remains stable for the lifetime of the transaction, which makes it useful for correlating the
+        /// transaction across its operations and diagnostic traces.
+        /// Identifiers are unique and monotonically increasing within the process that created the transaction, but can
+        /// recur across replicas, partitions, and services.
         /// </remarks>
         long TransactionId { get; }
 
@@ -159,10 +174,14 @@ namespace Microsoft.ServiceFabric.Data
         /// Asynchronously returns the sequence number at or below which this transaction observes committed state.
         /// </summary>
         /// <remarks>
-        /// The first call establishes the snapshot the transaction reads from, ensuring its reads observe a consistent point in time even as concurrent transactions commit. Use the returned value to correlate this transaction's snapshot reads with other versioned operations.
+        /// The first call establishes the snapshot the transaction reads from, ensuring its reads observe a consistent point
+        /// in time even as concurrent transactions commit. Use the returned value to correlate this transaction's snapshot
+        /// reads with other versioned operations.
         /// </remarks>
-        /// <exception cref="InvalidOperationException">The transaction is not in a valid state for this operation, for example, it has already been committed or aborted, or another operation is in progress on it.</exception>
-        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry the operation on a new transaction.</exception>
+        /// <exception cref="InvalidOperationException">The transaction is not in a valid state for this operation, for example,
+        /// it has already been committed or aborted, or another operation is in progress on it.</exception>
+        /// <exception cref="TransactionFaultedException">The transaction has been internally faulted by the system. Retry
+        /// the operation on a new transaction.</exception>
         Task<long> GetVisibilitySequenceNumberAsync();
     }
 }
