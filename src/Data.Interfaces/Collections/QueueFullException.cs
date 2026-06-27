@@ -23,16 +23,12 @@ namespace Microsoft.ServiceFabric.Data.Collections
     /// </remarks>
     public class QueueFullException : FabricTransientException
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QueueFullException"/> class.
-        /// </summary>
+        /// <inheritdoc path="/summary" cref="QueueFullException(string, Exception)"/>
         public QueueFullException()
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QueueFullException"/> class.
-        /// </summary>
+        /// <inheritdoc path="/summary" cref="QueueFullException(string, Exception)"/>
         public QueueFullException(string msg)
             : base(msg)
         {
