@@ -114,6 +114,7 @@ namespace Microsoft.ServiceFabric.Data
         /// or that omit the attribute entirely;
         /// <c>VolatileActorStateProvider</c> is selected for <c>StatePersistence.Volatile</c>.
         /// </exception>
+        /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
         /// <remarks>
         /// <para>
         /// This API must be called from the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>.
