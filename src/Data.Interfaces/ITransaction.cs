@@ -56,13 +56,11 @@ namespace Microsoft.ServiceFabric.Data
     /// 
     ///     try
     ///     {
-    ///         using (var tx = this.StateManager.CreateTransaction())
-    ///         {
-    ///             await concurrentQueue.EnqueueAsync(tx, 12L, cancellationToken);
-    ///             await tx.CommitAsync();
+    ///         using ITransaction tx = this.StateManager.CreateTransaction();
+    ///         await concurrentQueue.EnqueueAsync(tx, 12L, cancellationToken);
+    ///         await tx.CommitAsync();
     ///
-    ///             return;
-    ///         }
+    ///         return;
     ///     }
     ///     catch (TransactionFaultedException e)
     ///     {
@@ -106,17 +104,15 @@ namespace Microsoft.ServiceFabric.Data
     /// The following is an example of incorrect usage that has undefined behavior.
     /// <code language="csharp">
     /// <![CDATA[
-    /// using (var tx = this.StateManager.CreateTransaction())
-    /// {
-    ///     List<Task<ConditionalValue<T>>> taskList = new();
-    ///     taskList.Add(concurrentQueue.TryDequeueAsync(tx, cancellationToken));
-    ///     taskList.Add(concurrentQueue.TryDequeueAsync(tx, cancellationToken));
+    /// using ITransaction tx = this.StateManager.CreateTransaction();
+    /// List<Task<ConditionalValue<T>>> taskList = new();
+    /// taskList.Add(concurrentQueue.TryDequeueAsync(tx, cancellationToken));
+    /// taskList.Add(concurrentQueue.TryDequeueAsync(tx, cancellationToken));
     ///
-    ///     // Both TryDequeueAsync calls run on the same transaction and are awaited together; per the await-serialization
-    ///     // rule documented on this interface, every reliable data structure API (IReliableCollection<T>, IReliableConcurrentQueue<T>, etc.) on a transaction must be awaited one at a time.
-    ///     await Task.WhenAll(taskList);
-    ///     await tx.CommitAsync();
-    /// }
+    /// // Both TryDequeueAsync calls run on the same transaction and are awaited together; per the await-serialization
+    /// // rule documented on this interface, every reliable data structure API (IReliableCollection<T>, IReliableConcurrentQueue<T>, etc.) on a transaction must be awaited one at a time.
+    /// await Task.WhenAll(taskList);
+    /// await tx.CommitAsync();
     /// ]]>
     /// </code>
     /// </example>
