@@ -127,17 +127,16 @@ namespace Microsoft.ServiceFabric.Data
         /// backup file fails checksum verification or full-backup metadata is missing or inconsistent.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// The call is made outside the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>, another restore
-        /// is already in flight on the same replica, or the
-        /// restore is otherwise invalid for the target partition. For example, the <see cref="ServicePartitionKind"/> of the
-        /// partition from which the backup was taken differs from that of the current partition being restored.
+        /// The call is made outside the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>, another
+        /// restore is already in flight on the same replica, or the restore is otherwise invalid for the target partition.
+        /// For example, the <see cref="ServicePartitionKind"/> of the partition from which the backup was taken differs from
+        /// that of the current partition being restored.
         /// </exception>
         /// <exception cref="NotImplementedException">
         /// The actor service is backed by <c>VolatileActorStateProvider</c> or <c>NullActorStateProvider</c>, neither of
         /// which supports restore.
         /// <c>NullActorStateProvider</c> is selected for actor types whose <c>[StatePersistence]</c> attribute specifies
-        /// <c>StatePersistence.None</c>
-        /// or that omit the attribute entirely;
+        /// <c>StatePersistence.None</c> or that omit the attribute entirely;
         /// <c>VolatileActorStateProvider</c> is selected for <c>StatePersistence.Volatile</c>.
         /// </exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
