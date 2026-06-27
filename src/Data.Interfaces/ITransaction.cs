@@ -52,12 +52,12 @@ namespace Microsoft.ServiceFabric.Data
     /// <![CDATA[
     /// while (true)
     /// {
-    ///     cancellationToken.ThrowIfCancellationRequested();
+    ///     cancellation.ThrowIfCancellationRequested();
     /// 
     ///     try
     ///     {
     ///         using ITransaction tx = this.StateManager.CreateTransaction();
-    ///         await concurrentQueue.EnqueueAsync(tx, 12L, cancellationToken);
+    ///         await concurrentQueue.EnqueueAsync(tx, 12L, cancellation);
     ///         await tx.CommitAsync();
     ///
     ///         return;
@@ -95,7 +95,7 @@ namespace Microsoft.ServiceFabric.Data
     ///     }
     ///
     ///     // Delay and retry.
-    ///     await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
+    ///     await Task.Delay(TimeSpan.FromMilliseconds(100), cancellation);
     /// }
     /// ]]>
     /// </code>
@@ -105,13 +105,13 @@ namespace Microsoft.ServiceFabric.Data
     /// <code language="csharp">
     /// <![CDATA[
     /// using ITransaction tx = this.StateManager.CreateTransaction();
-    /// List<Task<ConditionalValue<T>>> taskList = new();
-    /// taskList.Add(concurrentQueue.TryDequeueAsync(tx, cancellationToken));
-    /// taskList.Add(concurrentQueue.TryDequeueAsync(tx, cancellationToken));
+    /// List<Task<ConditionalValue<T>>> tasks = new();
+    /// tasks.Add(concurrentQueue.TryDequeueAsync(tx, cancellation));
+    /// tasks.Add(concurrentQueue.TryDequeueAsync(tx, cancellation));
     ///
     /// // Both TryDequeueAsync calls run on the same transaction and are awaited together; per the await-serialization
     /// // rule documented on this interface, every reliable data structure API (IReliableCollection<T>, IReliableConcurrentQueue<T>, etc.) on a transaction must be awaited one at a time.
-    /// await Task.WhenAll(taskList);
+    /// await Task.WhenAll(tasks);
     /// await tx.CommitAsync();
     /// ]]>
     /// </code>
