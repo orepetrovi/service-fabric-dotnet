@@ -134,10 +134,11 @@ namespace Microsoft.ServiceFabric.Data
         /// Only one restore can be in flight per replica at a time.
         /// </para>
         /// <para>
-        /// Exceptions thrown by this API differ depending on the underlying state provider. The exceptions that are currently documented for
-        /// this API apply only to the out-of-box state providers that support restore: any Reliable Services state provider, the
-        /// <c>KvsActorStateProvider</c> used for actor types with <c>StatePersistence.Persisted</c> (on .NET Framework and on Windows .NET),
-        /// and the <c>ReliableCollectionsActorStateProvider</c> used for <c>StatePersistence.Persisted</c> on non-Windows .NET.
+        /// Exceptions thrown by this API differ depending on the underlying state provider. The exceptions that are currently
+        /// documented for this API apply only to the out-of-box state providers that support restore: any Reliable Services
+        /// state provider, the <c>KvsActorStateProvider</c> used for actor types with <c>StatePersistence.Persisted</c>
+        /// (on .NET Framework and on Windows .NET), and the <c>ReliableCollectionsActorStateProvider</c> used for
+        /// <c>StatePersistence.Persisted</c> on non-Windows .NET.
         /// </para>
         /// </remarks>
         public Task RestoreAsync(RestoreDescription restoreDescription, CancellationToken cancellationToken)
