@@ -54,10 +54,9 @@ namespace Microsoft.ServiceFabric.Data
         public TimeSpan? ReplicationBatchSendInterval { get; set; }
 
         /// <summary>
-        /// Determines whether the specified delta settings equal the current settings, comparing only the properties that are set on <paramref name="obj"/>.
+        /// Determines whether the specified delta settings equal the current settings, comparing only the properties that are set on <paramref name="obj"/>, and returns <see langword="true" /> if every set property matches; otherwise, <see langword="false" />.
         /// </summary>
-        /// <param name="obj">The delta settings to compare with the current settings. Only the properties that are set on this object are compared.</param>
-        /// <returns><see langword="true" /> if every property set on <paramref name="obj"/> matches the corresponding value on the current settings; otherwise, <see langword="false" />.</returns>
+        /// <param name="obj">The delta settings to compare with the current settings.</param>
         public override bool Equals(object obj)
         {
             if (obj == null)
