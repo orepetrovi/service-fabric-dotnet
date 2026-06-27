@@ -29,7 +29,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         }
 
         /// <summary>
-        /// Gets the new set of <see cref="IReliableState"/> providers now in the State Manager.
+        /// Gets the new set of <see cref="IReliableState"/> providers now in the <see cref="IReliableStateManager"/>.
         /// </summary>
         public IAsyncEnumerable<IReliableState> ReliableStates
         {
