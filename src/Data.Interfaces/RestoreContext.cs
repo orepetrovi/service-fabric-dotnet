@@ -38,10 +38,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Asynchronously restores the replica's state from the backup described by <paramref name="restoreDescription"/>.
         /// </summary>
-        /// <exception cref="FabricMissingFullBackupException">
-        /// The input backup folder does not contain a full backup.
-        /// For a backup folder to be restorable, it must contain exactly one full backup and any number of incremental backups.
-        /// </exception>
         /// <exception cref="ArgumentException">
         /// <para>
         /// The specified <see cref="RestoreDescription.BackupFolderPath"/> is <see langword="null"/>, empty, or contains only whitespace.
@@ -53,22 +49,6 @@ namespace Microsoft.ServiceFabric.Data
         /// </exception>
         /// <exception cref="DirectoryNotFoundException">
         /// The supplied backup folder does not exist.
-        /// </exception>
-        /// <exception cref="FabricObjectClosedException">
-        /// The replica is closing.
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// The call is made outside the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>, another restore
-        /// is already in flight on the same replica, or the
-        /// restore is otherwise invalid for the target partition. For example, the <see cref="ServicePartitionKind"/> of the
-        /// partition from which the backup was taken differs from that of the current partition being restored.
-        /// </exception>
-        /// <exception cref="FileNotFoundException">
-        /// The expected backup files under the supplied backup folder are not found.
-        /// </exception>
-        /// <exception cref="InvalidDataException">
-        /// For Reliable Services, the backup or checkpoint data in the supplied backup folder is corrupt, such as when a
-        /// backup file fails checksum verification or full-backup metadata is missing or inconsistent.
         /// </exception>
         /// <exception cref="FabricException">
         /// The restore operation failed. The <see cref="FabricException.ErrorCode"/> property indicates the specific reason.
@@ -107,6 +87,26 @@ namespace Microsoft.ServiceFabric.Data
         ///         </description>
         ///     </item>
         /// </list>
+        /// </exception>
+        /// <exception cref="FabricMissingFullBackupException">
+        /// The input backup folder does not contain a full backup.
+        /// For a backup folder to be restorable, it must contain exactly one full backup and any number of incremental backups.
+        /// </exception>
+        /// <exception cref="FabricObjectClosedException">
+        /// The replica is closing.
+        /// </exception>
+        /// <exception cref="FileNotFoundException">
+        /// The expected backup files under the supplied backup folder are not found.
+        /// </exception>
+        /// <exception cref="InvalidDataException">
+        /// For Reliable Services, the backup or checkpoint data in the supplied backup folder is corrupt, such as when a
+        /// backup file fails checksum verification or full-backup metadata is missing or inconsistent.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// The call is made outside the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>, another restore
+        /// is already in flight on the same replica, or the
+        /// restore is otherwise invalid for the target partition. For example, the <see cref="ServicePartitionKind"/> of the
+        /// partition from which the backup was taken differs from that of the current partition being restored.
         /// </exception>
         /// <exception cref="NotImplementedException">
         /// The actor service is backed by <c>VolatileActorStateProvider</c> or <c>NullActorStateProvider</c>, neither of which supports restore.
