@@ -49,6 +49,19 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Asynchronously restores the replica's state from the backup described by <paramref name="restoreDescription"/>.
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This API must be called from the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>.
+        /// Only one restore can be in flight per replica at a time.
+        /// </para>
+        /// <para>
+        /// Exceptions thrown by this API differ depending on the underlying state provider. The exceptions that are currently
+        /// documented for this API apply only to the out-of-box state providers that support restore: any Reliable Services
+        /// state provider, the <c>KvsActorStateProvider</c> used for actor types with <c>StatePersistence.Persisted</c>
+        /// (on .NET Framework and on Windows .NET), and the <c>ReliableCollectionsActorStateProvider</c> used for
+        /// <c>StatePersistence.Persisted</c> on non-Windows .NET.
+        /// </para>
+        /// </remarks>
         /// <exception cref="ArgumentException">
         /// <para>
         /// The specified <see cref="RestoreDescription.BackupFolderPath"/> is <see langword="null"/>, empty, or contains only whitespace.
@@ -128,19 +141,6 @@ namespace Microsoft.ServiceFabric.Data
         /// <c>VolatileActorStateProvider</c> is selected for <c>StatePersistence.Volatile</c>.
         /// </exception>
         /// <exception cref="OperationCanceledException">The operation was canceled via <paramref name="cancellationToken"/>.</exception>
-        /// <remarks>
-        /// <para>
-        /// This API must be called from the callback assigned to <see cref="IStateProviderReplica.OnDataLossAsync"/>.
-        /// Only one restore can be in flight per replica at a time.
-        /// </para>
-        /// <para>
-        /// Exceptions thrown by this API differ depending on the underlying state provider. The exceptions that are currently
-        /// documented for this API apply only to the out-of-box state providers that support restore: any Reliable Services
-        /// state provider, the <c>KvsActorStateProvider</c> used for actor types with <c>StatePersistence.Persisted</c>
-        /// (on .NET Framework and on Windows .NET), and the <c>ReliableCollectionsActorStateProvider</c> used for
-        /// <c>StatePersistence.Persisted</c> on non-Windows .NET.
-        /// </para>
-        /// </remarks>
         public Task RestoreAsync(RestoreDescription restoreDescription, CancellationToken cancellationToken)
         {
             return this.stateProviderReplica.RestoreAsync(
