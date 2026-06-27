@@ -21,6 +21,7 @@ namespace Microsoft.ServiceFabric.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="RestoreContext"/> struct.
         /// </summary>
+        /// <exception cref="ArgumentNullException"><paramref name="stateProviderReplica"/> is <see langword="null"/>.</exception>
         public RestoreContext(IStateProviderReplica stateProviderReplica)
         {
             this.stateProviderReplica = stateProviderReplica;
