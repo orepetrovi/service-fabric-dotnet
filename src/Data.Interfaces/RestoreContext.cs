@@ -119,8 +119,10 @@ namespace Microsoft.ServiceFabric.Data
         /// partition from which the backup was taken differs from that of the current partition being restored.
         /// </exception>
         /// <exception cref="NotImplementedException">
-        /// The actor service is backed by <c>VolatileActorStateProvider</c> or <c>NullActorStateProvider</c>, neither of which supports restore.
-        /// <c>NullActorStateProvider</c> is selected for actor types whose <c>[StatePersistence]</c> attribute specifies <c>StatePersistence.None</c>
+        /// The actor service is backed by <c>VolatileActorStateProvider</c> or <c>NullActorStateProvider</c>, neither of
+        /// which supports restore.
+        /// <c>NullActorStateProvider</c> is selected for actor types whose <c>[StatePersistence]</c> attribute specifies
+        /// <c>StatePersistence.None</c>
         /// or that omit the attribute entirely;
         /// <c>VolatileActorStateProvider</c> is selected for <c>StatePersistence.Volatile</c>.
         /// </exception>
