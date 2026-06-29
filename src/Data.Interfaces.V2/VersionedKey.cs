@@ -21,7 +21,7 @@ namespace Microsoft.ServiceFabric.Data
         public long SequenceNumber { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VersionedKey{TKey}"/> struct with the specified key and sequence number.
+        /// Initializes a new instance of the <see cref="VersionedKey{TKey}"/> struct.
         /// </summary>
         public VersionedKey(TKey key, long sequenceNumber)
         {
