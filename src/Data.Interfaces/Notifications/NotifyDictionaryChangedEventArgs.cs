@@ -87,6 +87,7 @@ namespace Microsoft.ServiceFabric.Data.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyDictionaryTransactionalEventArgs{TKey, TValue}"/> class.
         /// </summary>
+        // TODO: <exception cref="ArgumentNullException"><paramref name="transaction"/> is <see langword="null"/>.</exception>
         public NotifyDictionaryTransactionalEventArgs(ITransaction transaction, NotifyDictionaryChangedAction action) : base(action)
         {
             this.transaction = transaction;
