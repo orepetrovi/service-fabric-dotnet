@@ -18,8 +18,13 @@ namespace Microsoft.ServiceFabric.Data.Beta
     /// Defines isolation levels for single-entity reads on a <see cref="ReplicaRole.Primary"/> replica within an <see cref="ITransaction"/>.
     /// </summary>
     /// <remarks>
+    /// <para>
+    /// (Beta) Not for production use - API is subject to change in the future.
+    /// </para>
+    /// <para>
     /// Multi-entity reads, such as count and enumeration, and all reads on <see cref="ReplicaRole.ActiveSecondary"/> replicas
     /// always use <see cref="Snapshot"/> regardless of this setting.
+    /// </para>
     /// </remarks>
     public enum IsolationLevel
     {
