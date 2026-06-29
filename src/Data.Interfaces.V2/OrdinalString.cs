@@ -52,66 +52,48 @@ namespace Microsoft.ServiceFabric.Data
         }
 
         /// <summary>
-        /// Determines whether two specified <see cref="OrdinalString"/> values have the same value.
+        /// Returns <see langword="true"/> if the value of <paramref name="left"/> is the same as the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </summary>
-        /// <returns>
-        /// <see langword="true"/> if the value of <paramref name="left"/> is the same as the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
-        /// </returns>
         public static bool operator ==(OrdinalString left, OrdinalString right)
         {
             return left.Equals(right);
         }
 
         /// <summary>
-        /// Determines whether two specified <see cref="OrdinalString"/> values have different values.
+        /// Returns <see langword="true"/> if the value of <paramref name="left"/> is different from the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </summary>
-        /// <returns>
-        /// <see langword="true"/> if the value of <paramref name="left"/> is different from the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
-        /// </returns>
         public static bool operator !=(OrdinalString left, OrdinalString right)
         {
             return !left.Equals(right);
         }
 
         /// <summary>
-        /// Determines whether the first <see cref="OrdinalString"/> is less than the second <see cref="OrdinalString"/>.
+        /// Returns <see langword="true"/> if the value of <paramref name="left"/> is less than the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </summary>
-        /// <returns>
-        /// <see langword="true"/> if the value of <paramref name="left"/> is less than the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
-        /// </returns>
         public static bool operator <(OrdinalString left, OrdinalString right)
         {
             return left.CompareTo(right) < 0;
         }
 
         /// <summary>
-        /// Determines whether the first <see cref="OrdinalString"/> is greater than the second <see cref="OrdinalString"/>.
+        /// Returns <see langword="true"/> if the value of <paramref name="left"/> is greater than the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </summary>
-        /// <returns>
-        /// <see langword="true"/> if the value of <paramref name="left"/> is greater than the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
-        /// </returns>
         public static bool operator >(OrdinalString left, OrdinalString right)
         {
             return left.CompareTo(right) > 0;
         }
 
         /// <summary>
-        /// Determines whether the first <see cref="OrdinalString"/> is less than or equal to the second <see cref="OrdinalString"/>.
+        /// Returns <see langword="true"/> if the value of <paramref name="left"/> is less than or equal to the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </summary>
-        /// <returns>
-        /// <see langword="true"/> if the value of <paramref name="left"/> is less than or equal to the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
-        /// </returns>
         public static bool operator <=(OrdinalString left, OrdinalString right)
         {
             return left.CompareTo(right) <= 0;
         }
 
         /// <summary>
-        /// Determines whether the first <see cref="OrdinalString"/> is greater than or equal to the second <see cref="OrdinalString"/>.
+        /// Returns <see langword="true"/> if the value of <paramref name="left"/> is greater than or equal to the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
         /// </summary>
-        /// <returns>
-        /// <see langword="true"/> if the value of <paramref name="left"/> is greater than or equal to the value of <paramref name="right"/>; otherwise, <see langword="false"/>.
-        /// </returns>
         public static bool operator >=(OrdinalString left, OrdinalString right)
         {
             return left.CompareTo(right) >= 0;
