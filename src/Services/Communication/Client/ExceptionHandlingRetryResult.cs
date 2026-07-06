@@ -85,37 +85,10 @@ namespace Microsoft.ServiceFabric.Services.Communication.Client
         /// </param>
         /// <param name="retrySettings">The retrySettings from which the interval to wait before retrying is figured out.</param>
         /// <param name="maxRetryCount">The maximum number of times the exception identified by the exceptionId parameter needs to be retried for.</param>
-        public ExceptionHandlingRetryResult(
-           Exception exception,
-           bool isTransient,
-           OperationRetrySettings retrySettings,
-           int maxRetryCount)
-        {
-            this.exceptionId = exception.GetType().FullName;
-            this.isTransient = isTransient;
-            this.retrySettings = retrySettings;
-            this.retryDelay = retrySettings.RetryPolicy.GetNextRetryDelay(new RetryDelayParameters(0, isTransient));
-            this.maxRetryCount = maxRetryCount;
-        }
+        public ExceptionHandlingRetryResult(Exception exception, bool isTransient, OperationRetrySettings retrySettings, int maxRetryCount)
+            : this(exception.GetType().FullName, isTransient, retrySettings, maxRetryCount) {}
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExceptionHandlingRetryResult"/> class.
-        /// </summary>
-        /// <param name="exceptionId">An identifier for the exception that needs to be retried.</param>
-        /// <param name="isTransient">
-        /// Indicates if this is a transient retriable exception.
-        /// Transient retriable exceptions are those where the communication channel from client
-        /// to service still exists.
-        /// Non transient retriable exceptions are those where we need to re-resolve the service endpoint
-        /// before we retry.
-        /// </param>
-        /// <param name="retrySettings">The retrySettings from which the interval to wait before retrying is figured out.</param>
-        /// <param name="maxRetryCount">The maximum number of times the exception identified by the exceptionId parameter needs to be retried for.</param>
-        internal ExceptionHandlingRetryResult(
-           string exceptionId,
-           bool isTransient,
-           OperationRetrySettings retrySettings,
-           int maxRetryCount)
+        internal ExceptionHandlingRetryResult(string exceptionId, bool isTransient, OperationRetrySettings retrySettings, int maxRetryCount)
         {
             this.exceptionId = exceptionId;
             this.isTransient = isTransient;
