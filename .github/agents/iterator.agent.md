@@ -1,6 +1,7 @@
 ---
 description: "Coordinates iterative coding and review until the code is ready."
 tools: [agent, execute, read, search, web]
+agents: ["coder", "reviewer"]
 ---
 
 **Understand `.github/copilot-instructions.md` before doing anything else**.
@@ -12,9 +13,9 @@ This repository requires unique knowledge you don't possess; you won't know what
     ```md
     Implement `{what is needed?}`.
     Note that I'm working on the following request.
-    ---
+    ***
     {your prompt}
-    ---
+    ***
     ```
     - Don't explain how to implement the code, file names or paths.
     - Don't mention git.
@@ -34,9 +35,9 @@ This repository requires unique knowledge you don't possess; you won't know what
     - _Exclude findings previously reported in `{file path}-needs-human-review.md`, if it exists_.
 
     Note that I'm working on the following request.
-    ---
+    ***
     {your prompt}
-    ---
+    ***
     ```
   - Do not change the reviewer prompt in any other way.
 
@@ -58,9 +59,9 @@ This repository requires unique knowledge you don't possess; you won't know what
     Address the following review finding. If you refuse implementing the suggested changes, update the code to make your
     reasoning evident and prevent reporting of similar findings in future reviews. Add comments if the reasoning cannot
     be expressed in code itself.
-    ---
+    ***
     {Single finding from the review report}
-    ---
+    ***
     ```
     - Don't change this prompt in any other way.
     - Don't add any commit instructions.

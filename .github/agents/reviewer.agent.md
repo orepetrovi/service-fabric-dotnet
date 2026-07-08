@@ -1,6 +1,7 @@
 ---
 description: Independent Reviewer
 tools: [agent, read]
+agents: ["gemini", "gpt", "opus"]
 model: ["Claude Opus 4.8"]
 ---
 
@@ -47,14 +48,14 @@ model: ["Claude Opus 4.8"]
   - Prepare the feedback prompt
     ```md
     Re-evaluate your previous recommendation taking into account responses from other models.
-    ---
+    ***
     {Original Finding}
     {Cross-check Responses}
-    ---
+    ***
     Note that I'm working on the following request.
-    ---
+    ***
     {your prompt}
-    ---
+    ***
     Respond with
     - `Insist` if you still believe your original proposal should be implemented.
     - `Retract` if you now believe your original proposal is incorrect or optional.
@@ -69,14 +70,14 @@ model: ["Claude Opus 4.8"]
   - Prepare the double-check prompt
     ```md
     Respond to the finding author insisting on it after you disagreed.
-    ---
+    ***
     {Original Finding}
     {Cross-check Responses}
-    ---
+    ***
     Note that I'm working on the following request.
-    ---
+    ***
     {your prompt}
-    ---
+    ***
     Respond with
     - `Agree` if you now agree with the finding.
     - `Accept` if you accept it as an alternative solution for a problem that could be solved either way.
