@@ -1,7 +1,7 @@
 ---
 description: Independent Reviewer
 tools: [agent, read]
-agents: ["gemini", "gpt", "opus"]
+agents: ["gpt", "opus"]
 model: ["Claude Opus 4.8"]
 ---
 
@@ -18,7 +18,7 @@ model: ["Claude Opus 4.8"]
   - Append `Don't start the "reviewer" subagent.`
   - Don't change the prompt in any other way.
 
-- **Run, one at a time, subagents `gemini`, `gpt` and `opus`, with the prepared prompt**.
+- **Run, one at a time, subagents `gpt` and `opus`, with the prepared prompt**.
   - Don't change the prepared prompt in any way - each subagent needs to perform a complete, independent review.
   - Wait for each agent to complete before starting another.
 
@@ -40,7 +40,7 @@ model: ["Claude Opus 4.8"]
   - Don't cross-check `📝 Notes` unless they contradict recommendations from other models.
   - A finding requires cross-check if **any** of the three models explicitly contradicted or did not report it.
   - Run, in parallel, subagents of every model that contradicted or did not report the finding, with the cross-check prompt.
-    For example, if `gemini` and `gpt` reported a finding and `opus` did not, ask `opus` to cross-check it.
+    For example, if `gpt` reported a finding and `opus` did not, ask `opus` to cross-check it.
   - Record each cross-check verdict verbatim (`Agree`, `Disagree`, `Abstain`) alongside the model name.
 
 - **Incorporate the cross-check feedback**.
