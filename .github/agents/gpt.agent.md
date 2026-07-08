@@ -1,6 +1,6 @@
 ---
 description: "Sub-agent using latest GPT model"
-tools: [execute, read, search, web]
+tools: [read, search, web]
 model: ["GPT-5.5"]
 ---
 
