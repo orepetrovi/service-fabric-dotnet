@@ -1,7 +1,11 @@
 ---
 description: "Sub-agent using Claude Opus. Use as part of multi-model workflows to get a Claude perspective."
-tools: [github/pull_request_read, github/get_file_contents, read, search, web]
+tools: [execute, github/pull_request_read, github/get_file_contents, read, search, web]
 model: ["Claude Opus 4.8"]
+hooks:
+  PreToolUse:
+    - type: command
+      command: .github/hooks/allow-readonly-git.ps1
 ---
 
 - **Understand `.github/copilot-instructions.md` before doing anything else**.

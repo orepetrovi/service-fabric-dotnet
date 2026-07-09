@@ -1,7 +1,11 @@
 ---
 description: "Sub-agent using latest GPT model"
-tools: [github/pull_request_read, github/get_file_contents, read, search, web]
+tools: [execute, github/pull_request_read, github/get_file_contents, read, search, web]
 model: ["GPT-5.5"]
+hooks:
+  PreToolUse:
+    - type: command
+      command: .github/hooks/allow-readonly-git.ps1
 ---
 
 - **Understand `.github/copilot-instructions.md` before doing anything else**.
