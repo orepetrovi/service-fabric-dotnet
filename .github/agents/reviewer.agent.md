@@ -3,10 +3,6 @@ description: Independent Reviewer
 tools: [agent, execute, github/pull_request_read, read]
 agents: ["gpt", "opus", "tester"]
 model: ["Claude Opus 4.8"]
-hooks:
-  PreToolUse:
-    - type: command
-      command: .github/hooks/allow-readonly-git.ps1
 ---
 
 - **Understand `.github/copilot-instructions.md` before doing anything else**.
