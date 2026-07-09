@@ -1,6 +1,6 @@
 ---
 description: Independent Reviewer
-tools: [agent, read]
+tools: [agent, github/pull_request_read, read]
 agents: ["gpt", "opus", "tester"]
 model: ["Claude Opus 4.8"]
 ---
