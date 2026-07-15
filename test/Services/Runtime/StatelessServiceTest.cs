@@ -123,14 +123,14 @@ public abstract class StatelessServiceTest
     public sealed class IStatelessUserServiceInstance_OnCloseAsync : IStatelessUserServiceInstanceTest, IDisposable
     {
         // Method parameters
-        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken; // matches SUT parameter name
 
         readonly EventSourceTest<ServiceEventSource> events = InstallEventSource();
 
         void IDisposable.Dispose() => events.Dispose();
 
         [Fact]
-        public void ForwardsCancellationTokenToProtectedOnCloseAsync()
+        public void ForwardsToProtectedOnCloseAsync()
         {
             CancellationToken actual = default;
             int calls = 0;
@@ -160,10 +160,10 @@ public abstract class StatelessServiceTest
 
     public sealed class IStatelessUserServiceInstance_OnOpenAsync : IStatelessUserServiceInstanceTest
     {
-        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken; // matches SUT parameter name
 
         [Fact]
-        public void ForwardsCancellationTokenToProtectedOnOpenAsync()
+        public void ForwardsToProtectedOnOpenAsync()
         {
             CancellationToken actual = default;
             int calls = 0;
@@ -192,10 +192,10 @@ public abstract class StatelessServiceTest
 
     public sealed class IStatelessUserServiceInstance_RunAsync : IStatelessUserServiceInstanceTest
     {
-        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken; // matches SUT parameter name
 
         [Fact]
-        public void ForwardsCancellationTokenToProtectedRunAsync()
+        public void ForwardsToProtectedRunAsync()
         {
             CancellationToken actual = default;
             int calls = 0;
@@ -219,36 +219,36 @@ public abstract class StatelessServiceTest
 
     public sealed class OnCloseAsync : StatelessServiceTest
     {
-        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken; // matches SUT parameter name
 
         [Fact]
         public void ReturnsCompletedTaskByDefault()
         {
-            Task actual = sut.InvokeBaseOnCloseAsync(cancellationToken);
+            Task actual = sut.InvokeBaseOnClose(cancellationToken);
             Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
         }
     }
 
     public sealed class OnOpenAsync : StatelessServiceTest
     {
-        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken; // matches SUT parameter name
 
         [Fact]
         public void ReturnsCompletedTaskByDefault()
         {
-            Task actual = sut.InvokeBaseOnOpenAsync(cancellationToken);
+            Task actual = sut.InvokeBaseOnOpen(cancellationToken);
             Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
         }
     }
 
     public sealed class RunAsync : StatelessServiceTest
     {
-        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken; // matches SUT parameter name
 
         [Fact]
         public void ReturnsCompletedTaskByDefault()
         {
-            Task actual = sut.InvokeBaseRunAsync(cancellationToken);
+            Task actual = sut.InvokeBaseRun(cancellationToken);
             Assert.Equal(TaskStatus.RanToCompletion, actual.Status);
         }
     }
@@ -279,22 +279,16 @@ public abstract class StatelessServiceTest
         protected override Task OnCloseAsync(CancellationToken cancellation) =>
             OnCloseAsyncHandler != null ? OnCloseAsyncHandler(cancellation) : base.OnCloseAsync(cancellation);
 
-        protected override void OnAbort()
-        {
-            if (OnAbortHandler != null)
-                OnAbortHandler();
-            else
-                base.OnAbort();
-        }
+        protected override void OnAbort() => (OnAbortHandler ?? base.OnAbort)();
 
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners() =>
             CreateServiceInstanceListenersHandler != null ? CreateServiceInstanceListenersHandler() : base.CreateServiceInstanceListeners();
 
         internal IStatelessServicePartition GetPartitionForTest() => Partition;
         internal IReadOnlyDictionary<string, string> GetAddressesForTest() => GetAddresses();
-        internal Task InvokeBaseRunAsync(CancellationToken cancellation) => base.RunAsync(cancellation);
-        internal Task InvokeBaseOnOpenAsync(CancellationToken cancellation) => base.OnOpenAsync(cancellation);
-        internal Task InvokeBaseOnCloseAsync(CancellationToken cancellation) => base.OnCloseAsync(cancellation);
+        internal Task InvokeBaseRun(CancellationToken cancellation) => base.RunAsync(cancellation);
+        internal Task InvokeBaseOnOpen(CancellationToken cancellation) => base.OnOpenAsync(cancellation);
+        internal Task InvokeBaseOnClose(CancellationToken cancellation) => base.OnCloseAsync(cancellation);
         internal void InvokeBaseOnAbort() => base.OnAbort();
         internal IEnumerable<ServiceInstanceListener> InvokeBaseCreateServiceInstanceListeners() => base.CreateServiceInstanceListeners();
     }

@@ -80,6 +80,7 @@ public abstract class StatelessServiceInstanceAdapterTest
             sut.Abort();
 
             Assert.True(existingCts.IsCancellationRequested);
+            Assert.Null(sut.Field<CancellationTokenSource>().Value);
         }
 
         [Fact]

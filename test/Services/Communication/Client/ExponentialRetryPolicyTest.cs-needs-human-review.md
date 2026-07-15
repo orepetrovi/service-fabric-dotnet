@@ -1,0 +1,7 @@
+#### ❓ Needs Human Review — `Assert.InRange` upper bound is inclusive but SUT cannot produce it
+
+Reported by `gpt`, cross-check `Agree` from `gemini` and `opus`. Classified as ❓ because the same concern is already pending in [test/Services/Communication/Client/ConstantRetryPolicyTest.cs-needs-human-review.md](test/Services/Communication/Client/ConstantRetryPolicyTest.cs-needs-human-review.md); human should decide consistently across both files.
+
+The SUT at [src/Services/Communication/Client/ExponentialRetryPolicy.cs](src/Services/Communication/Client/ExponentialRetryPolicy.cs#L92) computes `maxRetryJitter.TotalMilliseconds * RandomGenerator.NextDouble() + base`. `Random.NextDouble()` returns `[0.0, 1.0)`, so the delay is strictly less than `expectedMax`. The tests at [ExponentialRetryPolicyTest.cs#L66](test/Services/Communication/Client/ExponentialRetryPolicyTest.cs#L66), [#L97](test/Services/Communication/Client/ExponentialRetryPolicyTest.cs#L97), and [#L177](test/Services/Communication/Client/ExponentialRetryPolicyTest.cs#L177) use `Assert.InRange(delay, expectedMin, expectedMax)`; xUnit's `Assert.InRange` upper bound is inclusive, so a regression returning exactly `expectedMax` (clamping, off-by-one, switching to `1.0 - NextDouble()`, or using an inclusive RNG) would pass. The follow-up statistical checks (`observedMax > expectedMax/2`) only constrain spread, not the upper boundary.
+
+Suggested change: tighten via a helper like `Assert.True(delay >= expectedMin && delay < expectedMax)`.

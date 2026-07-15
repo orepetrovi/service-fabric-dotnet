@@ -304,7 +304,7 @@ public abstract class StatefulServiceBaseTest
         void IDisposable.Dispose() => events.Dispose();
 
         [Fact]
-        public void ForwardsCancellationTokenToProtectedOnCloseAsync()
+        public void ForwardsToProtectedOnCloseAsync()
         {
             CancellationToken actual = default;
             int calls = 0;
@@ -377,7 +377,7 @@ public abstract class StatefulServiceBaseTest
         readonly CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         [Fact]
-        public void ForwardsCancellationTokenToProtectedRunAsync()
+        public void ForwardsToProtectedRunAsync()
         {
             CancellationToken actual = default;
             int calls = 0;
