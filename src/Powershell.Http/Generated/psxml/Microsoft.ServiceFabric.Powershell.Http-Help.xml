@@ -2202,6 +2202,108 @@
     </command:command>
     <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
             <command:details>
+                <command:name>Get-SFCapacityReleaseLevel</command:name>
+                <command:verb>Get</command:verb>
+                <command:noun>CapacityReleaseLevel</command:noun>
+                <maml:description>
+                    <maml:para>Gets the current capacity release level for the cluster.</maml:para>
+                </maml:description>
+            </command:details>
+            <command:syntax>
+            </command:syntax>
+            <maml:description>
+                <maml:para>Gets the capacity release level currently applied to the Service Fabric cluster.</maml:para>
+            </maml:description>
+            <command:parameters>
+            <command:parameter required="false" position="0">
+                <maml:name>ServerTimeout</maml:name>
+                <maml:Description>
+                    <maml:para>
+                    The server timeout for performing the operation in seconds. This timeout specifies the time duration that the client is willing to wait for the requested operation to complete. The default value for this parameter is 60 seconds.
+                    </maml:para>
+                </maml:Description>
+            <command:parameterValue required="false">long?</command:parameterValue>
+                <dev:type>
+                    <maml:name>long?</maml:name>
+                </dev:type>
+            </command:parameter>
+            </command:parameters>
+    </command:command>
+    <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+            <command:details>
+                <command:name>Set-SFCapacityReleaseLevel</command:name>
+                <command:verb>Set</command:verb>
+                <command:noun>CapacityReleaseLevel</command:noun>
+                <maml:description>
+                    <maml:para>Sets the capacity release level for the cluster.</maml:para>
+                </maml:description>
+            </command:details>
+            <command:syntax>
+            </command:syntax>
+            <maml:description>
+                <maml:para>Sets the capacity release level applied to the Service Fabric cluster.</maml:para>
+            </maml:description>
+            <command:parameters>
+            <command:parameter required="true" position="0">
+                <maml:name>Level</maml:name>
+                <maml:Description>
+                    <maml:para>
+                    The capacity release level to set for the cluster. Possible values include: 'None', 'Minor', 'Major'
+                    </maml:para>
+                </maml:Description>
+            <command:parameterValue required="true">CapacityReleaseLevel?</command:parameterValue>
+                <dev:type>
+                    <maml:name>CapacityReleaseLevel?</maml:name>
+                </dev:type>
+            </command:parameter>
+            <command:parameter required="false" position="1">
+                <maml:name>ServerTimeout</maml:name>
+                <maml:Description>
+                    <maml:para>
+                    The server timeout for performing the operation in seconds. This timeout specifies the time duration that the client is willing to wait for the requested operation to complete. The default value for this parameter is 60 seconds.
+                    </maml:para>
+                </maml:Description>
+            <command:parameterValue required="false">long?</command:parameterValue>
+                <dev:type>
+                    <maml:name>long?</maml:name>
+                </dev:type>
+            </command:parameter>
+            </command:parameters>
+    </command:command>
+    <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+            <command:details>
+                <command:name>Get-SFCapacityReleaseEstimation</command:name>
+                <command:verb>Get</command:verb>
+                <command:noun>CapacityReleaseEstimation</command:noun>
+                <maml:description>
+                    <maml:para>Gets capacity release estimates for the cluster.</maml:para>
+                </maml:description>
+            </command:details>
+            <command:syntax>
+            </command:syntax>
+            <maml:description>
+                <maml:para>Gets capacity release estimates for cluster metrics at the available capacity release levels.
+                
+                Runtimes that do not yet include the Placement and Load Balancing implementation for this operation return an OperationNotSupported error.
+                </maml:para>
+            </maml:description>
+            <command:parameters>
+            <command:parameter required="false" position="0">
+                <maml:name>ServerTimeout</maml:name>
+                <maml:Description>
+                    <maml:para>
+                    The server timeout for performing the operation in seconds. This timeout specifies the time duration that the client is willing to wait for the requested operation to complete. The default value for this parameter is 60 seconds.
+                    </maml:para>
+                </maml:Description>
+            <command:parameterValue required="false">long?</command:parameterValue>
+                <dev:type>
+                    <maml:name>long?</maml:name>
+                </dev:type>
+            </command:parameter>
+            </command:parameters>
+    </command:command>
+    <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+            <command:details>
                 <command:name>Switch-SFVerboseServicePlacementHealthReporting</command:name>
                 <command:verb>Switch</command:verb>
                 <command:noun>VerboseServicePlacementHealthReporting</command:noun>
