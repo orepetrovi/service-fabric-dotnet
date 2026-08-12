@@ -11,7 +11,7 @@ namespace Microsoft.ServiceFabric.Powershell.Http
     using Microsoft.ServiceFabric.Common;
 
     /// <summary>
-    /// Gets capacity release estimates for the cluster.
+    /// Gets projected used capacity relative to cluster total capacity for each metric at each capacity release level.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, "SFCapacityReleaseEstimation")]
     public partial class GetCapacityReleaseEstimationCmdlet : CommonCmdletBase
@@ -33,11 +33,14 @@ namespace Microsoft.ServiceFabric.Powershell.Http
 
             if (result != null)
             {
-                foreach (var item in result)
-                {
-                    this.WriteObject(this.FormatOutput(item));
-                }
+                this.WriteObject(this.FormatOutput(result));
             }
+        }
+
+        /// <inheritdoc/>
+        protected override object FormatOutput(object output)
+        {
+            return output;
         }
     }
 }

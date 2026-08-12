@@ -2276,15 +2276,13 @@
                 <command:verb>Get</command:verb>
                 <command:noun>CapacityReleaseEstimation</command:noun>
                 <maml:description>
-                    <maml:para>Gets capacity release estimates for the cluster.</maml:para>
+                    <maml:para>Gets projected used capacity relative to cluster total capacity for each metric at each capacity release level.</maml:para>
                 </maml:description>
             </command:details>
             <command:syntax>
             </command:syntax>
             <maml:description>
-                <maml:para>Gets capacity release estimates for cluster metrics at the available capacity release levels.
-                
-                Runtimes that do not yet include the Placement and Load Balancing implementation for this operation return an OperationNotSupported error.
+                <maml:para>Reports projected used capacity relative to cluster total capacity for each cluster metric at each reported capacity release level.
                 </maml:para>
             </maml:description>
             <command:parameters>

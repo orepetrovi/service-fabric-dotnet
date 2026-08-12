@@ -9,21 +9,24 @@ namespace Microsoft.ServiceFabric.Common
     using System.Collections.Generic;
 
     /// <summary>
-    /// An estimate of the capacity available at a capacity release level for a cluster metric.
+    /// An estimate of projected used capacity relative to cluster total capacity for a cluster metric under a capacity
+    /// release scenario.
     /// </summary>
     public partial class CapacityReleaseEstimate
     {
         /// <summary>
         /// Initializes a new instance of the CapacityReleaseEstimate class.
         /// </summary>
-        /// <param name="level">The capacity release level represented by this estimate. Possible values include: 'None',
-        /// 'Minor', 'Major'
+        /// <param name="level">The capacity release scenario whose projected impact this estimate represents. Possible values
+        /// include: 'None', 'Minor', 'Major'
         /// 
         /// The level of capacity release applied to the cluster.
         /// </param>
-        /// <param name="metricName">The name of the cluster metric.</param>
-        /// <param name="usedCapacity">The capacity currently used for the metric.</param>
-        /// <param name="totalCapacity">The total capacity available for the metric.</param>
+        /// <param name="metricName">The cluster metric being projected.</param>
+        /// <param name="usedCapacity">The projected used capacity for the metric if the capacity release level were
+        /// applied.</param>
+        /// <param name="totalCapacity">The cluster total capacity for the metric. This value is not projected and does not
+        /// depend on the capacity release level.</param>
         public CapacityReleaseEstimate(
             CapacityReleaseLevel? level,
             string metricName,
@@ -41,24 +44,26 @@ namespace Microsoft.ServiceFabric.Common
         }
 
         /// <summary>
-        /// Gets the capacity release level represented by this estimate. Possible values include: 'None', 'Minor', 'Major'
+        /// Gets the capacity release scenario whose projected impact this estimate represents. Possible values include:
+        /// 'None', 'Minor', 'Major'
         /// 
         /// The level of capacity release applied to the cluster.
         /// </summary>
         public CapacityReleaseLevel? Level { get; }
 
         /// <summary>
-        /// Gets the name of the cluster metric.
+        /// Gets the cluster metric being projected.
         /// </summary>
         public string MetricName { get; }
 
         /// <summary>
-        /// Gets the capacity currently used for the metric.
+        /// Gets the projected used capacity for the metric if the capacity release level were applied.
         /// </summary>
         public long? UsedCapacity { get; }
 
         /// <summary>
-        /// Gets the total capacity available for the metric.
+        /// Gets the cluster total capacity for the metric. This value is not projected and does not depend on the capacity
+        /// release level.
         /// </summary>
         public long? TotalCapacity { get; }
     }

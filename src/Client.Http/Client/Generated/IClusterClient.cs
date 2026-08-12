@@ -818,13 +818,11 @@ namespace Microsoft.ServiceFabric.Client
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Gets capacity release estimates for the cluster.
+        /// Gets projected used capacity relative to cluster total capacity for each metric at each capacity release level.
         /// </summary>
         /// <remarks>
-        /// Gets capacity release estimates for cluster metrics at the available capacity release levels.
-        /// 
-        /// Runtimes that do not yet include the Placement and Load Balancing implementation for this operation return an
-        /// OperationNotSupported error.
+        /// Reports projected used capacity relative to cluster total capacity for each cluster metric at each reported
+        /// capacity release level.
         /// </remarks>
         /// <param name ="serverTimeout">The server timeout for performing the operation in seconds. This timeout specifies the
         /// time duration that the client is willing to wait for the requested operation to complete. The default value for
@@ -837,7 +835,7 @@ namespace Microsoft.ServiceFabric.Client
         /// <exception cref="ServiceFabricRequestException">Thrown when request to Service Fabric cluster failed due to an underlying issue such as network connectivity, DNS failure or timeout.</exception>
         /// <exception cref="ServiceFabricException">Thrown when the requested operation failed at server. Exception contains Error code <see cref="FabricError.ErrorCode"/>, message indicating the failure. It also contains a flag wether the exception is transient or not, client operations can be retried if its transient.</exception>
         /// <exception cref="OperationCanceledException">Thrown when cancellation is requested for the cancellation token.</exception>
-        Task<IEnumerable<CapacityReleaseEstimate>> GetCapacityReleaseEstimationAsync(
+        Task<CapacityReleaseEstimationResult> GetCapacityReleaseEstimationAsync(
             long? serverTimeout = 60,
             CancellationToken cancellationToken = default(CancellationToken));
 

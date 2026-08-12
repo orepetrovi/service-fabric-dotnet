@@ -884,7 +884,7 @@ namespace Microsoft.ServiceFabric.Client.Http
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<CapacityReleaseEstimate>> GetCapacityReleaseEstimationAsync(
+        public Task<CapacityReleaseEstimationResult> GetCapacityReleaseEstimationAsync(
             long? serverTimeout = 60,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -907,7 +907,7 @@ namespace Microsoft.ServiceFabric.Client.Http
                 return request;
             }
 
-            return this.httpClient.SendAsyncGetResponseAsList(RequestFunc, url, CapacityReleaseEstimateConverter.Deserialize, requestId, cancellationToken);
+            return this.httpClient.SendAsyncGetResponse(RequestFunc, url, CapacityReleaseEstimationResultConverter.Deserialize, requestId, cancellationToken);
         }
 
         /// <inheritdoc />
