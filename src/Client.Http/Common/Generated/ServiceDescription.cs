@@ -36,6 +36,8 @@ namespace Microsoft.ServiceFabric.Common
         /// Specifies the move cost for the service.
         /// </param>
         /// <param name="isDefaultMoveCostSpecified">Indicates if the DefaultMoveCost property is specified.</param>
+        /// <param name="capacityReleaseAction">Specifies the service target policy configured for capacity release. Possible
+        /// values include: 'None', 'DropToZero', 'DropToMin'</param>
         /// <param name="servicePackageActivationMode">The activation mode of service package to be used for a service.
         /// Possible values include: 'SharedProcess', 'ExclusiveProcess'
         /// 
@@ -59,6 +61,7 @@ namespace Microsoft.ServiceFabric.Common
             IEnumerable<ServicePlacementPolicyDescription> servicePlacementPolicies = default(IEnumerable<ServicePlacementPolicyDescription>),
             MoveCost? defaultMoveCost = default(MoveCost?),
             bool? isDefaultMoveCostSpecified = default(bool?),
+            CapacityReleaseAction? capacityReleaseAction = default(CapacityReleaseAction?),
             ServicePackageActivationMode? servicePackageActivationMode = default(ServicePackageActivationMode?),
             string serviceDnsName = default(string),
             IEnumerable<ScalingPolicyDescription> scalingPolicies = default(IEnumerable<ScalingPolicyDescription>),
@@ -80,6 +83,7 @@ namespace Microsoft.ServiceFabric.Common
             this.ServicePlacementPolicies = servicePlacementPolicies;
             this.DefaultMoveCost = defaultMoveCost;
             this.IsDefaultMoveCostSpecified = isDefaultMoveCostSpecified;
+            this.CapacityReleaseAction = capacityReleaseAction;
             this.ServicePackageActivationMode = servicePackageActivationMode;
             this.ServiceDnsName = serviceDnsName;
             this.ScalingPolicies = scalingPolicies;
@@ -145,6 +149,12 @@ namespace Microsoft.ServiceFabric.Common
         /// Gets indicates if the DefaultMoveCost property is specified.
         /// </summary>
         public bool? IsDefaultMoveCostSpecified { get; }
+
+        /// <summary>
+        /// Gets specifies the service target policy configured for capacity release. Possible values include: 'None',
+        /// 'DropToZero', 'DropToMin'
+        /// </summary>
+        public CapacityReleaseAction? CapacityReleaseAction { get; }
 
         /// <summary>
         /// Gets the activation mode of service package to be used for a service. Possible values include: 'SharedProcess',

@@ -44,6 +44,7 @@ namespace Microsoft.ServiceFabric.Common
         /// - ServiceDnsName - Indicates the ServiceDnsName property is set. The value is 131072.
         /// - ServiceTags TagsRequiredToPlace - Indicates the TagsRequiredToPlace property is set. The value is 1048576.
         /// - ServiceTags TagsRequiredToRun - Indicates the TagsRequiredToRun property is set. The value is 2097152.
+        /// - CapacityReleaseAction - Indicates the CapacityReleaseAction property is set. The value is 268435456.
         /// </param>
         /// <param name="placementConstraints">The placement constraints as a string. Placement constraints are boolean
         /// expressions on node properties and allow for restricting a service to particular nodes based on the service
@@ -57,6 +58,8 @@ namespace Microsoft.ServiceFabric.Common
         /// 
         /// Specifies the move cost for the service.
         /// </param>
+        /// <param name="capacityReleaseAction">Specifies the service target policy configured for capacity release. Possible
+        /// values include: 'None', 'DropToZero', 'DropToMin'</param>
         /// <param name="scalingPolicies">Scaling policies for this service.</param>
         /// <param name="serviceDnsName">The DNS name of the service.</param>
         /// <param name="serviceTags">Service tags collections for placement and running of the service.</param>
@@ -86,6 +89,7 @@ namespace Microsoft.ServiceFabric.Common
             IEnumerable<ServiceLoadMetricDescription> loadMetrics = default(IEnumerable<ServiceLoadMetricDescription>),
             IEnumerable<ServicePlacementPolicyDescription> servicePlacementPolicies = default(IEnumerable<ServicePlacementPolicyDescription>),
             MoveCost? defaultMoveCost = default(MoveCost?),
+            CapacityReleaseAction? capacityReleaseAction = default(CapacityReleaseAction?),
             IEnumerable<ScalingPolicyDescription> scalingPolicies = default(IEnumerable<ScalingPolicyDescription>),
             string serviceDnsName = default(string),
             ServiceTags serviceTags = default(ServiceTags),
@@ -108,6 +112,7 @@ namespace Microsoft.ServiceFabric.Common
                 loadMetrics,
                 servicePlacementPolicies,
                 defaultMoveCost,
+                capacityReleaseAction,
                 scalingPolicies,
                 serviceDnsName,
                 serviceTags,

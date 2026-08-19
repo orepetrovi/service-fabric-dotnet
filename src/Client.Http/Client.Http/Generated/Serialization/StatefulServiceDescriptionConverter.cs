@@ -44,6 +44,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
             var servicePlacementPolicies = default(IEnumerable<ServicePlacementPolicyDescription>);
             var defaultMoveCost = default(MoveCost?);
             var isDefaultMoveCostSpecified = default(bool?);
+            var capacityReleaseAction = default(CapacityReleaseAction?);
             var servicePackageActivationMode = default(ServicePackageActivationMode?);
             var serviceDnsName = default(string);
             var scalingPolicies = default(IEnumerable<ScalingPolicyDescription>);
@@ -108,6 +109,10 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 else if (string.Compare("IsDefaultMoveCostSpecified", propName, StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     isDefaultMoveCostSpecified = reader.ReadValueAsBool();
+                }
+                else if (string.Compare("CapacityReleaseAction", propName, StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    capacityReleaseAction = CapacityReleaseActionConverter.Deserialize(reader);
                 }
                 else if (string.Compare("ServicePackageActivationMode", propName, StringComparison.OrdinalIgnoreCase) == 0)
                 {
@@ -196,6 +201,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 servicePlacementPolicies: servicePlacementPolicies,
                 defaultMoveCost: defaultMoveCost,
                 isDefaultMoveCostSpecified: isDefaultMoveCostSpecified,
+                capacityReleaseAction: capacityReleaseAction,
                 servicePackageActivationMode: servicePackageActivationMode,
                 serviceDnsName: serviceDnsName,
                 scalingPolicies: scalingPolicies,
@@ -232,6 +238,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
             writer.WriteProperty(obj.MinReplicaSetSize, "MinReplicaSetSize", JsonWriterExtensions.WriteIntValue);
             writer.WriteProperty(obj.HasPersistedState, "HasPersistedState", JsonWriterExtensions.WriteBoolValue);
             writer.WriteProperty(obj.DefaultMoveCost, "DefaultMoveCost", MoveCostConverter.Serialize);
+            writer.WriteProperty(obj.CapacityReleaseAction, "CapacityReleaseAction", CapacityReleaseActionConverter.Serialize);
             writer.WriteProperty(obj.ServicePackageActivationMode, "ServicePackageActivationMode", ServicePackageActivationModeConverter.Serialize);
             if (obj.ApplicationName != null)
             {
