@@ -39,7 +39,6 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
             var loadMetrics = default(IEnumerable<ServiceLoadMetricDescription>);
             var servicePlacementPolicies = default(IEnumerable<ServicePlacementPolicyDescription>);
             var defaultMoveCost = default(MoveCost?);
-            var capacityReleaseAction = default(CapacityReleaseAction?);
             var scalingPolicies = default(IEnumerable<ScalingPolicyDescription>);
             var serviceDnsName = default(string);
             var serviceTags = default(ServiceTags);
@@ -54,6 +53,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
             var replicaLifecycleDescription = default(ReplicaLifecycleDescription);
             var auxiliaryReplicaCount = default(int?);
             var serviceSensitivityDescription = default(ServiceSensitivityDescription);
+            var capacityReleaseAction = default(CapacityReleaseAction?);
 
             do
             {
@@ -81,10 +81,6 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 else if (string.Compare("DefaultMoveCost", propName, StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     defaultMoveCost = MoveCostConverter.Deserialize(reader);
-                }
-                else if (string.Compare("CapacityReleaseAction", propName, StringComparison.OrdinalIgnoreCase) == 0)
-                {
-                    capacityReleaseAction = CapacityReleaseActionConverter.Deserialize(reader);
                 }
                 else if (string.Compare("ScalingPolicies", propName, StringComparison.OrdinalIgnoreCase) == 0)
                 {
@@ -142,6 +138,10 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 {
                     serviceSensitivityDescription = ServiceSensitivityDescriptionConverter.Deserialize(reader);
                 }
+                else if (string.Compare("CapacityReleaseAction", propName, StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    capacityReleaseAction = CapacityReleaseActionConverter.Deserialize(reader);
+                }
                 else
                 {
                     reader.SkipPropertyValue();
@@ -156,7 +156,6 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 loadMetrics: loadMetrics,
                 servicePlacementPolicies: servicePlacementPolicies,
                 defaultMoveCost: defaultMoveCost,
-                capacityReleaseAction: capacityReleaseAction,
                 scalingPolicies: scalingPolicies,
                 serviceDnsName: serviceDnsName,
                 serviceTags: serviceTags,
@@ -170,7 +169,8 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 dropSourceReplicaOnMove: dropSourceReplicaOnMove,
                 replicaLifecycleDescription: replicaLifecycleDescription,
                 auxiliaryReplicaCount: auxiliaryReplicaCount,
-                serviceSensitivityDescription: serviceSensitivityDescription);
+                serviceSensitivityDescription: serviceSensitivityDescription,
+                capacityReleaseAction: capacityReleaseAction);
         }
 
         /// <summary>
@@ -184,7 +184,6 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
             writer.WriteStartObject();
             writer.WriteProperty(obj.ServiceKind, "ServiceKind", ServiceKindConverter.Serialize);
             writer.WriteProperty(obj.DefaultMoveCost, "DefaultMoveCost", MoveCostConverter.Serialize);
-            writer.WriteProperty(obj.CapacityReleaseAction, "CapacityReleaseAction", CapacityReleaseActionConverter.Serialize);
             if (obj.Flags != null)
             {
                 writer.WriteProperty(obj.Flags, "Flags", JsonWriterExtensions.WriteStringValue);
@@ -280,6 +279,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 writer.WriteProperty(obj.ServiceSensitivityDescription, "ServiceSensitivityDescription", ServiceSensitivityDescriptionConverter.Serialize);
             }
 
+            writer.WriteProperty(obj.CapacityReleaseAction, "CapacityReleaseAction", CapacityReleaseActionConverter.Serialize);
             writer.WriteEndObject();
         }
     }

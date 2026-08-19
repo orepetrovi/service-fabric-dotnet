@@ -36,8 +36,6 @@ namespace Microsoft.ServiceFabric.Common
         /// Specifies the move cost for the service.
         /// </param>
         /// <param name="isDefaultMoveCostSpecified">Indicates if the DefaultMoveCost property is specified.</param>
-        /// <param name="capacityReleaseAction">Specifies the service target policy configured for capacity release. Possible
-        /// values include: 'None', 'DropToZero', 'DropToMin'</param>
         /// <param name="servicePackageActivationMode">The activation mode of service package to be used for a service.
         /// Possible values include: 'SharedProcess', 'ExclusiveProcess'
         /// 
@@ -102,6 +100,8 @@ namespace Microsoft.ServiceFabric.Common
         /// - InitiallyDisabled - The service is created in a disabled state and must be
         /// explicitly enabled before any replicas or instances are placed. The value is 1.
         /// </param>
+        /// <param name="capacityReleaseAction">Specifies the service target policy configured for capacity release. Possible
+        /// values include: 'None', 'DropToZero', 'DropToMin'</param>
         public StatelessServiceDescription(
             ServiceName serviceName,
             string serviceTypeName,
@@ -115,7 +115,6 @@ namespace Microsoft.ServiceFabric.Common
             IEnumerable<ServicePlacementPolicyDescription> servicePlacementPolicies = default(IEnumerable<ServicePlacementPolicyDescription>),
             MoveCost? defaultMoveCost = default(MoveCost?),
             bool? isDefaultMoveCostSpecified = default(bool?),
-            CapacityReleaseAction? capacityReleaseAction = default(CapacityReleaseAction?),
             ServicePackageActivationMode? servicePackageActivationMode = default(ServicePackageActivationMode?),
             string serviceDnsName = default(string),
             IEnumerable<ScalingPolicyDescription> scalingPolicies = default(IEnumerable<ScalingPolicyDescription>),
@@ -126,7 +125,8 @@ namespace Microsoft.ServiceFabric.Common
             long? instanceCloseDelayDurationSeconds = default(long?),
             InstanceLifecycleDescription instanceLifecycleDescription = default(InstanceLifecycleDescription),
             long? instanceRestartWaitDurationSeconds = default(long?),
-            int? serviceOptions = default(int?))
+            int? serviceOptions = default(int?),
+            CapacityReleaseAction? capacityReleaseAction = default(CapacityReleaseAction?))
             : base(
                 serviceName,
                 serviceTypeName,
@@ -140,11 +140,11 @@ namespace Microsoft.ServiceFabric.Common
                 servicePlacementPolicies,
                 defaultMoveCost,
                 isDefaultMoveCostSpecified,
-                capacityReleaseAction,
                 servicePackageActivationMode,
                 serviceDnsName,
                 scalingPolicies,
-                serviceTags)
+                serviceTags,
+                capacityReleaseAction)
         {
             instanceCount.ThrowIfNull(nameof(instanceCount));
             instanceCount?.ThrowIfLessThan("instanceCount", -1);

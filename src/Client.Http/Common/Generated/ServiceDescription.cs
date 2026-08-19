@@ -36,8 +36,6 @@ namespace Microsoft.ServiceFabric.Common
         /// Specifies the move cost for the service.
         /// </param>
         /// <param name="isDefaultMoveCostSpecified">Indicates if the DefaultMoveCost property is specified.</param>
-        /// <param name="capacityReleaseAction">Specifies the service target policy configured for capacity release. Possible
-        /// values include: 'None', 'DropToZero', 'DropToMin'</param>
         /// <param name="servicePackageActivationMode">The activation mode of service package to be used for a service.
         /// Possible values include: 'SharedProcess', 'ExclusiveProcess'
         /// 
@@ -48,6 +46,8 @@ namespace Microsoft.ServiceFabric.Common
         /// Service Fabric cluster.</param>
         /// <param name="scalingPolicies">Scaling policies for this service.</param>
         /// <param name="serviceTags">Service tags collections for placement and running of the service.</param>
+        /// <param name="capacityReleaseAction">Specifies the service target policy configured for capacity release. Possible
+        /// values include: 'None', 'DropToZero', 'DropToMin'</param>
         protected ServiceDescription(
             ServiceName serviceName,
             string serviceTypeName,
@@ -61,11 +61,11 @@ namespace Microsoft.ServiceFabric.Common
             IEnumerable<ServicePlacementPolicyDescription> servicePlacementPolicies = default(IEnumerable<ServicePlacementPolicyDescription>),
             MoveCost? defaultMoveCost = default(MoveCost?),
             bool? isDefaultMoveCostSpecified = default(bool?),
-            CapacityReleaseAction? capacityReleaseAction = default(CapacityReleaseAction?),
             ServicePackageActivationMode? servicePackageActivationMode = default(ServicePackageActivationMode?),
             string serviceDnsName = default(string),
             IEnumerable<ScalingPolicyDescription> scalingPolicies = default(IEnumerable<ScalingPolicyDescription>),
-            ServiceTags serviceTags = default(ServiceTags))
+            ServiceTags serviceTags = default(ServiceTags),
+            CapacityReleaseAction? capacityReleaseAction = default(CapacityReleaseAction?))
         {
             serviceName.ThrowIfNull(nameof(serviceName));
             serviceTypeName.ThrowIfNull(nameof(serviceTypeName));
@@ -83,11 +83,11 @@ namespace Microsoft.ServiceFabric.Common
             this.ServicePlacementPolicies = servicePlacementPolicies;
             this.DefaultMoveCost = defaultMoveCost;
             this.IsDefaultMoveCostSpecified = isDefaultMoveCostSpecified;
-            this.CapacityReleaseAction = capacityReleaseAction;
             this.ServicePackageActivationMode = servicePackageActivationMode;
             this.ServiceDnsName = serviceDnsName;
             this.ScalingPolicies = scalingPolicies;
             this.ServiceTags = serviceTags;
+            this.CapacityReleaseAction = capacityReleaseAction;
         }
 
         /// <summary>
@@ -151,12 +151,6 @@ namespace Microsoft.ServiceFabric.Common
         public bool? IsDefaultMoveCostSpecified { get; }
 
         /// <summary>
-        /// Gets specifies the service target policy configured for capacity release. Possible values include: 'None',
-        /// 'DropToZero', 'DropToMin'
-        /// </summary>
-        public CapacityReleaseAction? CapacityReleaseAction { get; }
-
-        /// <summary>
         /// Gets the activation mode of service package to be used for a service. Possible values include: 'SharedProcess',
         /// 'ExclusiveProcess'
         /// 
@@ -179,6 +173,12 @@ namespace Microsoft.ServiceFabric.Common
         /// Gets service tags collections for placement and running of the service.
         /// </summary>
         public ServiceTags ServiceTags { get; }
+
+        /// <summary>
+        /// Gets specifies the service target policy configured for capacity release. Possible values include: 'None',
+        /// 'DropToZero', 'DropToMin'
+        /// </summary>
+        public CapacityReleaseAction? CapacityReleaseAction { get; }
 
         /// <summary>
         /// Gets the kind of service (Stateless or Stateful).
