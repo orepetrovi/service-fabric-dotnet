@@ -885,15 +885,20 @@ namespace Microsoft.ServiceFabric.Client.Http
 
         /// <inheritdoc />
         public Task<CapacityReleaseEstimationResult> GetCapacityReleaseEstimationAsync(
+            ContinuationToken continuationToken = default(ContinuationToken),
+            long? maxResults = 0,
             long? serverTimeout = 60,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            maxResults?.ThrowIfLessThan("maxResults", 0);
             serverTimeout?.ThrowIfOutOfInclusiveRange("serverTimeout", 1, 4294967295);
             var requestId = Guid.NewGuid().ToString();
             var url = "$/GetCapacityReleaseEstimation";
             var queryParams = new List<string>();
             
             // Append to queryParams if not null.
+            continuationToken?.AddToQueryParameters(queryParams, $"ContinuationToken={continuationToken.ToString()}");
+            maxResults?.AddToQueryParameters(queryParams, $"MaxResults={maxResults}");
             serverTimeout?.AddToQueryParameters(queryParams, $"timeout={serverTimeout}");
             queryParams.Add("api-version=11.9");
             url += "?" + string.Join("&", queryParams);

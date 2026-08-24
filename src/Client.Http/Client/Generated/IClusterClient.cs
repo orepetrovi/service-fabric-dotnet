@@ -824,6 +824,8 @@ namespace Microsoft.ServiceFabric.Client
         /// Reports projected used capacity relative to cluster total capacity for each cluster metric at each reported
         /// capacity release level.
         /// </remarks>
+        /// <param name ="continuationToken">The continuation token to obtain the next set of results.</param>
+        /// <param name ="maxResults">The maximum number of results to return. The value must be non-negative.</param>
         /// <param name ="serverTimeout">The server timeout for performing the operation in seconds. This timeout specifies the
         /// time duration that the client is willing to wait for the requested operation to complete. The default value for
         /// this parameter is 60 seconds.</param>
@@ -836,6 +838,8 @@ namespace Microsoft.ServiceFabric.Client
         /// <exception cref="ServiceFabricException">Thrown when the requested operation failed at server. Exception contains Error code <see cref="FabricError.ErrorCode"/>, message indicating the failure. It also contains a flag wether the exception is transient or not, client operations can be retried if its transient.</exception>
         /// <exception cref="OperationCanceledException">Thrown when cancellation is requested for the cancellation token.</exception>
         Task<CapacityReleaseEstimationResult> GetCapacityReleaseEstimationAsync(
+            ContinuationToken continuationToken = default(ContinuationToken),
+            long? maxResults = 0,
             long? serverTimeout = 60,
             CancellationToken cancellationToken = default(CancellationToken));
 

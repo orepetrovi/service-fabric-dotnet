@@ -34,7 +34,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
         internal static CapacityReleaseEstimationResult GetFromJsonProperties(JsonReader reader)
         {
             var items = default(IEnumerable<CapacityReleaseEstimate>);
-            var recommendedLevel = default(CapacityReleaseLevel?);
+            var continuationToken = default(ContinuationToken);
 
             do
             {
@@ -43,9 +43,9 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 {
                     items = reader.ReadList(CapacityReleaseEstimateConverter.Deserialize);
                 }
-                else if (string.Compare("RecommendedLevel", propName, StringComparison.OrdinalIgnoreCase) == 0)
+                else if (string.Compare("ContinuationToken", propName, StringComparison.OrdinalIgnoreCase) == 0)
                 {
-                    recommendedLevel = CapacityReleaseLevelConverter.Deserialize(reader);
+                    continuationToken = ContinuationTokenConverter.Deserialize(reader);
                 }
                 else
                 {
@@ -56,7 +56,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
 
             return new CapacityReleaseEstimationResult(
                 items: items,
-                recommendedLevel: recommendedLevel);
+                continuationToken: continuationToken);
         }
 
         /// <summary>
@@ -68,7 +68,10 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
         {
             // Required properties are always serialized, optional properties are serialized when not null.
             writer.WriteStartObject();
-            writer.WriteProperty(obj.RecommendedLevel, "RecommendedLevel", CapacityReleaseLevelConverter.Serialize);
+            if (obj.ContinuationToken != null)
+            {
+                writer.WriteProperty(obj.ContinuationToken, "ContinuationToken", ContinuationTokenConverter.Serialize);
+            }
             writer.WriteEnumerableProperty(obj.Items, "Items", CapacityReleaseEstimateConverter.Serialize);
             writer.WriteEndObject();
         }

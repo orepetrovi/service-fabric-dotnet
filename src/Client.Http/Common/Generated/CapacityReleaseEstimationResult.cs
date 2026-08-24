@@ -9,7 +9,7 @@ namespace Microsoft.ServiceFabric.Common
     using System.Collections.Generic;
 
     /// <summary>
-    /// The capacity release estimates and the recommended capacity release level based on those projections.
+    /// A page of capacity release estimates.
     /// </summary>
     public partial class CapacityReleaseEstimationResult
     {
@@ -18,19 +18,14 @@ namespace Microsoft.ServiceFabric.Common
         /// </summary>
         /// <param name="items">The estimates reporting projected used capacity relative to cluster total capacity for each
         /// cluster metric at each reported capacity release level.</param>
-        /// <param name="recommendedLevel">The recommended capacity release level based on the projections. Possible values
-        /// include: 'None', 'Minor', 'Major'
-        /// 
-        /// The level of capacity release applied to the cluster.
-        /// </param>
+        /// <param name="continuationToken">The continuation token for the next page of results.</param>
         public CapacityReleaseEstimationResult(
             IEnumerable<CapacityReleaseEstimate> items,
-            CapacityReleaseLevel? recommendedLevel)
+            ContinuationToken continuationToken = default(ContinuationToken))
         {
             items.ThrowIfNull(nameof(items));
-            recommendedLevel.ThrowIfNull(nameof(recommendedLevel));
             this.Items = items;
-            this.RecommendedLevel = recommendedLevel;
+            this.ContinuationToken = continuationToken;
         }
 
         /// <summary>
@@ -40,11 +35,8 @@ namespace Microsoft.ServiceFabric.Common
         public IEnumerable<CapacityReleaseEstimate> Items { get; }
 
         /// <summary>
-        /// Gets the recommended capacity release level based on the projections. Possible values include: 'None', 'Minor',
-        /// 'Major'
-        /// 
-        /// The level of capacity release applied to the cluster.
+        /// Gets the continuation token for the next page of results.
         /// </summary>
-        public CapacityReleaseLevel? RecommendedLevel { get; }
+        public ContinuationToken ContinuationToken { get; }
     }
 }
