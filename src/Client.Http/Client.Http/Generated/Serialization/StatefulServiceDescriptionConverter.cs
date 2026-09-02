@@ -61,6 +61,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
             var auxiliaryReplicaCount = default(int?);
             var serviceSensitivityDescription = default(ServiceSensitivityDescription);
             var serviceOptions = default(int?);
+            var capacityReleaseAction = default(CapacityReleaseAction?);
 
             do
             {
@@ -177,6 +178,10 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 {
                     serviceOptions = reader.ReadValueAsInt();
                 }
+                else if (string.Compare("CapacityReleaseAction", propName, StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    capacityReleaseAction = CapacityReleaseActionConverter.Deserialize(reader);
+                }
                 else
                 {
                     reader.SkipPropertyValue();
@@ -212,7 +217,8 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 replicaLifecycleDescription: replicaLifecycleDescription,
                 auxiliaryReplicaCount: auxiliaryReplicaCount,
                 serviceSensitivityDescription: serviceSensitivityDescription,
-                serviceOptions: serviceOptions);
+                serviceOptions: serviceOptions,
+                capacityReleaseAction: capacityReleaseAction);
         }
 
         /// <summary>
@@ -333,6 +339,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 writer.WriteProperty(obj.ServiceOptions, "ServiceOptions", JsonWriterExtensions.WriteIntValue);
             }
 
+            writer.WriteProperty(obj.CapacityReleaseAction, "CapacityReleaseAction", CapacityReleaseActionConverter.Serialize);
             writer.WriteEndObject();
         }
     }

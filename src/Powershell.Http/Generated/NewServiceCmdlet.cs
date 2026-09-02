@@ -414,6 +414,13 @@ namespace Microsoft.ServiceFabric.Powershell.Http
         [Parameter(Mandatory = false, Position = 41)]
         public long? ServerTimeout { get; set; }
 
+        /// <summary>
+        /// Gets or sets CapacityReleaseAction. Specifies the service target policy configured for capacity release. Possible
+        /// values include: 'None', 'DropToZero', 'DropToMin'
+        /// </summary>
+        [Parameter(Mandatory = false, Position = 42)]
+        public CapacityReleaseAction? CapacityReleaseAction { get; set; }
+
         /// <inheritdoc/>
         protected override void ProcessRecordInternal()
         {
@@ -472,7 +479,8 @@ namespace Microsoft.ServiceFabric.Powershell.Http
                     replicaLifecycleDescription: this.ReplicaLifecycleDescription,
                     auxiliaryReplicaCount: this.AuxiliaryReplicaCount,
                     serviceSensitivityDescription: this.ServiceSensitivityDescription,
-                    serviceOptions: this.ServiceOptions);
+                    serviceOptions: this.ServiceOptions,
+                    capacityReleaseAction: this.CapacityReleaseAction);
             }
             else if (this.Stateless.IsPresent)
             {
@@ -499,7 +507,8 @@ namespace Microsoft.ServiceFabric.Powershell.Http
                     instanceCloseDelayDurationSeconds: this.InstanceCloseDelayDurationSeconds,
                     instanceLifecycleDescription: this.InstanceLifecycleDescription,
                     instanceRestartWaitDurationSeconds: this.InstanceRestartWaitDurationSeconds,
-                    serviceOptions: this.ServiceOptions);
+                    serviceOptions: this.ServiceOptions,
+                    capacityReleaseAction: this.CapacityReleaseAction);
             }
 
             this.ServiceFabricClient.Services.CreateServiceAsync(

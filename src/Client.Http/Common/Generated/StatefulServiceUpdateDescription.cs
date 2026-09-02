@@ -79,6 +79,8 @@ namespace Microsoft.ServiceFabric.Common
         /// <param name="auxiliaryReplicaCount">The auxiliary replica count as a number. To use Auxiliary replicas, the
         /// following must be true: AuxiliaryReplicaCount &lt; (TargetReplicaSetSize+1)/2 and TargetReplicaSetSize >=3.</param>
         /// <param name="serviceSensitivityDescription">Defines default levels of replica sensitivity of this service.</param>
+        /// <param name="capacityReleaseAction">Specifies the service target policy configured for capacity release. Possible
+        /// values include: 'None', 'DropToZero', 'DropToMin'</param>
         public StatefulServiceUpdateDescription(
             string flags = default(string),
             string placementConstraints = default(string),
@@ -99,7 +101,8 @@ namespace Microsoft.ServiceFabric.Common
             bool? dropSourceReplicaOnMove = default(bool?),
             ReplicaLifecycleDescription replicaLifecycleDescription = default(ReplicaLifecycleDescription),
             int? auxiliaryReplicaCount = default(int?),
-            ServiceSensitivityDescription serviceSensitivityDescription = default(ServiceSensitivityDescription))
+            ServiceSensitivityDescription serviceSensitivityDescription = default(ServiceSensitivityDescription),
+            CapacityReleaseAction? capacityReleaseAction = default(CapacityReleaseAction?))
             : base(
                 Common.ServiceKind.Stateful,
                 flags,
@@ -111,7 +114,8 @@ namespace Microsoft.ServiceFabric.Common
                 scalingPolicies,
                 serviceDnsName,
                 serviceTags,
-                repartitionDescription)
+                repartitionDescription,
+                capacityReleaseAction)
         {
             targetReplicaSetSize?.ThrowIfLessThan("targetReplicaSetSize", 1);
             minReplicaSetSize?.ThrowIfLessThan("minReplicaSetSize", 1);

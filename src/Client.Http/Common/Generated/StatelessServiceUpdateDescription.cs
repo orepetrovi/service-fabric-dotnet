@@ -97,6 +97,8 @@ namespace Microsoft.ServiceFabric.Common
         /// The default value is 0, which indicates that when stateless instance goes down, Service Fabric will immediately
         /// start building its replacement.
         /// </param>
+        /// <param name="capacityReleaseAction">Specifies the service target policy configured for capacity release. Possible
+        /// values include: 'None', 'DropToZero', 'DropToMin'</param>
         public StatelessServiceUpdateDescription(
             string flags = default(string),
             string placementConstraints = default(string),
@@ -113,7 +115,8 @@ namespace Microsoft.ServiceFabric.Common
             int? minInstancePercentage = default(int?),
             string instanceCloseDelayDurationSeconds = default(string),
             InstanceLifecycleDescription instanceLifecycleDescription = default(InstanceLifecycleDescription),
-            string instanceRestartWaitDurationSeconds = default(string))
+            string instanceRestartWaitDurationSeconds = default(string),
+            CapacityReleaseAction? capacityReleaseAction = default(CapacityReleaseAction?))
             : base(
                 Common.ServiceKind.Stateless,
                 flags,
@@ -125,7 +128,8 @@ namespace Microsoft.ServiceFabric.Common
                 scalingPolicies,
                 serviceDnsName,
                 serviceTags,
-                repartitionDescription)
+                repartitionDescription,
+                capacityReleaseAction)
         {
             instanceCount?.ThrowIfLessThan("instanceCount", -1);
             this.InstanceCount = instanceCount;

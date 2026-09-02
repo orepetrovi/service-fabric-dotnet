@@ -100,6 +100,8 @@ namespace Microsoft.ServiceFabric.Common
         /// - InitiallyDisabled - The service is created in a disabled state and must be
         /// explicitly enabled before any replicas or instances are placed. The value is 1.
         /// </param>
+        /// <param name="capacityReleaseAction">Specifies the service target policy configured for capacity release. Possible
+        /// values include: 'None', 'DropToZero', 'DropToMin'</param>
         public StatelessServiceDescription(
             ServiceName serviceName,
             string serviceTypeName,
@@ -123,7 +125,8 @@ namespace Microsoft.ServiceFabric.Common
             long? instanceCloseDelayDurationSeconds = default(long?),
             InstanceLifecycleDescription instanceLifecycleDescription = default(InstanceLifecycleDescription),
             long? instanceRestartWaitDurationSeconds = default(long?),
-            int? serviceOptions = default(int?))
+            int? serviceOptions = default(int?),
+            CapacityReleaseAction? capacityReleaseAction = default(CapacityReleaseAction?))
             : base(
                 serviceName,
                 serviceTypeName,
@@ -140,7 +143,8 @@ namespace Microsoft.ServiceFabric.Common
                 servicePackageActivationMode,
                 serviceDnsName,
                 scalingPolicies,
-                serviceTags)
+                serviceTags,
+                capacityReleaseAction)
         {
             instanceCount.ThrowIfNull(nameof(instanceCount));
             instanceCount?.ThrowIfLessThan("instanceCount", -1);

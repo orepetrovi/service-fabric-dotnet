@@ -49,6 +49,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
             var instanceCloseDelayDurationSeconds = default(string);
             var instanceLifecycleDescription = default(InstanceLifecycleDescription);
             var instanceRestartWaitDurationSeconds = default(string);
+            var capacityReleaseAction = default(CapacityReleaseAction?);
 
             do
             {
@@ -117,6 +118,10 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 {
                     instanceRestartWaitDurationSeconds = reader.ReadValueAsString();
                 }
+                else if (string.Compare("CapacityReleaseAction", propName, StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    capacityReleaseAction = CapacityReleaseActionConverter.Deserialize(reader);
+                }
                 else
                 {
                     reader.SkipPropertyValue();
@@ -140,7 +145,8 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 minInstancePercentage: minInstancePercentage,
                 instanceCloseDelayDurationSeconds: instanceCloseDelayDurationSeconds,
                 instanceLifecycleDescription: instanceLifecycleDescription,
-                instanceRestartWaitDurationSeconds: instanceRestartWaitDurationSeconds);
+                instanceRestartWaitDurationSeconds: instanceRestartWaitDurationSeconds,
+                capacityReleaseAction: capacityReleaseAction);
         }
 
         /// <summary>
@@ -229,6 +235,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 writer.WriteProperty(obj.InstanceRestartWaitDurationSeconds, "InstanceRestartWaitDurationSeconds", JsonWriterExtensions.WriteStringValue);
             }
 
+            writer.WriteProperty(obj.CapacityReleaseAction, "CapacityReleaseAction", CapacityReleaseActionConverter.Serialize);
             writer.WriteEndObject();
         }
     }

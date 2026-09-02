@@ -74,6 +74,7 @@ namespace Microsoft.ServiceFabric.Powershell.Http
         /// - ServiceDnsName - Indicates the ServiceDnsName property is set. The value is 131072.
         /// - ServiceTags TagsRequiredToPlace - Indicates the TagsRequiredToPlace property is set. The value is 1048576.
         /// - ServiceTags TagsRequiredToRun - Indicates the TagsRequiredToRun property is set. The value is 2097152.
+        /// - CapacityReleaseAction - Indicates the CapacityReleaseAction property is set. The value is 268435456.
         /// </summary>
         [Parameter(Mandatory = false, Position = 3)]
         public string Flags { get; set; }
@@ -287,6 +288,13 @@ namespace Microsoft.ServiceFabric.Powershell.Http
         [Parameter(Mandatory = false, Position = 31)]
         public long? ServerTimeout { get; set; }
 
+        /// <summary>
+        /// Gets or sets CapacityReleaseAction. Specifies the service target policy configured for capacity release. Possible
+        /// values include: 'None', 'DropToZero', 'DropToMin'
+        /// </summary>
+        [Parameter(Mandatory = false, Position = 32)]
+        public CapacityReleaseAction? CapacityReleaseAction { get; set; }
+
         /// <inheritdoc/>
         protected override void ProcessRecordInternal()
         {
@@ -326,7 +334,8 @@ namespace Microsoft.ServiceFabric.Powershell.Http
                     dropSourceReplicaOnMove: this.DropSourceReplicaOnMove,
                     replicaLifecycleDescription: this.ReplicaLifecycleDescription,
                     auxiliaryReplicaCount: this.AuxiliaryReplicaCount,
-                    serviceSensitivityDescription: this.ServiceSensitivityDescription);
+                    serviceSensitivityDescription: this.ServiceSensitivityDescription,
+                    capacityReleaseAction: this.CapacityReleaseAction);
             }
             else if (this.Stateless.IsPresent)
             {
@@ -346,7 +355,8 @@ namespace Microsoft.ServiceFabric.Powershell.Http
                     minInstancePercentage: this.MinInstancePercentage,
                     instanceCloseDelayDurationSeconds: this.InstanceCloseDelayDurationSeconds,
                     instanceLifecycleDescription: this.InstanceLifecycleDescription,
-                    instanceRestartWaitDurationSeconds: this.InstanceRestartWaitDurationSeconds);
+                    instanceRestartWaitDurationSeconds: this.InstanceRestartWaitDurationSeconds,
+                    capacityReleaseAction: this.CapacityReleaseAction);
             }
 
             this.ServiceFabricClient.Services.UpdateServiceAsync(
