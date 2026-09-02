@@ -34,7 +34,21 @@ namespace Microsoft.ServiceFabric.Powershell.Http
         /// <inheritdoc/>
         protected override void ProcessRecordInternal()
         {
-            if (!this.ShouldProcess("Service Fabric cluster", $"Set capacity release level to '{this.Level}'"))
+            string action = this.Level switch
+            {
+                CapacityReleaseLevel.None =>
+                    "Set capacity release level to None: restore configured replica, instance, minimum, and auxiliary targets",
+                CapacityReleaseLevel.Minor =>
+                    "Set capacity release level to Minor: reduce DropToZero services to configured minimum and auxiliary targets " +
+                    "to zero; this increases quorum-loss exposure",
+                CapacityReleaseLevel.Major =>
+                    "Set capacity release level to Major: reduce DropToMin services to configured minimum, DropToZero services " +
+                    "to zero, and auxiliary targets to zero; services at zero become unavailable and stateful services at zero " +
+                    "permanently lose data",
+                _ => throw new ArgumentOutOfRangeException(nameof(this.Level), this.Level, null),
+            };
+
+            if (!this.ShouldProcess("Service Fabric cluster", action))
                 return;
 
             this.ServiceFabricClient.Cluster.SetCapacityReleaseLevelAsync(
