@@ -61,7 +61,7 @@ namespace Microsoft.ServiceFabric.Powershell.Http
                 continuationToken = result.ContinuationToken;
                 this.WriteDebug(string.Format(Resource.MsgCountAndContinuationToken, count, continuationToken));
             }
-            while (continuationToken.Next);
+            while (continuationToken?.Next == true);
         }
 
         /// <inheritdoc/>
