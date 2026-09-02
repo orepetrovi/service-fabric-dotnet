@@ -838,7 +838,7 @@ namespace Microsoft.ServiceFabric.Client.Http
             
             // Append to queryParams if not null.
             serverTimeout?.AddToQueryParameters(queryParams, $"timeout={serverTimeout}");
-            queryParams.Add("api-version=12.0");
+            queryParams.Add("api-version=11.9");
             url += "?" + string.Join("&", queryParams);
             
             HttpRequestMessage RequestFunc()
@@ -868,7 +868,7 @@ namespace Microsoft.ServiceFabric.Client.Http
             // Append to queryParams if not null.
             level?.AddToQueryParameters(queryParams, $"Level={level.ToString()}");
             serverTimeout?.AddToQueryParameters(queryParams, $"timeout={serverTimeout}");
-            queryParams.Add("api-version=12.0");
+            queryParams.Add("api-version=11.9");
             url += "?" + string.Join("&", queryParams);
             
             HttpRequestMessage RequestFunc()
@@ -900,7 +900,7 @@ namespace Microsoft.ServiceFabric.Client.Http
             continuationToken?.AddToQueryParameters(queryParams, $"ContinuationToken={continuationToken.ToString()}");
             maxResults?.AddToQueryParameters(queryParams, $"MaxResults={maxResults}");
             serverTimeout?.AddToQueryParameters(queryParams, $"timeout={serverTimeout}");
-            queryParams.Add("api-version=12.0");
+            queryParams.Add("api-version=11.9");
             url += "?" + string.Join("&", queryParams);
             
             HttpRequestMessage RequestFunc()
