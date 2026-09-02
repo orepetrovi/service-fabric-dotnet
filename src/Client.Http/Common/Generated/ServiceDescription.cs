@@ -47,7 +47,10 @@ namespace Microsoft.ServiceFabric.Common
         /// <param name="scalingPolicies">Scaling policies for this service.</param>
         /// <param name="serviceTags">Service tags collections for placement and running of the service.</param>
         /// <param name="capacityReleaseAction">Specifies the service target policy configured for capacity release. Possible
-        /// values include: 'None', 'DropToZero', 'DropToMin'</param>
+        /// values include: 'None', 'DropToZero', 'DropToMin'
+        /// 
+        /// Specifies the service target policy configured for capacity release.
+        /// </param>
         protected ServiceDescription(
             ServiceName serviceName,
             string serviceTypeName,
@@ -177,6 +180,8 @@ namespace Microsoft.ServiceFabric.Common
         /// <summary>
         /// Gets specifies the service target policy configured for capacity release. Possible values include: 'None',
         /// 'DropToZero', 'DropToMin'
+        /// 
+        /// Specifies the service target policy configured for capacity release.
         /// </summary>
         public CapacityReleaseAction? CapacityReleaseAction { get; }
 

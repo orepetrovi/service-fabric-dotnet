@@ -49,6 +49,11 @@ namespace Microsoft.ServiceFabric.Common
         /// Service Fabric cluster.</param>
         /// <param name="scalingPolicies">Scaling policies for this service.</param>
         /// <param name="serviceTags">Service tags collections for placement and running of the service.</param>
+        /// <param name="capacityReleaseAction">Specifies the service target policy configured for capacity release. Possible
+        /// values include: 'None', 'DropToZero', 'DropToMin'
+        /// 
+        /// Specifies the service target policy configured for capacity release.
+        /// </param>
         /// <param name="flags">Flags indicating whether other properties are set. Each of the associated properties
         /// corresponds to a flag, specified below, which, if set, indicate that the property is specified.
         /// This property can be a combination of those flags obtained using bitwise 'OR' operator.
@@ -86,8 +91,6 @@ namespace Microsoft.ServiceFabric.Common
         /// - InitiallyDisabled - The service is created in a disabled state and must be
         /// explicitly enabled before any replicas or instances are placed. The value is 1.
         /// </param>
-        /// <param name="capacityReleaseAction">Specifies the service target policy configured for capacity release. Possible
-        /// values include: 'None', 'DropToZero', 'DropToMin'</param>
         public StatefulServiceDescription(
             ServiceName serviceName,
             string serviceTypeName,
@@ -107,6 +110,7 @@ namespace Microsoft.ServiceFabric.Common
             string serviceDnsName = default(string),
             IEnumerable<ScalingPolicyDescription> scalingPolicies = default(IEnumerable<ScalingPolicyDescription>),
             ServiceTags serviceTags = default(ServiceTags),
+            CapacityReleaseAction? capacityReleaseAction = default(CapacityReleaseAction?),
             int? flags = default(int?),
             long? replicaRestartWaitDurationSeconds = default(long?),
             long? quorumLossWaitDurationSeconds = default(long?),
@@ -116,8 +120,7 @@ namespace Microsoft.ServiceFabric.Common
             ReplicaLifecycleDescription replicaLifecycleDescription = default(ReplicaLifecycleDescription),
             int? auxiliaryReplicaCount = default(int?),
             ServiceSensitivityDescription serviceSensitivityDescription = default(ServiceSensitivityDescription),
-            int? serviceOptions = default(int?),
-            CapacityReleaseAction? capacityReleaseAction = default(CapacityReleaseAction?))
+            int? serviceOptions = default(int?))
             : base(
                 serviceName,
                 serviceTypeName,

@@ -43,13 +43,13 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
             var serviceDnsName = default(string);
             var serviceTags = default(ServiceTags);
             var repartitionDescription = default(RepartitionSchemeDescription);
+            var capacityReleaseAction = default(CapacityReleaseAction?);
             var instanceCount = default(int?);
             var minInstanceCount = default(int?);
             var minInstancePercentage = default(int?);
             var instanceCloseDelayDurationSeconds = default(string);
             var instanceLifecycleDescription = default(InstanceLifecycleDescription);
             var instanceRestartWaitDurationSeconds = default(string);
-            var capacityReleaseAction = default(CapacityReleaseAction?);
 
             do
             {
@@ -94,6 +94,10 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 {
                     repartitionDescription = RepartitionSchemeDescriptionConverter.Deserialize(reader);
                 }
+                else if (string.Compare("CapacityReleaseAction", propName, StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    capacityReleaseAction = CapacityReleaseActionConverter.Deserialize(reader);
+                }
                 else if (string.Compare("InstanceCount", propName, StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     instanceCount = reader.ReadValueAsInt();
@@ -118,10 +122,6 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 {
                     instanceRestartWaitDurationSeconds = reader.ReadValueAsString();
                 }
-                else if (string.Compare("CapacityReleaseAction", propName, StringComparison.OrdinalIgnoreCase) == 0)
-                {
-                    capacityReleaseAction = CapacityReleaseActionConverter.Deserialize(reader);
-                }
                 else
                 {
                     reader.SkipPropertyValue();
@@ -140,13 +140,13 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 serviceDnsName: serviceDnsName,
                 serviceTags: serviceTags,
                 repartitionDescription: repartitionDescription,
+                capacityReleaseAction: capacityReleaseAction,
                 instanceCount: instanceCount,
                 minInstanceCount: minInstanceCount,
                 minInstancePercentage: minInstancePercentage,
                 instanceCloseDelayDurationSeconds: instanceCloseDelayDurationSeconds,
                 instanceLifecycleDescription: instanceLifecycleDescription,
-                instanceRestartWaitDurationSeconds: instanceRestartWaitDurationSeconds,
-                capacityReleaseAction: capacityReleaseAction);
+                instanceRestartWaitDurationSeconds: instanceRestartWaitDurationSeconds);
         }
 
         /// <summary>
@@ -160,6 +160,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
             writer.WriteStartObject();
             writer.WriteProperty(obj.ServiceKind, "ServiceKind", ServiceKindConverter.Serialize);
             writer.WriteProperty(obj.DefaultMoveCost, "DefaultMoveCost", MoveCostConverter.Serialize);
+            writer.WriteProperty(obj.CapacityReleaseAction, "CapacityReleaseAction", CapacityReleaseActionConverter.Serialize);
             if (obj.Flags != null)
             {
                 writer.WriteProperty(obj.Flags, "Flags", JsonWriterExtensions.WriteStringValue);
@@ -235,7 +236,6 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 writer.WriteProperty(obj.InstanceRestartWaitDurationSeconds, "InstanceRestartWaitDurationSeconds", JsonWriterExtensions.WriteStringValue);
             }
 
-            writer.WriteProperty(obj.CapacityReleaseAction, "CapacityReleaseAction", CapacityReleaseActionConverter.Serialize);
             writer.WriteEndObject();
         }
     }

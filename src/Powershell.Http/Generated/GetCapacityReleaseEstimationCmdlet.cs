@@ -17,16 +17,13 @@ namespace Microsoft.ServiceFabric.Powershell.Http
     public partial class GetCapacityReleaseEstimationCmdlet : CommonCmdletBase
     {
         /// <summary>
-        /// Gets or sets ContinuationToken. The continuation token to obtain the next set of results.
+        /// Gets or sets MaxResults. The maximum number of results to be returned as part of the paged queries. This parameter
+        /// defines the upper bound on the number of results returned. The results returned can be less than the specified
+        /// maximum results if they do not fit in the message as per the max message size restrictions defined in the
+        /// configuration. If this parameter is zero or not specified, the paged query includes as many results as possible
+        /// that fit in the return message.
         /// </summary>
         [Parameter(Mandatory = false, Position = 0)]
-        public ContinuationToken ContinuationToken { get; set; }
-
-        /// <summary>
-        /// Gets or sets MaxResults. The maximum number of results to return. The value must be non-negative.
-        /// </summary>
-        [Parameter(Mandatory = false, Position = 1)]
-        [ValidateRange(0, long.MaxValue)]
         public long? MaxResults { get; set; }
 
         /// <summary>
@@ -34,22 +31,37 @@ namespace Microsoft.ServiceFabric.Powershell.Http
         /// time duration that the client is willing to wait for the requested operation to complete. The default value for
         /// this parameter is 60 seconds.
         /// </summary>
-        [Parameter(Mandatory = false, Position = 2)]
+        [Parameter(Mandatory = false, Position = 1)]
         public long? ServerTimeout { get; set; }
 
         /// <inheritdoc/>
         protected override void ProcessRecordInternal()
         {
-            var result = this.ServiceFabricClient.Cluster.GetCapacityReleaseEstimationAsync(
-                continuationToken: this.ContinuationToken,
-                maxResults: this.MaxResults,
-                serverTimeout: this.ServerTimeout,
-                cancellationToken: this.CancellationToken).GetAwaiter().GetResult();
-
-            if (result != null)
+            var continuationToken = default(ContinuationToken);
+            do
             {
-                this.WriteObject(this.FormatOutput(result));
+                var result = this.ServiceFabricClient.Cluster.GetCapacityReleaseEstimationAsync(
+                    continuationToken: continuationToken,
+                    maxResults: this.MaxResults,
+                    serverTimeout: this.ServerTimeout,
+                    cancellationToken: this.CancellationToken).GetAwaiter().GetResult();
+
+                if (result == null)
+                {
+                    break;
+                }
+
+                var count = 0;
+                foreach (var item in result.Data)
+                {
+                    count++;
+                    this.WriteObject(this.FormatOutput(item));
+                }
+
+                continuationToken = result.ContinuationToken;
+                this.WriteDebug(string.Format(Resource.MsgCountAndContinuationToken, count, continuationToken));
             }
+            while (continuationToken.Next);
         }
 
         /// <inheritdoc/>

@@ -838,7 +838,7 @@ namespace Microsoft.ServiceFabric.Client.Http
             
             // Append to queryParams if not null.
             serverTimeout?.AddToQueryParameters(queryParams, $"timeout={serverTimeout}");
-            queryParams.Add("api-version=11.9");
+            queryParams.Add("api-version=12.0");
             url += "?" + string.Join("&", queryParams);
             
             HttpRequestMessage RequestFunc()
@@ -868,7 +868,7 @@ namespace Microsoft.ServiceFabric.Client.Http
             // Append to queryParams if not null.
             level?.AddToQueryParameters(queryParams, $"Level={level.ToString()}");
             serverTimeout?.AddToQueryParameters(queryParams, $"timeout={serverTimeout}");
-            queryParams.Add("api-version=11.9");
+            queryParams.Add("api-version=12.0");
             url += "?" + string.Join("&", queryParams);
             
             HttpRequestMessage RequestFunc()
@@ -884,7 +884,7 @@ namespace Microsoft.ServiceFabric.Client.Http
         }
 
         /// <inheritdoc />
-        public Task<CapacityReleaseEstimationResult> GetCapacityReleaseEstimationAsync(
+        public Task<PagedData<CapacityReleaseEstimate>> GetCapacityReleaseEstimationAsync(
             ContinuationToken continuationToken = default(ContinuationToken),
             long? maxResults = 0,
             long? serverTimeout = 60,
@@ -900,7 +900,7 @@ namespace Microsoft.ServiceFabric.Client.Http
             continuationToken?.AddToQueryParameters(queryParams, $"ContinuationToken={continuationToken.ToString()}");
             maxResults?.AddToQueryParameters(queryParams, $"MaxResults={maxResults}");
             serverTimeout?.AddToQueryParameters(queryParams, $"timeout={serverTimeout}");
-            queryParams.Add("api-version=11.9");
+            queryParams.Add("api-version=12.0");
             url += "?" + string.Join("&", queryParams);
             
             HttpRequestMessage RequestFunc()
@@ -912,7 +912,7 @@ namespace Microsoft.ServiceFabric.Client.Http
                 return request;
             }
 
-            return this.httpClient.SendAsyncGetResponse(RequestFunc, url, CapacityReleaseEstimationResultConverter.Deserialize, requestId, cancellationToken);
+            return this.httpClient.SendAsyncGetResponseAsPagedData(RequestFunc, url, CapacityReleaseEstimateConverter.Deserialize, requestId, cancellationToken);
         }
 
         /// <inheritdoc />

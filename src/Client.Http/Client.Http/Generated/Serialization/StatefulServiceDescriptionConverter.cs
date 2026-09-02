@@ -48,6 +48,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
             var serviceDnsName = default(string);
             var scalingPolicies = default(IEnumerable<ScalingPolicyDescription>);
             var serviceTags = default(ServiceTags);
+            var capacityReleaseAction = default(CapacityReleaseAction?);
             var targetReplicaSetSize = default(int?);
             var minReplicaSetSize = default(int?);
             var hasPersistedState = default(bool?);
@@ -61,7 +62,6 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
             var auxiliaryReplicaCount = default(int?);
             var serviceSensitivityDescription = default(ServiceSensitivityDescription);
             var serviceOptions = default(int?);
-            var capacityReleaseAction = default(CapacityReleaseAction?);
 
             do
             {
@@ -126,6 +126,10 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 {
                     serviceTags = ServiceTagsConverter.Deserialize(reader);
                 }
+                else if (string.Compare("CapacityReleaseAction", propName, StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    capacityReleaseAction = CapacityReleaseActionConverter.Deserialize(reader);
+                }
                 else if (string.Compare("TargetReplicaSetSize", propName, StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     targetReplicaSetSize = reader.ReadValueAsInt();
@@ -178,10 +182,6 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 {
                     serviceOptions = reader.ReadValueAsInt();
                 }
-                else if (string.Compare("CapacityReleaseAction", propName, StringComparison.OrdinalIgnoreCase) == 0)
-                {
-                    capacityReleaseAction = CapacityReleaseActionConverter.Deserialize(reader);
-                }
                 else
                 {
                     reader.SkipPropertyValue();
@@ -205,6 +205,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 serviceDnsName: serviceDnsName,
                 scalingPolicies: scalingPolicies,
                 serviceTags: serviceTags,
+                capacityReleaseAction: capacityReleaseAction,
                 targetReplicaSetSize: targetReplicaSetSize,
                 minReplicaSetSize: minReplicaSetSize,
                 hasPersistedState: hasPersistedState,
@@ -217,8 +218,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 replicaLifecycleDescription: replicaLifecycleDescription,
                 auxiliaryReplicaCount: auxiliaryReplicaCount,
                 serviceSensitivityDescription: serviceSensitivityDescription,
-                serviceOptions: serviceOptions,
-                capacityReleaseAction: capacityReleaseAction);
+                serviceOptions: serviceOptions);
         }
 
         /// <summary>
@@ -239,6 +239,7 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
             writer.WriteProperty(obj.HasPersistedState, "HasPersistedState", JsonWriterExtensions.WriteBoolValue);
             writer.WriteProperty(obj.DefaultMoveCost, "DefaultMoveCost", MoveCostConverter.Serialize);
             writer.WriteProperty(obj.ServicePackageActivationMode, "ServicePackageActivationMode", ServicePackageActivationModeConverter.Serialize);
+            writer.WriteProperty(obj.CapacityReleaseAction, "CapacityReleaseAction", CapacityReleaseActionConverter.Serialize);
             if (obj.ApplicationName != null)
             {
                 writer.WriteProperty(obj.ApplicationName, "ApplicationName", ApplicationNameConverter.Serialize);
@@ -339,7 +340,6 @@ namespace Microsoft.ServiceFabric.Client.Http.Serialization
                 writer.WriteProperty(obj.ServiceOptions, "ServiceOptions", JsonWriterExtensions.WriteIntValue);
             }
 
-            writer.WriteProperty(obj.CapacityReleaseAction, "CapacityReleaseAction", CapacityReleaseActionConverter.Serialize);
             writer.WriteEndObject();
         }
     }
